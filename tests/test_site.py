@@ -92,12 +92,18 @@ class TestDDMMSSite(unittest.TestCase):
         index_html = (BASE_DIR / "index.html").read_text(encoding="utf-8")
         self.assertNotIn("section-header", index_html, "Found section-header in index.html")
 
-    def test_standard_subpage_titles(self):
-        self.assertIn('<h1 class="section-title">About</h1>', (BASE_DIR / "about.html").read_text(encoding="utf-8"))
-        self.assertIn('<h1 class="section-title">People</h1>', (BASE_DIR / "people.html").read_text(encoding="utf-8"))
-        self.assertIn('<h1 class="section-title">Research</h1>', (BASE_DIR / "research.html").read_text(encoding="utf-8"))
-        self.assertIn('<h1 class="section-title">Publications</h1>', (BASE_DIR / "publications.html").read_text(encoding="utf-8"))
-        self.assertIn('<h1 class="section-title">Code</h1>', (BASE_DIR / "code.html").read_text(encoding="utf-8"))
+    def test_no_menu_matching_title_on_first_section(self):
+        menu_titles = [
+            ("about.html", "About"),
+            ("people.html", "People"),
+            ("research.html", "Research"),
+            ("publications.html", "Publications"),
+            ("code.html", "Code"),
+        ]
+        for fname, title in menu_titles:
+            content = (BASE_DIR / fname).read_text(encoding="utf-8")
+            self.assertNotIn(f'<h1 class="section-title">{title}</h1>', content, f"Found title matching menu name {title} in {fname}")
+            self.assertNotIn(f'<h2 class="section-title">{title}</h2>', content, f"Found title matching menu name {title} in {fname}")
 
     def test_alin_elena_picture_used(self):
         img_path = BASE_DIR / "assets" / "images" / "alin_elena.jpg"

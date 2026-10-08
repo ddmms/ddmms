@@ -520,7 +520,6 @@ def generate_code_html():
   <main id="main-content" style="padding-top: 3rem;">
     <div class="container">
       <div class="section-header" style="text-align: left; margin-bottom: 2.5rem;">
-        <h1 class="section-title">Code</h1>
         <p class="section-subtitle">
           Community-driven, well-tested, and reproducible scientific tools developed by the Data Driven Materials and Molecular Science group.
         </p>
@@ -673,7 +672,6 @@ def generate_publications_html(pubs, authors):
   <main id="main-content" style="padding-top: 2.5rem;">
     <div class="container" id="pubs-app-root">
       <div class="section-header" style="text-align: left; margin-bottom: 2rem;">
-        <h1 class="section-title">Publications</h1>
         <p class="section-subtitle">
           Comprehensive, real-time bibliography aggregated via the ORCID Public API for members of Data Driven Materials and Molecular Science.
         </p>
@@ -804,7 +802,6 @@ def generate_about_html():
   <main id="main-content" style="padding-top: 3rem;">
     <div class="container">
       <div class="section-header" style="text-align: left; margin-bottom: 2.5rem;">
-        <h1 class="section-title">About</h1>
         <p class="section-subtitle">
           Uniting statistical physics, quantum mechanics, and artificial intelligence to explore matter at the atomic level.
         </p>
@@ -897,7 +894,6 @@ def generate_people_html():
   <main id="main-content" style="padding-top: 3rem;">
     <div class="container">
       <div class="section-header" style="text-align: left; margin-bottom: 2rem;">
-        <h1 class="section-title">People</h1>
         <p class="section-subtitle">
           Our team comprises specialists in theoretical condensed matter physics, computational chemistry, software architecture, and AI for science.
         </p>
@@ -1289,7 +1285,6 @@ def generate_research_html():
   <main id="main-content" style="padding-top: 3rem;">
     <div class="container">
       <div class="section-header" style="text-align: left; margin-bottom: 2.5rem;">
-        <h1 class="section-title">Research</h1>
         <p class="section-subtitle">
           From quantum-level potential energy surfaces to supercomputing molecular dynamics and macroscopic thermal transport.
         </p>
