@@ -126,17 +126,23 @@ class TestDDMMSSite(unittest.TestCase):
         includes_footer = BASE_DIR / "_includes" / "footer.html"
         self.assertTrue(includes_footer.exists(), "_includes/footer.html does not exist")
 
-    def test_build_site_get_footer_reads_file(self):
+    def test_build_site_get_footer_container(self):
         import build_site
         footer = build_site.get_footer()
-        file_content = (BASE_DIR / "footer.html").read_text(encoding="utf-8").rstrip()
-        self.assertEqual(footer, file_content)
+        self.assertIn('id="site-footer"', footer)
+        self.assertIn('data-include-footer', footer)
 
-    def test_all_pages_contain_footer(self):
+    def test_all_pages_reuse_footer(self):
         for fname in self.html_files:
             content = (BASE_DIR / fname).read_text(encoding="utf-8")
-            self.assertIn('<footer class="site-footer">', content, f"Footer missing from {fname}")
-            self.assertIn("Data Driven Materials and Molecular Science", content, f"Footer brand missing from {fname}")
+            self.assertIn('id="site-footer"', content, f"Footer container missing from {fname}")
+            self.assertIn('data-include-footer', content, f"Footer include attribute missing from {fname}")
+
+    def test_no_duplicate_footer_markup_in_pages(self):
+        for fname in self.html_files:
+            content = (BASE_DIR / fname).read_text(encoding="utf-8")
+            self.assertNotIn('<footer class="site-footer">', content, f"Duplicated footer markup found in {fname}")
+            self.assertNotIn('<div class="footer-grid">', content, f"Duplicated footer grid found in {fname}")
 
 
 if __name__ == "__main__":
