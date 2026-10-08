@@ -165,6 +165,24 @@ class TestDDMMSSite(unittest.TestCase):
             self.assertNotIn('<footer class="site-footer">', content, f"Duplicated footer markup found in {fname}")
             self.assertNotIn('<div class="footer-grid">', content, f"Duplicated footer grid found in {fname}")
 
+    def test_deploy_workflow_actions_upgraded_to_node24(self):
+        wf = BASE_DIR / ".github" / "workflows" / "deploy.yml"
+        self.assertTrue(wf.exists(), "deploy.yml missing")
+        content = wf.read_text(encoding="utf-8")
+        self.assertIn("actions/checkout@v7", content)
+        self.assertIn("actions/setup-python@v7", content)
+        self.assertIn("stefanzweifel/git-auto-commit-action@v7", content)
+        self.assertIn("actions/configure-pages@v6", content)
+        self.assertIn("actions/upload-pages-artifact@v5", content)
+        self.assertIn("actions/deploy-pages@v5", content)
+        # Ensure deprecated Node 20 versions are no longer referenced
+        self.assertNotIn("actions/checkout@v4", content)
+        self.assertNotIn("actions/setup-python@v5", content)
+        self.assertNotIn("stefanzweifel/git-auto-commit-action@v5", content)
+        self.assertNotIn("actions/configure-pages@v5", content)
+        self.assertNotIn("actions/upload-pages-artifact@v3", content)
+        self.assertNotIn("actions/deploy-pages@v4", content)
+
 
 if __name__ == "__main__":
     unittest.main()
