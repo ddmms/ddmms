@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Code &amp; Software | Data Driven Materials and Molecular Science</title>
+  <meta name="description" content="Open-source scientific software, tools, and repositories developed by the DDMMS research group.">
+  <link rel="icon" type="image/svg+xml" href="assets/logos/ddmms.svg">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <header class="site-header" id="top">
+    <div class="container header-container">
+      <a href="index.html" class="brand-link" aria-label="DDMMS Home">
+        <img id="site-logo" class="brand-logo-img" src="assets/logos/ddmms_for_light_modes.svg" alt="Data Driven Materials and Molecular Science">
+        <div class="brand-text-block">
+          <span class="brand-title-main">DDMMS</span>
+          <span class="brand-title-sub">Data Driven Materials &amp; Molecular Science</span>
+        </div>
+      </a>
+
+      <nav class="nav-desktop" aria-label="Primary Navigation">
+        <ul class="nav-links">
+        <li class="nav-item"><a href="about.html">About</a></li>
+        <li class="nav-item"><a href="people.html">People</a></li>
+        <li class="nav-item"><a href="research.html">Research</a></li>
+        <li class="nav-item"><a href="publications.html">Publications</a></li>
+        <li class="nav-item"><a href="code.html" class="active">Code</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button type="button" class="theme-toggle-btn" aria-label="Toggle Dark/Light Mode" title="Toggle theme">
+          <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12.3 2a10 10 0 00-1.9 19.8 10 10 0 0011.6-11.6A10 10 0 0012.3 2zm-.3 18a8 8 0 110-16 8.3 8.3 0 011.7.2 8 8 0 00-1.9 7.8 8 8 0 007.8 8c-.5 0-1.1 0-1.6-.0z"/></svg>
+        </button>
+
+        <button type="button" class="mobile-toggle-btn" aria-label="Open Navigation Menu" aria-expanded="false" aria-controls="mobile-drawer">
+          <span class="hamburger-icon">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Drawer -->
+    <div class="mobile-drawer" id="mobile-drawer">
+      <ul class="mobile-nav-links">
+        <li class="mobile-nav-item"><a href="about.html"><span>About</span><span>→</span></a></li>
+        <li class="mobile-nav-item"><a href="people.html"><span>People</span><span>→</span></a></li>
+        <li class="mobile-nav-item"><a href="research.html"><span>Research</span><span>→</span></a></li>
+        <li class="mobile-nav-item"><a href="publications.html"><span>Publications</span><span>→</span></a></li>
+        <li class="mobile-nav-item"><a href="code.html" class="active"><span>Code</span><span>→</span></a></li>
+      </ul>
+      <div class="mobile-actions">
+        <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Theme Appearance</span>
+        <button type="button" class="theme-toggle-btn" aria-label="Toggle theme">
+          <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12.3 2a10 10 0 00-1.9 19.8 10 10 0 0011.6-11.6A10 10 0 0012.3 2zm-.3 18a8 8 0 110-16 8.3 8.3 0 011.7.2 8 8 0 00-1.9 7.8 8 8 0 007.8 8c-.5 0-1.1 0-1.6-.0z"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" style="padding-top: 3rem;">
+    <div class="container">
+      <div class="section-header" style="text-align: left; margin-bottom: 2.5rem;">
+        <span class="section-pill">Open Source Ecosystem</span>
+        <h1 class="section-title">Software, Codes &amp; Tools</h1>
+        <p class="section-subtitle">
+          Freely accessible, well-documented, and tested scientific tools supporting the atomistic modeling community.
+        </p>
+      </div>
+
+      <div class="code-grid" style="grid-template-columns: 1fr 1fr;">
+        <!-- janus-core -->
+        <article class="code-card">
+          <div class="code-card-header">
+            <div class="code-title-group">
+              <h3><span>🪐</span> janus-core</h3>
+            </div>
+            <span class="badge" style="background:#dbeafe; color:#1e40af;">Python / ASE / CLI</span>
+          </div>
+          <p class="code-desc">
+            Tools for materials modeling with machine-learned interatomic potentials (MACE, SevenNet, CHGNet, M3GNet). Provides a simple, robust CLI and Python API with full ASE calculator support.
+          </p>
+          <div class="code-install-box">
+            <code>pip install janus-core</code>
+            <button class="copy-snippet-btn" data-code="pip install janus-core" title="Copy command">📋</button>
+          </div>
+          <ul class="code-features-list">
+            <li>Single-point energies, forces, stress tensors, Hessians</li>
+            <li>Geometry optimization with FrechetCellFilter &amp; BFGS/FIRE</li>
+            <li>Molecular dynamics (NVE, NVT, NPT) with thermostat/barostat logging</li>
+            <li>Automated equation of state (EOS) and full 6x6 elasticity stiffness tensors ($C_{ij}$)</li>
+            <li>Phonon band structures &amp; DOS via Phonopy</li>
+            <li>Minimum Energy Pathways with Climbing-Image NEB</li>
+          </ul>
+          <div class="person-links">
+            <a href="https://github.com/stfc/janus-core" target="_blank" rel="noopener noreferrer" class="person-link-btn">GitHub &rarr;</a>
+            <a href="https://stfc.github.io/janus-core" target="_blank" rel="noopener noreferrer" class="person-link-btn">Docs</a>
+            <a href="https://pypi.org/project/janus-core/" target="_blank" rel="noopener noreferrer" class="person-link-btn">PyPI</a>
+          </div>
+        </article>
+
+        <!-- FTorch -->
+        <article class="code-card">
+          <div class="code-card-header">
+            <div class="code-title-group">
+              <h3><span>🔥</span> FTorch</h3>
+            </div>
+            <span class="badge" style="background:#fee2e2; color:#991b1b;">Fortran / C++ / PyTorch</span>
+          </div>
+          <p class="code-desc">
+            A library for direct coupling of PyTorch machine learning models into native Fortran applications. Developed to lower the technical barrier for incorporating modern AI/ML into large legacy numerical engines.
+          </p>
+          <div class="code-install-box">
+            <code>git clone https://github.com/stfc/FTorch.git</code>
+            <button class="copy-snippet-btn" data-code="git clone https://github.com/stfc/FTorch.git" title="Copy command">📋</button>
+          </div>
+          <ul class="code-features-list">
+            <li>Direct integration with LibTorch without Python runtime overhead</li>
+            <li>Preserves high computational throughput on HPC clusters</li>
+            <li>Published in the Journal of Open Source Software (JOSS)</li>
+            <li>Extensive tutorial suite and CMake build templates</li>
+          </ul>
+          <div class="person-links">
+            <a href="https://github.com/stfc/FTorch" target="_blank" rel="noopener noreferrer" class="person-link-btn">GitHub &rarr;</a>
+            <a href="https://doi.org/10.21105/joss.07602" target="_blank" rel="noopener noreferrer" class="person-link-btn">JOSS Paper</a>
+          </div>
+        </article>
+
+        <!-- DL_POLY 5 -->
+        <article class="code-card">
+          <div class="code-card-header">
+            <div class="code-title-group">
+              <h3><span>🌐</span> DL_POLY 5</h3>
+            </div>
+            <span class="badge" style="background:#e0e7ff; color:#3730a3;">Fortran / MPI / OpenMP</span>
+          </div>
+          <p class="code-desc">
+            STFC's flagship molecular dynamics simulation package designed for distributed memory supercomputers. Scales smoothly across thousands of cores for materials, biomolecules, and complex solutions.
+          </p>
+          <div class="code-install-box">
+            <code>cmake -B build -DENABLE_MPI=ON</code>
+            <button class="copy-snippet-btn" data-code="cmake -B build -DENABLE_MPI=ON" title="Copy command">📋</button>
+          </div>
+          <ul class="code-features-list">
+            <li>Massively parallel domain decomposition</li>
+            <li>On-the-fly transport coefficient and correlation calculation</li>
+            <li>Rigid body quaternions, bond constraints, and Ewald sums</li>
+          </ul>
+          <div class="person-links">
+            <a href="https://www.scd.stfc.ac.uk/Pages/DL_POLY.aspx" target="_blank" rel="noopener noreferrer" class="person-link-btn">STFC Portal &rarr;</a>
+            <a href="https://www.ccp5.ac.uk" target="_blank" rel="noopener noreferrer" class="person-link-btn">CCP5</a>
+          </div>
+        </article>
+
+        <!-- pubs -->
+        <article class="code-card">
+          <div class="code-card-header">
+            <div class="code-title-group">
+              <h3><span>📚</span> pubs</h3>
+            </div>
+            <span class="badge" style="background:#fef3c7; color:#92400e;">Python / ORCID / CI</span>
+          </div>
+          <p class="code-desc">
+            Automated publication aggregation engine using the ORCID Public API. Synchronizes research group bibliographies, deduplicates multi-author papers, and generates static searchable portals and feeds.
+          </p>
+          <div class="code-install-box">
+            <code>python pubs.py</code>
+            <button class="copy-snippet-btn" data-code="python pubs.py" title="Copy command">📋</button>
+          </div>
+          <ul class="code-features-list">
+            <li>Continuous weekly synchronization via GitHub Actions</li>
+            <li>Outputs interactive HTML, Markdown bibliography &amp; JSON feeds</li>
+            <li>Instantaneous offline execution with embedded local caching</li>
+          </ul>
+          <div class="person-links">
+            <a href="https://github.com/ddmms/pubs" target="_blank" rel="noopener noreferrer" class="person-link-btn">GitHub &rarr;</a>
+            <a href="publications.html" class="person-link-btn">View Live Portal</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <h4>Data Driven Materials and Molecular Science</h4>
+          <p>Accelerating atomistic discovery through physics-informed machine learning, multiscale molecular simulation, and open-source scientific workflows.</p>
+        </div>
+
+        <div class="footer-col">
+          <h5>Navigation</h5>
+          <ul class="footer-links">
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="people.html">People</a></li>
+            <li><a href="research.html">Research Themes</a></li>
+            <li><a href="publications.html">Publications</a></li>
+            <li><a href="code.html">Code & Software</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Affiliations</h5>
+          <ul class="footer-links">
+            <li><a href="https://www.scd.stfc.ac.uk" target="_blank" rel="noopener noreferrer">STFC SCD</a></li>
+            <li><a href="https://www.ukri.org" target="_blank" rel="noopener noreferrer">UKRI</a></li>
+            <li><a href="https://www.ccp5.ac.uk" target="_blank" rel="noopener noreferrer">CCP5</a></li>
+            <li><a href="https://sci-techdaresbury.com" target="_blank" rel="noopener noreferrer">Sci-Tech Daresbury</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Open Science</h5>
+          <ul class="footer-links">
+            <li><a href="https://github.com/ddmms" target="_blank" rel="noopener noreferrer">GitHub @ddmms</a></li>
+            <li><a href="https://github.com/stfc/janus-core" target="_blank" rel="noopener noreferrer">janus-core</a></li>
+            <li><a href="https://github.com/stfc/FTorch" target="_blank" rel="noopener noreferrer">FTorch</a></li>
+            <li><a href="publications.json" download="publications.json">publications.json</a></li>
+            <li><a href="PUBLICATIONS.md" target="_blank">PUBLICATIONS.md</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>&copy; 2026 Data Driven Materials and Molecular Science (DDMMS). Licensed under BSD-3-Clause.</span>
+        <span>Sci-Tech Daresbury &bull; Warrington &bull; United Kingdom</span>
+      </div>
+    </div>
+  </footer>
+  <div class="toast" id="toast" role="alert" aria-live="polite"></div>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

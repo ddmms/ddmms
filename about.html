@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About | Data Driven Materials and Molecular Science</title>
+  <meta name="description" content="Mission, background, and methodology of the Data Driven Materials and Molecular Science group at STFC Daresbury Laboratory, UKRI.">
+  <link rel="icon" type="image/svg+xml" href="assets/logos/ddmms.svg">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <header class="site-header" id="top">
+    <div class="container header-container">
+      <a href="index.html" class="brand-link" aria-label="DDMMS Home">
+        <img id="site-logo" class="brand-logo-img" src="assets/logos/ddmms_for_light_modes.svg" alt="Data Driven Materials and Molecular Science">
+        <div class="brand-text-block">
+          <span class="brand-title-main">DDMMS</span>
+          <span class="brand-title-sub">Data Driven Materials &amp; Molecular Science</span>
+        </div>
+      </a>
+
+      <nav class="nav-desktop" aria-label="Primary Navigation">
+        <ul class="nav-links">
+        <li class="nav-item"><a href="about.html" class="active">About</a></li>
+        <li class="nav-item"><a href="people.html">People</a></li>
+        <li class="nav-item"><a href="research.html">Research</a></li>
+        <li class="nav-item"><a href="publications.html">Publications</a></li>
+        <li class="nav-item"><a href="code.html">Code</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button type="button" class="theme-toggle-btn" aria-label="Toggle Dark/Light Mode" title="Toggle theme">
+          <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12.3 2a10 10 0 00-1.9 19.8 10 10 0 0011.6-11.6A10 10 0 0012.3 2zm-.3 18a8 8 0 110-16 8.3 8.3 0 011.7.2 8 8 0 00-1.9 7.8 8 8 0 007.8 8c-.5 0-1.1 0-1.6-.0z"/></svg>
+        </button>
+
+        <button type="button" class="mobile-toggle-btn" aria-label="Open Navigation Menu" aria-expanded="false" aria-controls="mobile-drawer">
+          <span class="hamburger-icon">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Drawer -->
+    <div class="mobile-drawer" id="mobile-drawer">
+      <ul class="mobile-nav-links">
+        <li class="mobile-nav-item"><a href="about.html" class="active"><span>About</span><span>→</span></a></li>
+        <li class="mobile-nav-item"><a href="people.html"><span>People</span><span>→</span></a></li>
+        <li class="mobile-nav-item"><a href="research.html"><span>Research</span><span>→</span></a></li>
+        <li class="mobile-nav-item"><a href="publications.html"><span>Publications</span><span>→</span></a></li>
+        <li class="mobile-nav-item"><a href="code.html"><span>Code</span><span>→</span></a></li>
+      </ul>
+      <div class="mobile-actions">
+        <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Theme Appearance</span>
+        <button type="button" class="theme-toggle-btn" aria-label="Toggle theme">
+          <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12.3 2a10 10 0 00-1.9 19.8 10 10 0 0011.6-11.6A10 10 0 0012.3 2zm-.3 18a8 8 0 110-16 8.3 8.3 0 011.7.2 8 8 0 00-1.9 7.8 8 8 0 007.8 8c-.5 0-1.1 0-1.6-.0z"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" style="padding-top: 3rem;">
+    <div class="container">
+      <div class="section-header" style="text-align: left; margin-bottom: 2.5rem;">
+        <span class="section-pill">About DDMMS</span>
+        <h1 class="section-title">Our Vision, Science &amp; Heritage</h1>
+        <p class="section-subtitle">
+          Uniting statistical physics, quantum mechanics, and artificial intelligence to explore matter at the atomic level.
+        </p>
+      </div>
+
+      <div class="about-grid">
+        <div class="about-text">
+          <h3>The Group Mission</h3>
+          <p>
+            The <strong>Data Driven Materials and Molecular Science (DDMMS)</strong> group is hosted within the Scientific Computing Department (SCD) of the Science and Technology Facilities Council (STFC), part of UK Research and Innovation (UKRI), based at Sci-Tech Daresbury.
+          </p>
+          <p>
+            Computational materials science has long faced a fundamental trade-off: high-accuracy quantum mechanical calculations (such as density functional theory and post-Hartree-Fock) are computationally expensive and limited to small systems, whereas classical empirical force fields scale to millions of atoms but suffer from fixed functional forms and limited chemical transferability.
+          </p>
+          <p>
+            Our core mission is to eliminate this trade-off by constructing robust, physics-informed machine-learned interatomic potentials (MLIPs), creating automated calculation workflows, and running extreme-scale simulations on high-performance computing facilities.
+          </p>
+
+          <h3 style="margin-top: 1.5rem;">Methodological Pillars</h3>
+          <p>
+            Our research combines rigorous physics with modern data science across three interconnected layers:
+          </p>
+          <div class="about-pillars" style="margin-top: 0.5rem;">
+            <div class="pillar-card">
+              <div class="pillar-icon">🧬</div>
+              <h4 class="pillar-title">1. Machine Learning &amp; AI</h4>
+              <p class="pillar-desc">Equivariant graph neural networks (MACE, SevenNet, CHGNet), polarizable foundation models, and active learning strategies.</p>
+            </div>
+            <div class="pillar-card">
+              <div class="pillar-icon">⚡</div>
+              <h4 class="pillar-title">2. Atomistic Simulation</h4>
+              <p class="pillar-desc">First-principles DFT, nonadiabatic dynamics with CP2K, and massive-parallel molecular dynamics with DL_POLY 5.</p>
+            </div>
+            <div class="pillar-card">
+              <div class="pillar-icon">🔬</div>
+              <h4 class="pillar-title">3. Materials Discovery</h4>
+              <p class="pillar-desc">Metal-organic frameworks (MOFs), molten salts for green energy, negative thermal expansion, and heterogeneous catalysts.</p>
+            </div>
+            <div class="pillar-card">
+              <div class="pillar-icon">🌐</div>
+              <h4 class="pillar-title">4. Open Science &amp; FAIR</h4>
+              <p class="pillar-desc">Modular, reproducible software pipelines published under permissive open-source licenses for the international community.</p>
+            </div>
+          </div>
+
+          <h3 style="margin-top: 2rem;">Collaborative Ecosystem</h3>
+          <p>
+            We work closely with the Collaborative Computational Project for computer simulation of condensed and materials phases (CCP5), the ISIS Neutron and Muon Source, the Diamond Light Source, and academic institutions worldwide.
+          </p>
+        </div>
+
+        <div class="about-sidebar">
+          <div class="news-box">
+            <h3 class="news-box-title"><span>🏛</span> Key Facts &amp; Infrastructure</h3>
+            <ul class="news-list">
+              <li class="news-item">
+                <div class="news-date">Institution</div>
+                <div class="news-headline">STFC Scientific Computing Department, UKRI.</div>
+              </li>
+              <li class="news-item">
+                <div class="news-date">Location</div>
+                <div class="news-headline">Sci-Tech Daresbury, Cheshire / Warrington, UK.</div>
+              </li>
+              <li class="news-item">
+                <div class="news-date">HPC Supercomputing</div>
+                <div class="news-headline">SCARF, ARCHER2 UK National Supercomputing Service, and Tier-2 centers.</div>
+              </li>
+              <li class="news-item">
+                <div class="news-date">Community Leadership</div>
+                <div class="news-headline">Active governance in CCP5, DL_POLY consortia, and atomistic machine learning standards.</div>
+              </li>
+            </ul>
+          </div>
+
+          <div class="news-box">
+            <h3 class="news-box-title"><span>🤝</span> Work With Us</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1rem;">
+              We welcome prospective PhD researchers, postdocs, and international scientific visitors interested in machine-learning interatomic potentials, molecular dynamics algorithms, and porous materials.
+            </p>
+            <a href="people.html#contact" class="btn btn-primary" style="width: 100%;">Contact the Group</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <h4>Data Driven Materials and Molecular Science</h4>
+          <p>Accelerating atomistic discovery through physics-informed machine learning, multiscale molecular simulation, and open-source scientific workflows.</p>
+        </div>
+
+        <div class="footer-col">
+          <h5>Navigation</h5>
+          <ul class="footer-links">
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="people.html">People</a></li>
+            <li><a href="research.html">Research Themes</a></li>
+            <li><a href="publications.html">Publications</a></li>
+            <li><a href="code.html">Code & Software</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Affiliations</h5>
+          <ul class="footer-links">
+            <li><a href="https://www.scd.stfc.ac.uk" target="_blank" rel="noopener noreferrer">STFC SCD</a></li>
+            <li><a href="https://www.ukri.org" target="_blank" rel="noopener noreferrer">UKRI</a></li>
+            <li><a href="https://www.ccp5.ac.uk" target="_blank" rel="noopener noreferrer">CCP5</a></li>
+            <li><a href="https://sci-techdaresbury.com" target="_blank" rel="noopener noreferrer">Sci-Tech Daresbury</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Open Science</h5>
+          <ul class="footer-links">
+            <li><a href="https://github.com/ddmms" target="_blank" rel="noopener noreferrer">GitHub @ddmms</a></li>
+            <li><a href="https://github.com/stfc/janus-core" target="_blank" rel="noopener noreferrer">janus-core</a></li>
+            <li><a href="https://github.com/stfc/FTorch" target="_blank" rel="noopener noreferrer">FTorch</a></li>
+            <li><a href="publications.json" download="publications.json">publications.json</a></li>
+            <li><a href="PUBLICATIONS.md" target="_blank">PUBLICATIONS.md</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>&copy; 2026 Data Driven Materials and Molecular Science (DDMMS). Licensed under BSD-3-Clause.</span>
+        <span>Sci-Tech Daresbury &bull; Warrington &bull; United Kingdom</span>
+      </div>
+    </div>
+  </footer>
+  <div class="toast" id="toast" role="alert" aria-live="polite"></div>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

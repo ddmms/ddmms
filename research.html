@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Research | Data Driven Materials and Molecular Science</title>
+  <meta name="description" content="Research areas of the Data Driven Materials and Molecular Science group: MLIPs, MOFs, molten salts, DL_POLY 5, and automated workflows.">
+  <link rel="icon" type="image/svg+xml" href="assets/logos/ddmms.svg">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <header class="site-header" id="top">
+    <div class="container header-container">
+      <a href="index.html" class="brand-link" aria-label="DDMMS Home">
+        <img id="site-logo" class="brand-logo-img" src="assets/logos/ddmms_for_light_modes.svg" alt="Data Driven Materials and Molecular Science">
+        <div class="brand-text-block">
+          <span class="brand-title-main">DDMMS</span>
+          <span class="brand-title-sub">Data Driven Materials &amp; Molecular Science</span>
+        </div>
+      </a>
+
+      <nav class="nav-desktop" aria-label="Primary Navigation">
+        <ul class="nav-links">
+        <li class="nav-item"><a href="about.html">About</a></li>
+        <li class="nav-item"><a href="people.html">People</a></li>
+        <li class="nav-item"><a href="research.html" class="active">Research</a></li>
+        <li class="nav-item"><a href="publications.html">Publications</a></li>
+        <li class="nav-item"><a href="code.html">Code</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button type="button" class="theme-toggle-btn" aria-label="Toggle Dark/Light Mode" title="Toggle theme">
+          <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12.3 2a10 10 0 00-1.9 19.8 10 10 0 0011.6-11.6A10 10 0 0012.3 2zm-.3 18a8 8 0 110-16 8.3 8.3 0 011.7.2 8 8 0 00-1.9 7.8 8 8 0 007.8 8c-.5 0-1.1 0-1.6-.0z"/></svg>
+        </button>
+
+        <button type="button" class="mobile-toggle-btn" aria-label="Open Navigation Menu" aria-expanded="false" aria-controls="mobile-drawer">
+          <span class="hamburger-icon">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Drawer -->
+    <div class="mobile-drawer" id="mobile-drawer">
+      <ul class="mobile-nav-links">
+        <li class="mobile-nav-item"><a href="about.html"><span>About</span><span>→</span></a></li>
+        <li class="mobile-nav-item"><a href="people.html"><span>People</span><span>→</span></a></li>
+        <li class="mobile-nav-item"><a href="research.html" class="active"><span>Research</span><span>→</span></a></li>
+        <li class="mobile-nav-item"><a href="publications.html"><span>Publications</span><span>→</span></a></li>
+        <li class="mobile-nav-item"><a href="code.html"><span>Code</span><span>→</span></a></li>
+      </ul>
+      <div class="mobile-actions">
+        <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Theme Appearance</span>
+        <button type="button" class="theme-toggle-btn" aria-label="Toggle theme">
+          <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12.3 2a10 10 0 00-1.9 19.8 10 10 0 0011.6-11.6A10 10 0 0012.3 2zm-.3 18a8 8 0 110-16 8.3 8.3 0 011.7.2 8 8 0 00-1.9 7.8 8 8 0 007.8 8c-.5 0-1.1 0-1.6-.0z"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" style="padding-top: 3rem;">
+    <div class="container">
+      <div class="section-header" style="text-align: left; margin-bottom: 2.5rem;">
+        <span class="section-pill">Scientific Portfolio</span>
+        <h1 class="section-title">Research Themes &amp; Programs</h1>
+        <p class="section-subtitle">
+          From quantum-level potential energy surfaces to supercomputing molecular dynamics and macroscopic thermal transport.
+        </p>
+      </div>
+
+      <div class="research-grid" style="grid-template-columns: 1fr; gap: 2.5rem;">
+        <!-- Theme 1 -->
+        <article class="research-card">
+          <div class="research-card-top">
+            <span class="research-tag">Theme 1 &bull; Physics-Informed AI</span>
+            <h2 class="research-card-title">Foundation Machine-Learned Interatomic Potentials (MLIPs)</h2>
+            <p class="research-card-desc">
+              Accurate modeling of chemical reactivity, phases transitions, and defect dynamics requires potential energy surfaces that respect rotational, translational, and permutational invariances. We develop and extend equivariant graph neural network potentials such as MACE, SevenNet, and CHGNet.
+            </p>
+            <p class="research-card-desc" style="margin-top: 0.5rem;">
+              Key research topics include the incorporation of polarisable long-range electrostatics (MACE-POLAR), optimal active-learning criteria that balance coverage and model uncertainty, and cross-learning strategies connecting molecular, surface, and inorganic solid phases.
+            </p>
+          </div>
+          <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+            <a href="publications.html?search=MLIP" class="btn btn-outline">Explore Related Publications &rarr;</a>
+          </div>
+        </article>
+
+        <!-- Theme 2 -->
+        <article class="research-card">
+          <div class="research-card-top">
+            <span class="research-tag">Theme 2 &bull; Porous Materials</span>
+            <h2 class="research-card-title">Metal-Organic Frameworks &amp; Nanoporous Networks</h2>
+            <p class="research-card-desc">
+              Metal-Organic Frameworks (MOFs) exhibit remarkable chemical modularity, ultra-high surface areas, and tunable mechanical properties such as negative thermal expansion (NTE). We curate the uMOF benchmark database and build dedicated ML potentials that enable high-throughput phonon calculations, thermodynamic stability screening, and gas adsorption modeling.
+            </p>
+          </div>
+          <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+            <a href="publications.html?search=MOF" class="btn btn-outline">Explore Related Publications &rarr;</a>
+          </div>
+        </article>
+
+        <!-- Theme 3 -->
+        <article class="research-card">
+          <div class="research-card-top">
+            <span class="research-tag">Theme 3 &bull; Liquid State &amp; Clean Energy</span>
+            <h2 class="research-card-title">Complex Fluids, Molten Salts &amp; Transport Phenomena</h2>
+            <p class="research-card-desc">
+              Molten salts serve as critical thermal storage media and coolants in next-generation nuclear and concentrated solar energy systems. We perform molecular dynamics simulations to quantify self-diffusion, ionic conductivity, shear viscosity, and thermal conductivity from first principles, testing fundamental theoretical bounds and experimental calibrations.
+            </p>
+          </div>
+          <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+            <a href="publications.html?search=salt" class="btn btn-outline">Explore Related Publications &rarr;</a>
+          </div>
+        </article>
+
+        <!-- Theme 4 -->
+        <article class="research-card">
+          <div class="research-card-top">
+            <span class="research-tag">Theme 4 &bull; Supercomputing</span>
+            <h2 class="research-card-title">Massively Parallel Atomistic MD: DL_POLY 5</h2>
+            <p class="research-card-desc">
+              STFC DL_POLY 5 is engineered for massive parallelism on distributed-memory supercomputers and heterogeneous accelerators. We lead core enhancements in spatial domain decomposition, rigid-body quaternion dynamics, on-the-fly physical observable calculation, and GPU offloading to model complex condensed systems comprising tens of millions of atoms.
+            </p>
+          </div>
+          <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+            <a href="code.html" class="btn btn-outline">View DL_POLY 5 Software Details &rarr;</a>
+          </div>
+        </article>
+
+        <!-- Theme 5 -->
+        <article class="research-card">
+          <div class="research-card-top">
+            <span class="research-tag">Theme 5 &bull; Autonomous Workflows</span>
+            <h2 class="research-card-title">High-Throughput Simulation Workflows with janus-core</h2>
+            <p class="research-card-desc">
+              Bridging the gap between interatomic potentials and scientific discovery requires seamless automation. With janus-core, we provide unified pipelines for geometry relaxation (BFGS, FIRE, FrechetCellFilter), equation of state fitting (Birch-Murnaghan, Murnaghan), full 6x6 elasticity stiffness tensors ($C_{ij}$), and climbing image nudged elastic band (CI-NEB) minimum energy pathways.
+            </p>
+          </div>
+          <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+            <a href="https://stfc.github.io/janus-core" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Read janus-core Documentation &rarr;</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <h4>Data Driven Materials and Molecular Science</h4>
+          <p>Accelerating atomistic discovery through physics-informed machine learning, multiscale molecular simulation, and open-source scientific workflows.</p>
+        </div>
+
+        <div class="footer-col">
+          <h5>Navigation</h5>
+          <ul class="footer-links">
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="people.html">People</a></li>
+            <li><a href="research.html">Research Themes</a></li>
+            <li><a href="publications.html">Publications</a></li>
+            <li><a href="code.html">Code & Software</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Affiliations</h5>
+          <ul class="footer-links">
+            <li><a href="https://www.scd.stfc.ac.uk" target="_blank" rel="noopener noreferrer">STFC SCD</a></li>
+            <li><a href="https://www.ukri.org" target="_blank" rel="noopener noreferrer">UKRI</a></li>
+            <li><a href="https://www.ccp5.ac.uk" target="_blank" rel="noopener noreferrer">CCP5</a></li>
+            <li><a href="https://sci-techdaresbury.com" target="_blank" rel="noopener noreferrer">Sci-Tech Daresbury</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Open Science</h5>
+          <ul class="footer-links">
+            <li><a href="https://github.com/ddmms" target="_blank" rel="noopener noreferrer">GitHub @ddmms</a></li>
+            <li><a href="https://github.com/stfc/janus-core" target="_blank" rel="noopener noreferrer">janus-core</a></li>
+            <li><a href="https://github.com/stfc/FTorch" target="_blank" rel="noopener noreferrer">FTorch</a></li>
+            <li><a href="publications.json" download="publications.json">publications.json</a></li>
+            <li><a href="PUBLICATIONS.md" target="_blank">PUBLICATIONS.md</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>&copy; 2026 Data Driven Materials and Molecular Science (DDMMS). Licensed under BSD-3-Clause.</span>
+        <span>Sci-Tech Daresbury &bull; Warrington &bull; United Kingdom</span>
+      </div>
+    </div>
+  </footer>
+  <div class="toast" id="toast" role="alert" aria-live="polite"></div>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
