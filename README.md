@@ -11,7 +11,10 @@ Welcome to the official website repository for the **Data Driven Materials and M
   - **People**: Detailed researcher profiles (Dr. Alin Marin Elena, Elliott Kasoar, Dr. Junwen Yin), research tags, ORCID IDs, and open positions.
   - **Research**: In-depth coverage of core themes (Foundation MLIPs, Metal-Organic Frameworks, Complex Fluids & Molten Salts, DL_POLY 5 Massively Parallel MD, and Automated Atomistic Workflows).
   - **Publications**: Full interactive catalog integrated from the group's ORCID automated aggregation pipeline (`../pubs`), featuring live text search, author filtering, year filtering, sorting, BibTeX generation, citation copying, and DOI links.
-  - **Code**: Showcase of open-source packages (`janus-core`, `FTorch`, `DL_POLY 5`, `uMOF`, `pubs`) with quick copy installation commands and links to repositories.
+  - **Code**: Showcase of flagship open-source scientific tools developed by the group: `janus-core`, `aiida-mlip`, `ml-peg`, and `goldilocks`, with quick copy installation commands and links to repositories.
+- **Dedicated Multi-Page Architecture**:
+  - Independent, dedicated pages for each section ([`about.html`](about.html), [`people.html`](people.html), [`research.html`](research.html), [`publications.html`](publications.html), [`code.html`](code.html)) rather than a single linear page, ensuring optimal navigation, deep-linking, and fast loading.
+  - Landing page ([`index.html`](index.html)) provides a focused home overview with quick portal gateways to each section.
 - **Adaptive Dark / Light Themes**:
   - Dynamically toggles logos between `ddmms_for_light_modes` and `ddmms_for_dark_modes` for pixel-perfect contrast.
   - Persists preference via `localStorage` and respects system `prefers-color-scheme`.
@@ -29,12 +32,12 @@ Welcome to the official website repository for the **Data Driven Materials and M
 
 ```text
 .
-├── index.html              # Responsive homepage with all sections, hero & live widgets
-├── about.html              # Dedicated About page
-├── people.html             # Dedicated People & team page
-├── research.html           # Dedicated Research themes page
-├── publications.html       # Dedicated Publications portal
-├── code.html               # Dedicated Software & tools page
+├── index.html              # Dedicated Home landing page with group highlights & gateways
+├── about.html              # Dedicated About page (mission, history, pillars)
+├── people.html             # Dedicated People & team page (profiles, ORCID, contacts)
+├── research.html           # Dedicated Research themes page (scientific programs)
+├── publications.html       # Dedicated Publications portal (filters, search, BibTeX)
+├── code.html               # Dedicated Software page (janus-core, aiida-mlip, ml-peg, goldilocks)
 ├── build_site.py           # Site generator synchronizing shared navigation & data
 ├── publications.json       # Canonical publications dataset (ORCID aggregated)
 ├── PUBLICATIONS.md          # Generated Markdown bibliography

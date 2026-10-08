@@ -109,40 +109,15 @@
     });
   }
 
-  // --- Active Nav Link Highlight on Scroll ---
-  const sections = document.querySelectorAll('section[id]');
-  const desktopNavLinks = document.querySelectorAll('.nav-desktop .nav-item a');
-  const mobileNavLinks = document.querySelectorAll('.mobile-nav-item a');
-
-  if (sections.length > 0 && ('IntersectionObserver' in window)) {
-    const observer = new IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const id = entry.target.getAttribute('id');
-            const updateLinks = links => {
-              links.forEach(link => {
-                const href = link.getAttribute('href');
-                if (href === `#${id}` || href.endsWith(`#${id}`)) {
-                  link.classList.add('active');
-                } else if (href.startsWith('#')) {
-                  link.classList.remove('active');
-                }
-              });
-            };
-            updateLinks(desktopNavLinks);
-            updateLinks(mobileNavLinks);
-          }
-        });
-      },
-      {
-        rootMargin: '-20% 0px -70% 0px',
-        threshold: 0
-      }
-    );
-
-    sections.forEach(sec => observer.observe(sec));
-  }
+  // --- Active Nav Link based on URL path ---
+  const currentFilename = window.location.pathname.split('/').pop() || 'index.html';
+  const navLinks = document.querySelectorAll('.nav-desktop .nav-item a, .mobile-nav-item a');
+  navLinks.forEach(link => {
+    const href = link.getAttribute('href');
+    if (href === currentFilename || (currentFilename === '' && href === 'index.html')) {
+      link.classList.add('active');
+    }
+  });
 
   // --- Toast Notification Utility ---
   window.showToast = function (message) {

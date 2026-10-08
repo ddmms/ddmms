@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Research | Data Driven Materials and Molecular Science</title>
-  <meta name="description" content="Research areas of the Data Driven Materials and Molecular Science group: MLIPs, MOFs, molten salts, DL_POLY 5, and automated workflows.">
+  <meta name="description" content="Research areas of the Data Driven Materials and Molecular Science group: MLIPs, MOFs, molten salts, and automated workflows.">
   <link rel="icon" type="image/svg+xml" href="assets/logos/ddmms.svg">
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
@@ -44,7 +44,7 @@
       </div>
     </div>
 
-    <!-- Mobile Drawer -->
+    <!-- Mobile Navigation Drawer -->
     <div class="mobile-drawer" id="mobile-drawer">
       <ul class="mobile-nav-links">
         <li class="mobile-nav-item"><a href="about.html"><span>About</span><span>→</span></a></li>
@@ -79,7 +79,7 @@
             <span class="research-tag">Theme 1 &bull; Physics-Informed AI</span>
             <h2 class="research-card-title">Foundation Machine-Learned Interatomic Potentials (MLIPs)</h2>
             <p class="research-card-desc">
-              Accurate modeling of chemical reactivity, phases transitions, and defect dynamics requires potential energy surfaces that respect rotational, translational, and permutational invariances. We develop and extend equivariant graph neural network potentials such as MACE, SevenNet, and CHGNet.
+              Accurate modeling of chemical reactivity, phase transitions, and defect dynamics requires potential energy surfaces that respect rotational, translational, and permutational invariances. We develop and extend equivariant graph neural network potentials such as MACE, SevenNet, and CHGNet.
             </p>
             <p class="research-card-desc" style="margin-top: 0.5rem;">
               Key research topics include the incorporation of polarisable long-range electrostatics (MACE-POLAR), optimal active-learning criteria that balance coverage and model uncertainty, and cross-learning strategies connecting molecular, surface, and inorganic solid phases.
@@ -121,28 +121,28 @@
         <!-- Theme 4 -->
         <article class="research-card">
           <div class="research-card-top">
-            <span class="research-tag">Theme 4 &bull; Supercomputing</span>
-            <h2 class="research-card-title">Massively Parallel Atomistic MD: DL_POLY 5</h2>
+            <span class="research-tag">Theme 4 &bull; Autonomous Workflows</span>
+            <h2 class="research-card-title">High-Throughput Simulation Workflows with janus-core &amp; aiida-mlip</h2>
             <p class="research-card-desc">
-              STFC DL_POLY 5 is engineered for massive parallelism on distributed-memory supercomputers and heterogeneous accelerators. We lead core enhancements in spatial domain decomposition, rigid-body quaternion dynamics, on-the-fly physical observable calculation, and GPU offloading to model complex condensed systems comprising tens of millions of atoms.
+              Bridging the gap between interatomic potentials and scientific discovery requires seamless automation. With janus-core and the aiida-mlip plugin, we provide unified pipelines with full data provenance for geometry relaxation (BFGS, FIRE, FrechetCellFilter), equation of state fitting, full 6x6 elasticity stiffness tensors ($C_{ij}$), and climbing image nudged elastic band (CI-NEB) minimum energy pathways.
             </p>
           </div>
           <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
-            <a href="code.html" class="btn btn-outline">View DL_POLY 5 Software Details &rarr;</a>
+            <a href="code.html" class="btn btn-primary">Read Software Documentation &rarr;</a>
           </div>
         </article>
 
         <!-- Theme 5 -->
         <article class="research-card">
           <div class="research-card-top">
-            <span class="research-tag">Theme 5 &bull; Autonomous Workflows</span>
-            <h2 class="research-card-title">High-Throughput Simulation Workflows with janus-core</h2>
+            <span class="research-tag">Theme 5 &bull; Benchmarks &amp; DFT Optimisation</span>
+            <h2 class="research-card-title">Benchmarking &amp; DFT Acceleration (ml-peg &amp; goldilocks)</h2>
             <p class="research-card-desc">
-              Bridging the gap between interatomic potentials and scientific discovery requires seamless automation. With janus-core, we provide unified pipelines for geometry relaxation (BFGS, FIRE, FrechetCellFilter), equation of state fitting (Birch-Murnaghan, Murnaghan), full 6x6 elasticity stiffness tensors ($C_{ij}$), and climbing image nudged elastic band (CI-NEB) minimum energy pathways.
+              To establish trust in computational predictions, we engineer rigorous community benchmarks and input optimizers. The ML-PEG framework evaluates MLIP physical accuracy across diverse chemical systems, while Goldilocks automates optimal k-point mesh sampling for Quantum ESPRESSO single-point calculations.
             </p>
           </div>
           <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
-            <a href="https://stfc.github.io/janus-core" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Read janus-core Documentation &rarr;</a>
+            <a href="code.html" class="btn btn-outline">Explore ml-peg &amp; goldilocks &rarr;</a>
           </div>
         </article>
       </div>
@@ -164,7 +164,7 @@
             <li><a href="people.html">People</a></li>
             <li><a href="research.html">Research Themes</a></li>
             <li><a href="publications.html">Publications</a></li>
-            <li><a href="code.html">Code & Software</a></li>
+            <li><a href="code.html">Code &amp; Software</a></li>
           </ul>
         </div>
 
@@ -179,11 +179,12 @@
         </div>
 
         <div class="footer-col">
-          <h5>Open Science</h5>
+          <h5>Software &amp; Feeds</h5>
           <ul class="footer-links">
-            <li><a href="https://github.com/ddmms" target="_blank" rel="noopener noreferrer">GitHub @ddmms</a></li>
             <li><a href="https://github.com/stfc/janus-core" target="_blank" rel="noopener noreferrer">janus-core</a></li>
-            <li><a href="https://github.com/stfc/FTorch" target="_blank" rel="noopener noreferrer">FTorch</a></li>
+            <li><a href="https://github.com/stfc/aiida-mlip" target="_blank" rel="noopener noreferrer">aiida-mlip</a></li>
+            <li><a href="https://github.com/ddmms/ml-peg" target="_blank" rel="noopener noreferrer">ml-peg</a></li>
+            <li><a href="https://github.com/stfc/goldilocks" target="_blank" rel="noopener noreferrer">goldilocks</a></li>
             <li><a href="publications.json" download="publications.json">publications.json</a></li>
             <li><a href="PUBLICATIONS.md" target="_blank">PUBLICATIONS.md</a></li>
           </ul>

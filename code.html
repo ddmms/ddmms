@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Code &amp; Software | Data Driven Materials and Molecular Science</title>
-  <meta name="description" content="Open-source scientific software, tools, and repositories developed by the DDMMS research group.">
+  <meta name="description" content="Open-source scientific software packages developed by DDMMS: janus-core, aiida-mlip, ml-peg, and goldilocks.">
   <link rel="icon" type="image/svg+xml" href="assets/logos/ddmms.svg">
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
@@ -44,7 +44,7 @@
       </div>
     </div>
 
-    <!-- Mobile Drawer -->
+    <!-- Mobile Navigation Drawer -->
     <div class="mobile-drawer" id="mobile-drawer">
       <ul class="mobile-nav-links">
         <li class="mobile-nav-item"><a href="about.html"><span>About</span><span>→</span></a></li>
@@ -65,14 +65,14 @@
   <main id="main-content" style="padding-top: 3rem;">
     <div class="container">
       <div class="section-header" style="text-align: left; margin-bottom: 2.5rem;">
-        <span class="section-pill">Open Source Ecosystem</span>
-        <h1 class="section-title">Software, Codes &amp; Tools</h1>
+        <span class="section-pill">Software Suite</span>
+        <h1 class="section-title">Open-Source Scientific Codes &amp; Tools</h1>
         <p class="section-subtitle">
-          Freely accessible, well-documented, and tested scientific tools supporting the atomistic modeling community.
+          Community-driven, well-tested, and reproducible scientific tools developed by the Data Driven Materials and Molecular Science group.
         </p>
       </div>
 
-      <div class="code-grid" style="grid-template-columns: 1fr 1fr;">
+      <div class="code-grid" style="grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));">
         <!-- janus-core -->
         <article class="code-card">
           <div class="code-card-header">
@@ -89,96 +89,100 @@
             <button class="copy-snippet-btn" data-code="pip install janus-core" title="Copy command">📋</button>
           </div>
           <ul class="code-features-list">
-            <li>Single-point energies, forces, stress tensors, Hessians</li>
-            <li>Geometry optimization with FrechetCellFilter &amp; BFGS/FIRE</li>
-            <li>Molecular dynamics (NVE, NVT, NPT) with thermostat/barostat logging</li>
+            <li>Single-point energies, forces, stress tensors, and Hessians</li>
+            <li>Geometry optimization with FrechetCellFilter and BFGS/FIRE</li>
+            <li>Molecular dynamics in NVE, NVT, and NPT ensembles with thermostat/barostat logging</li>
             <li>Automated equation of state (EOS) and full 6x6 elasticity stiffness tensors ($C_{ij}$)</li>
-            <li>Phonon band structures &amp; DOS via Phonopy</li>
+            <li>Phonon band structures &amp; DOS via Phonopy integration</li>
             <li>Minimum Energy Pathways with Climbing-Image NEB</li>
           </ul>
           <div class="person-links">
-            <a href="https://github.com/stfc/janus-core" target="_blank" rel="noopener noreferrer" class="person-link-btn">GitHub &rarr;</a>
-            <a href="https://stfc.github.io/janus-core" target="_blank" rel="noopener noreferrer" class="person-link-btn">Docs</a>
+            <a href="https://github.com/stfc/janus-core" target="_blank" rel="noopener noreferrer" class="person-link-btn">GitHub Repository &rarr;</a>
+            <a href="https://stfc.github.io/janus-core" target="_blank" rel="noopener noreferrer" class="person-link-btn">Documentation</a>
             <a href="https://pypi.org/project/janus-core/" target="_blank" rel="noopener noreferrer" class="person-link-btn">PyPI</a>
           </div>
         </article>
 
-        <!-- FTorch -->
+        <!-- aiida-mlip -->
         <article class="code-card">
           <div class="code-card-header">
             <div class="code-title-group">
-              <h3><span>🔥</span> FTorch</h3>
+              <h3><span>🔄</span> aiida-mlip</h3>
             </div>
-            <span class="badge" style="background:#fee2e2; color:#991b1b;">Fortran / C++ / PyTorch</span>
+            <span class="badge" style="background:#fef3c7; color:#92400e;">AiiDA / Workflows</span>
           </div>
           <p class="code-desc">
-            A library for direct coupling of PyTorch machine learning models into native Fortran applications. Developed to lower the technical barrier for incorporating modern AI/ML into large legacy numerical engines.
+            An open-source AiiDA plugin integrating the janus-core library to manage automated workflows for machine learning interatomic potentials (MLIPs) with complete data provenance.
           </p>
           <div class="code-install-box">
-            <code>git clone https://github.com/stfc/FTorch.git</code>
-            <button class="copy-snippet-btn" data-code="git clone https://github.com/stfc/FTorch.git" title="Copy command">📋</button>
+            <code>pip install aiida-mlip</code>
+            <button class="copy-snippet-btn" data-code="pip install aiida-mlip" title="Copy command">📋</button>
           </div>
           <ul class="code-features-list">
-            <li>Direct integration with LibTorch without Python runtime overhead</li>
-            <li>Preserves high computational throughput on HPC clusters</li>
-            <li>Published in the Journal of Open Source Software (JOSS)</li>
-            <li>Extensive tutorial suite and CMake build templates</li>
+            <li>Full provenance graphs recording every calculation input, output, and potential parameter</li>
+            <li>Automated single-point, geometry optimization, and molecular dynamics workchains</li>
+            <li>Scalable execution across local workstations and remote HPC clusters</li>
+            <li>Integrates directly with the wider AiiDA simulation and materials informatics ecosystem</li>
           </ul>
           <div class="person-links">
-            <a href="https://github.com/stfc/FTorch" target="_blank" rel="noopener noreferrer" class="person-link-btn">GitHub &rarr;</a>
-            <a href="https://doi.org/10.21105/joss.07602" target="_blank" rel="noopener noreferrer" class="person-link-btn">JOSS Paper</a>
+            <a href="https://github.com/stfc/aiida-mlip" target="_blank" rel="noopener noreferrer" class="person-link-btn">GitHub Repository &rarr;</a>
+            <a href="https://stfc.github.io/aiida-mlip" target="_blank" rel="noopener noreferrer" class="person-link-btn">Documentation</a>
+            <a href="https://pypi.org/project/aiida-mlip/" target="_blank" rel="noopener noreferrer" class="person-link-btn">PyPI</a>
           </div>
         </article>
 
-        <!-- DL_POLY 5 -->
+        <!-- ml-peg -->
         <article class="code-card">
           <div class="code-card-header">
             <div class="code-title-group">
-              <h3><span>🌐</span> DL_POLY 5</h3>
+              <h3><span>📊</span> ml-peg</h3>
             </div>
-            <span class="badge" style="background:#e0e7ff; color:#3730a3;">Fortran / MPI / OpenMP</span>
+            <span class="badge" style="background:#e0e7ff; color:#3730a3;">Benchmark / Guide</span>
           </div>
           <p class="code-desc">
-            STFC's flagship molecular dynamics simulation package designed for distributed memory supercomputers. Scales smoothly across thousands of cores for materials, biomolecules, and complex solutions.
+            Machine Learning Performance and Extrapolation Guide. A comprehensive benchmarking framework and interactive performance guide to evaluate MLIPs across diverse chemical systems, extrapolations, and physical observables.
           </p>
           <div class="code-install-box">
-            <code>cmake -B build -DENABLE_MPI=ON</code>
-            <button class="copy-snippet-btn" data-code="cmake -B build -DENABLE_MPI=ON" title="Copy command">📋</button>
+            <code>git clone https://github.com/ddmms/ml-peg.git</code>
+            <button class="copy-snippet-btn" data-code="git clone https://github.com/ddmms/ml-peg.git" title="Copy command">📋</button>
           </div>
           <ul class="code-features-list">
-            <li>Massively parallel domain decomposition</li>
-            <li>On-the-fly transport coefficient and correlation calculation</li>
-            <li>Rigid body quaternions, bond constraints, and Ewald sums</li>
+            <li>Evaluates model performance beyond basic force/energy errors to actual physical stability</li>
+            <li>Tests out-of-distribution generalization, extrapolation limits, and uncertainty quantification</li>
+            <li>Interactive web dashboard for comparing foundation models and dataset baselines</li>
+            <li>Open-source protocols for standardized community potential verification</li>
           </ul>
           <div class="person-links">
-            <a href="https://www.scd.stfc.ac.uk/Pages/DL_POLY.aspx" target="_blank" rel="noopener noreferrer" class="person-link-btn">STFC Portal &rarr;</a>
-            <a href="https://www.ccp5.ac.uk" target="_blank" rel="noopener noreferrer" class="person-link-btn">CCP5</a>
+            <a href="https://github.com/ddmms/ml-peg" target="_blank" rel="noopener noreferrer" class="person-link-btn">GitHub Repository &rarr;</a>
+            <a href="https://ml-peg.stfc.ac.uk" target="_blank" rel="noopener noreferrer" class="person-link-btn">Live Platform &rarr;</a>
           </div>
         </article>
 
-        <!-- pubs -->
+        <!-- goldilocks -->
         <article class="code-card">
           <div class="code-card-header">
             <div class="code-title-group">
-              <h3><span>📚</span> pubs</h3>
+              <h3><span>🐻</span> goldilocks</h3>
             </div>
-            <span class="badge" style="background:#fef3c7; color:#92400e;">Python / ORCID / CI</span>
+            <span class="badge" style="background:#ecfdf5; color:#065f46;">Python / Streamlit</span>
           </div>
           <p class="code-desc">
-            Automated publication aggregation engine using the ORCID Public API. Synchronizes research group bibliographies, deduplicates multi-author papers, and generates static searchable portals and feeds.
+            A web application and library for automated generation of input files with optimised k-point meshes for Quantum ESPRESSO self-consistent field (SCF) single-point total energy calculations.
           </p>
           <div class="code-install-box">
-            <code>python pubs.py</code>
-            <button class="copy-snippet-btn" data-code="python pubs.py" title="Copy command">📋</button>
+            <code>pip install goldilocks</code>
+            <button class="copy-snippet-btn" data-code="pip install goldilocks" title="Copy command">📋</button>
           </div>
           <ul class="code-features-list">
-            <li>Continuous weekly synchronization via GitHub Actions</li>
-            <li>Outputs interactive HTML, Markdown bibliography &amp; JSON feeds</li>
-            <li>Instantaneous offline execution with embedded local caching</li>
+            <li>Automatic determination of optimised k-point sampling balancing accuracy and compute time</li>
+            <li>Interactive web interface deployed on Streamlit Community Cloud</li>
+            <li>Published in RSC <em>Digital Discovery</em> (2026, DOI: 10.1039/d5dd00565e)</li>
+            <li>Command-line interface and Python module for automated high-throughput DFT workflows</li>
           </ul>
           <div class="person-links">
-            <a href="https://github.com/ddmms/pubs" target="_blank" rel="noopener noreferrer" class="person-link-btn">GitHub &rarr;</a>
-            <a href="publications.html" class="person-link-btn">View Live Portal</a>
+            <a href="https://github.com/stfc/goldilocks" target="_blank" rel="noopener noreferrer" class="person-link-btn">GitHub Repository &rarr;</a>
+            <a href="https://goldilocks.streamlit.app" target="_blank" rel="noopener noreferrer" class="person-link-btn">Streamlit App &rarr;</a>
+            <a href="https://doi.org/10.1039/d5dd00565e" target="_blank" rel="noopener noreferrer" class="person-link-btn">Paper (Digital Discovery)</a>
           </div>
         </article>
       </div>
@@ -200,7 +204,7 @@
             <li><a href="people.html">People</a></li>
             <li><a href="research.html">Research Themes</a></li>
             <li><a href="publications.html">Publications</a></li>
-            <li><a href="code.html">Code & Software</a></li>
+            <li><a href="code.html">Code &amp; Software</a></li>
           </ul>
         </div>
 
@@ -215,11 +219,12 @@
         </div>
 
         <div class="footer-col">
-          <h5>Open Science</h5>
+          <h5>Software &amp; Feeds</h5>
           <ul class="footer-links">
-            <li><a href="https://github.com/ddmms" target="_blank" rel="noopener noreferrer">GitHub @ddmms</a></li>
             <li><a href="https://github.com/stfc/janus-core" target="_blank" rel="noopener noreferrer">janus-core</a></li>
-            <li><a href="https://github.com/stfc/FTorch" target="_blank" rel="noopener noreferrer">FTorch</a></li>
+            <li><a href="https://github.com/stfc/aiida-mlip" target="_blank" rel="noopener noreferrer">aiida-mlip</a></li>
+            <li><a href="https://github.com/ddmms/ml-peg" target="_blank" rel="noopener noreferrer">ml-peg</a></li>
+            <li><a href="https://github.com/stfc/goldilocks" target="_blank" rel="noopener noreferrer">goldilocks</a></li>
             <li><a href="publications.json" download="publications.json">publications.json</a></li>
             <li><a href="PUBLICATIONS.md" target="_blank">PUBLICATIONS.md</a></li>
           </ul>

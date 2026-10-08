@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Site generator for Data Driven Materials and Molecular Science (DDMMS) website.
 
-Generates responsive, accessible HTML pages with shared navigation,
+Generates responsive, accessible separate HTML pages with shared navigation,
 light/dark theme toggle, logo integration, and publications system.
 """
 
@@ -14,6 +14,7 @@ BASE_DIR = Path(__file__).resolve().parent
 PUBLICATIONS_FILE = BASE_DIR / "publications.json"
 AUTHORS_FILE = BASE_DIR / "data" / "authors.csv"
 
+
 def load_data():
     pubs = []
     if PUBLICATIONS_FILE.exists():
@@ -23,7 +24,7 @@ def load_data():
     authors = {
         "0000-0002-7013-6670": "Alin Marin Elena",
         "0009-0005-2015-9478": "Elliott Kasoar",
-        "0000-0001-7374-9352": "Junwen Yin"
+        "0000-0001-7374-9352": "Junwen Yin",
     }
     if AUTHORS_FILE.exists():
         with open(AUTHORS_FILE, "r", encoding="utf-8-sig") as f:
@@ -36,34 +37,30 @@ def load_data():
 
     return pubs, authors
 
+
 def get_header(active_page="home"):
     pages = [
-        ("about", "About", "about.html", "#about"),
-        ("people", "People", "people.html", "#people"),
-        ("research", "Research", "research.html", "#research"),
-        ("publications", "Publications", "publications.html", "#publications"),
-        ("code", "Code", "code.html", "#code")
+        ("about", "About", "about.html"),
+        ("people", "People", "people.html"),
+        ("research", "Research", "research.html"),
+        ("publications", "Publications", "publications.html"),
+        ("code", "Code", "code.html"),
     ]
-
-    # For index.html, internal navigation jumps to section anchors
-    # For subpages, navigation links point to the respective page or home anchors
-    is_home = (active_page == "home")
 
     nav_items_desktop = []
     nav_items_mobile = []
 
-    for key, label, page_url, anchor in pages:
+    for key, label, page_url in pages:
         is_active = (active_page == key)
         active_cls = ' class="active"' if is_active else ''
-        target_href = anchor if is_home else page_url
 
-        nav_items_desktop.append(f'<li class="nav-item"><a href="{target_href}"{active_cls}>{label}</a></li>')
-        nav_items_mobile.append(f'<li class="mobile-nav-item"><a href="{target_href}"{active_cls}><span>{label}</span><span>→</span></a></li>')
+        nav_items_desktop.append(f'<li class="nav-item"><a href="{page_url}"{active_cls}>{label}</a></li>')
+        nav_items_mobile.append(f'<li class="mobile-nav-item"><a href="{page_url}"{active_cls}><span>{label}</span><span>→</span></a></li>')
 
     desktop_nav_html = "\n        ".join(nav_items_desktop)
     mobile_nav_html = "\n        ".join(nav_items_mobile)
 
-    home_href = "index.html" if not is_home else "#top"
+    home_href = "index.html"
 
     return f"""  <header class="site-header" id="top">
     <div class="container header-container">
@@ -96,7 +93,7 @@ def get_header(active_page="home"):
       </div>
     </div>
 
-    <!-- Mobile Drawer -->
+    <!-- Mobile Navigation Drawer -->
     <div class="mobile-drawer" id="mobile-drawer">
       <ul class="mobile-nav-links">
         {mobile_nav_html}
@@ -109,6 +106,7 @@ def get_header(active_page="home"):
       </div>
     </div>
   </header>"""
+
 
 def get_footer():
     return """  <footer class="site-footer">
@@ -126,7 +124,7 @@ def get_footer():
             <li><a href="people.html">People</a></li>
             <li><a href="research.html">Research Themes</a></li>
             <li><a href="publications.html">Publications</a></li>
-            <li><a href="code.html">Code & Software</a></li>
+            <li><a href="code.html">Code &amp; Software</a></li>
           </ul>
         </div>
 
@@ -141,11 +139,12 @@ def get_footer():
         </div>
 
         <div class="footer-col">
-          <h5>Open Science</h5>
+          <h5>Software &amp; Feeds</h5>
           <ul class="footer-links">
-            <li><a href="https://github.com/ddmms" target="_blank" rel="noopener noreferrer">GitHub @ddmms</a></li>
             <li><a href="https://github.com/stfc/janus-core" target="_blank" rel="noopener noreferrer">janus-core</a></li>
-            <li><a href="https://github.com/stfc/FTorch" target="_blank" rel="noopener noreferrer">FTorch</a></li>
+            <li><a href="https://github.com/stfc/aiida-mlip" target="_blank" rel="noopener noreferrer">aiida-mlip</a></li>
+            <li><a href="https://github.com/ddmms/ml-peg" target="_blank" rel="noopener noreferrer">ml-peg</a></li>
+            <li><a href="https://github.com/stfc/goldilocks" target="_blank" rel="noopener noreferrer">goldilocks</a></li>
             <li><a href="publications.json" download="publications.json">publications.json</a></li>
             <li><a href="PUBLICATIONS.md" target="_blank">PUBLICATIONS.md</a></li>
           </ul>
@@ -160,11 +159,31 @@ def get_footer():
   </footer>
   <div class="toast" id="toast" role="alert" aria-live="polite"></div>"""
 
+
 def generate_index_html(pubs, authors):
     header_html = get_header("home")
     footer_html = get_footer()
-    pubs_json_str = json.dumps(pubs)
-    authors_json_str = json.dumps(authors)
+
+    # Get sample latest publications
+    recent_pubs = pubs[:4]
+    recent_pubs_html = []
+    for p in recent_pubs:
+        url = p.get("url") or (f"https://doi.org/{p['doi']}" if p.get("doi") else None)
+        title_content = f'<a href="{url}" target="_blank" rel="noopener noreferrer">{p["title"]}</a>' if url else p["title"]
+        authors_str = ", ".join(p.get("authors", []))
+        venue_str = f" <em>{p['journal']}</em>" if p.get("journal") else ""
+        doi_badge = f'<a href="https://doi.org/{p["doi"]}" target="_blank" rel="noopener noreferrer" class="badge badge-doi">DOI: {p["doi"]}</a>' if p.get("doi") else ""
+
+        recent_pubs_html.append(f"""          <article class="pub-card" style="padding: 1.15rem;">
+            <h4 class="pub-title" style="font-size: 1rem;">{title_content}</h4>
+            <div class="pub-meta">
+              <span style="font-weight: 600; color: var(--text);">{authors_str}</span>
+              <span class="badge badge-year">{p.get("year", "2026")}</span>
+              <span class="pub-venue">{venue_str}</span>
+              {doi_badge}
+            </div>
+          </article>""")
+    recent_pubs_rendered = "\n".join(recent_pubs_html)
 
     content = f"""<!DOCTYPE html>
 <html lang="en">
@@ -172,7 +191,7 @@ def generate_index_html(pubs, authors):
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Data Driven Materials and Molecular Science | DDMMS</title>
-  <meta name="description" content="Data Driven Materials and Molecular Science research group - Machine learning interatomic potentials, multiscale molecular dynamics, and materials discovery.">
+  <meta name="description" content="Data Driven Materials and Molecular Science (DDMMS) research group at STFC Daresbury Laboratory, UKRI. Machine learning interatomic potentials, multiscale molecular dynamics, and materials discovery.">
   <link rel="icon" type="image/svg+xml" href="assets/logos/ddmms.svg">
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
@@ -195,9 +214,9 @@ def generate_index_html(pubs, authors):
             Pioneering the convergence of physics-informed machine learning, high-performance molecular dynamics, and automated workflows to decipher materials from quantum to continuum scales.
           </p>
           <div class="hero-cta-group">
-            <a href="#research" class="btn btn-primary">Explore Research</a>
-            <a href="#code" class="btn btn-outline">Our Software &amp; Code</a>
-            <a href="#publications" class="btn btn-outline">Publications ({len(pubs)})</a>
+            <a href="research.html" class="btn btn-primary">Explore Research Themes</a>
+            <a href="code.html" class="btn btn-outline">Our Software &amp; Codes</a>
+            <a href="publications.html" class="btn btn-outline">Publications ({len(pubs)})</a>
           </div>
         </div>
 
@@ -210,8 +229,8 @@ def generate_index_html(pubs, authors):
                 <div class="hero-stat-label">Publications</div>
               </div>
               <div class="hero-stat-item">
-                <div class="hero-stat-num">5+</div>
-                <div class="hero-stat-label">Open Packages</div>
+                <div class="hero-stat-num">4</div>
+                <div class="hero-stat-label">Core Packages</div>
               </div>
               <div class="hero-stat-item">
                 <div class="hero-stat-num">100%</div>
@@ -219,7 +238,7 @@ def generate_index_html(pubs, authors):
               </div>
               <div class="hero-stat-item">
                 <div class="hero-stat-num">HPC</div>
-                <div class="hero-stat-label">Scale Computing</div>
+                <div class="hero-stat-label">Scale Science</div>
               </div>
             </div>
           </div>
@@ -227,8 +246,8 @@ def generate_index_html(pubs, authors):
       </div>
     </section>
 
-    <!-- About Section -->
-    <section class="section-wrapper bg-alt" id="about">
+    <!-- Mission & Overview Section -->
+    <section class="section-wrapper bg-alt">
       <div class="container">
         <div class="section-header">
           <span class="section-pill">About The Group</span>
@@ -244,34 +263,34 @@ def generate_index_html(pubs, authors):
               The <strong>Data Driven Materials and Molecular Science (DDMMS)</strong> group is based at the Science and Technology Facilities Council (STFC) Scientific Computing Department at Sci-Tech Daresbury, UKRI.
             </p>
             <p>
-              Our research focuses on solving the accuracy-versus-scale dilemma in atomistic simulation. By integrating <strong>equivariant graph neural networks (MACE, SevenNet)</strong>, advanced electronic structure theories (CP2K, Quantum ESPRESSO), and massive-parallel molecular dynamics (DL_POLY 5), we investigate materials for energy storage, heterogeneous catalysis, carbon capture, and clean technologies.
+              Our research overcomes the traditional trade-off between quantum mechanical accuracy and large-scale simulation capabilities. By creating <strong>equivariant graph neural network potentials</strong>, automated calculation workflows, and high-performance computing pipelines, we enable predictive simulation of complex materials for energy storage, catalysis, carbon capture, and quantum technologies.
             </p>
 
             <div class="about-pillars">
               <div class="pillar-card">
                 <div class="pillar-icon">⚛</div>
                 <h4 class="pillar-title">Machine Learning Potentials</h4>
-                <p class="pillar-desc">Equivariant foundation models (MACE, SevenNet, CHGNet) delivering DFT-level fidelity across millions of atoms.</p>
+                <p class="pillar-desc">Equivariant foundation models (MACE, SevenNet, CHGNet) delivering DFT fidelity across millions of atoms.</p>
               </div>
               <div class="pillar-card">
                 <div class="pillar-icon">⚡</div>
                 <h4 class="pillar-title">Extreme-Scale MD</h4>
-                <p class="pillar-desc">High-performance algorithms in DL_POLY 5, GPU acceleration, and symplectic integrators on supercomputers.</p>
+                <p class="pillar-desc">Massively parallel algorithms, GPU offloading, and symplectic statistical mechanics.</p>
               </div>
               <div class="pillar-card">
                 <div class="pillar-icon">💎</div>
                 <h4 class="pillar-title">Nanoporous Materials</h4>
-                <p class="pillar-desc">Metal-organic frameworks (uMOF), negative thermal expansion, vibrational phonons, and gas adsorption.</p>
+                <p class="pillar-desc">Metal-organic frameworks (uMOF), negative thermal expansion, phonons, and gas adsorption.</p>
               </div>
               <div class="pillar-card">
                 <div class="pillar-icon">🛠</div>
-                <h4 class="pillar-title">Open-Source Ecosystem</h4>
-                <p class="pillar-desc">FAIR scientific codes including janus-core, FTorch, and automated ORCID publication portals.</p>
+                <h4 class="pillar-title">Automated Workflows</h4>
+                <p class="pillar-desc">Reproducible pipelines with janus-core, aiida-mlip, ml-peg, and goldilocks.</p>
               </div>
             </div>
 
-            <div style="margin-top: 1rem;">
-              <a href="about.html" class="btn btn-outline">Read More About Our Mission &rarr;</a>
+            <div style="margin-top: 1.5rem;">
+              <a href="about.html" class="btn btn-primary">Read More About Our Group &rarr;</a>
             </div>
           </div>
 
@@ -285,15 +304,15 @@ def generate_index_html(pubs, authors):
                 </li>
                 <li class="news-item">
                   <div class="news-date">2026 Release</div>
-                  <div class="news-headline">Automated k-point sampling framework for Quantum ESPRESSO published in <em>Digital Discovery</em>.</div>
+                  <div class="news-headline">Goldilocks automated k-point sampling framework for Quantum ESPRESSO published in <em>Digital Discovery</em>.</div>
                 </li>
                 <li class="news-item">
                   <div class="news-date">2026 Discovery</div>
                   <div class="news-headline">uMOF universal benchmark database and ML interatomic potentials released for metal-organic frameworks.</div>
                 </li>
                 <li class="news-item">
-                  <div class="news-date">Software Impact</div>
-                  <div class="news-headline">FTorch featured in <em>Journal of Open Source Software (JOSS)</em> for coupling PyTorch with native Fortran.</div>
+                  <div class="news-date">Software Ecosystem</div>
+                  <div class="news-headline">aiida-mlip released, integrating janus-core workflows with full data provenance in AiiDA.</div>
                 </li>
               </ul>
             </div>
@@ -302,319 +321,61 @@ def generate_index_html(pubs, authors):
       </div>
     </section>
 
-    <!-- People Section -->
-    <section class="section-wrapper" id="people">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-pill">Our Team</span>
-          <h2 class="section-title">Researchers &amp; Software Architects</h2>
-          <p class="section-subtitle">
-            Multidisciplinary researchers bridging physics, chemistry, machine learning, and high-performance computing.
-          </p>
-        </div>
-
-        <div class="people-grid">
-          <!-- Alin Marin Elena -->
-          <article class="person-card">
-            <div class="person-header">
-              <div class="person-avatar">AE</div>
-              <div class="person-title-wrap">
-                <h3>Dr. Alin Marin Elena</h3>
-                <div class="person-role">Group Leader &bull; Senior Computational Scientist</div>
-                <div class="person-affiliation">STFC SCD, UKRI | CCP5 Executive Committee</div>
-              </div>
-            </div>
-            <p class="person-bio">
-              Senior computational scientist with extensive leadership in molecular dynamics, machine-learned interatomic potentials, DL_POLY 5 architecture, and scientific software engineering for large-scale materials discovery.
-            </p>
-            <div class="person-tags">
-              <span class="person-tag">MLIPs</span>
-              <span class="person-tag">Molecular Dynamics</span>
-              <span class="person-tag">DL_POLY</span>
-              <span class="person-tag">Molten Salts</span>
-              <span class="person-tag">HPC</span>
-            </div>
-            <div class="person-links">
-              <a href="https://orcid.org/0000-0002-7013-6670" target="_blank" rel="noopener noreferrer" class="person-link-btn" title="ORCID Profile">
-                <svg viewBox="0 0 256 256" style="fill:#a6ce39;"><path d="M256 128c0 70.7-57.3 128-128 128S0 198.7 0 128 57.3 0 128 0s128 57.3 128 128z"/><path fill="#fff" d="M86.3 186.2H70.9V79.1h15.4v107.1zM78.6 62.2c-5.5 0-10-4.5-10-10s4.5-10 10-10 10 4.5 10 10-4.5 10-10 10zm108.8 77.8c0 27.8-19.8 46.2-49.9 46.2H108V79.1h31.6c28.2 0 47.8 19.5 47.8 46.5v14.4zm-16.1-.7c0-20.7-13.8-32.9-33.1-32.9h-14.7v72.8h14.7c20 0 33.1-13.1 33.1-34.1v-5.8z"/></svg>
-                <span>ORCID</span>
-              </a>
-              <a href="https://github.com/alin-elena" target="_blank" rel="noopener noreferrer" class="person-link-btn">
-                <span>GitHub</span>
-              </a>
-              <a href="publications.html?author=Alin%20Marin%20Elena" class="person-link-btn">
-                <span>View Publications</span>
-              </a>
-            </div>
-          </article>
-
-          <!-- Elliott Kasoar -->
-          <article class="person-card">
-            <div class="person-header">
-              <div class="person-avatar">EK</div>
-              <div class="person-title-wrap">
-                <h3>Elliott Kasoar</h3>
-                <div class="person-role">Computational Scientist &bull; Research Associate</div>
-                <div class="person-affiliation">STFC SCD, UKRI</div>
-              </div>
-            </div>
-            <p class="person-bio">
-              Specialist in equivariant graph neural network potentials (MACE, SevenNet), active learning dataset selection, and workflow automation. Core lead and architect of the janus-core materials simulation platform.
-            </p>
-            <div class="person-tags">
-              <span class="person-tag">MACE Foundation Models</span>
-              <span class="person-tag">janus-core</span>
-              <span class="person-tag">Active Learning</span>
-              <span class="person-tag">Python &amp; ASE</span>
-            </div>
-            <div class="person-links">
-              <a href="https://orcid.org/0009-0005-2015-9478" target="_blank" rel="noopener noreferrer" class="person-link-btn" title="ORCID Profile">
-                <svg viewBox="0 0 256 256" style="fill:#a6ce39;"><path d="M256 128c0 70.7-57.3 128-128 128S0 198.7 0 128 57.3 0 128 0s128 57.3 128 128z"/><path fill="#fff" d="M86.3 186.2H70.9V79.1h15.4v107.1zM78.6 62.2c-5.5 0-10-4.5-10-10s4.5-10 10-10 10 4.5 10 10-4.5 10-10 10zm108.8 77.8c0 27.8-19.8 46.2-49.9 46.2H108V79.1h31.6c28.2 0 47.8 19.5 47.8 46.5v14.4zm-16.1-.7c0-20.7-13.8-32.9-33.1-32.9h-14.7v72.8h14.7c20 0 33.1-13.1 33.1-34.1v-5.8z"/></svg>
-                <span>ORCID</span>
-              </a>
-              <a href="publications.html?author=Elliott%20Kasoar" class="person-link-btn">
-                <span>View Publications</span>
-              </a>
-            </div>
-          </article>
-
-          <!-- Junwen Yin -->
-          <article class="person-card">
-            <div class="person-header">
-              <div class="person-avatar">JY</div>
-              <div class="person-title-wrap">
-                <h3>Dr. Junwen Yin</h3>
-                <div class="person-role">Computational Scientist &bull; Research Associate</div>
-                <div class="person-affiliation">STFC SCD, UKRI</div>
-              </div>
-            </div>
-            <p class="person-bio">
-              Expert in ab initio electronic structure methods, nonadiabatic molecular dynamics, CP2K code extensions, and materials modeling for photoactive and electrochemically driven systems.
-            </p>
-            <div class="person-tags">
-              <span class="person-tag">Nonadiabatic Dynamics</span>
-              <span class="person-tag">CP2K Framework</span>
-              <span class="person-tag">DFT</span>
-              <span class="person-tag">Photochemistry</span>
-            </div>
-            <div class="person-links">
-              <a href="https://orcid.org/0000-0001-7374-9352" target="_blank" rel="noopener noreferrer" class="person-link-btn" title="ORCID Profile">
-                <svg viewBox="0 0 256 256" style="fill:#a6ce39;"><path d="M256 128c0 70.7-57.3 128-128 128S0 198.7 0 128 57.3 0 128 0s128 57.3 128 128z"/><path fill="#fff" d="M86.3 186.2H70.9V79.1h15.4v107.1zM78.6 62.2c-5.5 0-10-4.5-10-10s4.5-10 10-10 10 4.5 10 10-4.5 10-10 10zm108.8 77.8c0 27.8-19.8 46.2-49.9 46.2H108V79.1h31.6c28.2 0 47.8 19.5 47.8 46.5v14.4zm-16.1-.7c0-20.7-13.8-32.9-33.1-32.9h-14.7v72.8h14.7c20 0 33.1-13.1 33.1-34.1v-5.8z"/></svg>
-                <span>ORCID</span>
-              </a>
-              <a href="publications.html?author=Junwen%20Yin" class="person-link-btn">
-                <span>View Publications</span>
-              </a>
-            </div>
-          </article>
-        </div>
-
-        <div style="text-align: center; margin-top: 2.5rem;">
-          <a href="people.html" class="btn btn-outline">Meet All Members, Collaborators &amp; Open Positions &rarr;</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Research Section -->
-    <section class="section-wrapper bg-alt" id="research">
+    <!-- Research Highlights Section -->
+    <section class="section-wrapper">
       <div class="container">
         <div class="section-header">
           <span class="section-pill">Research Themes</span>
           <h2 class="section-title">Core Scientific Frontiers</h2>
           <p class="section-subtitle">
-            Exploring materials complexity across spatial and temporal dimensions with data-driven and quantum-mechanics tools.
+            Advancing computational materials discovery across length and timescales.
           </p>
         </div>
 
         <div class="research-grid">
-          <!-- Pillar 1 -->
           <div class="research-card">
             <div class="research-card-top">
-              <span class="research-tag">Machine Learning</span>
-              <h3 class="research-card-title">Foundation Machine-Learned Interatomic Potentials</h3>
+              <span class="research-tag">Theme 1</span>
+              <h3 class="research-card-title">Foundation ML Interatomic Potentials</h3>
               <p class="research-card-desc">
-                Developing, fine-tuning, and benchmarking equivariant graph neural networks (MACE, SevenNet, CHGNet). Enhancing transferability, active learning dataset selection, and long-range polarizable electrostatics for molecular and condensed-phase systems.
+                Developing equivariant graph neural networks (MACE, SevenNet, CHGNet), polarizable electrostatics (MACE-POLAR), and active-learning training set optimization.
               </p>
             </div>
-            <ul class="research-highlights">
-              <li>MACE-POLAR polarisable foundation models</li>
-              <li>Active-learning training set optimization</li>
-              <li>Cross-learning between electronic structure levels</li>
-            </ul>
           </div>
 
-          <!-- Pillar 2 -->
           <div class="research-card">
             <div class="research-card-top">
-              <span class="research-tag">Porous Frameworks</span>
-              <h3 class="research-card-title">Metal-Organic Frameworks &amp; Nanoporous Solids</h3>
+              <span class="research-tag">Theme 2</span>
+              <h3 class="research-card-title">Metal-Organic Frameworks &amp; Porous Solids</h3>
               <p class="research-card-desc">
-                High-throughput screening of flexible MOF structures, negative thermal expansion (NTE) mechanics, vibrational phonon dynamics, and selective catalytic centers for hydrocarbon separations and environmental cleanup.
+                High-throughput screening of flexible MOF structures, negative thermal expansion (NTE) mechanics, vibrational phonon dynamics, and selective catalytic centers.
               </p>
             </div>
-            <ul class="research-highlights">
-              <li>uMOF database and benchmark interatomic potentials</li>
-              <li>Phonon dispersion &amp; thermodynamic stability</li>
-              <li>Subnanometric Pd speciation for selective catalysis</li>
-            </ul>
           </div>
 
-          <!-- Pillar 3 -->
           <div class="research-card">
             <div class="research-card-top">
-              <span class="research-tag">Liquid State Physics</span>
-              <h3 class="research-card-title">Molten Salts, Complex Liquids &amp; Transport</h3>
+              <span class="research-tag">Theme 3</span>
+              <h3 class="research-card-title">Complex Fluids &amp; Molten Salts</h3>
               <p class="research-card-desc">
-                Investigating microscopic transport properties, ionic correlations, viscosity, and fundamental bounds of thermal conductivity in molten chloride/fluoride salts and high-entropy liquid mixtures for advanced clean energy reactors.
+                Microscopic transport properties, ionic correlations, viscosity, and fundamental bounds of thermal conductivity in molten salts for green energy systems.
               </p>
             </div>
-            <ul class="research-highlights">
-              <li>Thermal conductivity bounds in molten salts</li>
-              <li>Green-Kubo and Einstein transport coefficient derivations</li>
-              <li>Equilibrium isotope fractionation in mineral phases</li>
-            </ul>
-          </div>
-
-          <!-- Pillar 4 -->
-          <div class="research-card">
-            <div class="research-card-top">
-              <span class="research-tag">HPC &amp; Algorithms</span>
-              <h3 class="research-card-title">Massively Parallel Molecular Dynamics</h3>
-              <p class="research-card-desc">
-                Architecting DL_POLY 5 for ultra-scale parallelism on distributed memory supercomputers, offloading compute kernels to GPU accelerators, and on-the-fly trajectory analysis for systems comprising tens of millions of atoms.
-              </p>
-            </div>
-            <ul class="research-highlights">
-              <li>DL_POLY 5 massive parallelism &amp; domain decomposition</li>
-              <li>Symplectic integrators and rigid-body constraints</li>
-              <li>On-the-fly property evaluations and statistical sampling</li>
-            </ul>
-          </div>
-
-          <!-- Pillar 5 -->
-          <div class="research-card">
-            <div class="research-card-top">
-              <span class="research-tag">Workflows</span>
-              <h3 class="research-card-title">Autonomous Multiscale Simulation Workflows</h3>
-              <p class="research-card-desc">
-                End-to-end automated simulation pipelines connecting structure parsing, cell relaxation via FrechetCellFilter, full 6x6 elasticity stiffness tensors ($C_{{ij}}$), equation of state (EOS), and CI-NEB transition state searches.
-              </p>
-            </div>
-            <ul class="research-highlights">
-              <li>Automated single points, geometry optimizations &amp; MD</li>
-              <li>Equation of state &amp; elastic tensor calculation pipelines</li>
-              <li>Automated Quantum ESPRESSO k-point mesh optimization</li>
-            </ul>
-          </div>
-
-          <!-- Pillar 6 -->
-          <div class="research-card">
-            <div class="research-card-top">
-              <span class="research-tag">Spectroscopy</span>
-              <h3 class="research-card-title">Inelastic Neutron Scattering &amp; Spectroscopy Validation</h3>
-              <p class="research-card-desc">
-                Directly validating machine-learned interatomic potential energy landscapes against high-pressure inelastic neutron scattering experiments at ISIS Neutron and Muon Source and international beamline facilities.
-              </p>
-            </div>
-            <ul class="research-highlights">
-              <li>Experimental validation of potential energy landscapes</li>
-              <li>Dynamical structure factor $S(Q, \\omega)$ calculations</li>
-              <li>Phonon anharmonicity and thermal expansion in perovskites</li>
-            </ul>
           </div>
         </div>
 
         <div style="text-align: center; margin-top: 2.5rem;">
-          <a href="research.html" class="btn btn-primary">Discover More Research Details &rarr;</a>
+          <a href="research.html" class="btn btn-outline">Explore All Research Programs &rarr;</a>
         </div>
       </div>
     </section>
 
-    <!-- Publications Section (Integrated from ../pubs) -->
-    <section class="section-wrapper" id="publications">
-      <div class="container" id="pubs-app-root">
-        <div class="section-header">
-          <span class="section-pill">Research Output</span>
-          <h2 class="section-title">Publications &amp; Preprints</h2>
-          <p class="section-subtitle">
-            Curated and auto-aggregated from group member ORCID records. Filter dynamically by author, year, or search topic.
-          </p>
-        </div>
-
-        <!-- Controls Card -->
-        <div class="pubs-controls-card">
-          <div class="pubs-controls-grid">
-            <div class="form-group">
-              <label for="pub-filter-author"><span>👤</span> Filter by Author</label>
-              <select id="pub-filter-author" class="form-control pub-filter-author">
-                <option value="all">All Group Members</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="pub-filter-year"><span>📅</span> Filter by Year</label>
-              <select id="pub-filter-year" class="form-control pub-filter-year">
-                <option value="all">All Years</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="pub-filter-search"><span>🔍</span> Search Keywords</label>
-              <input type="text" id="pub-filter-search" class="form-control pub-filter-search" placeholder="Title, journal, DOI, author...">
-            </div>
-
-            <div class="form-group">
-              <label for="pub-filter-sort"><span>⚡</span> Sort Order</label>
-              <select id="pub-filter-sort" class="form-control pub-filter-sort">
-                <option value="year-desc">Year (Newest First)</option>
-                <option value="year-asc">Year (Oldest First)</option>
-                <option value="title-asc">Title (A - Z)</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="pubs-controls-extra">
-            <label class="checkbox-label">
-              <input type="checkbox" class="pub-toggle-group-year" checked>
-              <span>Group publications by year</span>
-            </label>
-
-            <button type="button" class="btn-action pub-reset-btn">
-              <span>↺</span> Reset Filters
-            </button>
-          </div>
-        </div>
-
-        <!-- Results Counter & Status Bar -->
-        <div class="pubs-results-bar">
-          <div class="pubs-counter">
-            Showing <strong class="pub-visible-count">0</strong> of <strong class="pub-total-count">{len(pubs)}</strong> publications
-          </div>
-
-          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-            <a href="publications.html" class="btn-action" title="Open full publication catalog">
-              <span>📚</span> Full Publication Catalog
-            </a>
-            <a href="publications.json" download="publications.json" class="btn-action" title="Download raw JSON feed">
-              <span>{{ }}</span> JSON Feed
-            </a>
-            <a href="PUBLICATIONS.md" class="btn-action" title="View Markdown bibliography">
-              <span>📄</span> Markdown
-            </a>
-          </div>
-        </div>
-
-        <!-- Publication Cards List -->
-        <div class="pubs-container"></div>
-      </div>
-    </section>
-
-    <!-- Code & Software Section -->
-    <section class="section-wrapper bg-alt" id="code">
+    <!-- Software & Codes Showcase -->
+    <section class="section-wrapper bg-alt">
       <div class="container">
         <div class="section-header">
-          <span class="section-pill">Software &amp; Tools</span>
-          <h2 class="section-title">Open-Source Scientific Codes</h2>
+          <span class="section-pill">Software &amp; Codes</span>
+          <h2 class="section-title">Open-Source Scientific Tools</h2>
           <p class="section-subtitle">
             Community-driven, FAIR-compliant software designed for reproducibility, modularity, and high-performance computing.
           </p>
@@ -630,155 +391,338 @@ def generate_index_html(pubs, authors):
               <span class="badge" style="background:#dbeafe; color:#1e40af;">Python / ASE</span>
             </div>
             <p class="code-desc">
-              Tools for materials modeling with machine-learned interatomic potentials (MACE, SevenNet, CHGNet, M3GNet). Provides both a high-level Python API and a rich CLI for automated atomistic workflows.
+              High-level Python API and rich CLI for materials modeling with machine-learned interatomic potentials (MACE, SevenNet, CHGNet, M3GNet).
             </p>
             <div class="code-install-box">
               <code>pip install janus-core</code>
               <button class="copy-snippet-btn" data-code="pip install janus-core" title="Copy install command">📋</button>
             </div>
-            <ul class="code-features-list">
-              <li>Single points, forces, stresses, Hessians</li>
-              <li>Geometry optimization (BFGS, FIRE, FrechetCellFilter)</li>
-              <li>Molecular dynamics (NVE, NVT, NPT, Langevin, Nosé-Hoover)</li>
-              <li>Automated phonons, equation of state, elasticity tensors &amp; NEB</li>
-            </ul>
-            <div class="person-links">
-              <a href="https://github.com/stfc/janus-core" target="_blank" rel="noopener noreferrer" class="person-link-btn">GitHub Repository &rarr;</a>
+            <div class="person-links" style="margin-top: 1rem;">
+              <a href="https://github.com/stfc/janus-core" target="_blank" rel="noopener noreferrer" class="person-link-btn">GitHub Repo &rarr;</a>
               <a href="https://stfc.github.io/janus-core" target="_blank" rel="noopener noreferrer" class="person-link-btn">Documentation</a>
             </div>
           </article>
 
-          <!-- FTorch -->
+          <!-- aiida-mlip -->
           <article class="code-card">
             <div class="code-card-header">
               <div class="code-title-group">
-                <h3><span>🔥</span> FTorch</h3>
+                <h3><span>🔄</span> aiida-mlip</h3>
               </div>
-              <span class="badge" style="background:#fee2e2; color:#991b1b;">Fortran / C++</span>
+              <span class="badge" style="background:#fef3c7; color:#92400e;">AiiDA / Provenance</span>
             </div>
             <p class="code-desc">
-              A lightweight library for coupling PyTorch machine learning models directly into native Fortran applications, enabling fast ML inferencing inside legacy HPC simulation codes.
+              AiiDA plugin integrating janus-core for reproducible calculations with machine-learned interatomic potentials and full data provenance.
             </p>
             <div class="code-install-box">
-              <code>git clone https://github.com/stfc/FTorch.git</code>
-              <button class="copy-snippet-btn" data-code="git clone https://github.com/stfc/FTorch.git" title="Copy git clone command">📋</button>
+              <code>pip install aiida-mlip</code>
+              <button class="copy-snippet-btn" data-code="pip install aiida-mlip" title="Copy install command">📋</button>
             </div>
-            <ul class="code-features-list">
-              <li>Zero-copy tensor passing between Fortran and TorchScript</li>
-              <li>Seamless deployment of deep neural networks in HPC models</li>
-              <li>Peer-reviewed and published in JOSS (Journal of Open Source Software)</li>
-            </ul>
-            <div class="person-links">
-              <a href="https://github.com/stfc/FTorch" target="_blank" rel="noopener noreferrer" class="person-link-btn">GitHub Repository &rarr;</a>
-              <a href="https://doi.org/10.21105/joss.07602" target="_blank" rel="noopener noreferrer" class="person-link-btn">JOSS Paper</a>
+            <div class="person-links" style="margin-top: 1rem;">
+              <a href="https://github.com/stfc/aiida-mlip" target="_blank" rel="noopener noreferrer" class="person-link-btn">GitHub Repo &rarr;</a>
+              <a href="https://stfc.github.io/aiida-mlip" target="_blank" rel="noopener noreferrer" class="person-link-btn">Documentation</a>
             </div>
           </article>
 
-          <!-- DL_POLY 5 -->
+          <!-- ml-peg -->
           <article class="code-card">
             <div class="code-card-header">
               <div class="code-title-group">
-                <h3><span>🌐</span> DL_POLY 5</h3>
+                <h3><span>📊</span> ml-peg</h3>
               </div>
-              <span class="badge" style="background:#e0e7ff; color:#3730a3;">Fortran / MPI / OMP</span>
+              <span class="badge" style="background:#e0e7ff; color:#3730a3;">Benchmark / Guide</span>
             </div>
             <p class="code-desc">
-              Flagship STFC general-purpose atomistic molecular dynamics package engineered for massive parallelism on distributed-memory supercomputers and heterogeneous accelerators.
+              Machine Learning Performance and Extrapolation Guide. A benchmarking framework evaluating MLIPs across diverse systems and physical properties.
             </p>
             <div class="code-install-box">
-              <code>cmake -B build -DENABLE_MPI=ON</code>
-              <button class="copy-snippet-btn" data-code="cmake -B build -DENABLE_MPI=ON" title="Copy build command">📋</button>
+              <code>git clone https://github.com/ddmms/ml-peg.git</code>
+              <button class="copy-snippet-btn" data-code="git clone https://github.com/ddmms/ml-peg.git" title="Copy command">📋</button>
             </div>
-            <ul class="code-features-list">
-              <li>Scalable domain decomposition for 10M+ atoms</li>
-              <li>Symplectic integrators and rigid-body quaternions</li>
-              <li>Calculates system properties on the fly via massive parallelism</li>
-            </ul>
-            <div class="person-links">
-              <a href="https://www.scd.stfc.ac.uk/Pages/DL_POLY.aspx" target="_blank" rel="noopener noreferrer" class="person-link-btn">STFC DL_POLY Portal &rarr;</a>
-              <a href="https://www.ccp5.ac.uk" target="_blank" rel="noopener noreferrer" class="person-link-btn">CCP5</a>
+            <div class="person-links" style="margin-top: 1rem;">
+              <a href="https://github.com/ddmms/ml-peg" target="_blank" rel="noopener noreferrer" class="person-link-btn">GitHub Repo &rarr;</a>
+              <a href="https://ml-peg.stfc.ac.uk" target="_blank" rel="noopener noreferrer" class="person-link-btn">Live Portal</a>
             </div>
           </article>
 
-          <!-- uMOF -->
+          <!-- goldilocks -->
           <article class="code-card">
             <div class="code-card-header">
               <div class="code-title-group">
-                <h3><span>🏛</span> uMOF Benchmark</h3>
+                <h3><span>🐻</span> goldilocks</h3>
               </div>
-              <span class="badge" style="background:#ecfdf5; color:#065f46;">Dataset / MLIP</span>
+              <span class="badge" style="background:#ecfdf5; color:#065f46;">DFT / Streamlit</span>
             </div>
             <p class="code-desc">
-              A universal database, benchmark suite, and machine learning interatomic potentials tailored specifically for metal-organic frameworks and hybrid crystalline structures.
+              Web application and library for generating input files with optimised k-point meshes for Quantum ESPRESSO SCF total energy calculations.
             </p>
             <div class="code-install-box">
-              <code>pip install mof-analysis</code>
-              <button class="copy-snippet-btn" data-code="pip install mof-analysis" title="Copy command">📋</button>
+              <code>pip install goldilocks</code>
+              <button class="copy-snippet-btn" data-code="pip install goldilocks" title="Copy command">📋</button>
             </div>
-            <ul class="code-features-list">
-              <li>Comprehensive database of relaxed MOF structures &amp; phonons</li>
-              <li>Machine learned potentials for high-throughput vibrational screening</li>
-              <li>Negative thermal expansion analysis suite</li>
-            </ul>
-            <div class="person-links">
-              <a href="https://arxiv.org/abs/2608.28100" target="_blank" rel="noopener noreferrer" class="person-link-btn">arXiv Preprint &rarr;</a>
-            </div>
-          </article>
-
-          <!-- pubs -->
-          <article class="code-card">
-            <div class="code-card-header">
-              <div class="code-title-group">
-                <h3><span>📚</span> pubs</h3>
-              </div>
-              <span class="badge" style="background:#fef3c7; color:#92400e;">Python / Automation</span>
-            </div>
-            <p class="code-desc">
-              Automated research publication aggregator and web portal generator using the ORCID Public API for academic research groups.
-            </p>
-            <div class="code-install-box">
-              <code>python pubs.py</code>
-              <button class="copy-snippet-btn" data-code="python pubs.py" title="Copy command">📋</button>
-            </div>
-            <ul class="code-features-list">
-              <li>ORCID API synchronization with local caching</li>
-              <li>Generates interactive HTML portals, Markdown bibliographies &amp; JSON feeds</li>
-              <li>Automated GitHub Actions weekly workflow deployment</li>
-            </ul>
-            <div class="person-links">
-              <a href="https://github.com/ddmms/pubs" target="_blank" rel="noopener noreferrer" class="person-link-btn">GitHub Repository &rarr;</a>
+            <div class="person-links" style="margin-top: 1rem;">
+              <a href="https://github.com/stfc/goldilocks" target="_blank" rel="noopener noreferrer" class="person-link-btn">GitHub Repo &rarr;</a>
+              <a href="https://goldilocks.streamlit.app" target="_blank" rel="noopener noreferrer" class="person-link-btn">Streamlit App</a>
             </div>
           </article>
         </div>
 
         <div style="text-align: center; margin-top: 2.5rem;">
-          <a href="code.html" class="btn btn-outline">Explore Full Software Directory &amp; Documentation &rarr;</a>
+          <a href="code.html" class="btn btn-primary">View Full Code &amp; Software Directory &rarr;</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Recent Publications Preview -->
+    <section class="section-wrapper">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-pill">Recent Research</span>
+          <h2 class="section-title">Latest Publications</h2>
+          <p class="section-subtitle">
+            Synchronized directly via ORCID. Browse our latest journal articles and preprints.
+          </p>
+        </div>
+
+        <div class="pubs-list" style="margin-bottom: 2rem;">
+{recent_pubs_rendered}
+        </div>
+
+        <div style="text-align: center;">
+          <a href="publications.html" class="btn btn-primary">Search &amp; Filter All {len(pubs)} Publications &rarr;</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- People Preview -->
+    <section class="section-wrapper bg-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-pill">Our Team</span>
+          <h2 class="section-title">Researchers &amp; Software Architects</h2>
+          <p class="section-subtitle">
+            Multidisciplinary scientists bridging physics, chemistry, machine learning, and high-performance computing.
+          </p>
+        </div>
+
+        <div class="people-grid">
+          <article class="person-card">
+            <div class="person-header">
+              <div class="person-avatar">AE</div>
+              <div class="person-title-wrap">
+                <h3>Dr. Alin Marin Elena</h3>
+                <div class="person-role">Group Leader &bull; Senior Computational Scientist</div>
+                <div class="person-affiliation">STFC SCD, UKRI | CCP5 Executive Committee</div>
+              </div>
+            </div>
+            <p class="person-bio">
+              Specializing in atomistic molecular dynamics, machine-learned interatomic potentials, DL_POLY development, and scientific computing infrastructures.
+            </p>
+            <div class="person-links">
+              <a href="people.html" class="person-link-btn">Full Profile &rarr;</a>
+              <a href="publications.html?author=Alin%20Marin%20Elena" class="person-link-btn">Publications</a>
+            </div>
+          </article>
+
+          <article class="person-card">
+            <div class="person-header">
+              <div class="person-avatar">EK</div>
+              <div class="person-title-wrap">
+                <h3>Elliott Kasoar</h3>
+                <div class="person-role">Computational Scientist &bull; Research Associate</div>
+                <div class="person-affiliation">STFC SCD, UKRI</div>
+              </div>
+            </div>
+            <p class="person-bio">
+              Specialist in equivariant graph neural networks, foundation interatomic potentials (MACE), active learning, and lead developer of janus-core.
+            </p>
+            <div class="person-links">
+              <a href="people.html" class="person-link-btn">Full Profile &rarr;</a>
+              <a href="publications.html?author=Elliott%20Kasoar" class="person-link-btn">Publications</a>
+            </div>
+          </article>
+
+          <article class="person-card">
+            <div class="person-header">
+              <div class="person-avatar">JY</div>
+              <div class="person-title-wrap">
+                <h3>Dr. Junwen Yin</h3>
+                <div class="person-role">Computational Scientist &bull; Research Associate</div>
+                <div class="person-affiliation">STFC SCD, UKRI</div>
+              </div>
+            </div>
+            <p class="person-bio">
+              Expert in ab initio electronic structure methods, nonadiabatic dynamics, extended CP2K simulations, and materials modeling.
+            </p>
+            <div class="person-links">
+              <a href="people.html" class="person-link-btn">Full Profile &rarr;</a>
+              <a href="publications.html?author=Junwen%20Yin" class="person-link-btn">Publications</a>
+            </div>
+          </article>
+        </div>
+
+        <div style="text-align: center; margin-top: 2.5rem;">
+          <a href="people.html" class="btn btn-outline">Meet All Members &amp; Open Opportunities &rarr;</a>
         </div>
       </div>
     </section>
   </main>
 
 {footer_html}
-
-  <!-- Embedded Data for 100% Offline and Local Functionality -->
-  <script id="publications-data" type="application/json">
-{pubs_json_str}
-  </script>
-  <script id="authors-data" type="application/json">
-{authors_json_str}
-  </script>
-
   <script src="assets/js/main.js"></script>
-  <script src="assets/js/publications.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {{
-      // Initialize publications with interactive filtering
-      window.initPublications('pubs-app-root');
-    }});
-  </script>
 </body>
 </html>"""
     return content
+
+
+def generate_code_html():
+    header_html = get_header("code")
+    footer_html = get_footer()
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Code &amp; Software | Data Driven Materials and Molecular Science</title>
+  <meta name="description" content="Open-source scientific software packages developed by DDMMS: janus-core, aiida-mlip, ml-peg, and goldilocks.">
+  <link rel="icon" type="image/svg+xml" href="assets/logos/ddmms.svg">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+{header_html}
+
+  <main id="main-content" style="padding-top: 3rem;">
+    <div class="container">
+      <div class="section-header" style="text-align: left; margin-bottom: 2.5rem;">
+        <span class="section-pill">Software Suite</span>
+        <h1 class="section-title">Open-Source Scientific Codes &amp; Tools</h1>
+        <p class="section-subtitle">
+          Community-driven, well-tested, and reproducible scientific tools developed by the Data Driven Materials and Molecular Science group.
+        </p>
+      </div>
+
+      <div class="code-grid" style="grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));">
+        <!-- janus-core -->
+        <article class="code-card">
+          <div class="code-card-header">
+            <div class="code-title-group">
+              <h3><span>🪐</span> janus-core</h3>
+            </div>
+            <span class="badge" style="background:#dbeafe; color:#1e40af;">Python / ASE / CLI</span>
+          </div>
+          <p class="code-desc">
+            Tools for materials modeling with machine-learned interatomic potentials (MACE, SevenNet, CHGNet, M3GNet). Provides a simple, robust CLI and Python API with full ASE calculator support.
+          </p>
+          <div class="code-install-box">
+            <code>pip install janus-core</code>
+            <button class="copy-snippet-btn" data-code="pip install janus-core" title="Copy command">📋</button>
+          </div>
+          <ul class="code-features-list">
+            <li>Single-point energies, forces, stress tensors, and Hessians</li>
+            <li>Geometry optimization with FrechetCellFilter and BFGS/FIRE</li>
+            <li>Molecular dynamics in NVE, NVT, and NPT ensembles with thermostat/barostat logging</li>
+            <li>Automated equation of state (EOS) and full 6x6 elasticity stiffness tensors ($C_{{ij}}$)</li>
+            <li>Phonon band structures &amp; DOS via Phonopy integration</li>
+            <li>Minimum Energy Pathways with Climbing-Image NEB</li>
+          </ul>
+          <div class="person-links">
+            <a href="https://github.com/stfc/janus-core" target="_blank" rel="noopener noreferrer" class="person-link-btn">GitHub Repository &rarr;</a>
+            <a href="https://stfc.github.io/janus-core" target="_blank" rel="noopener noreferrer" class="person-link-btn">Documentation</a>
+            <a href="https://pypi.org/project/janus-core/" target="_blank" rel="noopener noreferrer" class="person-link-btn">PyPI</a>
+          </div>
+        </article>
+
+        <!-- aiida-mlip -->
+        <article class="code-card">
+          <div class="code-card-header">
+            <div class="code-title-group">
+              <h3><span>🔄</span> aiida-mlip</h3>
+            </div>
+            <span class="badge" style="background:#fef3c7; color:#92400e;">AiiDA / Workflows</span>
+          </div>
+          <p class="code-desc">
+            An open-source AiiDA plugin integrating the janus-core library to manage automated workflows for machine learning interatomic potentials (MLIPs) with complete data provenance.
+          </p>
+          <div class="code-install-box">
+            <code>pip install aiida-mlip</code>
+            <button class="copy-snippet-btn" data-code="pip install aiida-mlip" title="Copy command">📋</button>
+          </div>
+          <ul class="code-features-list">
+            <li>Full provenance graphs recording every calculation input, output, and potential parameter</li>
+            <li>Automated single-point, geometry optimization, and molecular dynamics workchains</li>
+            <li>Scalable execution across local workstations and remote HPC clusters</li>
+            <li>Integrates directly with the wider AiiDA simulation and materials informatics ecosystem</li>
+          </ul>
+          <div class="person-links">
+            <a href="https://github.com/stfc/aiida-mlip" target="_blank" rel="noopener noreferrer" class="person-link-btn">GitHub Repository &rarr;</a>
+            <a href="https://stfc.github.io/aiida-mlip" target="_blank" rel="noopener noreferrer" class="person-link-btn">Documentation</a>
+            <a href="https://pypi.org/project/aiida-mlip/" target="_blank" rel="noopener noreferrer" class="person-link-btn">PyPI</a>
+          </div>
+        </article>
+
+        <!-- ml-peg -->
+        <article class="code-card">
+          <div class="code-card-header">
+            <div class="code-title-group">
+              <h3><span>📊</span> ml-peg</h3>
+            </div>
+            <span class="badge" style="background:#e0e7ff; color:#3730a3;">Benchmark / Guide</span>
+          </div>
+          <p class="code-desc">
+            Machine Learning Performance and Extrapolation Guide. A comprehensive benchmarking framework and interactive performance guide to evaluate MLIPs across diverse chemical systems, extrapolations, and physical observables.
+          </p>
+          <div class="code-install-box">
+            <code>git clone https://github.com/ddmms/ml-peg.git</code>
+            <button class="copy-snippet-btn" data-code="git clone https://github.com/ddmms/ml-peg.git" title="Copy command">📋</button>
+          </div>
+          <ul class="code-features-list">
+            <li>Evaluates model performance beyond basic force/energy errors to actual physical stability</li>
+            <li>Tests out-of-distribution generalization, extrapolation limits, and uncertainty quantification</li>
+            <li>Interactive web dashboard for comparing foundation models and dataset baselines</li>
+            <li>Open-source protocols for standardized community potential verification</li>
+          </ul>
+          <div class="person-links">
+            <a href="https://github.com/ddmms/ml-peg" target="_blank" rel="noopener noreferrer" class="person-link-btn">GitHub Repository &rarr;</a>
+            <a href="https://ml-peg.stfc.ac.uk" target="_blank" rel="noopener noreferrer" class="person-link-btn">Live Platform &rarr;</a>
+          </div>
+        </article>
+
+        <!-- goldilocks -->
+        <article class="code-card">
+          <div class="code-card-header">
+            <div class="code-title-group">
+              <h3><span>🐻</span> goldilocks</h3>
+            </div>
+            <span class="badge" style="background:#ecfdf5; color:#065f46;">Python / Streamlit</span>
+          </div>
+          <p class="code-desc">
+            A web application and library for automated generation of input files with optimised k-point meshes for Quantum ESPRESSO self-consistent field (SCF) single-point total energy calculations.
+          </p>
+          <div class="code-install-box">
+            <code>pip install goldilocks</code>
+            <button class="copy-snippet-btn" data-code="pip install goldilocks" title="Copy command">📋</button>
+          </div>
+          <ul class="code-features-list">
+            <li>Automatic determination of optimised k-point sampling balancing accuracy and compute time</li>
+            <li>Interactive web interface deployed on Streamlit Community Cloud</li>
+            <li>Published in RSC <em>Digital Discovery</em> (2026, DOI: 10.1039/d5dd00565e)</li>
+            <li>Command-line interface and Python module for automated high-throughput DFT workflows</li>
+          </ul>
+          <div class="person-links">
+            <a href="https://github.com/stfc/goldilocks" target="_blank" rel="noopener noreferrer" class="person-link-btn">GitHub Repository &rarr;</a>
+            <a href="https://goldilocks.streamlit.app" target="_blank" rel="noopener noreferrer" class="person-link-btn">Streamlit App &rarr;</a>
+            <a href="https://doi.org/10.1039/d5dd00565e" target="_blank" rel="noopener noreferrer" class="person-link-btn">Paper (Digital Discovery)</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </main>
+
+{footer_html}
+  <script src="assets/js/main.js"></script>
+</body>
+</html>"""
+
 
 def generate_publications_html(pubs, authors):
     header_html = get_header("publications")
@@ -914,6 +858,7 @@ def generate_publications_html(pubs, authors):
 </html>"""
     return content
 
+
 def generate_about_html():
     header_html = get_header("about")
     footer_html = get_footer()
@@ -955,7 +900,7 @@ def generate_about_html():
 
           <h3 style="margin-top: 1.5rem;">Methodological Pillars</h3>
           <p>
-            Our research combines rigorous physics with modern data science across three interconnected layers:
+            Our research combines rigorous physics with modern data science across four interconnected layers:
           </p>
           <div class="about-pillars" style="margin-top: 0.5rem;">
             <div class="pillar-card">
@@ -1025,6 +970,7 @@ def generate_about_html():
   <script src="assets/js/main.js"></script>
 </body>
 </html>"""
+
 
 def generate_people_html():
     header_html = get_header("people")
@@ -1167,6 +1113,7 @@ def generate_people_html():
 </body>
 </html>"""
 
+
 def generate_research_html():
     header_html = get_header("research")
     footer_html = get_footer()
@@ -1176,7 +1123,7 @@ def generate_research_html():
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Research | Data Driven Materials and Molecular Science</title>
-  <meta name="description" content="Research areas of the Data Driven Materials and Molecular Science group: MLIPs, MOFs, molten salts, DL_POLY 5, and automated workflows.">
+  <meta name="description" content="Research areas of the Data Driven Materials and Molecular Science group: MLIPs, MOFs, molten salts, and automated workflows.">
   <link rel="icon" type="image/svg+xml" href="assets/logos/ddmms.svg">
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
@@ -1200,7 +1147,7 @@ def generate_research_html():
             <span class="research-tag">Theme 1 &bull; Physics-Informed AI</span>
             <h2 class="research-card-title">Foundation Machine-Learned Interatomic Potentials (MLIPs)</h2>
             <p class="research-card-desc">
-              Accurate modeling of chemical reactivity, phases transitions, and defect dynamics requires potential energy surfaces that respect rotational, translational, and permutational invariances. We develop and extend equivariant graph neural network potentials such as MACE, SevenNet, and CHGNet.
+              Accurate modeling of chemical reactivity, phase transitions, and defect dynamics requires potential energy surfaces that respect rotational, translational, and permutational invariances. We develop and extend equivariant graph neural network potentials such as MACE, SevenNet, and CHGNet.
             </p>
             <p class="research-card-desc" style="margin-top: 0.5rem;">
               Key research topics include the incorporation of polarisable long-range electrostatics (MACE-POLAR), optimal active-learning criteria that balance coverage and model uncertainty, and cross-learning strategies connecting molecular, surface, and inorganic solid phases.
@@ -1242,28 +1189,28 @@ def generate_research_html():
         <!-- Theme 4 -->
         <article class="research-card">
           <div class="research-card-top">
-            <span class="research-tag">Theme 4 &bull; Supercomputing</span>
-            <h2 class="research-card-title">Massively Parallel Atomistic MD: DL_POLY 5</h2>
+            <span class="research-tag">Theme 4 &bull; Autonomous Workflows</span>
+            <h2 class="research-card-title">High-Throughput Simulation Workflows with janus-core &amp; aiida-mlip</h2>
             <p class="research-card-desc">
-              STFC DL_POLY 5 is engineered for massive parallelism on distributed-memory supercomputers and heterogeneous accelerators. We lead core enhancements in spatial domain decomposition, rigid-body quaternion dynamics, on-the-fly physical observable calculation, and GPU offloading to model complex condensed systems comprising tens of millions of atoms.
+              Bridging the gap between interatomic potentials and scientific discovery requires seamless automation. With janus-core and the aiida-mlip plugin, we provide unified pipelines with full data provenance for geometry relaxation (BFGS, FIRE, FrechetCellFilter), equation of state fitting, full 6x6 elasticity stiffness tensors ($C_{{ij}}$), and climbing image nudged elastic band (CI-NEB) minimum energy pathways.
             </p>
           </div>
           <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
-            <a href="code.html" class="btn btn-outline">View DL_POLY 5 Software Details &rarr;</a>
+            <a href="code.html" class="btn btn-primary">Read Software Documentation &rarr;</a>
           </div>
         </article>
 
         <!-- Theme 5 -->
         <article class="research-card">
           <div class="research-card-top">
-            <span class="research-tag">Theme 5 &bull; Autonomous Workflows</span>
-            <h2 class="research-card-title">High-Throughput Simulation Workflows with janus-core</h2>
+            <span class="research-tag">Theme 5 &bull; Benchmarks &amp; DFT Optimisation</span>
+            <h2 class="research-card-title">Benchmarking &amp; DFT Acceleration (ml-peg &amp; goldilocks)</h2>
             <p class="research-card-desc">
-              Bridging the gap between interatomic potentials and scientific discovery requires seamless automation. With janus-core, we provide unified pipelines for geometry relaxation (BFGS, FIRE, FrechetCellFilter), equation of state fitting (Birch-Murnaghan, Murnaghan), full 6x6 elasticity stiffness tensors ($C_{{ij}}$), and climbing image nudged elastic band (CI-NEB) minimum energy pathways.
+              To establish trust in computational predictions, we engineer rigorous community benchmarks and input optimizers. The ML-PEG framework evaluates MLIP physical accuracy across diverse chemical systems, while Goldilocks automates optimal k-point mesh sampling for Quantum ESPRESSO single-point calculations.
             </p>
           </div>
           <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
-            <a href="https://stfc.github.io/janus-core" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Read janus-core Documentation &rarr;</a>
+            <a href="code.html" class="btn btn-outline">Explore ml-peg &amp; goldilocks &rarr;</a>
           </div>
         </article>
       </div>
@@ -1275,149 +1222,6 @@ def generate_research_html():
 </body>
 </html>"""
 
-def generate_code_html():
-    header_html = get_header("code")
-    footer_html = get_footer()
-    return f"""<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Code &amp; Software | Data Driven Materials and Molecular Science</title>
-  <meta name="description" content="Open-source scientific software, tools, and repositories developed by the DDMMS research group.">
-  <link rel="icon" type="image/svg+xml" href="assets/logos/ddmms.svg">
-  <link rel="stylesheet" href="assets/css/style.css">
-</head>
-<body>
-{header_html}
-
-  <main id="main-content" style="padding-top: 3rem;">
-    <div class="container">
-      <div class="section-header" style="text-align: left; margin-bottom: 2.5rem;">
-        <span class="section-pill">Open Source Ecosystem</span>
-        <h1 class="section-title">Software, Codes &amp; Tools</h1>
-        <p class="section-subtitle">
-          Freely accessible, well-documented, and tested scientific tools supporting the atomistic modeling community.
-        </p>
-      </div>
-
-      <div class="code-grid" style="grid-template-columns: 1fr 1fr;">
-        <!-- janus-core -->
-        <article class="code-card">
-          <div class="code-card-header">
-            <div class="code-title-group">
-              <h3><span>🪐</span> janus-core</h3>
-            </div>
-            <span class="badge" style="background:#dbeafe; color:#1e40af;">Python / ASE / CLI</span>
-          </div>
-          <p class="code-desc">
-            Tools for materials modeling with machine-learned interatomic potentials (MACE, SevenNet, CHGNet, M3GNet). Provides a simple, robust CLI and Python API with full ASE calculator support.
-          </p>
-          <div class="code-install-box">
-            <code>pip install janus-core</code>
-            <button class="copy-snippet-btn" data-code="pip install janus-core" title="Copy command">📋</button>
-          </div>
-          <ul class="code-features-list">
-            <li>Single-point energies, forces, stress tensors, Hessians</li>
-            <li>Geometry optimization with FrechetCellFilter &amp; BFGS/FIRE</li>
-            <li>Molecular dynamics (NVE, NVT, NPT) with thermostat/barostat logging</li>
-            <li>Automated equation of state (EOS) and full 6x6 elasticity stiffness tensors ($C_{{ij}}$)</li>
-            <li>Phonon band structures &amp; DOS via Phonopy</li>
-            <li>Minimum Energy Pathways with Climbing-Image NEB</li>
-          </ul>
-          <div class="person-links">
-            <a href="https://github.com/stfc/janus-core" target="_blank" rel="noopener noreferrer" class="person-link-btn">GitHub &rarr;</a>
-            <a href="https://stfc.github.io/janus-core" target="_blank" rel="noopener noreferrer" class="person-link-btn">Docs</a>
-            <a href="https://pypi.org/project/janus-core/" target="_blank" rel="noopener noreferrer" class="person-link-btn">PyPI</a>
-          </div>
-        </article>
-
-        <!-- FTorch -->
-        <article class="code-card">
-          <div class="code-card-header">
-            <div class="code-title-group">
-              <h3><span>🔥</span> FTorch</h3>
-            </div>
-            <span class="badge" style="background:#fee2e2; color:#991b1b;">Fortran / C++ / PyTorch</span>
-          </div>
-          <p class="code-desc">
-            A library for direct coupling of PyTorch machine learning models into native Fortran applications. Developed to lower the technical barrier for incorporating modern AI/ML into large legacy numerical engines.
-          </p>
-          <div class="code-install-box">
-            <code>git clone https://github.com/stfc/FTorch.git</code>
-            <button class="copy-snippet-btn" data-code="git clone https://github.com/stfc/FTorch.git" title="Copy command">📋</button>
-          </div>
-          <ul class="code-features-list">
-            <li>Direct integration with LibTorch without Python runtime overhead</li>
-            <li>Preserves high computational throughput on HPC clusters</li>
-            <li>Published in the Journal of Open Source Software (JOSS)</li>
-            <li>Extensive tutorial suite and CMake build templates</li>
-          </ul>
-          <div class="person-links">
-            <a href="https://github.com/stfc/FTorch" target="_blank" rel="noopener noreferrer" class="person-link-btn">GitHub &rarr;</a>
-            <a href="https://doi.org/10.21105/joss.07602" target="_blank" rel="noopener noreferrer" class="person-link-btn">JOSS Paper</a>
-          </div>
-        </article>
-
-        <!-- DL_POLY 5 -->
-        <article class="code-card">
-          <div class="code-card-header">
-            <div class="code-title-group">
-              <h3><span>🌐</span> DL_POLY 5</h3>
-            </div>
-            <span class="badge" style="background:#e0e7ff; color:#3730a3;">Fortran / MPI / OpenMP</span>
-          </div>
-          <p class="code-desc">
-            STFC's flagship molecular dynamics simulation package designed for distributed memory supercomputers. Scales smoothly across thousands of cores for materials, biomolecules, and complex solutions.
-          </p>
-          <div class="code-install-box">
-            <code>cmake -B build -DENABLE_MPI=ON</code>
-            <button class="copy-snippet-btn" data-code="cmake -B build -DENABLE_MPI=ON" title="Copy command">📋</button>
-          </div>
-          <ul class="code-features-list">
-            <li>Massively parallel domain decomposition</li>
-            <li>On-the-fly transport coefficient and correlation calculation</li>
-            <li>Rigid body quaternions, bond constraints, and Ewald sums</li>
-          </ul>
-          <div class="person-links">
-            <a href="https://www.scd.stfc.ac.uk/Pages/DL_POLY.aspx" target="_blank" rel="noopener noreferrer" class="person-link-btn">STFC Portal &rarr;</a>
-            <a href="https://www.ccp5.ac.uk" target="_blank" rel="noopener noreferrer" class="person-link-btn">CCP5</a>
-          </div>
-        </article>
-
-        <!-- pubs -->
-        <article class="code-card">
-          <div class="code-card-header">
-            <div class="code-title-group">
-              <h3><span>📚</span> pubs</h3>
-            </div>
-            <span class="badge" style="background:#fef3c7; color:#92400e;">Python / ORCID / CI</span>
-          </div>
-          <p class="code-desc">
-            Automated publication aggregation engine using the ORCID Public API. Synchronizes research group bibliographies, deduplicates multi-author papers, and generates static searchable portals and feeds.
-          </p>
-          <div class="code-install-box">
-            <code>python pubs.py</code>
-            <button class="copy-snippet-btn" data-code="python pubs.py" title="Copy command">📋</button>
-          </div>
-          <ul class="code-features-list">
-            <li>Continuous weekly synchronization via GitHub Actions</li>
-            <li>Outputs interactive HTML, Markdown bibliography &amp; JSON feeds</li>
-            <li>Instantaneous offline execution with embedded local caching</li>
-          </ul>
-          <div class="person-links">
-            <a href="https://github.com/ddmms/pubs" target="_blank" rel="noopener noreferrer" class="person-link-btn">GitHub &rarr;</a>
-            <a href="publications.html" class="person-link-btn">View Live Portal</a>
-          </div>
-        </article>
-      </div>
-    </div>
-  </main>
-
-{footer_html}
-  <script src="assets/js/main.js"></script>
-</body>
-</html>"""
 
 def main():
     print("Loading publications and authors...")
@@ -1430,7 +1234,7 @@ def main():
         "about.html": generate_about_html(),
         "people.html": generate_people_html(),
         "research.html": generate_research_html(),
-        "code.html": generate_code_html()
+        "code.html": generate_code_html(),
     }
 
     for filename, content in pages.items():
@@ -1440,6 +1244,7 @@ def main():
         print(f"Generated {filename} ({len(content)} bytes)")
 
     print("Site generation complete!")
+
 
 if __name__ == "__main__":
     main()

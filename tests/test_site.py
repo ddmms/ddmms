@@ -57,13 +57,28 @@ class TestDDMMSSite(unittest.TestCase):
         self.assertIsInstance(data, list)
         self.assertGreater(len(data), 0, "No publications in publications.json")
 
-    def test_embedded_publications_script_in_index(self):
-        content = (BASE_DIR / "index.html").read_text(encoding="utf-8")
+    def test_embedded_publications_script_in_publications_page(self):
+        content = (BASE_DIR / "publications.html").read_text(encoding="utf-8")
         match = re.search(r'<script\s+id="publications-data"\s+type="application/json">\s*([\s\S]*?)\s*</script>', content)
-        self.assertIsNotNone(match, "Embedded publications-data script missing in index.html")
+        self.assertIsNotNone(match, "Embedded publications-data script missing in publications.html")
         data = json.loads(match.group(1))
         self.assertIsInstance(data, list)
         self.assertGreater(len(data), 0)
+
+    def test_codes_showcase_in_code_page(self):
+        code_content = (BASE_DIR / "code.html").read_text(encoding="utf-8").lower()
+        expected_codes = ["janus-core", "aiida-mlip", "ml-peg", "goldilocks"]
+        for c in expected_codes:
+            self.assertIn(c, code_content, f"Expected code '{c}' not found in code.html")
+
+    def test_separate_navigation_links(self):
+        for fname in self.html_files:
+            content = (BASE_DIR / "fname" if False else BASE_DIR / fname).read_text(encoding="utf-8")
+            self.assertIn('href="about.html"', content, f"Separate link about.html missing in {fname}")
+            self.assertIn('href="people.html"', content, f"Separate link people.html missing in {fname}")
+            self.assertIn('href="research.html"', content, f"Separate link research.html missing in {fname}")
+            self.assertIn('href="publications.html"', content, f"Separate link publications.html missing in {fname}")
+            self.assertIn('href="code.html"', content, f"Separate link code.html missing in {fname}")
 
     def test_css_and_js_assets_exist(self):
         self.assertTrue((BASE_DIR / "assets" / "css" / "style.css").exists())
