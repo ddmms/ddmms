@@ -428,7 +428,9 @@ def generate_index_html(pubs, authors):
         <div class="people-grid">
           <article class="person-card">
             <div class="person-header">
-              <div class="person-avatar">AE</div>
+              <div class="person-avatar">
+                <img src="assets/images/alin_elena.jpg" alt="Dr. Alin Marin Elena">
+              </div>
               <div class="person-title-wrap">
                 <h3>Dr. Alin Marin Elena</h3>
                 <div class="person-role">Group Leader &bull; Principal Computational Scientist</div>
@@ -919,7 +921,9 @@ def generate_people_html():
           <!-- Dr. Alin Marin Elena -->
           <article class="person-card">
             <div class="person-header">
-              <div class="person-avatar">AE</div>
+              <div class="person-avatar">
+                <img src="assets/images/alin_elena.jpg" alt="Dr. Alin Marin Elena">
+              </div>
               <div class="person-title-wrap">
                 <h3>Dr. Alin Marin Elena</h3>
                 <div class="person-role">Group Leader &bull; Principal Computational Scientist</div>
