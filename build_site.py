@@ -448,7 +448,9 @@ def generate_index_html(pubs, authors):
 
           <article class="person-card">
             <div class="person-header">
-              <div class="person-avatar">EK</div>
+              <div class="person-avatar">
+                <img src="assets/images/elliott_kasoar.jpg" alt="Elliott Kasoar">
+              </div>
               <div class="person-title-wrap">
                 <h3>Elliott Kasoar</h3>
                 <div class="person-role">Computational Scientist &bull; Research Associate</div>
@@ -957,7 +959,9 @@ def generate_people_html():
           <!-- Elliott Kasoar -->
           <article class="person-card">
             <div class="person-header">
-              <div class="person-avatar">EK</div>
+              <div class="person-avatar">
+                <img src="assets/images/elliott_kasoar.jpg" alt="Elliott Kasoar">
+              </div>
               <div class="person-title-wrap">
                 <h3>Elliott Kasoar</h3>
                 <div class="person-role">Computational Scientist &bull; Research Associate</div>
