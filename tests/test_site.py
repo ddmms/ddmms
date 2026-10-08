@@ -92,6 +92,28 @@ class TestDDMMSSite(unittest.TestCase):
         self.assertTrue((BASE_DIR / "assets" / "js" / "main.js").exists())
         self.assertTrue((BASE_DIR / "assets" / "js" / "publications.js").exists())
 
+    def test_people_page_sections(self):
+        people_html = (BASE_DIR / "people.html").read_text(encoding="utf-8").lower()
+        self.assertIn("core members", people_html)
+        self.assertIn("former members", people_html)
+        self.assertIn("collaborator", people_html)
+        self.assertIn("visitor", people_html)
+
+    def test_people_page_collaborators_and_visitors_content(self):
+        people_html = (BASE_DIR / "people.html").read_text(encoding="utf-8")
+        self.assertIn("Gilberto Teobaldi", people_html, "Collaborator Dr. Gilberto Teobaldi missing")
+        self.assertIn("Matteo Salvalaglio", people_html, "Visitor Prof. Matteo Salvalaglio missing")
+        self.assertIn("Jacob Wilkins", people_html, "Former member Dr. Jacob Wilkins missing")
+
+    def test_people_subnav_anchors(self):
+        people_html = (BASE_DIR / "people.html").read_text(encoding="utf-8")
+        self.assertIn('id="core-team"', people_html)
+        self.assertIn('id="former-members"', people_html)
+        self.assertIn('id="collaborators"', people_html)
+        self.assertIn('id="visitors"', people_html)
+        self.assertIn('id="contact"', people_html)
+
+
 if __name__ == "__main__":
     unittest.main()
 

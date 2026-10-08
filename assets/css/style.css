@@ -978,6 +978,60 @@ a:hover {
   height: 14px;
 }
 
+.person-tenure {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.15rem 0.55rem;
+  background: var(--badge-bg);
+  color: var(--badge-text);
+  border-radius: var(--radius-full);
+  margin-top: 0.25rem;
+  letter-spacing: 0.02em;
+}
+
+.person-badge-dest {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.25rem 0.6rem;
+  background: var(--primary-light);
+  color: var(--primary);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  margin-top: 0.25rem;
+}
+
+.subnav-pills {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 2.5rem;
+}
+
+.subnav-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.45rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: var(--radius-full);
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.subnav-pill:hover,
+.subnav-pill:focus {
+  background: var(--primary-light);
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
 /* ==========================================================================
    Code & Software Section
    ========================================================================== */
