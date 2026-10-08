@@ -71,6 +71,13 @@ class TestDDMMSSite(unittest.TestCase):
         for c in expected_codes:
             self.assertIn(c, code_content, f"Expected code '{c}' not found in code.html")
 
+    def test_goldilocks_ac_uk_and_psdi_presence(self):
+        code_html = (BASE_DIR / "code.html").read_text(encoding="utf-8")
+        about_html = (BASE_DIR / "about.html").read_text(encoding="utf-8")
+        self.assertIn("goldilocks.ac.uk", code_html, "goldilocks.ac.uk not found in code.html")
+        self.assertIn("psdi", about_html.lower(), "PSDI reference missing in about.html")
+        self.assertIn("data to knowledge", about_html.lower(), "Data to Knowledge missing in about.html")
+
     def test_separate_navigation_links(self):
         for fname in self.html_files:
             content = (BASE_DIR / "fname" if False else BASE_DIR / fname).read_text(encoding="utf-8")

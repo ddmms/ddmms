@@ -133,6 +133,7 @@ def get_footer():
           <ul class="footer-links">
             <li><a href="https://www.scd.stfc.ac.uk" target="_blank" rel="noopener noreferrer">STFC SCD</a></li>
             <li><a href="https://www.ukri.org" target="_blank" rel="noopener noreferrer">UKRI</a></li>
+            <li><a href="https://www.psdi.ac.uk" target="_blank" rel="noopener noreferrer">PSDI Data to Knowledge</a></li>
             <li><a href="https://www.ccp5.ac.uk" target="_blank" rel="noopener noreferrer">CCP5</a></li>
             <li><a href="https://sci-techdaresbury.com" target="_blank" rel="noopener noreferrer">Sci-Tech Daresbury</a></li>
           </ul>
@@ -143,8 +144,8 @@ def get_footer():
           <ul class="footer-links">
             <li><a href="https://github.com/stfc/janus-core" target="_blank" rel="noopener noreferrer">janus-core</a></li>
             <li><a href="https://github.com/stfc/aiida-mlip" target="_blank" rel="noopener noreferrer">aiida-mlip</a></li>
-            <li><a href="https://github.com/ddmms/ml-peg" target="_blank" rel="noopener noreferrer">ml-peg</a></li>
-            <li><a href="https://github.com/stfc/goldilocks" target="_blank" rel="noopener noreferrer">goldilocks</a></li>
+            <li><a href="https://ml-peg.stfc.ac.uk" target="_blank" rel="noopener noreferrer">ml-peg</a></li>
+            <li><a href="https://goldilocks.ac.uk" target="_blank" rel="noopener noreferrer">goldilocks.ac.uk</a></li>
             <li><a href="publications.json" download="publications.json">publications.json</a></li>
             <li><a href="PUBLICATIONS.md" target="_blank">PUBLICATIONS.md</a></li>
           </ul>
@@ -205,7 +206,7 @@ def generate_index_html(pubs, authors):
         <div class="hero-content">
           <div class="hero-badge">
             <span class="pulse-dot"></span>
-            <span>STFC &bull; UKRI &bull; Sci-Tech Daresbury</span>
+            <span>STFC &bull; UKRI &bull; PSDI Data to Knowledge &bull; Sci-Tech Daresbury</span>
           </div>
           <h1 class="hero-title">
             <span class="gradient-text">Data Driven</span> Materials &amp; Molecular Science
@@ -451,17 +452,18 @@ def generate_index_html(pubs, authors):
               <div class="code-title-group">
                 <h3><span>🐻</span> goldilocks</h3>
               </div>
-              <span class="badge" style="background:#ecfdf5; color:#065f46;">DFT / Streamlit</span>
+              <span class="badge" style="background:#ecfdf5; color:#065f46;">PSDI &bull; goldilocks.ac.uk</span>
             </div>
             <p class="code-desc">
-              Web application and library for generating input files with optimised k-point meshes for Quantum ESPRESSO SCF total energy calculations.
+              Web application and library for generating input files with optimised k-point meshes for Quantum ESPRESSO SCF calculations. Part of the PSDI Data to Knowledge initiative.
             </p>
             <div class="code-install-box">
               <code>pip install goldilocks</code>
               <button class="copy-snippet-btn" data-code="pip install goldilocks" title="Copy command">📋</button>
             </div>
             <div class="person-links" style="margin-top: 1rem;">
-              <a href="https://github.com/stfc/goldilocks" target="_blank" rel="noopener noreferrer" class="person-link-btn">GitHub Repo &rarr;</a>
+              <a href="https://goldilocks.ac.uk" target="_blank" rel="noopener noreferrer" class="person-link-btn">goldilocks.ac.uk &rarr;</a>
+              <a href="https://github.com/stfc/goldilocks" target="_blank" rel="noopener noreferrer" class="person-link-btn">GitHub Repo</a>
               <a href="https://goldilocks.streamlit.app" target="_blank" rel="noopener noreferrer" class="person-link-btn">Streamlit App</a>
             </div>
           </article>
@@ -693,24 +695,26 @@ def generate_code_html():
             <div class="code-title-group">
               <h3><span>🐻</span> goldilocks</h3>
             </div>
-            <span class="badge" style="background:#ecfdf5; color:#065f46;">Python / Streamlit</span>
+            <span class="badge" style="background:#ecfdf5; color:#065f46;">PSDI &bull; goldilocks.ac.uk</span>
           </div>
           <p class="code-desc">
-            A web application and library for automated generation of input files with optimised k-point meshes for Quantum ESPRESSO self-consistent field (SCF) single-point total energy calculations.
+            A web application and library for automated generation of input files with optimised k-point meshes for Quantum ESPRESSO self-consistent field (SCF) calculations. Developed as part of the <strong>PSDI (Physical Sciences Data Infrastructure) Data to Knowledge</strong> initiative to eliminate computational waste and improve sustainability on national supercomputers like ARCHER2.
           </p>
           <div class="code-install-box">
             <code>pip install goldilocks</code>
             <button class="copy-snippet-btn" data-code="pip install goldilocks" title="Copy command">📋</button>
           </div>
           <ul class="code-features-list">
-            <li>Automatic determination of optimised k-point sampling balancing accuracy and compute time</li>
+            <li>Part of the UKRI PSDI Data to Knowledge national infrastructure framework</li>
+            <li>Predicts "Goldilocks" k-point convergence parameters to reduce compute waste and carbon footprint</li>
+            <li>Dedicated project portal hosted at <a href="https://goldilocks.ac.uk" target="_blank" rel="noopener noreferrer">goldilocks.ac.uk</a></li>
             <li>Interactive web interface deployed on Streamlit Community Cloud</li>
-            <li>Published in RSC <em>Digital Discovery</em> (2026, DOI: 10.1039/d5dd00565e)</li>
-            <li>Command-line interface and Python module for automated high-throughput DFT workflows</li>
+            <li>Peer-reviewed and published in RSC <em>Digital Discovery</em> (2026, DOI: 10.1039/d5dd00565e)</li>
           </ul>
           <div class="person-links">
-            <a href="https://github.com/stfc/goldilocks" target="_blank" rel="noopener noreferrer" class="person-link-btn">GitHub Repository &rarr;</a>
-            <a href="https://goldilocks.streamlit.app" target="_blank" rel="noopener noreferrer" class="person-link-btn">Streamlit App &rarr;</a>
+            <a href="https://goldilocks.ac.uk" target="_blank" rel="noopener noreferrer" class="person-link-btn">goldilocks.ac.uk &rarr;</a>
+            <a href="https://github.com/stfc/goldilocks" target="_blank" rel="noopener noreferrer" class="person-link-btn">GitHub Repo &rarr;</a>
+            <a href="https://goldilocks.streamlit.app" target="_blank" rel="noopener noreferrer" class="person-link-btn">Streamlit App</a>
             <a href="https://doi.org/10.1039/d5dd00565e" target="_blank" rel="noopener noreferrer" class="person-link-btn">Paper (Digital Discovery)</a>
           </div>
         </article>
@@ -925,9 +929,12 @@ def generate_about_html():
             </div>
           </div>
 
-          <h3 style="margin-top: 2rem;">Collaborative Ecosystem</h3>
+          <h3 style="margin-top: 2rem;">Collaborative Ecosystem &amp; PSDI Data to Knowledge</h3>
           <p>
-            We work closely with the Collaborative Computational Project for computer simulation of condensed and materials phases (CCP5), the ISIS Neutron and Muon Source, the Diamond Light Source, and academic institutions worldwide.
+            We are an active development partner in the UKRI <strong>Physical Sciences Data Infrastructure (PSDI)</strong> under the <strong>Data to Knowledge</strong> program. Through projects such as <a href="https://goldilocks.ac.uk" target="_blank" rel="noopener noreferrer"><strong>Goldilocks</strong> (goldilocks.ac.uk)</a>, we develop tools, machine learning representations, and optimal parameter datasets to enhance the efficiency, reproducibility, and sustainability of electronic structure calculations across the UK research community.
+          </p>
+          <p>
+            We also work closely with the Collaborative Computational Project for computer simulation of condensed and materials phases (CCP5), the ISIS Neutron and Muon Source, the Diamond Light Source, and academic institutions worldwide.
           </p>
         </div>
 
@@ -942,6 +949,10 @@ def generate_about_html():
               <li class="news-item">
                 <div class="news-date">Location</div>
                 <div class="news-headline">Sci-Tech Daresbury, Cheshire / Warrington, UK.</div>
+              </li>
+              <li class="news-item">
+                <div class="news-date">National Infrastructure</div>
+                <div class="news-headline">PSDI (Physical Sciences Data Infrastructure) – Data to Knowledge program partner.</div>
               </li>
               <li class="news-item">
                 <div class="news-date">HPC Supercomputing</div>
@@ -1203,14 +1214,18 @@ def generate_research_html():
         <!-- Theme 5 -->
         <article class="research-card">
           <div class="research-card-top">
-            <span class="research-tag">Theme 5 &bull; Benchmarks &amp; DFT Optimisation</span>
-            <h2 class="research-card-title">Benchmarking &amp; DFT Acceleration (ml-peg &amp; goldilocks)</h2>
+            <span class="research-tag">Theme 5 &bull; PSDI Data to Knowledge &amp; Benchmarks</span>
+            <h2 class="research-card-title">Sustainable DFT &amp; Community Benchmarks (Goldilocks &amp; ML-PEG)</h2>
             <p class="research-card-desc">
-              To establish trust in computational predictions, we engineer rigorous community benchmarks and input optimizers. The ML-PEG framework evaluates MLIP physical accuracy across diverse chemical systems, while Goldilocks automates optimal k-point mesh sampling for Quantum ESPRESSO single-point calculations.
+              Computational electronic structure calculations represent a major fraction of workloads on national supercomputing services like ARCHER2. In collaboration with the <strong>PSDI (Physical Sciences Data Infrastructure) Data to Knowledge</strong> initiative, we develop <a href="https://goldilocks.ac.uk" target="_blank" rel="noopener noreferrer"><strong>Goldilocks</strong> (goldilocks.ac.uk)</a> to predict optimal, sustainable k-point convergence parameters for Quantum ESPRESSO, eliminating compute and electricity waste while preserving target accuracy.
+            </p>
+            <p class="research-card-desc" style="margin-top: 0.5rem;">
+              Alongside Goldilocks, our ML-PEG benchmarking platform provides rigorous, multi-property evaluation protocols for community machine-learned interatomic potentials.
             </p>
           </div>
-          <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
-            <a href="code.html" class="btn btn-outline">Explore ml-peg &amp; goldilocks &rarr;</a>
+          <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <a href="https://goldilocks.ac.uk" target="_blank" rel="noopener noreferrer" class="btn btn-primary">goldilocks.ac.uk &rarr;</a>
+            <a href="code.html" class="btn btn-outline">Explore Code &amp; Software &rarr;</a>
           </div>
         </article>
       </div>
