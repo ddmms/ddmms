@@ -13,8 +13,8 @@ Welcome to the official website repository for the **Data Driven Materials and M
   - **Publications**: Full interactive catalog integrated from the group's ORCID automated aggregation pipeline (`../pubs`), featuring live text search, author filtering, year filtering, sorting, BibTeX generation, citation copying, and DOI links.
   - **Code**: Showcase of flagship open-source scientific tools developed by the group: `janus-core`, `aiida-mlip`, `ml-peg`, and `goldilocks`, with quick copy installation commands and links to repositories.
 - **Dedicated Multi-Page Architecture**:
-  - Independent, dedicated pages for each section ([`about.html`](about.html), [`people.html`](people.html), [`research.html`](research.html), [`publications.html`](publications.html), [`code.html`](code.html)) rather than a single linear page, ensuring optimal navigation, deep-linking, and fast loading.
-  - Landing page ([`index.html`](index.html)) provides a focused home overview with quick portal gateways to each section.
+  - Independent, dedicated pages for each section ([`index.html`](index.html), [`people.html`](people.html), [`research.html`](research.html), [`publications.html`](publications.html), [`code.html`](code.html)) rather than a single linear page, ensuring optimal navigation, deep-linking, and fast loading.
+  - Landing page ([`index.html`](index.html)) provides the group mission, recent highlights, and news.
 - **Adaptive Dark / Light Themes**:
   - Dynamically toggles logos between `ddmms_for_light_modes` and `ddmms_for_dark_modes` for pixel-perfect contrast.
   - Persists preference via `localStorage` and respects system `prefers-color-scheme`.
@@ -32,8 +32,7 @@ Welcome to the official website repository for the **Data Driven Materials and M
 
 ```text
 .
-├── index.html              # Dedicated Home landing page with group highlights & gateways
-├── about.html              # Dedicated About page (mission, history, pillars)
+├── index.html              # Landing / About page (mission, recent highlights, news)
 ├── people.html             # Dedicated People & team page (profiles, ORCID, contacts)
 ├── research.html           # Dedicated Research themes page (scientific programs)
 ├── publications.html       # Dedicated Publications portal (filters, search, BibTeX)

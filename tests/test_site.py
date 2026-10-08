@@ -11,7 +11,6 @@ class TestDDMMSSite(unittest.TestCase):
         self.html_files = [
             "index.html",
             "publications.html",
-            "about.html",
             "people.html",
             "research.html",
             "code.html"
@@ -73,13 +72,13 @@ class TestDDMMSSite(unittest.TestCase):
 
     def test_goldilocks_ac_uk_and_psdi_presence(self):
         code_html = (BASE_DIR / "code.html").read_text(encoding="utf-8")
-        about_html = (BASE_DIR / "about.html").read_text(encoding="utf-8")
+        footer_html = (BASE_DIR / "footer.html").read_text(encoding="utf-8")
         research_html = (BASE_DIR / "research.html").read_text(encoding="utf-8")
         self.assertIn("goldilocks.ac.uk", code_html, "goldilocks.ac.uk not found in code.html")
         self.assertIn("goldilocks.ac.uk", research_html, "goldilocks.ac.uk not found in research.html")
         self.assertIn("ml-peg", research_html.lower(), "ml-peg not found in research.html")
-        self.assertIn("psdi", about_html.lower(), "PSDI reference missing in about.html")
-        self.assertIn("data to knowledge", about_html.lower(), "Data to Knowledge missing in about.html")
+        self.assertIn("psdi", footer_html.lower(), "PSDI reference missing in footer.html")
+        self.assertIn("data to knowledge", footer_html.lower(), "Data to Knowledge missing in footer.html")
 
     def test_research_cards_include_goldilocks_and_ml_peg(self):
         research_html = (BASE_DIR / "research.html").read_text(encoding="utf-8")
@@ -87,22 +86,18 @@ class TestDDMMSSite(unittest.TestCase):
         self.assertIn("Machine Learning Performance and Extrapolation Guide (ML-PEG)", research_html)
 
     def test_key_facts_card_removed(self):
-        about_html = (BASE_DIR / "about.html").read_text(encoding="utf-8")
-        self.assertNotIn("Key Facts &amp; Infrastructure", about_html)
-        self.assertNotIn("Key Facts", about_html)
+        index_html = (BASE_DIR / "index.html").read_text(encoding="utf-8")
+        self.assertNotIn("Key Facts &amp; Infrastructure", index_html)
+        self.assertNotIn("Key Facts", index_html)
 
     def test_no_section_pills_across_site(self):
         for fname in self.html_files:
             content = (BASE_DIR / fname).read_text(encoding="utf-8")
             self.assertNotIn("section-pill", content, f"Found unexpected section-pill in {fname}")
 
-    def test_no_section_headers_on_index(self):
-        index_html = (BASE_DIR / "index.html").read_text(encoding="utf-8")
-        self.assertNotIn("section-header", index_html, "Found section-header in index.html")
-
     def test_no_menu_matching_title_on_first_section(self):
         menu_titles = [
-            ("about.html", "About"),
+            ("index.html", "About"),
             ("people.html", "People"),
             ("research.html", "Research"),
             ("publications.html", "Publications"),
@@ -119,26 +114,23 @@ class TestDDMMSSite(unittest.TestCase):
         self.assertTrue(img_path.exists(), "alin_elena.jpg image does not exist")
         self.assertGreater(img_path.stat().st_size, 1000, "alin_elena.jpg file is too small")
         self.assertIn("assets/images/alin_elena.jpg", (BASE_DIR / "people.html").read_text(encoding="utf-8"))
-        self.assertIn("assets/images/alin_elena.jpg", (BASE_DIR / "index.html").read_text(encoding="utf-8"))
 
     def test_elliott_kasoar_picture_used(self):
         img_path = BASE_DIR / "assets" / "images" / "elliott_kasoar.jpg"
         self.assertTrue(img_path.exists(), "elliott_kasoar.jpg image does not exist")
         self.assertGreater(img_path.stat().st_size, 1000, "elliott_kasoar.jpg file is too small")
         self.assertIn("assets/images/elliott_kasoar.jpg", (BASE_DIR / "people.html").read_text(encoding="utf-8"))
-        self.assertIn("assets/images/elliott_kasoar.jpg", (BASE_DIR / "index.html").read_text(encoding="utf-8"))
 
     def test_junwen_yin_picture_used(self):
         img_path = BASE_DIR / "assets" / "images" / "junwen_yin.jpeg"
         self.assertTrue(img_path.exists(), "junwen_yin.jpeg image does not exist")
         self.assertGreater(img_path.stat().st_size, 1000, "junwen_yin.jpeg file is too small")
         self.assertIn("assets/images/junwen_yin.jpeg", (BASE_DIR / "people.html").read_text(encoding="utf-8"))
-        self.assertIn("assets/images/junwen_yin.jpeg", (BASE_DIR / "index.html").read_text(encoding="utf-8"))
 
     def test_separate_navigation_links(self):
         for fname in ["header.html", "_includes/header.html", "footer.html", "_includes/footer.html"]:
             content = (BASE_DIR / fname).read_text(encoding="utf-8")
-            self.assertIn('href="about.html"', content, f"Separate link about.html missing in {fname}")
+            self.assertIn('href="index.html"', content, f"Separate link index.html missing in {fname}")
             self.assertIn('href="people.html"', content, f"Separate link people.html missing in {fname}")
             self.assertIn('href="research.html"', content, f"Separate link research.html missing in {fname}")
             self.assertIn('href="publications.html"', content, f"Separate link publications.html missing in {fname}")
@@ -278,25 +270,21 @@ class TestDDMMSSite(unittest.TestCase):
         self.assertIn(".katex", style_css, ".katex missing from style.css")
 
     def test_about_page_highlights_and_landing_page(self):
-        about_html = (BASE_DIR / "about.html").read_text(encoding="utf-8")
-        self.assertIn("Recent Highlights &amp; News", about_html)
-        self.assertIn("Work With Us", about_html)
-        self.assertIn("Contact the Group", about_html)
+        index_html = (BASE_DIR / "index.html").read_text(encoding="utf-8")
+        self.assertIn("Recent Highlights &amp; News", index_html)
+        self.assertIn("Work With Us", index_html)
+        self.assertIn("Contact the Group", index_html)
         # Ensure Recent Highlights & News appears above Work With Us / Contact
-        highlights_pos = about_html.find("Recent Highlights &amp; News")
-        contact_pos = about_html.find("Contact the Group")
+        highlights_pos = index_html.find("Recent Highlights &amp; News")
+        contact_pos = index_html.find("Contact the Group")
         self.assertNotEqual(highlights_pos, -1)
         self.assertNotEqual(contact_pos, -1)
         self.assertLess(highlights_pos, contact_pos, "Recent Highlights & News must appear above Contact")
 
-        # Brand links point to about.html as landing page
+        # Brand links point to index.html as landing page
         for fname in ["header.html", "_includes/header.html"]:
             content = (BASE_DIR / fname).read_text(encoding="utf-8")
-            self.assertIn('<a href="about.html" class="brand-link"', content)
-
-        # index.html redirects to about.html
-        index_html = (BASE_DIR / "index.html").read_text(encoding="utf-8")
-        self.assertIn('url=about.html', index_html)
+            self.assertIn('<a href="index.html" class="brand-link"', content)
 
 
 if __name__ == "__main__":

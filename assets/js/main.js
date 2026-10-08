@@ -61,10 +61,10 @@
     if (!headerScope) return;
 
     // Apply active link
-    const currentFilename = window.location.pathname.split('/').pop() || 'about.html';
+    const currentFilename = window.location.pathname.split('/').pop() || 'index.html';
     headerScope.querySelectorAll('.nav-desktop .nav-item a, .mobile-nav-item a').forEach(link => {
       const href = link.getAttribute('href');
-      if (href === currentFilename || (currentFilename === '' && href === 'about.html') || (currentFilename === 'index.html' && href === 'about.html')) {
+      if (href === currentFilename || (currentFilename === '' && href === 'index.html')) {
         link.classList.add('active');
       }
     });
@@ -181,7 +181,7 @@
           console.debug('Dynamic fetch of header.html failed, using fallback:', err);
           el.innerHTML = `  <header class="site-header" id="top">
     <div class="container header-container">
-      <a href="about.html" class="brand-link" aria-label="DDMMS Home">
+      <a href="index.html" class="brand-link" aria-label="DDMMS Home">
         <img id="site-logo" class="brand-logo-img" src="assets/logos/ddmms_for_light_modes.svg" alt="Data Driven Materials and Molecular Science">
         <div class="brand-text-block">
           <span class="brand-title-main">DDMMS</span>
@@ -191,7 +191,7 @@
 
       <nav class="nav-desktop" aria-label="Primary Navigation">
         <ul class="nav-links">
-          <li class="nav-item"><a href="about.html">About</a></li>
+          <li class="nav-item"><a href="index.html">About</a></li>
           <li class="nav-item"><a href="people.html">People</a></li>
           <li class="nav-item"><a href="research.html">Research</a></li>
           <li class="nav-item"><a href="publications.html">Publications</a></li>
@@ -217,7 +217,7 @@
     <!-- Mobile Navigation Drawer -->
     <div class="mobile-drawer" id="mobile-drawer">
       <ul class="mobile-nav-links">
-        <li class="mobile-nav-item"><a href="about.html"><span>About</span><span>&rarr;</span></a></li>
+        <li class="mobile-nav-item"><a href="index.html"><span>About</span><span>&rarr;</span></a></li>
         <li class="mobile-nav-item"><a href="people.html"><span>People</span><span>&rarr;</span></a></li>
         <li class="mobile-nav-item"><a href="research.html"><span>Research</span><span>&rarr;</span></a></li>
         <li class="mobile-nav-item"><a href="publications.html"><span>Publications</span><span>&rarr;</span></a></li>
@@ -263,7 +263,7 @@
         <div class="footer-col">
           <h5>Navigation</h5>
           <ul class="footer-links">
-            <li><a href="about.html">About Us</a></li>
+            <li><a href="index.html">About Us</a></li>
             <li><a href="people.html">People</a></li>
             <li><a href="research.html">Research Themes</a></li>
             <li><a href="publications.html">Publications</a></li>
