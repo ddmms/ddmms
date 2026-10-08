@@ -1172,8 +1172,6 @@ def generate_people_html():
             </div>
           </article>
         </div>
-
-
       </section>
 
       <!-- Opportunities Section -->
