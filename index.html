@@ -3,11 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="refresh" content="0; url=about.html">
-  <link rel="canonical" href="about.html">
-  <script>window.location.replace("about.html");</script>
-  <title>Data Driven Materials and Molecular Science | DDMMS</title>
-  <meta name="description" content="Data Driven Materials and Molecular Science (DDMMS) research group at STFC Daresbury Laboratory, UKRI. Machine learning interatomic potentials, multiscale molecular dynamics, and materials discovery.">
+  <title>About | Data Driven Materials and Molecular Science</title>
+  <meta name="description" content="Mission, background, and methodology of the Data Driven Materials and Molecular Science group at STFC Daresbury Laboratory, UKRI.">
   <link rel="icon" type="image/svg+xml" href="assets/logos/ddmms.svg">
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
@@ -17,352 +14,96 @@
 <body>
   <div id="site-header" data-include-header></div>
 
-  <main id="main-content">
-    <!-- Hero Section -->
-    <section class="hero-section">
-      <div class="container hero-grid">
-        <div class="hero-content">
-          <div class="hero-badge">
-            <span class="pulse-dot"></span>
-            <span>STFC &bull; UKRI &bull; PSDI Data to Knowledge &bull; Sci-Tech Daresbury</span>
-          </div>
-          <h1 class="hero-title">
-            <span class="gradient-text">Data Driven</span> Materials &amp; Molecular Science
-          </h1>
-          <p class="hero-subtitle">
-            Pioneering the convergence of physics-informed machine learning, high-performance molecular dynamics, and automated workflows to decipher materials from quantum to continuum scales.
+  <main id="main-content" style="padding-top: 3rem;">
+    <div class="container">
+      <div class="section-header" style="text-align: left; margin-bottom: 2.5rem;">
+        <p class="section-subtitle">
+          Uniting statistical physics, quantum mechanics, and artificial intelligence to explore matter at the atomic level.
+        </p>
+      </div>
+
+      <div class="about-grid">
+        <div class="about-text">
+          <h3>The Group Mission</h3>
+          <p>
+            The <strong>Data Driven Materials and Molecular Science (DDMMS)</strong> group is hosted within the Scientific Computing Department (SCD) of the Science and Technology Facilities Council (STFC), part of UK Research and Innovation (UKRI), based at Sci-Tech Daresbury.
           </p>
-          <div class="hero-cta-group">
-            <a href="research.html" class="btn btn-primary">Explore Research Themes</a>
-            <a href="code.html" class="btn btn-outline">Our Software &amp; Codes</a>
-            <a href="publications.html" class="btn btn-outline">Publications (60)</a>
-          </div>
-        </div>
+          <p>
+            Computational materials science has long faced a fundamental trade-off: high-accuracy quantum mechanical calculations (such as density functional theory and post-Hartree-Fock) are computationally expensive and limited to small systems, whereas classical empirical force fields scale to millions of atoms but suffer from fixed functional forms and limited chemical transferability.
+          </p>
+          <p>
+            Our core mission is to eliminate this trade-off by constructing robust, physics-informed machine-learned interatomic potentials (MLIPs), creating automated calculation workflows, and running extreme-scale simulations on high-performance computing facilities.
+          </p>
 
-        <div class="hero-visual">
-          <div class="hero-card-display">
-            <img class="hero-card-logo" src="assets/logos/ddmms_for_light_modes-with-text.svg" alt="DDMMS Logo">
-            <div class="hero-card-stats">
-              <div class="hero-stat-item">
-                <div class="hero-stat-num">60+</div>
-                <div class="hero-stat-label">Publications</div>
-              </div>
-              <div class="hero-stat-item">
-                <div class="hero-stat-num">4</div>
-                <div class="hero-stat-label">Core Packages</div>
-              </div>
-              <div class="hero-stat-item">
-                <div class="hero-stat-num">100%</div>
-                <div class="hero-stat-label">Open Science</div>
-              </div>
-              <div class="hero-stat-item">
-                <div class="hero-stat-num">HPC</div>
-                <div class="hero-stat-label">Scale Science</div>
-              </div>
+          <h3 style="margin-top: 1.5rem;">Methodological Pillars</h3>
+          <p>
+            Our research combines rigorous physics with modern data science across four interconnected layers:
+          </p>
+          <div class="about-pillars" style="margin-top: 0.5rem;">
+            <div class="pillar-card">
+              <div class="pillar-icon">🧬</div>
+              <h4 class="pillar-title">1. Machine Learning &amp; AI</h4>
+              <p class="pillar-desc">Equivariant graph neural networks (MACE, SevenNet, CHGNet), polarizable foundation models, and active learning strategies.</p>
             </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Mission & Overview Section -->
-    <section class="section-wrapper bg-alt">
-      <div class="container">
-        <div class="about-grid">
-          <div class="about-text">
-            <p>
-              The <strong>Data Driven Materials and Molecular Science (DDMMS)</strong> group is based at the Science and Technology Facilities Council (STFC) Scientific Computing Department at Sci-Tech Daresbury, UKRI.
-            </p>
-            <p>
-              Our research overcomes the traditional trade-off between quantum mechanical accuracy and large-scale simulation capabilities. By creating <strong>equivariant graph neural network potentials</strong>, automated calculation workflows, and high-performance computing pipelines, we enable predictive simulation of complex materials for energy storage, catalysis, carbon capture, and quantum technologies.
-            </p>
-
-            <div class="about-pillars">
-              <div class="pillar-card">
-                <div class="pillar-icon">⚛</div>
-                <h4 class="pillar-title">Machine Learning Potentials</h4>
-                <p class="pillar-desc">Equivariant foundation models (MACE, SevenNet, CHGNet) delivering DFT fidelity across millions of atoms.</p>
-              </div>
-              <div class="pillar-card">
-                <div class="pillar-icon">⚡</div>
-                <h4 class="pillar-title">Extreme-Scale MD</h4>
-                <p class="pillar-desc">Massively parallel algorithms, GPU offloading, and symplectic statistical mechanics.</p>
-              </div>
-              <div class="pillar-card">
-                <div class="pillar-icon">💎</div>
-                <h4 class="pillar-title">Nanoporous Materials</h4>
-                <p class="pillar-desc">Metal-organic frameworks (uMOF), negative thermal expansion, phonons, and gas adsorption.</p>
-              </div>
-              <div class="pillar-card">
-                <div class="pillar-icon">🛠</div>
-                <h4 class="pillar-title">Automated Workflows</h4>
-                <p class="pillar-desc">Reproducible pipelines with janus-core, aiida-mlip, ml-peg, and goldilocks.</p>
-              </div>
+            <div class="pillar-card">
+              <div class="pillar-icon">⚡</div>
+              <h4 class="pillar-title">2. Atomistic Simulation</h4>
+              <p class="pillar-desc">First-principles DFT, nonadiabatic dynamics with CP2K, and massive-parallel molecular dynamics with DL_POLY 5.</p>
             </div>
-
-            <div style="margin-top: 1.5rem;">
-              <a href="about.html" class="btn btn-primary">Read More About Our Group &rarr;</a>
+            <div class="pillar-card">
+              <div class="pillar-icon">🔬</div>
+              <h4 class="pillar-title">3. Materials Discovery</h4>
+              <p class="pillar-desc">Metal-organic frameworks (MOFs), molten salts for green energy, negative thermal expansion, and heterogeneous catalysts.</p>
             </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Research Highlights Section -->
-    <section class="section-wrapper">
-      <div class="container">
-        <div class="research-grid">
-          <div class="research-card">
-            <div class="research-card-top">
-              <span class="research-tag">Theme 1</span>
-              <h3 class="research-card-title">Foundation ML Interatomic Potentials</h3>
-              <p class="research-card-desc">
-                Developing equivariant graph neural networks (MACE, SevenNet, CHGNet), polarizable electrostatics (MACE-POLAR), and active-learning training set optimization.
-              </p>
+            <div class="pillar-card">
+              <div class="pillar-icon">🌐</div>
+              <h4 class="pillar-title">4. Open Science &amp; FAIR</h4>
+              <p class="pillar-desc">Modular, reproducible software pipelines published under permissive open-source licenses for the international community.</p>
             </div>
           </div>
 
-          <div class="research-card">
-            <div class="research-card-top">
-              <span class="research-tag">Theme 2</span>
-              <h3 class="research-card-title">Metal-Organic Frameworks &amp; Porous Solids</h3>
-              <p class="research-card-desc">
-                High-throughput screening of flexible MOF structures, negative thermal expansion (NTE) mechanics, vibrational phonon dynamics, and selective catalytic centers.
-              </p>
-            </div>
+          <h3 style="margin-top: 2rem;">Collaborative Ecosystem &amp; PSDI Data to Knowledge</h3>
+          <p>
+            We are an active development partner in the UKRI <strong>Physical Sciences Data Infrastructure (PSDI)</strong> under the <strong>Data to Knowledge</strong> program. Through projects such as <a href="https://goldilocks.ac.uk" target="_blank" rel="noopener noreferrer"><strong>Goldilocks</strong> (goldilocks.ac.uk)</a>, we develop tools, machine learning representations, and optimal parameter datasets to enhance the efficiency, reproducibility, and sustainability of electronic structure calculations across the UK research community.
+          </p>
+          <p>
+            We also work closely with the Collaborative Computational Project for computer simulation of condensed and materials phases (CCP5), the ISIS Neutron and Muon Source, the Diamond Light Source, and academic institutions worldwide.
+          </p>
+        </div>
+
+        <div class="about-sidebar">
+          <div class="news-box" style="margin-bottom: 1.5rem;">
+            <h3 class="news-box-title"><span>📢</span> Recent Highlights &amp; News</h3>
+            <ul class="news-list">
+              <li class="news-item">
+                <div class="news-date">2026 Milestone</div>
+                <div class="news-headline">Roadmap for an atomistic machine-learning ecosystem published on arXiv (2609.39090).</div>
+              </li>
+              <li class="news-item">
+                <div class="news-date">2026 Release</div>
+                <div class="news-headline">Goldilocks automated k-point sampling framework for Quantum ESPRESSO published in <em>Digital Discovery</em>.</div>
+              </li>
+              <li class="news-item">
+                <div class="news-date">2026 Discovery</div>
+                <div class="news-headline">uMOF universal benchmark database and ML interatomic potentials released for metal-organic frameworks.</div>
+              </li>
+              <li class="news-item">
+                <div class="news-date">Software Ecosystem</div>
+                <div class="news-headline">aiida-mlip released, integrating janus-core workflows with full data provenance in AiiDA.</div>
+              </li>
+            </ul>
           </div>
 
-          <div class="research-card">
-            <div class="research-card-top">
-              <span class="research-tag">Theme 3</span>
-              <h3 class="research-card-title">Complex Fluids &amp; Molten Salts</h3>
-              <p class="research-card-desc">
-                Microscopic transport properties, ionic correlations, viscosity, and fundamental bounds of thermal conductivity in molten salts for green energy systems.
-              </p>
-            </div>
+          <div class="news-box">
+            <h3 class="news-box-title"><span>🤝</span> Work With Us</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1rem;">
+              We welcome prospective PhD researchers, postdocs, and international scientific visitors interested in machine-learning interatomic potentials, molecular dynamics algorithms, and porous materials.
+            </p>
+            <a href="people.html#contact" class="btn btn-primary" style="width: 100%;">Contact the Group</a>
           </div>
         </div>
-
-        <div style="text-align: center; margin-top: 2.5rem;">
-          <a href="research.html" class="btn btn-outline">Explore All Research Programs &rarr;</a>
-        </div>
       </div>
-    </section>
-
-    <!-- Software & Codes Showcase -->
-    <section class="section-wrapper bg-alt">
-      <div class="container">
-        <div class="code-grid">
-          <!-- janus-core -->
-          <article class="code-card">
-            <div class="code-card-header">
-              <div class="code-title-group">
-                <h3><span>🪐</span> janus-core</h3>
-              </div>
-              <span class="badge" style="background:#dbeafe; color:#1e40af;">Python / ASE</span>
-            </div>
-            <p class="code-desc">
-              High-level Python API and rich CLI for materials modeling with machine-learned interatomic potentials (MACE, SevenNet, CHGNet, M3GNet).
-            </p>
-            <div class="code-install-box">
-              <code>pip install janus-core</code>
-              <button class="copy-snippet-btn" data-code="pip install janus-core" title="Copy install command">📋</button>
-            </div>
-            <div class="person-links" style="margin-top: 1rem;">
-              <a href="https://github.com/stfc/janus-core" target="_blank" rel="noopener noreferrer" class="person-link-btn">GitHub Repo &rarr;</a>
-              <a href="https://stfc.github.io/janus-core" target="_blank" rel="noopener noreferrer" class="person-link-btn">Documentation</a>
-            </div>
-          </article>
-
-          <!-- aiida-mlip -->
-          <article class="code-card">
-            <div class="code-card-header">
-              <div class="code-title-group">
-                <h3><span>🔄</span> aiida-mlip</h3>
-              </div>
-              <span class="badge" style="background:#fef3c7; color:#92400e;">AiiDA / Provenance</span>
-            </div>
-            <p class="code-desc">
-              AiiDA plugin integrating janus-core for reproducible calculations with machine-learned interatomic potentials and full data provenance.
-            </p>
-            <div class="code-install-box">
-              <code>pip install aiida-mlip</code>
-              <button class="copy-snippet-btn" data-code="pip install aiida-mlip" title="Copy install command">📋</button>
-            </div>
-            <div class="person-links" style="margin-top: 1rem;">
-              <a href="https://github.com/stfc/aiida-mlip" target="_blank" rel="noopener noreferrer" class="person-link-btn">GitHub Repo &rarr;</a>
-              <a href="https://stfc.github.io/aiida-mlip" target="_blank" rel="noopener noreferrer" class="person-link-btn">Documentation</a>
-            </div>
-          </article>
-
-          <!-- ml-peg -->
-          <article class="code-card">
-            <div class="code-card-header">
-              <div class="code-title-group">
-                <h3><span>📊</span> ml-peg</h3>
-              </div>
-              <span class="badge" style="background:#e0e7ff; color:#3730a3;">Benchmark / Guide</span>
-            </div>
-            <p class="code-desc">
-              Machine Learning Performance and Extrapolation Guide. A benchmarking framework evaluating MLIPs across diverse systems and physical properties.
-            </p>
-            <div class="code-install-box">
-              <code>git clone https://github.com/ddmms/ml-peg.git</code>
-              <button class="copy-snippet-btn" data-code="git clone https://github.com/ddmms/ml-peg.git" title="Copy command">📋</button>
-            </div>
-            <div class="person-links" style="margin-top: 1rem;">
-              <a href="https://github.com/ddmms/ml-peg" target="_blank" rel="noopener noreferrer" class="person-link-btn">GitHub Repo &rarr;</a>
-              <a href="https://ml-peg.stfc.ac.uk" target="_blank" rel="noopener noreferrer" class="person-link-btn">Live Portal</a>
-            </div>
-          </article>
-
-          <!-- goldilocks -->
-          <article class="code-card">
-            <div class="code-card-header">
-              <div class="code-title-group">
-                <h3><span>🐻</span> goldilocks</h3>
-              </div>
-              <span class="badge" style="background:#ecfdf5; color:#065f46;">PSDI &bull; goldilocks.ac.uk</span>
-            </div>
-            <p class="code-desc">
-              Web application and library for generating input files with optimised k-point meshes for Quantum ESPRESSO SCF calculations. Part of the PSDI Data to Knowledge initiative.
-            </p>
-            <div class="code-install-box">
-              <code>pip install goldilocks</code>
-              <button class="copy-snippet-btn" data-code="pip install goldilocks" title="Copy command">📋</button>
-            </div>
-            <div class="person-links" style="margin-top: 1rem;">
-              <a href="https://goldilocks.ac.uk" target="_blank" rel="noopener noreferrer" class="person-link-btn">goldilocks.ac.uk &rarr;</a>
-              <a href="https://github.com/stfc/goldilocks" target="_blank" rel="noopener noreferrer" class="person-link-btn">GitHub Repo</a>
-              <a href="https://goldilocks.streamlit.app" target="_blank" rel="noopener noreferrer" class="person-link-btn">Streamlit App</a>
-            </div>
-          </article>
-        </div>
-
-        <div style="text-align: center; margin-top: 2.5rem;">
-          <a href="code.html" class="btn btn-primary">View Full Code &amp; Software Directory &rarr;</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Recent Publications Preview -->
-    <section class="section-wrapper">
-      <div class="container">
-        <div class="pubs-list" style="margin-bottom: 2rem;">
-          <article class="pub-card" style="padding: 1.15rem;">
-            <h4 class="pub-title" style="font-size: 1rem;">A budget-dependent crossover between coverage-and response-based training-set selection for machine-learned interatomic potentials</h4>
-            <div class="pub-meta">
-              <span style="font-weight: 600; color: var(--text);">Alin Marin Elena</span>
-              <span class="badge badge-year">2026</span>
-              <span class="pub-venue"> <em>arXiv preprint arXiv:2609.05877</em></span>
-              
-            </div>
-          </article>
-          <article class="pub-card" style="padding: 1.15rem;">
-            <h4 class="pub-title" style="font-size: 1rem;"><a href="https://arxiv.org/abs/2609.39090" target="_blank" rel="noopener noreferrer">A strategic roadmap for an atomistic machine-learning ecosystem</a></h4>
-            <div class="pub-meta">
-              <span style="font-weight: 600; color: var(--text);">Alin Marin Elena</span>
-              <span class="badge badge-year">2026</span>
-              <span class="pub-venue"> <em>arXiv preprint arxiv: 2609.39090</em></span>
-              
-            </div>
-          </article>
-          <article class="pub-card" style="padding: 1.15rem;">
-            <h4 class="pub-title" style="font-size: 1rem;">An Efficient On-the-Fly Nonadiabatic Coupling Framework Integrated into CP2K</h4>
-            <div class="pub-meta">
-              <span style="font-weight: 600; color: var(--text);">Junwen Yin</span>
-              <span class="badge badge-year">2026</span>
-              <span class="pub-venue"> <em>The Journal of Physical Chemistry Letters</em></span>
-              
-            </div>
-          </article>
-          <article class="pub-card" style="padding: 1.15rem;">
-            <h4 class="pub-title" style="font-size: 1rem;"><a href="https://doi.org/10.1039/d5dd00565e" target="_blank" rel="noopener noreferrer">Automatic generation of input files with optimised k-point meshes for Quantum ESPRESSO self-consistent field single-point total energy calculations</a></h4>
-            <div class="pub-meta">
-              <span style="font-weight: 600; color: var(--text);">Alin Marin Elena, Junwen Yin</span>
-              <span class="badge badge-year">2026</span>
-              <span class="pub-venue"> <em>Digital Discovery</em></span>
-              <a href="https://doi.org/10.1039/d5dd00565e" target="_blank" rel="noopener noreferrer" class="badge badge-doi">DOI: 10.1039/d5dd00565e</a>
-            </div>
-          </article>
-        </div>
-
-        <div style="text-align: center;">
-          <a href="publications.html" class="btn btn-primary">Search &amp; Filter All 60 Publications &rarr;</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- People Preview -->
-    <section class="section-wrapper bg-alt">
-      <div class="container">
-        <div class="people-grid">
-          <article class="person-card">
-            <div class="person-header">
-              <div class="person-avatar">
-                <img src="assets/images/alin_elena.jpg" alt="Dr. Alin Marin Elena">
-              </div>
-              <div class="person-title-wrap">
-                <h3>Dr. Alin Marin Elena</h3>
-                <div class="person-role">Group Leader &bull; Principal Computational Scientist</div>
-                <div class="person-affiliation">STFC SCD, UKRI | CCP5 Scientific Secretary</div>
-              </div>
-            </div>
-            <p class="person-bio">
-              Specializing in atomistic molecular dynamics, machine-learned interatomic potentials, DL_POLY development, and scientific computing infrastructures.
-            </p>
-            <div class="person-links">
-              <a href="people.html" class="person-link-btn">Full Profile &rarr;</a>
-              <a href="publications.html?author=Alin%20Marin%20Elena" class="person-link-btn">Publications</a>
-            </div>
-          </article>
-
-          <article class="person-card">
-            <div class="person-header">
-              <div class="person-avatar">
-                <img src="assets/images/elliott_kasoar.jpg" alt="Elliott Kasoar">
-              </div>
-              <div class="person-title-wrap">
-                <h3>Elliott Kasoar</h3>
-                <div class="person-role">Computational Scientist &bull; Research Associate</div>
-                <div class="person-affiliation">STFC SCD, UKRI</div>
-              </div>
-            </div>
-            <p class="person-bio">
-              Specialist in equivariant graph neural networks, foundation interatomic potentials (MACE), active learning, and lead developer of janus-core.
-            </p>
-            <div class="person-links">
-              <a href="people.html" class="person-link-btn">Full Profile &rarr;</a>
-              <a href="publications.html?author=Elliott%20Kasoar" class="person-link-btn">Publications</a>
-            </div>
-          </article>
-
-          <article class="person-card">
-            <div class="person-header">
-              <div class="person-avatar">
-                <img src="assets/images/junwen_yin.jpeg" alt="Dr. Junwen Yin">
-              </div>
-              <div class="person-title-wrap">
-                <h3>Dr. Junwen Yin</h3>
-                <div class="person-role">Computational Scientist &bull; Research Associate</div>
-                <div class="person-affiliation">STFC SCD, UKRI</div>
-              </div>
-            </div>
-            <p class="person-bio">
-              Expert in ab initio electronic structure methods, nonadiabatic dynamics, extended CP2K simulations, and materials modeling.
-            </p>
-            <div class="person-links">
-              <a href="people.html" class="person-link-btn">Full Profile &rarr;</a>
-              <a href="publications.html?author=Junwen%20Yin" class="person-link-btn">Publications</a>
-            </div>
-          </article>
-        </div>
-
-        <div style="text-align: center; margin-top: 2.5rem;">
-          <a href="people.html" class="btn btn-outline">Meet All Members &amp; Open Opportunities &rarr;</a>
-        </div>
-      </div>
-    </section>
+    </div>
   </main>
 
   <div id="site-footer" data-include-footer></div>
