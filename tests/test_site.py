@@ -74,9 +74,17 @@ class TestDDMMSSite(unittest.TestCase):
     def test_goldilocks_ac_uk_and_psdi_presence(self):
         code_html = (BASE_DIR / "code.html").read_text(encoding="utf-8")
         about_html = (BASE_DIR / "about.html").read_text(encoding="utf-8")
+        research_html = (BASE_DIR / "research.html").read_text(encoding="utf-8")
         self.assertIn("goldilocks.ac.uk", code_html, "goldilocks.ac.uk not found in code.html")
+        self.assertIn("goldilocks.ac.uk", research_html, "goldilocks.ac.uk not found in research.html")
+        self.assertIn("ml-peg", research_html.lower(), "ml-peg not found in research.html")
         self.assertIn("psdi", about_html.lower(), "PSDI reference missing in about.html")
         self.assertIn("data to knowledge", about_html.lower(), "Data to Knowledge missing in about.html")
+
+    def test_research_cards_include_goldilocks_and_ml_peg(self):
+        research_html = (BASE_DIR / "research.html").read_text(encoding="utf-8")
+        self.assertIn("Sustainable DFT &amp; k-Point Optimization (Goldilocks)", research_html)
+        self.assertIn("Machine Learning Performance and Extrapolation Guide (ML-PEG)", research_html)
 
     def test_key_facts_card_removed(self):
         about_html = (BASE_DIR / "about.html").read_text(encoding="utf-8")

@@ -1173,14 +1173,7 @@ def generate_people_html():
           </article>
         </div>
 
-        <!-- Sabbatical & Visiting Fellowships Box -->
-        <div style="margin-top: 2rem; background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.75rem;">
-          <h4 style="font-size: 1.15rem; font-weight: 700; color: var(--text); margin-bottom: 0.5rem;">Visiting the Group &amp; Sabbatical Stays</h4>
-          <p style="font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1rem;">
-            We regularly host academic visitors, sabbatical researchers, and students supported by schemes such as CCP5 Visitor Grants, STFC Scientific Computing fellowships, and international exchange programs at Sci-Tech Daresbury.
-          </p>
-          <a href="mailto:alin-marin.elena@stfc.ac.uk?subject=Academic%20Visitor%20Enquiry%20-%20DDMMS" class="btn btn-outline"><span>✉</span> Inquire About Sabbatical or Visitor Stays &rarr;</a>
-        </div>
+
       </section>
 
       <!-- Opportunities Section -->
@@ -1193,7 +1186,6 @@ def generate_people_html():
         </p>
         <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
           <a href="mailto:alin-marin.elena@stfc.ac.uk" class="btn btn-primary"><span>✉</span> Get in Touch via Email</a>
-          <a href="https://www.scd.stfc.ac.uk" target="_blank" rel="noopener noreferrer" class="btn btn-outline">STFC Careers &amp; Fellowships &rarr;</a>
         </div>
       </section>
     </div>
@@ -1292,18 +1284,38 @@ def generate_research_html():
         <!-- Theme 5 -->
         <article class="research-card">
           <div class="research-card-top">
-            <span class="research-tag">Theme 5 &bull; PSDI Data to Knowledge &amp; Benchmarks</span>
-            <h2 class="research-card-title">Sustainable DFT &amp; Community Benchmarks (Goldilocks &amp; ML-PEG)</h2>
+            <span class="research-tag">Theme 5 &bull; PSDI Data to Knowledge</span>
+            <h2 class="research-card-title">Sustainable DFT &amp; k-Point Optimization (Goldilocks)</h2>
             <p class="research-card-desc">
-              Computational electronic structure calculations represent a major fraction of workloads on national supercomputing services like ARCHER2. In collaboration with the <strong>PSDI (Physical Sciences Data Infrastructure) Data to Knowledge</strong> initiative, we develop <a href="https://goldilocks.ac.uk" target="_blank" rel="noopener noreferrer"><strong>Goldilocks</strong> (goldilocks.ac.uk)</a> to predict optimal, sustainable k-point convergence parameters for Quantum ESPRESSO, eliminating compute and electricity waste while preserving target accuracy.
+              Computational electronic structure calculations represent a major fraction of workloads on national supercomputing services like ARCHER2. In collaboration with the <strong>PSDI (Physical Sciences Data Infrastructure) Data to Knowledge</strong> initiative, we develop <a href="https://goldilocks.ac.uk" target="_blank" rel="noopener noreferrer"><strong>Goldilocks</strong> (goldilocks.ac.uk)</a> to predict optimal, sustainable k-point convergence parameters for Quantum ESPRESSO self-consistent field (SCF) calculations.
             </p>
             <p class="research-card-desc" style="margin-top: 0.5rem;">
-              Alongside Goldilocks, our ML-PEG benchmarking platform provides rigorous, multi-property evaluation protocols for community machine-learned interatomic potentials.
+              By balancing numerical accuracy with computational efficiency—never under-converged, never computationally wasteful—Goldilocks eliminates compute and electricity waste while preserving target accuracy. Peer-reviewed in RSC <em>Digital Discovery</em> (2026, DOI: 10.1039/d5dd00565e).
             </p>
           </div>
           <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); display: flex; gap: 0.75rem; flex-wrap: wrap;">
             <a href="https://goldilocks.ac.uk" target="_blank" rel="noopener noreferrer" class="btn btn-primary">goldilocks.ac.uk &rarr;</a>
-            <a href="code.html" class="btn btn-outline">Explore Code &amp; Software &rarr;</a>
+            <a href="https://github.com/stfc/goldilocks" target="_blank" rel="noopener noreferrer" class="btn btn-outline">GitHub &rarr;</a>
+            <a href="code.html" class="btn btn-outline">Explore in Software &rarr;</a>
+          </div>
+        </article>
+
+        <!-- Theme 6 -->
+        <article class="research-card">
+          <div class="research-card-top">
+            <span class="research-tag">Theme 6 &bull; MLIP Benchmarking &amp; Validation</span>
+            <h2 class="research-card-title">Machine Learning Performance and Extrapolation Guide (ML-PEG)</h2>
+            <p class="research-card-desc">
+              Evaluating machine-learned interatomic potentials requires going beyond simple training force and energy RMSE errors to evaluate true physical stability, phase behavior, and uncertainty quantification. The <strong>ML-PEG</strong> benchmarking platform establishes rigorous evaluation protocols to stress-test MLIPs across diverse chemical systems, out-of-distribution scenarios, and extrapolation limits.
+            </p>
+            <p class="research-card-desc" style="margin-top: 0.5rem;">
+              Alongside standardized community benchmarks, ML-PEG provides an interactive web dashboard for transparently comparing foundation models and dataset baselines across materials discovery tasks.
+            </p>
+          </div>
+          <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <a href="https://ml-peg.stfc.ac.uk" target="_blank" rel="noopener noreferrer" class="btn btn-primary">ml-peg.stfc.ac.uk &rarr;</a>
+            <a href="https://github.com/ddmms/ml-peg" target="_blank" rel="noopener noreferrer" class="btn btn-outline">GitHub &rarr;</a>
+            <a href="code.html" class="btn btn-outline">Explore in Software &rarr;</a>
           </div>
         </article>
       </div>
