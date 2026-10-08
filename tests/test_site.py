@@ -25,7 +25,7 @@ class TestDDMMSSite(unittest.TestCase):
 
     def test_required_nav_menu_items(self):
         required_items = ["about", "people", "research", "publications", "code"]
-        for fname in self.html_files:
+        for fname in ["header.html", "_includes/header.html"]:
             content = (BASE_DIR / fname).read_text(encoding="utf-8").lower()
             for item in required_items:
                 self.assertIn(item, content, f"Menu item '{item}' missing from {fname}")
@@ -127,8 +127,8 @@ class TestDDMMSSite(unittest.TestCase):
         self.assertIn("assets/images/junwen_yin.jpeg", (BASE_DIR / "index.html").read_text(encoding="utf-8"))
 
     def test_separate_navigation_links(self):
-        for fname in self.html_files:
-            content = (BASE_DIR / "fname" if False else BASE_DIR / fname).read_text(encoding="utf-8")
+        for fname in ["header.html", "_includes/header.html", "footer.html", "_includes/footer.html"]:
+            content = (BASE_DIR / fname).read_text(encoding="utf-8")
             self.assertIn('href="about.html"', content, f"Separate link about.html missing in {fname}")
             self.assertIn('href="people.html"', content, f"Separate link people.html missing in {fname}")
             self.assertIn('href="research.html"', content, f"Separate link research.html missing in {fname}")
@@ -196,6 +196,38 @@ class TestDDMMSSite(unittest.TestCase):
             content = (BASE_DIR / fname).read_text(encoding="utf-8")
             self.assertNotIn('<footer class="site-footer">', content, f"Duplicated footer markup found in {fname}")
             self.assertNotIn('<div class="footer-grid">', content, f"Duplicated footer grid found in {fname}")
+
+    def test_reusable_header_file_exists_and_valid(self):
+        header_path = BASE_DIR / "header.html"
+        self.assertTrue(header_path.exists(), "header.html does not exist")
+        header_content = header_path.read_text(encoding="utf-8")
+        self.assertIn('<header class="site-header"', header_content)
+        self.assertIn("brand-link", header_content)
+        self.assertIn("nav-desktop", header_content)
+        self.assertIn("mobile-drawer", header_content)
+
+    def test_includes_header_file_exists(self):
+        includes_header = BASE_DIR / "_includes" / "header.html"
+        self.assertTrue(includes_header.exists(), "_includes/header.html does not exist")
+
+    def test_build_site_get_header_container(self):
+        import build_site
+        header = build_site.get_header()
+        self.assertIn('id="site-header"', header)
+        self.assertIn('data-include-header', header)
+
+    def test_all_pages_reuse_header(self):
+        for fname in self.html_files:
+            content = (BASE_DIR / fname).read_text(encoding="utf-8")
+            self.assertIn('id="site-header"', content, f"Header container missing from {fname}")
+            self.assertIn('data-include-header', content, f"Header include attribute missing from {fname}")
+
+    def test_no_duplicate_header_markup_in_pages(self):
+        for fname in self.html_files:
+            content = (BASE_DIR / fname).read_text(encoding="utf-8")
+            self.assertNotIn('<header class="site-header"', content, f"Duplicated header markup found in {fname}")
+            self.assertNotIn('<nav class="nav-desktop"', content, f"Duplicated nav desktop found in {fname}")
+            self.assertNotIn('<div class="mobile-drawer"', content, f"Duplicated mobile drawer found in {fname}")
 
     def test_deploy_workflow_actions_upgraded_to_node24(self):
         wf = BASE_DIR / ".github" / "workflows" / "deploy.yml"

@@ -41,73 +41,12 @@ def load_data():
 
 
 def get_header(active_page="home"):
-    pages = [
-        ("about", "About", "about.html"),
-        ("people", "People", "people.html"),
-        ("research", "Research", "research.html"),
-        ("publications", "Publications", "publications.html"),
-        ("code", "Code", "code.html"),
-    ]
+    """Return the reusable site header container.
 
-    nav_items_desktop = []
-    nav_items_mobile = []
-
-    for key, label, page_url in pages:
-        is_active = (active_page == key)
-        active_cls = ' class="active"' if is_active else ''
-
-        nav_items_desktop.append(f'<li class="nav-item"><a href="{page_url}"{active_cls}>{label}</a></li>')
-        nav_items_mobile.append(f'<li class="mobile-nav-item"><a href="{page_url}"{active_cls}><span>{label}</span><span>→</span></a></li>')
-
-    desktop_nav_html = "\n        ".join(nav_items_desktop)
-    mobile_nav_html = "\n        ".join(nav_items_mobile)
-
-    home_href = "index.html"
-
-    return f"""  <header class="site-header" id="top">
-    <div class="container header-container">
-      <a href="{home_href}" class="brand-link" aria-label="DDMMS Home">
-        <img id="site-logo" class="brand-logo-img" src="assets/logos/ddmms_for_light_modes.svg" alt="Data Driven Materials and Molecular Science">
-        <div class="brand-text-block">
-          <span class="brand-title-main">DDMMS</span>
-          <span class="brand-title-sub">Data Driven Materials &amp; Molecular Science</span>
-        </div>
-      </a>
-
-      <nav class="nav-desktop" aria-label="Primary Navigation">
-        <ul class="nav-links">
-        {desktop_nav_html}
-        </ul>
-      </nav>
-
-      <div class="header-actions">
-        <button type="button" class="theme-toggle-btn" aria-label="Toggle Dark/Light Mode" title="Toggle theme">
-          <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12.3 2a10 10 0 00-1.9 19.8 10 10 0 0011.6-11.6A10 10 0 0012.3 2zm-.3 18a8 8 0 110-16 8.3 8.3 0 011.7.2 8 8 0 00-1.9 7.8 8 8 0 007.8 8c-.5 0-1.1 0-1.6-.0z"/></svg>
-        </button>
-
-        <button type="button" class="mobile-toggle-btn" aria-label="Open Navigation Menu" aria-expanded="false" aria-controls="mobile-drawer">
-          <span class="hamburger-icon">
-            <span class="hamburger-line"></span>
-            <span class="hamburger-line"></span>
-            <span class="hamburger-line"></span>
-          </span>
-        </button>
-      </div>
-    </div>
-
-    <!-- Mobile Navigation Drawer -->
-    <div class="mobile-drawer" id="mobile-drawer">
-      <ul class="mobile-nav-links">
-        {mobile_nav_html}
-      </ul>
-      <div class="mobile-actions">
-        <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Theme Appearance</span>
-        <button type="button" class="theme-toggle-btn" aria-label="Toggle theme">
-          <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12.3 2a10 10 0 00-1.9 19.8 10 10 0 0011.6-11.6A10 10 0 0012.3 2zm-.3 18a8 8 0 110-16 8.3 8.3 0 011.7.2 8 8 0 00-1.9 7.8 8 8 0 007.8 8c-.5 0-1.1 0-1.6-.0z"/></svg>
-        </button>
-      </div>
-    </div>
-  </header>"""
+    Individual HTML pages reuse the separate header.html file directly,
+    eliminating duplicate header markup across pages.
+    """
+    return '  <div id="site-header" data-include-header></div>'
 
 
 def get_footer():

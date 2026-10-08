@@ -8,9 +8,6 @@
 
   // --- Theme Management ---
   const THEME_KEY = 'ddmms-theme';
-  const themeToggleBtns = document.querySelectorAll('.theme-toggle-btn');
-  const brandLogos = document.querySelectorAll('.brand-logo-img');
-  const heroLogos = document.querySelectorAll('.hero-card-logo');
 
   function getSystemTheme() {
     return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
@@ -31,16 +28,16 @@
       ? 'assets/logos/ddmms_for_dark_modes-with-text.svg'
       : 'assets/logos/ddmms_for_light_modes-with-text.svg';
 
-    brandLogos.forEach(img => {
+    document.querySelectorAll('.brand-logo-img').forEach(img => {
       img.src = brandLogoSrc;
     });
 
-    heroLogos.forEach(img => {
+    document.querySelectorAll('.hero-card-logo').forEach(img => {
       img.src = heroLogoSrc;
     });
 
     // Update button icons
-    themeToggleBtns.forEach(btn => {
+    document.querySelectorAll('.theme-toggle-btn').forEach(btn => {
       btn.setAttribute('aria-label', `Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`);
       btn.innerHTML = theme === 'dark'
         ? `<svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58a.996.996 0 00-1.41 0 .996.996 0 000 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37a.996.996 0 00-1.41 0 .996.996 0 000 1.41l1.06 1.06c.39.39 1.03.39 1.41 0a.996.996 0 000-1.41l-1.06-1.06zm1.06-10.96a.996.996 0 000-1.41.996.996 0 00-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36a.996.996 0 000-1.41.996.996 0 00-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"/></svg>`
@@ -51,13 +48,6 @@
   const initialTheme = localStorage.getItem(THEME_KEY) || getSystemTheme();
   applyTheme(initialTheme);
 
-  themeToggleBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const current = document.documentElement.getAttribute('data-theme') || 'light';
-      applyTheme(current === 'dark' ? 'light' : 'dark');
-    });
-  });
-
   if (window.matchMedia) {
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
       if (!localStorage.getItem(THEME_KEY)) {
@@ -66,57 +56,79 @@
     });
   }
 
-  // --- Mobile Drawer Navigation ---
-  const mobileToggleBtn = document.querySelector('.mobile-toggle-btn');
-  const mobileDrawer = document.querySelector('.mobile-drawer');
+  // --- Header Initialization & Interactions ---
+  function initHeader(headerScope) {
+    if (!headerScope) return;
 
-  if (mobileToggleBtn && mobileDrawer) {
-    function toggleDrawer(open) {
-      const isOpen = open !== undefined ? open : !mobileDrawer.classList.contains('open');
-      mobileDrawer.classList.toggle('open', isOpen);
-      mobileToggleBtn.setAttribute('aria-expanded', String(isOpen));
-      if (isOpen) {
-        document.body.style.overflow = 'hidden';
-      } else {
-        document.body.style.overflow = '';
+    // Apply active link
+    const currentFilename = window.location.pathname.split('/').pop() || 'index.html';
+    headerScope.querySelectorAll('.nav-desktop .nav-item a, .mobile-nav-item a').forEach(link => {
+      const href = link.getAttribute('href');
+      if (href === currentFilename || (currentFilename === '' && href === 'index.html')) {
+        link.classList.add('active');
       }
+    });
+
+    // Theme toggle buttons in header
+    headerScope.querySelectorAll('.theme-toggle-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const current = document.documentElement.getAttribute('data-theme') || 'light';
+        applyTheme(current === 'dark' ? 'light' : 'dark');
+      });
+    });
+
+    // Mobile Drawer Navigation
+    const mobileToggleBtn = headerScope.querySelector('.mobile-toggle-btn');
+    const mobileDrawer = headerScope.querySelector('.mobile-drawer');
+
+    if (mobileToggleBtn && mobileDrawer) {
+      function toggleDrawer(open) {
+        const isOpen = open !== undefined ? open : !mobileDrawer.classList.contains('open');
+        mobileDrawer.classList.toggle('open', isOpen);
+        mobileToggleBtn.setAttribute('aria-expanded', String(isOpen));
+        document.body.style.overflow = isOpen ? 'hidden' : '';
+      }
+
+      mobileToggleBtn.addEventListener('click', () => toggleDrawer());
+
+      mobileDrawer.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => toggleDrawer(false));
+      });
+
+      document.addEventListener('click', e => {
+        if (
+          mobileDrawer.classList.contains('open') &&
+          !mobileDrawer.contains(e.target) &&
+          !mobileToggleBtn.contains(e.target)
+        ) {
+          toggleDrawer(false);
+        }
+      });
+
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && mobileDrawer.classList.contains('open')) {
+          toggleDrawer(false);
+        }
+      });
     }
 
-    mobileToggleBtn.addEventListener('click', () => toggleDrawer());
-
-    // Close when clicking nav link
-    const mobileLinks = mobileDrawer.querySelectorAll('a');
-    mobileLinks.forEach(link => {
-      link.addEventListener('click', () => toggleDrawer(false));
-    });
-
-    // Close when clicking outside
-    document.addEventListener('click', e => {
-      if (
-        mobileDrawer.classList.contains('open') &&
-        !mobileDrawer.contains(e.target) &&
-        !mobileToggleBtn.contains(e.target)
-      ) {
-        toggleDrawer(false);
-      }
-    });
-
-    // Close on Escape key
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape' && mobileDrawer.classList.contains('open')) {
-        toggleDrawer(false);
-      }
-    });
+    // Refresh logos and toggle states for current theme
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+    applyTheme(currentTheme);
   }
 
-  // --- Active Nav Link based on URL path ---
-  const currentFilename = window.location.pathname.split('/').pop() || 'index.html';
-  const navLinks = document.querySelectorAll('.nav-desktop .nav-item a, .mobile-nav-item a');
-  navLinks.forEach(link => {
-    const href = link.getAttribute('href');
-    if (href === currentFilename || (currentFilename === '' && href === 'index.html')) {
-      link.classList.add('active');
-    }
+  // Check if header is already present in DOM
+  const existingHeader = document.querySelector('.site-header');
+  if (existingHeader) {
+    initHeader(existingHeader.parentElement || existingHeader);
+  }
+
+  // Bind any existing theme toggle buttons outside dynamic header
+  document.querySelectorAll('.theme-toggle-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme') || 'light';
+      applyTheme(current === 'dark' ? 'light' : 'dark');
+    });
   });
 
   // --- Toast Notification Utility ---
@@ -150,6 +162,80 @@
     });
   });
 
+  // --- Reusable Header Dynamic Loader ---
+  function loadReusableHeader() {
+    const headerPlaceholders = document.querySelectorAll('#site-header, [data-include-header], #reusable-header');
+    headerPlaceholders.forEach(el => {
+      if (el.children.length > 0) return;
+
+      fetch('header.html')
+        .then(res => {
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          return res.text();
+        })
+        .then(html => {
+          el.innerHTML = html;
+          initHeader(el);
+        })
+        .catch(err => {
+          console.debug('Dynamic fetch of header.html failed, using fallback:', err);
+          el.innerHTML = `  <header class="site-header" id="top">
+    <div class="container header-container">
+      <a href="index.html" class="brand-link" aria-label="DDMMS Home">
+        <img id="site-logo" class="brand-logo-img" src="assets/logos/ddmms_for_light_modes.svg" alt="Data Driven Materials and Molecular Science">
+        <div class="brand-text-block">
+          <span class="brand-title-main">DDMMS</span>
+          <span class="brand-title-sub">Data Driven Materials &amp; Molecular Science</span>
+        </div>
+      </a>
+
+      <nav class="nav-desktop" aria-label="Primary Navigation">
+        <ul class="nav-links">
+          <li class="nav-item"><a href="about.html">About</a></li>
+          <li class="nav-item"><a href="people.html">People</a></li>
+          <li class="nav-item"><a href="research.html">Research</a></li>
+          <li class="nav-item"><a href="publications.html">Publications</a></li>
+          <li class="nav-item"><a href="code.html">Code</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button type="button" class="theme-toggle-btn" aria-label="Toggle Dark/Light Mode" title="Toggle theme">
+          <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12.3 2a10 10 0 00-1.9 19.8 10 10 0 0011.6-11.6A10 10 0 0012.3 2zm-.3 18a8 8 0 110-16 8.3 8.3 0 011.7.2 8 8 0 00-1.9 7.8 8 8 0 007.8 8c-.5 0-1.1 0-1.6-.0z"/></svg>
+        </button>
+
+        <button type="button" class="mobile-toggle-btn" aria-label="Open Navigation Menu" aria-expanded="false" aria-controls="mobile-drawer">
+          <span class="hamburger-icon">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div class="mobile-drawer" id="mobile-drawer">
+      <ul class="mobile-nav-links">
+        <li class="mobile-nav-item"><a href="about.html"><span>About</span><span>&rarr;</span></a></li>
+        <li class="mobile-nav-item"><a href="people.html"><span>People</span><span>&rarr;</span></a></li>
+        <li class="mobile-nav-item"><a href="research.html"><span>Research</span><span>&rarr;</span></a></li>
+        <li class="mobile-nav-item"><a href="publications.html"><span>Publications</span><span>&rarr;</span></a></li>
+        <li class="mobile-nav-item"><a href="code.html"><span>Code</span><span>&rarr;</span></a></li>
+      </ul>
+      <div class="mobile-actions">
+        <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Theme Appearance</span>
+        <button type="button" class="theme-toggle-btn" aria-label="Toggle theme">
+          <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12.3 2a10 10 0 00-1.9 19.8 10 10 0 0011.6-11.6A10 10 0 0012.3 2zm-.3 18a8 8 0 110-16 8.3 8.3 0 011.7.2 8 8 0 00-1.9 7.8 8 8 0 007.8 8c-.5 0-1.1 0-1.6-.0z"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>`;
+          initHeader(el);
+        });
+    });
+  }
+
   // --- Reusable Footer Dynamic Loader ---
   function loadReusableFooter() {
     const footerPlaceholders = document.querySelectorAll('#site-footer, [data-include-footer], #reusable-footer');
@@ -173,6 +259,7 @@
           <h4>Data Driven Materials and Molecular Science</h4>
           <p>Accelerating atomistic discovery through physics-informed machine learning, multiscale molecular simulation, and open-source scientific workflows.</p>
         </div>
+
         <div class="footer-col">
           <h5>Navigation</h5>
           <ul class="footer-links">
@@ -183,6 +270,7 @@
             <li><a href="code.html">Code &amp; Software</a></li>
           </ul>
         </div>
+
         <div class="footer-col">
           <h5>Affiliations</h5>
           <ul class="footer-links">
@@ -192,6 +280,7 @@
             <li><a href="https://www.ccp5.ac.uk" target="_blank" rel="noopener noreferrer">CCP5</a></li>
           </ul>
         </div>
+
         <div class="footer-col">
           <h5>Software &amp; Feeds</h5>
           <ul class="footer-links">
@@ -213,10 +302,15 @@
     });
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadReusableFooter);
-  } else {
+  function initDynamicIncludes() {
+    loadReusableHeader();
     loadReusableFooter();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initDynamicIncludes);
+  } else {
+    initDynamicIncludes();
   }
 
 })();
