@@ -208,14 +208,6 @@ def generate_index_html(pubs, authors):
     <!-- Mission & Overview Section -->
     <section class="section-wrapper bg-alt">
       <div class="container">
-        <div class="section-header">
-          <span class="section-pill">About The Group</span>
-          <h2 class="section-title">Bridging Physics, Data &amp; Molecular Engineering</h2>
-          <p class="section-subtitle">
-            We develop theory, computational algorithms, and scalable software to simulate complex chemical and physical phenomena with first-principles precision.
-          </p>
-        </div>
-
         <div class="about-grid">
           <div class="about-text">
             <p>
@@ -283,14 +275,6 @@ def generate_index_html(pubs, authors):
     <!-- Research Highlights Section -->
     <section class="section-wrapper">
       <div class="container">
-        <div class="section-header">
-          <span class="section-pill">Research Themes</span>
-          <h2 class="section-title">Core Scientific Frontiers</h2>
-          <p class="section-subtitle">
-            Advancing computational materials discovery across length and timescales.
-          </p>
-        </div>
-
         <div class="research-grid">
           <div class="research-card">
             <div class="research-card-top">
@@ -332,14 +316,6 @@ def generate_index_html(pubs, authors):
     <!-- Software & Codes Showcase -->
     <section class="section-wrapper bg-alt">
       <div class="container">
-        <div class="section-header">
-          <span class="section-pill">Software &amp; Codes</span>
-          <h2 class="section-title">Open-Source Scientific Tools</h2>
-          <p class="section-subtitle">
-            Community-driven, FAIR-compliant software designed for reproducibility, modularity, and high-performance computing.
-          </p>
-        </div>
-
         <div class="code-grid">
           <!-- janus-core -->
           <article class="code-card">
@@ -436,14 +412,6 @@ def generate_index_html(pubs, authors):
     <!-- Recent Publications Preview -->
     <section class="section-wrapper">
       <div class="container">
-        <div class="section-header">
-          <span class="section-pill">Recent Research</span>
-          <h2 class="section-title">Latest Publications</h2>
-          <p class="section-subtitle">
-            Synchronized directly via ORCID. Browse our latest journal articles and preprints.
-          </p>
-        </div>
-
         <div class="pubs-list" style="margin-bottom: 2rem;">
 {recent_pubs_rendered}
         </div>
@@ -457,14 +425,6 @@ def generate_index_html(pubs, authors):
     <!-- People Preview -->
     <section class="section-wrapper bg-alt">
       <div class="container">
-        <div class="section-header">
-          <span class="section-pill">Our Team</span>
-          <h2 class="section-title">Researchers &amp; Software Architects</h2>
-          <p class="section-subtitle">
-            Multidisciplinary scientists bridging physics, chemistry, machine learning, and high-performance computing.
-          </p>
-        </div>
-
         <div class="people-grid">
           <article class="person-card">
             <div class="person-header">
@@ -554,8 +514,7 @@ def generate_code_html():
   <main id="main-content" style="padding-top: 3rem;">
     <div class="container">
       <div class="section-header" style="text-align: left; margin-bottom: 2.5rem;">
-        <span class="section-pill">Software Suite</span>
-        <h1 class="section-title">Open-Source Scientific Codes &amp; Tools</h1>
+        <h1 class="section-title">Code</h1>
         <p class="section-subtitle">
           Community-driven, well-tested, and reproducible scientific tools developed by the Data Driven Materials and Molecular Science group.
         </p>
@@ -708,8 +667,7 @@ def generate_publications_html(pubs, authors):
   <main id="main-content" style="padding-top: 2.5rem;">
     <div class="container" id="pubs-app-root">
       <div class="section-header" style="text-align: left; margin-bottom: 2rem;">
-        <span class="section-pill">Research Bibliography</span>
-        <h1 class="section-title">Publications &amp; Preprints</h1>
+        <h1 class="section-title">Publications</h1>
         <p class="section-subtitle">
           Comprehensive, real-time bibliography aggregated via the ORCID Public API for members of Data Driven Materials and Molecular Science.
         </p>
@@ -840,8 +798,7 @@ def generate_about_html():
   <main id="main-content" style="padding-top: 3rem;">
     <div class="container">
       <div class="section-header" style="text-align: left; margin-bottom: 2.5rem;">
-        <span class="section-pill">About DDMMS</span>
-        <h1 class="section-title">Our Vision, Science &amp; Heritage</h1>
+        <h1 class="section-title">About</h1>
         <p class="section-subtitle">
           Uniting statistical physics, quantum mechanics, and artificial intelligence to explore matter at the atomic level.
         </p>
@@ -934,8 +891,7 @@ def generate_people_html():
   <main id="main-content" style="padding-top: 3rem;">
     <div class="container">
       <div class="section-header" style="text-align: left; margin-bottom: 2rem;">
-        <span class="section-pill">Our People</span>
-        <h1 class="section-title">Members, Collaborators &amp; Alumni</h1>
+        <h1 class="section-title">People</h1>
         <p class="section-subtitle">
           Our team comprises specialists in theoretical condensed matter physics, computational chemistry, software architecture, and AI for science.
         </p>
@@ -953,7 +909,6 @@ def generate_people_html():
       <!-- Core Team Section -->
       <section id="core-team" style="margin-bottom: 4rem;">
         <div class="section-header" style="text-align: left; margin-bottom: 2rem;">
-          <span class="section-pill">Research Team</span>
           <h2 class="section-title" style="font-size: 1.85rem;">Core Members</h2>
           <p class="section-subtitle">
             Researchers and computational scientists leading DDMMS programs at STFC Daresbury Laboratory.
@@ -1060,7 +1015,6 @@ def generate_people_html():
       <!-- Former Members (Alumni) Section -->
       <section id="former-members" style="margin-bottom: 4rem;">
         <div class="section-header" style="text-align: left; margin-bottom: 2rem;">
-          <span class="section-pill">Alumni</span>
           <h2 class="section-title" style="font-size: 1.85rem;">Former Members</h2>
           <p class="section-subtitle">
             Researchers, engineers, and graduate scholars who contributed to DDMMS scientific software and research initiatives.
@@ -1170,8 +1124,7 @@ def generate_people_html():
       <!-- Collaborators Section -->
       <section id="collaborators" style="margin-bottom: 4rem;">
         <div class="section-header" style="text-align: left; margin-bottom: 2rem;">
-          <span class="section-pill">Collaborations</span>
-          <h2 class="section-title" style="font-size: 1.85rem;">Collaborators &amp; Research Partners</h2>
+          <h2 class="section-title" style="font-size: 1.85rem;">Collaborators</h2>
           <p class="section-subtitle">
             Academic collaborators, national laboratory partners, and international consortia advancing atomistic simulation and scientific machine learning.
           </p>
@@ -1266,8 +1219,7 @@ def generate_people_html():
       <!-- Visitors Section -->
       <section id="visitors" style="margin-bottom: 4rem;">
         <div class="section-header" style="text-align: left; margin-bottom: 2rem;">
-          <span class="section-pill">Visiting Scholars</span>
-          <h2 class="section-title" style="font-size: 1.85rem;">Visitors &amp; Visiting Fellows</h2>
+          <h2 class="section-title" style="font-size: 1.85rem;">Visitors</h2>
           <p class="section-subtitle">
             Academic visitors, guest researchers, and sabbatical fellows who have visited the group at Sci-Tech Daresbury to collaborate on atomistic simulations and machine learning.
           </p>
@@ -1393,7 +1345,6 @@ def generate_people_html():
       <!-- Opportunities Section -->
       <section style="margin-top: 4rem; background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2.5rem;" id="contact">
         <div class="section-header" style="text-align: left; margin-bottom: 1.5rem; padding: 0;">
-          <span class="section-pill">Opportunities</span>
           <h2 class="section-title" style="font-size: 1.85rem;">Join the Research Group</h2>
         </div>
         <p style="color: var(--text-muted); font-size: 1.05rem; line-height: 1.7; max-width: 800px; margin-bottom: 1.5rem;">
@@ -1432,8 +1383,7 @@ def generate_research_html():
   <main id="main-content" style="padding-top: 3rem;">
     <div class="container">
       <div class="section-header" style="text-align: left; margin-bottom: 2.5rem;">
-        <span class="section-pill">Scientific Portfolio</span>
-        <h1 class="section-title">Research Themes &amp; Programs</h1>
+        <h1 class="section-title">Research</h1>
         <p class="section-subtitle">
           From quantum-level potential energy surfaces to supercomputing molecular dynamics and macroscopic thermal transport.
         </p>

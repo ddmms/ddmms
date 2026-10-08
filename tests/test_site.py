@@ -83,6 +83,22 @@ class TestDDMMSSite(unittest.TestCase):
         self.assertNotIn("Key Facts &amp; Infrastructure", about_html)
         self.assertNotIn("Key Facts", about_html)
 
+    def test_no_section_pills_across_site(self):
+        for fname in self.html_files:
+            content = (BASE_DIR / fname).read_text(encoding="utf-8")
+            self.assertNotIn("section-pill", content, f"Found unexpected section-pill in {fname}")
+
+    def test_no_section_headers_on_index(self):
+        index_html = (BASE_DIR / "index.html").read_text(encoding="utf-8")
+        self.assertNotIn("section-header", index_html, "Found section-header in index.html")
+
+    def test_standard_subpage_titles(self):
+        self.assertIn('<h1 class="section-title">About</h1>', (BASE_DIR / "about.html").read_text(encoding="utf-8"))
+        self.assertIn('<h1 class="section-title">People</h1>', (BASE_DIR / "people.html").read_text(encoding="utf-8"))
+        self.assertIn('<h1 class="section-title">Research</h1>', (BASE_DIR / "research.html").read_text(encoding="utf-8"))
+        self.assertIn('<h1 class="section-title">Publications</h1>', (BASE_DIR / "publications.html").read_text(encoding="utf-8"))
+        self.assertIn('<h1 class="section-title">Code</h1>', (BASE_DIR / "code.html").read_text(encoding="utf-8"))
+
     def test_separate_navigation_links(self):
         for fname in self.html_files:
             content = (BASE_DIR / "fname" if False else BASE_DIR / fname).read_text(encoding="utf-8")
