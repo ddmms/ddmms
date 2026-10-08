@@ -113,6 +113,13 @@ class TestDDMMSSite(unittest.TestCase):
         self.assertIn("assets/images/elliott_kasoar.jpg", (BASE_DIR / "people.html").read_text(encoding="utf-8"))
         self.assertIn("assets/images/elliott_kasoar.jpg", (BASE_DIR / "index.html").read_text(encoding="utf-8"))
 
+    def test_junwen_yin_picture_used(self):
+        img_path = BASE_DIR / "assets" / "images" / "junwen_yin.jpeg"
+        self.assertTrue(img_path.exists(), "junwen_yin.jpeg image does not exist")
+        self.assertGreater(img_path.stat().st_size, 1000, "junwen_yin.jpeg file is too small")
+        self.assertIn("assets/images/junwen_yin.jpeg", (BASE_DIR / "people.html").read_text(encoding="utf-8"))
+        self.assertIn("assets/images/junwen_yin.jpeg", (BASE_DIR / "index.html").read_text(encoding="utf-8"))
+
     def test_separate_navigation_links(self):
         for fname in self.html_files:
             content = (BASE_DIR / "fname" if False else BASE_DIR / fname).read_text(encoding="utf-8")
