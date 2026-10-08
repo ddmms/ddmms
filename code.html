@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Code &amp; Software | Data Driven Materials and Molecular Science</title>
-  <meta name="description" content="Open-source scientific software packages developed by DDMMS: janus-core, aiida-mlip, ml-peg, and goldilocks.">
+  <meta name="description" content="Open-source scientific software packages developed by DDMMS: janus-core, aiida-mlip, aiidalab-mlip, pack-mm, ml-peg, and goldilocks.">
   <link rel="icon" type="image/svg+xml" href="assets/logos/ddmms.svg">
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
@@ -75,6 +75,60 @@
             <a href="https://github.com/stfc/aiida-mlip" target="_blank" rel="noopener noreferrer" class="person-link-btn">GitHub Repository &rarr;</a>
             <a href="https://stfc.github.io/aiida-mlip" target="_blank" rel="noopener noreferrer" class="person-link-btn">Documentation</a>
             <a href="https://pypi.org/project/aiida-mlip/" target="_blank" rel="noopener noreferrer" class="person-link-btn">PyPI</a>
+          </div>
+        </article>
+
+        <!-- aiidalab-mlip -->
+        <article class="code-card">
+          <div class="code-card-header">
+            <div class="code-title-group">
+              <h3><span>🧪</span> aiidalab-mlip</h3>
+            </div>
+            <span class="badge" style="background:#e0f2fe; color:#0369a1;">AiiDAlab / Web GUI</span>
+          </div>
+          <p class="code-desc">
+            An interactive browser-based AiiDAlab application for configuring and running machine learning interatomic potential calculations with AiiDA and aiida-mlip.
+          </p>
+          <div class="code-install-box">
+            <code>pip install aiidalab-mlip</code>
+            <button class="copy-snippet-btn" data-code="pip install aiidalab-mlip" title="Copy command">📋</button>
+          </div>
+          <ul class="code-features-list">
+            <li>Interactive web interface for submitting MLIP simulations without writing boilerplate code</li>
+            <li>Structure loading from CIF, XYZ, and standard crystallography formats with 3D visualization</li>
+            <li>Direct integration with pre-trained foundation models (MACE-MP and others)</li>
+            <li>Interactive single-point energy, force evaluations, and geometry optimizations with full AiiDA provenance</li>
+          </ul>
+          <div class="person-links">
+            <a href="https://github.com/stfc/aiidalab-mlip" target="_blank" rel="noopener noreferrer" class="person-link-btn">GitHub Repository &rarr;</a>
+          </div>
+        </article>
+
+        <!-- pack-mm -->
+        <article class="code-card">
+          <div class="code-card-header">
+            <div class="code-title-group">
+              <h3><span>📦</span> pack-mm</h3>
+            </div>
+            <span class="badge" style="background:#fce7f3; color:#9d174d;">Python / Packing / CLI</span>
+          </div>
+          <p class="code-desc">
+            A Python package and CLI for building realistic atomistic and molecular systems for materials modeling, utilizing machine-learned interatomic potentials (via janus-core) with Monte Carlo and Molecular Dynamics routines.
+          </p>
+          <div class="code-install-box">
+            <code>pip install pack-mm</code>
+            <button class="copy-snippet-btn" data-code="pip install pack-mm" title="Copy command">📋</button>
+          </div>
+          <ul class="code-features-list">
+            <li>Generates realistic packed starting configurations for complex liquids, interfaces, and porous frameworks</li>
+            <li>Uses janus-core for MLIP interactions, with MACE-MP foundation models enabled by default</li>
+            <li>High-performance packing leveraging Monte Carlo, Molecular Dynamics, and hybrid MC/MD relaxation</li>
+            <li>Full Python API and intuitive CLI with support for both CPU and CUDA GPU acceleration</li>
+          </ul>
+          <div class="person-links">
+            <a href="https://github.com/ddmms/pack-mm" target="_blank" rel="noopener noreferrer" class="person-link-btn">GitHub Repository &rarr;</a>
+            <a href="https://ddmms.github.io/pack-mm" target="_blank" rel="noopener noreferrer" class="person-link-btn">Documentation</a>
+            <a href="https://pypi.org/project/pack-mm/" target="_blank" rel="noopener noreferrer" class="person-link-btn">PyPI</a>
           </div>
         </article>
 

@@ -280,16 +280,6 @@
             <li><a href="https://www.ccp5.ac.uk" target="_blank" rel="noopener noreferrer">CCP5</a></li>
           </ul>
         </div>
-
-        <div class="footer-col">
-          <h5>Software &amp; Feeds</h5>
-          <ul class="footer-links">
-            <li><a href="https://github.com/stfc/janus-core" target="_blank" rel="noopener noreferrer">janus-core</a></li>
-            <li><a href="https://github.com/stfc/aiida-mlip" target="_blank" rel="noopener noreferrer">aiida-mlip</a></li>
-            <li><a href="https://ml-peg.stfc.ac.uk" target="_blank" rel="noopener noreferrer">ml-peg</a></li>
-            <li><a href="https://goldilocks.ac.uk" target="_blank" rel="noopener noreferrer">goldilocks.ac.uk</a></li>
-          </ul>
-        </div>
       </div>
       <div class="footer-bottom">
         <span>&copy; 2026 Data Driven Materials and Molecular Science (DDMMS). Licensed under BSD-3-Clause.</span>

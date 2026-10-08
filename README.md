@@ -37,7 +37,7 @@ Welcome to the official website repository for the **Data Driven Materials and M
 ├── people.html             # Dedicated People & team page (profiles, ORCID, contacts)
 ├── research.html           # Dedicated Research themes page (scientific programs)
 ├── publications.html       # Dedicated Publications portal (filters, search, BibTeX)
-├── code.html               # Dedicated Software page (janus-core, aiida-mlip, ml-peg, goldilocks)
+├── code.html               # Dedicated Software page (janus-core, aiida-mlip, aiidalab-mlip, pack-mm, ml-peg, goldilocks)
 ├── build_site.py           # Site generator synchronizing shared navigation & data
 ├── publications.json       # Canonical publications dataset (ORCID aggregated)
 ├── PUBLICATIONS.md          # Generated Markdown bibliography

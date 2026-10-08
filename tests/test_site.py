@@ -67,7 +67,7 @@ class TestDDMMSSite(unittest.TestCase):
 
     def test_codes_showcase_in_code_page(self):
         code_content = (BASE_DIR / "code.html").read_text(encoding="utf-8").lower()
-        expected_codes = ["janus-core", "aiida-mlip", "ml-peg", "goldilocks"]
+        expected_codes = ["janus-core", "aiida-mlip", "aiidalab-mlip", "pack-mm", "ml-peg", "goldilocks"]
         for c in expected_codes:
             self.assertIn(c, code_content, f"Expected code '{c}' not found in code.html")
 
@@ -144,6 +144,12 @@ class TestDDMMSSite(unittest.TestCase):
             self.assertIn('href="publications.html"', content, f"Separate link publications.html missing in {fname}")
             self.assertIn('href="code.html"', content, f"Separate link code.html missing in {fname}")
 
+    def test_no_software_and_feeds_in_footer(self):
+        for fname in ["footer.html", "_includes/footer.html"]:
+            content = (BASE_DIR / fname).read_text(encoding="utf-8")
+            self.assertNotIn("Software &amp; Feeds", content, f"Found Software & Feeds in {fname}")
+            self.assertNotIn("Software & Feeds", content, f"Found Software & Feeds in {fname}")
+
     def test_css_and_js_assets_exist(self):
         self.assertTrue((BASE_DIR / "assets" / "css" / "style.css").exists())
         self.assertTrue((BASE_DIR / "assets" / "js" / "main.js").exists())
@@ -181,8 +187,8 @@ class TestDDMMSSite(unittest.TestCase):
         footer_content = footer_path.read_text(encoding="utf-8")
         self.assertIn('<footer class="site-footer">', footer_content)
         self.assertIn("footer-grid", footer_content)
-        self.assertIn("footer-brand", footer_content)
-        self.assertIn("janus-core", footer_content)
+        self.assertIn("footer-links", footer_content)
+        self.assertIn("Affiliations", footer_content)
 
     def test_includes_footer_file_exists(self):
         includes_footer = BASE_DIR / "_includes" / "footer.html"
