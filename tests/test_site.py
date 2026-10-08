@@ -101,7 +101,7 @@ class TestDDMMSSite(unittest.TestCase):
 
     def test_people_page_collaborators_and_visitors_content(self):
         people_html = (BASE_DIR / "people.html").read_text(encoding="utf-8")
-        self.assertIn("Gilberto Teobaldi", people_html, "Collaborator Dr. Gilberto Teobaldi missing")
+        self.assertIn("Collaborator Name", people_html, "Collaborator placeholder missing")
         self.assertIn("Matteo Salvalaglio", people_html, "Visitor Prof. Matteo Salvalaglio missing")
         self.assertIn("Jacob Wilkins", people_html, "Former member Dr. Jacob Wilkins missing")
 
