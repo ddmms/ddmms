@@ -150,4 +150,22 @@
     });
   });
 
+  // --- Reusable Footer Dynamic Loader (for pages using placeholder include) ---
+  const footerPlaceholders = document.querySelectorAll('[data-include-footer], #reusable-footer');
+  footerPlaceholders.forEach(el => {
+    if (!el.innerHTML.trim()) {
+      fetch('footer.html')
+        .then(res => {
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          return res.text();
+        })
+        .then(html => {
+          el.innerHTML = html;
+        })
+        .catch(err => {
+          console.debug('Dynamic footer loading skipped:', err);
+        });
+    }
+  });
+
 })();

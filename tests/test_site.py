@@ -113,6 +113,31 @@ class TestDDMMSSite(unittest.TestCase):
         self.assertIn('id="visitors"', people_html)
         self.assertIn('id="contact"', people_html)
 
+    def test_reusable_footer_file_exists_and_valid(self):
+        footer_path = BASE_DIR / "footer.html"
+        self.assertTrue(footer_path.exists(), "footer.html does not exist")
+        footer_content = footer_path.read_text(encoding="utf-8")
+        self.assertIn('<footer class="site-footer">', footer_content)
+        self.assertIn("footer-grid", footer_content)
+        self.assertIn("footer-brand", footer_content)
+        self.assertIn("janus-core", footer_content)
+
+    def test_includes_footer_file_exists(self):
+        includes_footer = BASE_DIR / "_includes" / "footer.html"
+        self.assertTrue(includes_footer.exists(), "_includes/footer.html does not exist")
+
+    def test_build_site_get_footer_reads_file(self):
+        import build_site
+        footer = build_site.get_footer()
+        file_content = (BASE_DIR / "footer.html").read_text(encoding="utf-8").rstrip()
+        self.assertEqual(footer, file_content)
+
+    def test_all_pages_contain_footer(self):
+        for fname in self.html_files:
+            content = (BASE_DIR / fname).read_text(encoding="utf-8")
+            self.assertIn('<footer class="site-footer">', content, f"Footer missing from {fname}")
+            self.assertIn("Data Driven Materials and Molecular Science", content, f"Footer brand missing from {fname}")
+
 
 if __name__ == "__main__":
     unittest.main()

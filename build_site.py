@@ -13,6 +13,8 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent
 PUBLICATIONS_FILE = BASE_DIR / "publications.json"
 AUTHORS_FILE = BASE_DIR / "data" / "authors.csv"
+FOOTER_FILE = BASE_DIR / "footer.html"
+INCLUDES_FOOTER_FILE = BASE_DIR / "_includes" / "footer.html"
 
 
 def load_data():
@@ -109,6 +111,16 @@ def get_header(active_page="home"):
 
 
 def get_footer():
+    """Load and return the reusable site footer.
+
+    Reads from the separate footer.html template file if available,
+    allowing the footer to be edited in a single place and reused across pages.
+    """
+    for candidate in (FOOTER_FILE, INCLUDES_FOOTER_FILE):
+        if candidate.exists():
+            return candidate.read_text(encoding="utf-8").rstrip()
+
+    # Fallback template if file is not found
     return """  <footer class="site-footer">
     <div class="container">
       <div class="footer-grid">
