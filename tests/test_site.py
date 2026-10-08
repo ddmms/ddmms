@@ -123,8 +123,13 @@ class TestDDMMSSite(unittest.TestCase):
     def test_people_page_collaborators_and_visitors_content(self):
         people_html = (BASE_DIR / "people.html").read_text(encoding="utf-8")
         self.assertIn("Collaborator Name", people_html, "Collaborator placeholder missing")
-        self.assertIn("Matteo Salvalaglio", people_html, "Visitor Prof. Matteo Salvalaglio missing")
-        self.assertIn("Jacob Wilkins", people_html, "Former member Dr. Jacob Wilkins missing")
+        self.assertIn("Former Member Name", people_html, "Former Member placeholder missing")
+        self.assertIn("Visitor Name", people_html, "Visitor placeholder missing")
+        # Ensure specific names are removed
+        self.assertNotIn("Matteo Salvalaglio", people_html)
+        self.assertNotIn("Jacob Wilkins", people_html)
+        self.assertNotIn("Francesca Peccati", people_html)
+        self.assertNotIn("Alexander Neate", people_html)
 
     def test_people_subnav_anchors(self):
         people_html = (BASE_DIR / "people.html").read_text(encoding="utf-8")
