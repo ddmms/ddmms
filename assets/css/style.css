@@ -1589,3 +1589,26 @@ a:hover {
     gap: 0.4rem;
   }
 }
+
+/* Math Typography and Rendering */
+.katex {
+  font-size: 1.05em;
+}
+
+.math-rendered {
+  font-family: "KaTeX_Math", "Cambria Math", "Times New Roman", Times, serif;
+  font-style: normal;
+  white-space: nowrap;
+}
+
+.math-rendered em {
+  font-family: "KaTeX_Math", "Cambria Math", "Times New Roman", Times, serif;
+  font-style: italic;
+}
+
+.math-rendered sub,
+.math-rendered sup {
+  font-size: 0.75em;
+  font-family: "KaTeX_Math", "Cambria Math", "Times New Roman", Times, serif;
+}
+

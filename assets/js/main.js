@@ -61,10 +61,10 @@
     if (!headerScope) return;
 
     // Apply active link
-    const currentFilename = window.location.pathname.split('/').pop() || 'index.html';
+    const currentFilename = window.location.pathname.split('/').pop() || 'about.html';
     headerScope.querySelectorAll('.nav-desktop .nav-item a, .mobile-nav-item a').forEach(link => {
       const href = link.getAttribute('href');
-      if (href === currentFilename || (currentFilename === '' && href === 'index.html')) {
+      if (href === currentFilename || (currentFilename === '' && href === 'about.html') || (currentFilename === 'index.html' && href === 'about.html')) {
         link.classList.add('active');
       }
     });
@@ -181,7 +181,7 @@
           console.debug('Dynamic fetch of header.html failed, using fallback:', err);
           el.innerHTML = `  <header class="site-header" id="top">
     <div class="container header-container">
-      <a href="index.html" class="brand-link" aria-label="DDMMS Home">
+      <a href="about.html" class="brand-link" aria-label="DDMMS Home">
         <img id="site-logo" class="brand-logo-img" src="assets/logos/ddmms_for_light_modes.svg" alt="Data Driven Materials and Molecular Science">
         <div class="brand-text-block">
           <span class="brand-title-main">DDMMS</span>
@@ -292,15 +292,97 @@
     });
   }
 
+  // --- Math Rendering (KaTeX + Offline Fallback) ---
+  function renderMathFallback(container) {
+    if (!container) return;
+    const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, null, false);
+    const nodesToReplace = [];
+    let currentNode;
+    while ((currentNode = walker.nextNode())) {
+      if (currentNode.nodeValue && currentNode.nodeValue.includes('$')) {
+        const parent = currentNode.parentElement;
+        if (parent) {
+          const tag = parent.tagName.toLowerCase();
+          if (!['script', 'style', 'textarea', 'pre', 'code'].includes(tag) && !parent.closest('.katex') && !parent.closest('.math-rendered')) {
+            nodesToReplace.push(currentNode);
+          }
+        }
+      }
+    }
+
+    nodesToReplace.forEach(node => {
+      const text = node.nodeValue;
+      if (!text || !text.includes('$')) return;
+      const mathRegex = /\$([^$]+)\$/g;
+      if (!mathRegex.test(text)) return;
+
+      const span = document.createElement('span');
+      span.innerHTML = text.replace(mathRegex, (_, expr) => {
+        expr = expr.trim();
+        let formatted = expr
+          .replace(/\\delta/g, '&delta;')
+          .replace(/\\alpha/g, '&alpha;')
+          .replace(/\\beta/g, '&beta;')
+          .replace(/\\gamma/g, '&gamma;')
+          .replace(/\\epsilon/g, '&epsilon;')
+          .replace(/([a-zA-Z0-9])_\{+([a-zA-Z0-9]+)\}+/g, '<em>$1</em><sub>$2</sub>')
+          .replace(/([a-zA-Z0-9])_([a-zA-Z0-9]+)/g, '<em>$1</em><sub>$2</sub>')
+          .replace(/([a-zA-Z0-9])\^\{+([a-zA-Z0-9]+)\}+/g, '<em>$1</em><sup>$2</sup>')
+          .replace(/([a-zA-Z0-9])\^([a-zA-Z0-9]+)/g, '<em>$1</em><sup>$2</sup>');
+        if (/^[a-zA-Z]$/.test(formatted)) {
+          formatted = `<em>${formatted}</em>`;
+        }
+        return `<span class="math-rendered">${formatted}</span>`;
+      });
+
+      if (node.parentNode) {
+        node.parentNode.replaceChild(span, node);
+      }
+    });
+  }
+
+  window.renderAllMath = function (targetEl) {
+    const el = targetEl || document.body;
+    if (!el) return;
+    if (typeof renderMathInElement === 'function') {
+      try {
+        renderMathInElement(el, {
+          delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '$', right: '$', display: false },
+            { left: '\\(', right: '\\)', display: false },
+            { left: '\\[', right: '\\]', display: true }
+          ],
+          throwOnError: false
+        });
+        return;
+      } catch (err) {
+        console.debug('KaTeX renderMathInElement error:', err);
+      }
+    }
+    renderMathFallback(el);
+  };
+
   function initDynamicIncludes() {
     loadReusableHeader();
     loadReusableFooter();
+    window.renderAllMath();
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initDynamicIncludes);
+    document.addEventListener('DOMContentLoaded', () => {
+      initDynamicIncludes();
+      setTimeout(window.renderAllMath, 200);
+    });
   } else {
     initDynamicIncludes();
+    setTimeout(window.renderAllMath, 200);
   }
+
+  window.addEventListener('load', () => {
+    if (typeof window.renderAllMath === 'function') {
+      window.renderAllMath();
+    }
+  });
 
 })();

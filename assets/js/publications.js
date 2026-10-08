@@ -443,6 +443,10 @@
         }
         pubsContainer.appendChild(list);
       }
+
+      if (typeof window.renderAllMath === 'function') {
+        window.renderAllMath(pubsContainer);
+      }
     }
 
     // Event listeners

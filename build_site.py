@@ -88,10 +88,16 @@ def generate_index_html(pubs, authors):
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="refresh" content="0; url=about.html">
+  <link rel="canonical" href="about.html">
+  <script>window.location.replace("about.html");</script>
   <title>Data Driven Materials and Molecular Science | DDMMS</title>
   <meta name="description" content="Data Driven Materials and Molecular Science (DDMMS) research group at STFC Daresbury Laboratory, UKRI. Machine learning interatomic potentials, multiscale molecular dynamics, and materials discovery.">
   <link rel="icon" type="image/svg+xml" href="assets/logos/ddmms.svg">
   <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
 </head>
 <body>
 {header_html}
@@ -181,30 +187,6 @@ def generate_index_html(pubs, authors):
 
             <div style="margin-top: 1.5rem;">
               <a href="about.html" class="btn btn-primary">Read More About Our Group &rarr;</a>
-            </div>
-          </div>
-
-          <div class="about-sidebar">
-            <div class="news-box">
-              <h3 class="news-box-title"><span>📢</span> Recent Highlights &amp; News</h3>
-              <ul class="news-list">
-                <li class="news-item">
-                  <div class="news-date">2026 Milestone</div>
-                  <div class="news-headline">Roadmap for an atomistic machine-learning ecosystem published on arXiv (2609.39090).</div>
-                </li>
-                <li class="news-item">
-                  <div class="news-date">2026 Release</div>
-                  <div class="news-headline">Goldilocks automated k-point sampling framework for Quantum ESPRESSO published in <em>Digital Discovery</em>.</div>
-                </li>
-                <li class="news-item">
-                  <div class="news-date">2026 Discovery</div>
-                  <div class="news-headline">uMOF universal benchmark database and ML interatomic potentials released for metal-organic frameworks.</div>
-                </li>
-                <li class="news-item">
-                  <div class="news-date">Software Ecosystem</div>
-                  <div class="news-headline">aiida-mlip released, integrating janus-core workflows with full data provenance in AiiDA.</div>
-                </li>
-              </ul>
             </div>
           </div>
         </div>
@@ -452,6 +434,9 @@ def generate_code_html():
   <meta name="description" content="Open-source scientific software packages developed by DDMMS: janus-core, aiida-mlip, aiidalab-mlip, pack-mm, ml-peg, and goldilocks.">
   <link rel="icon" type="image/svg+xml" href="assets/logos/ddmms.svg">
   <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
 </head>
 <body>
 {header_html}
@@ -658,6 +643,9 @@ def generate_publications_html(pubs, authors):
   <meta name="description" content="Full publication catalogue for the Data Driven Materials and Molecular Science group, auto-aggregated from ORCID.">
   <link rel="icon" type="image/svg+xml" href="assets/logos/ddmms.svg">
   <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
 </head>
 <body>
 {header_html}
@@ -788,6 +776,9 @@ def generate_about_html():
   <meta name="description" content="Mission, background, and methodology of the Data Driven Materials and Molecular Science group at STFC Daresbury Laboratory, UKRI.">
   <link rel="icon" type="image/svg+xml" href="assets/logos/ddmms.svg">
   <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
 </head>
 <body>
 {header_html}
@@ -850,6 +841,28 @@ def generate_about_html():
         </div>
 
         <div class="about-sidebar">
+          <div class="news-box" style="margin-bottom: 1.5rem;">
+            <h3 class="news-box-title"><span>📢</span> Recent Highlights &amp; News</h3>
+            <ul class="news-list">
+              <li class="news-item">
+                <div class="news-date">2026 Milestone</div>
+                <div class="news-headline">Roadmap for an atomistic machine-learning ecosystem published on arXiv (2609.39090).</div>
+              </li>
+              <li class="news-item">
+                <div class="news-date">2026 Release</div>
+                <div class="news-headline">Goldilocks automated k-point sampling framework for Quantum ESPRESSO published in <em>Digital Discovery</em>.</div>
+              </li>
+              <li class="news-item">
+                <div class="news-date">2026 Discovery</div>
+                <div class="news-headline">uMOF universal benchmark database and ML interatomic potentials released for metal-organic frameworks.</div>
+              </li>
+              <li class="news-item">
+                <div class="news-date">Software Ecosystem</div>
+                <div class="news-headline">aiida-mlip released, integrating janus-core workflows with full data provenance in AiiDA.</div>
+              </li>
+            </ul>
+          </div>
+
           <div class="news-box">
             <h3 class="news-box-title"><span>🤝</span> Work With Us</h3>
             <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1rem;">
@@ -880,6 +893,9 @@ def generate_people_html():
   <meta name="description" content="Meet the researchers, developers, former members, collaborators, and visitors in the Data Driven Materials and Molecular Science group.">
   <link rel="icon" type="image/svg+xml" href="assets/logos/ddmms.svg">
   <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
 </head>
 <body>
 {header_html}
@@ -1262,6 +1278,9 @@ def generate_research_html():
   <meta name="description" content="Research areas of the Data Driven Materials and Molecular Science group: MLIPs, MOFs, molten salts, and automated workflows.">
   <link rel="icon" type="image/svg+xml" href="assets/logos/ddmms.svg">
   <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
 </head>
 <body>
 {header_html}

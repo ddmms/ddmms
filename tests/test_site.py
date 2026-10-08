@@ -262,6 +262,42 @@ class TestDDMMSSite(unittest.TestCase):
         self.assertNotIn("actions/upload-pages-artifact@v3", content)
         self.assertNotIn("actions/deploy-pages@v4", content)
 
+    def test_math_rendering_and_katex_assets(self):
+        for fname in self.html_files:
+            content = (BASE_DIR / fname).read_text(encoding="utf-8")
+            self.assertIn("katex.min.css", content, f"KaTeX CSS missing from {fname}")
+            self.assertIn("katex.min.js", content, f"KaTeX JS missing from {fname}")
+            self.assertIn("auto-render.min.js", content, f"KaTeX auto-render missing from {fname}")
+
+        main_js = (BASE_DIR / "assets" / "js" / "main.js").read_text(encoding="utf-8")
+        self.assertIn("renderAllMath", main_js, "renderAllMath missing from main.js")
+        self.assertIn("renderMathFallback", main_js, "renderMathFallback missing from main.js")
+
+        style_css = (BASE_DIR / "assets" / "css" / "style.css").read_text(encoding="utf-8")
+        self.assertIn(".math-rendered", style_css, ".math-rendered missing from style.css")
+        self.assertIn(".katex", style_css, ".katex missing from style.css")
+
+    def test_about_page_highlights_and_landing_page(self):
+        about_html = (BASE_DIR / "about.html").read_text(encoding="utf-8")
+        self.assertIn("Recent Highlights &amp; News", about_html)
+        self.assertIn("Work With Us", about_html)
+        self.assertIn("Contact the Group", about_html)
+        # Ensure Recent Highlights & News appears above Work With Us / Contact
+        highlights_pos = about_html.find("Recent Highlights &amp; News")
+        contact_pos = about_html.find("Contact the Group")
+        self.assertNotEqual(highlights_pos, -1)
+        self.assertNotEqual(contact_pos, -1)
+        self.assertLess(highlights_pos, contact_pos, "Recent Highlights & News must appear above Contact")
+
+        # Brand links point to about.html as landing page
+        for fname in ["header.html", "_includes/header.html"]:
+            content = (BASE_DIR / fname).read_text(encoding="utf-8")
+            self.assertIn('<a href="about.html" class="brand-link"', content)
+
+        # index.html redirects to about.html
+        index_html = (BASE_DIR / "index.html").read_text(encoding="utf-8")
+        self.assertIn('url=about.html', index_html)
+
 
 if __name__ == "__main__":
     unittest.main()
