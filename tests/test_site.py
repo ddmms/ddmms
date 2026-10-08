@@ -24,7 +24,7 @@ class TestDDMMSSite(unittest.TestCase):
             self.assertGreater(p.stat().st_size, 1000, f"{fname} is suspiciously small")
 
     def test_required_nav_menu_items(self):
-        required_items = ["about", "people", "research", "publications", "code"]
+        required_items = ["about", "people", "research", "publications", "software"]
         for fname in ["header.html", "_includes/header.html"]:
             content = (BASE_DIR / fname).read_text(encoding="utf-8").lower()
             for item in required_items:
@@ -98,6 +98,7 @@ class TestDDMMSSite(unittest.TestCase):
             ("people.html", "People"),
             ("research.html", "Research"),
             ("publications.html", "Publications"),
+            ("code.html", "Software"),
             ("code.html", "Code"),
         ]
         for fname, title in menu_titles:

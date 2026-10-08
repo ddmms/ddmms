@@ -195,7 +195,7 @@
           <li class="nav-item"><a href="people.html">People</a></li>
           <li class="nav-item"><a href="research.html">Research</a></li>
           <li class="nav-item"><a href="publications.html">Publications</a></li>
-          <li class="nav-item"><a href="code.html">Code</a></li>
+          <li class="nav-item"><a href="code.html">Software</a></li>
         </ul>
       </nav>
 
@@ -221,7 +221,7 @@
         <li class="mobile-nav-item"><a href="people.html"><span>People</span><span>&rarr;</span></a></li>
         <li class="mobile-nav-item"><a href="research.html"><span>Research</span><span>&rarr;</span></a></li>
         <li class="mobile-nav-item"><a href="publications.html"><span>Publications</span><span>&rarr;</span></a></li>
-        <li class="mobile-nav-item"><a href="code.html"><span>Code</span><span>&rarr;</span></a></li>
+        <li class="mobile-nav-item"><a href="code.html"><span>Software</span><span>&rarr;</span></a></li>
       </ul>
       <div class="mobile-actions">
         <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Theme Appearance</span>
