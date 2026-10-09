@@ -30,7 +30,7 @@ def load_research(research_file: Optional[Union[str, Path]] = None) -> Dict[str,
         subtitle: "From quantum-level..."
       themes:
         - id: "mlips"
-          tag: "Theme 1 • Physics-Informed AI"
+          tag: "Interest 1 • Physics-Informed AI"
           title: "Foundation Machine-Learned Interatomic Potentials (MLIPs)"
           description:
             - "Paragraph 1..."
