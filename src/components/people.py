@@ -426,11 +426,13 @@ def generate_person_html(
 
     # Base href tag for subdirectory placement if needed
     base_tag = f'  <base href="{base_href}">\n' if base_href else ""
+    rel_prefix = base_href if base_href else ""
 
     # Avatar element
     if (avatar.startswith("assets/") or avatar.startswith("http") or avatar.startswith("/") or
         any(avatar.lower().endswith(ext) for ext in (".jpg", ".jpeg", ".png", ".svg", ".webp"))):
-        avatar_html = f'<img src="{avatar}" alt="{name}" class="profile-header-avatar">'
+        avatar_src = f"{rel_prefix}{avatar}" if (rel_prefix and avatar.startswith("assets/")) else avatar
+        avatar_html = f'<img src="{avatar_src}" alt="{name}" class="profile-header-avatar" style="max-height: 300px; height: auto; width: auto; max-width: 100%; object-fit: cover;">'
     elif avatar:
         avatar_html = f'<div class="profile-header-avatar profile-header-avatar-text">{avatar}</div>'
     else:

@@ -1222,13 +1222,14 @@ a:hover {
 }
 
 .profile-header-avatar {
-  width: 140px;
-  height: 140px;
-  border-radius: 50%;
+  max-height: 300px;
+  height: auto;
+  width: auto;
+  max-width: 100%;
+  border-radius: var(--radius-lg);
   object-fit: cover;
-  object-position: center 20%;
-  border: 3px solid var(--border);
-  box-shadow: var(--shadow-md);
+  border: 2px solid var(--border);
+  box-shadow: var(--shadow-sm);
   display: block;
 }
 
