@@ -357,7 +357,7 @@ class TestDDMMSSite(unittest.TestCase):
     def test_about_page_highlights_and_landing_page(self):
         index_html = (BASE_DIR / "index.html").read_text(encoding="utf-8")
         self.assertIn("Recent Highlights &amp; News", index_html)
-        self.assertIn("Work With Us", index_html)
+        self.assertIn("Collaborate With Us", index_html)
         self.assertIn("Contact the Group", index_html)
         # Ensure Recent Highlights & News appears above Work With Us / Contact
         highlights_pos = index_html.find("Recent Highlights &amp; News")
