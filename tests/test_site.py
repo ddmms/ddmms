@@ -223,6 +223,21 @@ class TestDDMMSSite(unittest.TestCase):
         self.assertIn("footer-grid", footer)
         self.assertIn("Affiliations", footer)
 
+    def test_footer_template_file_reading(self):
+        import build_site
+        import tempfile
+        template_content = '<footer class="custom-footer">Custom Footer {{ year }}</footer>'
+        with tempfile.NamedTemporaryFile("w+", encoding="utf-8", delete=False, suffix=".html") as tf:
+            tf.write(template_content)
+            tf_path = Path(tf.name)
+
+        try:
+            rendered = build_site.generate_footer_html(template_file=tf_path, year=2099)
+            self.assertIn('<footer class="custom-footer">Custom Footer 2099</footer>', rendered)
+        finally:
+            if tf_path.exists():
+                tf_path.unlink()
+
     def test_all_pages_reuse_footer(self):
         for fname in self.html_files:
             content = (BASE_DIR / fname).read_text(encoding="utf-8")
