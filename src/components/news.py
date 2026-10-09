@@ -1,6 +1,7 @@
 """News component and data loader for the DDMMS website."""
 
 from pathlib import Path
+import yaml
 
 try:
     from .header import get_header
@@ -14,7 +15,8 @@ except (ImportError, ValueError):
         from src.components.footer import get_footer
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
-NEWS_FILE = BASE_DIR / "data" / "news.csv"
+NEWS_FILE = BASE_DIR / "data" / "news.yaml"
+NEWS_CSV_FILE = BASE_DIR / "data" / "news.csv"
 
 DEFAULT_NEWS = [
     {
@@ -41,13 +43,24 @@ DEFAULT_NEWS = [
 
 
 def load_news(news_file=None):
-    """Load news items from pipe-separated CSV file (data/news.csv).
+    """Load news items from YAML file (data/news.yaml) or fallback CSV file.
 
-    Supported row format:
-        Date or Category | Headline [ | Optional Link URL ]
+    Supported YAML format:
+      - date: "2026 Milestone"
+        headline: "Roadmap..."
+        link: "https://..."
+
+    Supported CSV row format:
+      Date or Category | Headline [ | Optional Link URL ]
     """
     if news_file is None:
         news_file = NEWS_FILE
+        if not news_file.exists():
+            for alt_name in ("news.yml", "news.csv"):
+                cand = BASE_DIR / "data" / alt_name
+                if cand.exists():
+                    news_file = cand
+                    break
 
     target_path = Path(news_file)
     if not target_path.exists():
@@ -57,8 +70,34 @@ def load_news(news_file=None):
 
     news_items = []
     if target_path.exists():
-        with open(target_path, "r", encoding="utf-8-sig") as f:
-            for line in f:
+        content = target_path.read_text(encoding="utf-8-sig")
+        is_yaml = target_path.suffix.lower() in (".yaml", ".yml") or ("\n- " in content or content.startswith("- "))
+        parsed = None
+        if is_yaml:
+            try:
+                parsed = yaml.safe_load(content)
+            except Exception:
+                parsed = None
+
+        if parsed:
+            raw_list = parsed if isinstance(parsed, list) else parsed.get("news", [])
+            if isinstance(raw_list, list):
+                for item in raw_list:
+                    if not isinstance(item, dict):
+                        continue
+                    date_tag = str(item.get("date") or item.get("category") or "News").strip()
+                    headline = str(item.get("headline") or item.get("title") or "").strip()
+                    link = str(item.get("link") or item.get("url") or "").strip()
+                    if headline:
+                        news_items.append({
+                            "date": date_tag,
+                            "headline": headline,
+                            "link": link,
+                        })
+
+        # Fallback to pipe-separated CSV parsing if not YAML or no items loaded
+        if not news_items:
+            for line in content.splitlines():
                 clean_line = line.strip()
                 if not clean_line or clean_line.startswith("#"):
                     continue
@@ -161,4 +200,3 @@ def generate_news_html(news=None):
   <script src="assets/js/main.js"></script>
 </body>
 </html>"""
-

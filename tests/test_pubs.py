@@ -28,7 +28,9 @@ from pubs import (
     generate_html,
     generate_markdown,
     get_publication_url,
+    load_orcids,
     load_orcids_from_csv,
+    load_orcids_from_yaml,
     normalize_title,
     select_best_summary,
 )
@@ -291,6 +293,30 @@ https://orcid.org/0000-0001-6068-6786,Gilberto Teobaldi
     def test_load_orcids_from_csv_file_not_found(self):
         with self.assertRaises(FileNotFoundError):
             load_orcids_from_csv("non_existent_file.csv")
+
+    def test_load_orcids_from_yaml(self):
+        yaml_content = """# Group members
+- orcid: "0000-0002-7013-6670"
+  name: "Alin Marin Elena"
+- orcid: "https://orcid.org/0000-0001-6068-6786"
+  name: "Gilberto Teobaldi"
+"""
+        with tempfile.NamedTemporaryFile("w+", delete=False, suffix=".yaml") as tmp:
+            tmp.write(yaml_content)
+            tmp_path = tmp.name
+
+        try:
+            loaded = load_orcids_from_yaml(tmp_path)
+            self.assertEqual(len(loaded), 2)
+            self.assertEqual(loaded["0000-0002-7013-6670"], "Alin Marin Elena")
+            self.assertEqual(loaded["0000-0001-6068-6786"], "Gilberto Teobaldi")
+        finally:
+            if os.path.exists(tmp_path):
+                os.remove(tmp_path)
+
+    def test_load_orcids_from_yaml_file_not_found(self):
+        with self.assertRaises(FileNotFoundError):
+            load_orcids_from_yaml("non_existent_file.yaml")
 
     def test_aggregate_publications_accepts_dict(self):
         mock_works = [

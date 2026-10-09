@@ -7,18 +7,22 @@ loading data feeds (publications, authors, news), and writing static HTML assets
 
 import csv
 import json
+import re
 import sys
 from pathlib import Path
+import yaml
 
 # Paths
 BASE_DIR = Path(__file__).resolve().parent.parent
 PUBLICATIONS_FILE = BASE_DIR / "publications.json"
-AUTHORS_FILE = BASE_DIR / "data" / "authors.csv"
+AUTHORS_FILE = BASE_DIR / "data" / "authors.yaml"
+AUTHORS_CSV_FILE = BASE_DIR / "data" / "authors.csv"
 HEADER_FILE = BASE_DIR / "header.html"
 INCLUDES_HEADER_FILE = BASE_DIR / "_includes" / "header.html"
 FOOTER_FILE = BASE_DIR / "footer.html"
 INCLUDES_FOOTER_FILE = BASE_DIR / "_includes" / "footer.html"
-NEWS_FILE = BASE_DIR / "data" / "news.csv"
+NEWS_FILE = BASE_DIR / "data" / "news.yaml"
+NEWS_CSV_FILE = BASE_DIR / "data" / "news.csv"
 
 # Import modular components with flexible path resolution
 try:
@@ -75,7 +79,7 @@ __all__ = [
 
 
 def load_data():
-    """Load publications from publications.json and authors from data/authors.csv."""
+    """Load publications from publications.json and authors from data/authors.yaml (or CSV fallback)."""
     pubs = []
     if PUBLICATIONS_FILE.exists():
         with open(PUBLICATIONS_FILE, "r", encoding="utf-8") as f:
@@ -86,14 +90,55 @@ def load_data():
         "0009-0005-2015-9478": "Elliott Kasoar",
         "0000-0001-7374-9352": "Junwen Yin",
     }
-    if AUTHORS_FILE.exists():
-        with open(AUTHORS_FILE, "r", encoding="utf-8-sig") as f:
-            reader = csv.reader(f)
+
+    authors_path = AUTHORS_FILE
+    if not authors_path.exists():
+        for cand in (BASE_DIR / "data" / "authors.yml", AUTHORS_CSV_FILE):
+            if cand.exists():
+                authors_path = cand
+                break
+
+    if authors_path.exists():
+        content = authors_path.read_text(encoding="utf-8-sig")
+        is_yaml = authors_path.suffix.lower() in (".yaml", ".yml") or ("\n- " in content or content.startswith("- "))
+        loaded_yaml = None
+        if is_yaml:
+            try:
+                loaded_yaml = yaml.safe_load(content)
+            except Exception:
+                loaded_yaml = None
+
+        if loaded_yaml:
+            if isinstance(loaded_yaml, list):
+                for item in loaded_yaml:
+                    if isinstance(item, dict):
+                        orcid = str(item.get("orcid") or item.get("id") or "").strip()
+                        name = str(item.get("name") or "").strip()
+                        if orcid and name:
+                            clean_orcid = re.sub(r"^https?://(www\.)?orcid\.org/", "", orcid, flags=re.IGNORECASE).strip()
+                            authors[clean_orcid] = name
+            elif isinstance(loaded_yaml, dict):
+                raw_authors = loaded_yaml.get("authors", loaded_yaml)
+                if isinstance(raw_authors, list):
+                    for item in raw_authors:
+                        if isinstance(item, dict):
+                            orcid = str(item.get("orcid") or item.get("id") or "").strip()
+                            name = str(item.get("name") or "").strip()
+                            if orcid and name:
+                                clean_orcid = re.sub(r"^https?://(www\.)?orcid\.org/", "", orcid, flags=re.IGNORECASE).strip()
+                                authors[clean_orcid] = name
+                elif isinstance(raw_authors, dict):
+                    for k, v in raw_authors.items():
+                        clean_orcid = re.sub(r"^https?://(www\.)?orcid\.org/", "", str(k), flags=re.IGNORECASE).strip()
+                        authors[clean_orcid] = str(v).strip()
+        else:
+            reader = csv.reader(content.splitlines())
             for row in reader:
                 if not row or row[0].startswith("#") or row[0].lower() in ("orcid", "id"):
                     continue
                 if len(row) >= 2:
-                    authors[row[0].strip()] = row[1].strip()
+                    clean_orcid = re.sub(r"^https?://(www\.)?orcid\.org/", "", row[0].strip(), flags=re.IGNORECASE).strip()
+                    authors[clean_orcid] = row[1].strip()
 
     return pubs, authors
 

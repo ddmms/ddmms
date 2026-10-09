@@ -1,9 +1,0 @@
-# Date or Category | Headline | Optional Link
-2026 Milestone|Roadmap for an atomistic machine-learning ecosystem published on arXiv (2609.39090).|https://arxiv.org/abs/2609.39090
-2026 Release|Goldilocks automated k-point sampling framework for Quantum ESPRESSO published in <em>Digital Discovery</em>.|https://doi.org/10.1039/D4DD00045A
-2026 Discovery|uMOF universal benchmark database and ML interatomic potentials released for metal-organic frameworks.|
-Software Ecosystem|aiida-mlip released, integrating janus-core workflows with full data provenance in AiiDA.|https://github.com/stfc/aiida-mlip
-2025 Workshop|DDMMS team organized CCP5 workshop on Advanced Molecular Dynamics & Machine Learning.|https://www.ccp5.ac.uk
-2025 Grant|UKRI PSDI funding awarded for High-Throughput Materials Simulation and Data Workflows.|https://www.psdi.ac.uk
-2025 Software|Initial release of janus-core providing unified MLIP integration with ASE.|https://github.com/stfc/janus-core
-2024 Launch|Establishment of the Data Driven Materials and Molecular Science group at STFC Daresbury Laboratory.|https://www.scd.stfc.ac.uk

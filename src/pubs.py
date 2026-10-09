@@ -14,6 +14,7 @@ import re
 import sys
 from typing import Any, Dict, List, Optional, Sequence, Union
 import requests
+import yaml
 
 # HTML generation is delegated to components.publications; re-export for backward compatibility
 try:
@@ -25,27 +26,76 @@ except (ImportError, ValueError):
         from src.components.publications import build_html_page, generate_html
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+DEFAULT_AUTHORS_PATH = str(BASE_DIR / "data" / "authors.yaml")
 DEFAULT_CSV_PATH = str(BASE_DIR / "data" / "authors.csv")
 
-# Fallback dictionary if CSV is not found
+# Fallback dictionary if authors file is not found
 DEFAULT_ORCID_IDS: Dict[str, str] = {
     "0000-0002-7013-6670": "Alin Marin Elena",
 }
 
 
-def load_orcids_from_csv(csv_path: str = DEFAULT_CSV_PATH) -> Dict[str, str]:
-    """Load ORCID to author name mapping from a CSV file.
+def load_orcids_from_yaml(yaml_path: str = DEFAULT_AUTHORS_PATH) -> Dict[str, str]:
+    """Load ORCID to author name mapping from a YAML file.
 
-    Format expected: 'orcid,name' with optional header row.
-    Lines beginning with '#' and empty rows are ignored.
-    ORCID values are stripped of any leading URL prefixes (e.g. 'https://orcid.org/').
+    Format expected:
+      - orcid: '0000-0002-7013-6670'
+        name: 'Alin Marin Elena'
+      or dictionary mapping of '0000-...': 'Name'
+    """
+    p = Path(yaml_path)
+    if not p.is_file():
+        alt = BASE_DIR / yaml_path
+        if alt.is_file():
+            p = alt
+        else:
+            raise FileNotFoundError(f"Authors YAML file not found at '{yaml_path}'")
+
+    content = p.read_text(encoding="utf-8-sig")
+    data = yaml.safe_load(content)
+    mapping: Dict[str, str] = {}
+    orcid_pattern = re.compile(r"^(\d{4}-\d{4}-\d{4}-\d{3}[\dX])$", re.IGNORECASE)
+
+    def add_author(raw_orcid, raw_name):
+        if not raw_orcid or not raw_name:
+            return
+        clean_orcid = re.sub(r"^https?://(www\.)?orcid\.org/", "", str(raw_orcid), flags=re.IGNORECASE).strip()
+        if orcid_pattern.match(clean_orcid):
+            mapping[clean_orcid] = str(raw_name).strip()
+
+    if isinstance(data, list):
+        for item in data:
+            if isinstance(item, dict):
+                add_author(item.get("orcid") or item.get("id"), item.get("name"))
+    elif isinstance(data, dict):
+        raw_list = data.get("authors")
+        if isinstance(raw_list, list):
+            for item in raw_list:
+                if isinstance(item, dict):
+                    add_author(item.get("orcid") or item.get("id"), item.get("name"))
+        else:
+            for k, v in data.items():
+                if k.lower() not in ("authors", "title", "description"):
+                    add_author(k, v)
+
+    return mapping
+
+
+def load_orcids_from_csv(csv_path: str = DEFAULT_AUTHORS_PATH) -> Dict[str, str]:
+    """Load ORCID to author name mapping from a CSV or YAML file.
+
+    Maintained for backward compatibility. Supports both CSV and YAML paths.
     """
     if not os.path.exists(csv_path):
         alt_path = os.path.join(str(BASE_DIR), csv_path)
         if os.path.exists(alt_path):
             csv_path = alt_path
         else:
-            raise FileNotFoundError(f"Authors CSV file not found at '{csv_path}'")
+            raise FileNotFoundError(f"Authors file not found at '{csv_path}'")
+
+    # If it's a YAML file, route to YAML loader
+    if csv_path.lower().endswith((".yaml", ".yml")):
+        return load_orcids_from_yaml(csv_path)
 
     mapping: Dict[str, str] = {}
     orcid_pattern = re.compile(r"^(\d{4}-\d{4}-\d{4}-\d{3}[\dX])$", re.IGNORECASE)
@@ -86,23 +136,30 @@ def load_orcids_from_csv(csv_path: str = DEFAULT_CSV_PATH) -> Dict[str, str]:
     return mapping
 
 
-def get_configured_orcid_ids(csv_path: str = DEFAULT_CSV_PATH) -> Dict[str, str]:
-    """Retrieve ORCID mapping from CSV if available, otherwise return default mapping."""
-    if not os.path.isfile(csv_path):
-        alt_path = os.path.join(str(BASE_DIR), csv_path)
-        if os.path.isfile(alt_path):
-            csv_path = alt_path
-    if os.path.isfile(csv_path):
+load_orcids = load_orcids_from_yaml
+
+
+def get_configured_orcid_ids(path: Optional[str] = None) -> Dict[str, str]:
+    """Retrieve ORCID mapping from YAML (or CSV fallback) if available, otherwise return default mapping."""
+    if path is None:
+        for cand in (DEFAULT_AUTHORS_PATH, str(BASE_DIR / "data" / "authors.yml"), DEFAULT_CSV_PATH):
+            if os.path.isfile(cand):
+                path = cand
+                break
+    if path and os.path.isfile(path):
         try:
-            loaded = load_orcids_from_csv(csv_path)
+            if path.lower().endswith((".yaml", ".yml")):
+                loaded = load_orcids_from_yaml(path)
+            else:
+                loaded = load_orcids_from_csv(path)
             if loaded:
                 return loaded
         except Exception as e:
-            print(f"Warning: Could not read {csv_path}: {e}")
+            print(f"Warning: Could not read {path}: {e}")
     return dict(DEFAULT_ORCID_IDS)
 
 
-# Initialized from CSV if present
+# Initialized from YAML/CSV if present
 ORCID_IDS: Dict[str, str] = get_configured_orcid_ids()
 ORCIDS_IDS = ORCID_IDS
 
@@ -434,7 +491,7 @@ def main():
         "orcids",
         nargs="*",
         default=None,
-        help="ORCID IDs to fetch (optional positional args). Overrides or filters CSV members.",
+        help="ORCID IDs to fetch (optional positional args). Overrides or filters CSV/YAML members.",
     )
     parser.add_argument(
         "-o",
@@ -443,17 +500,19 @@ def main():
         help="Output Markdown file path (default: PUBLICATIONS.md)",
     )
     parser.add_argument(
-        "--csv",
+        "--authors",
+        "--authors-yaml",
         "--authors-csv",
-        dest="authors_csv",
-        default=DEFAULT_CSV_PATH,
-        help="Path to CSV containing 'orcid,name' mappings (default: data/authors.csv)",
+        "--csv",
+        dest="authors_path",
+        default=DEFAULT_AUTHORS_PATH,
+        help="Path to YAML or CSV containing author ORCID mappings (default: data/authors.yaml)",
     )
     parser.add_argument(
         "--orcids",
         nargs="+",
         dest="flag_orcids",
-        help="List of ORCID IDs to fetch (overrides CSV configuration)",
+        help="List of ORCID IDs to fetch (overrides file configuration)",
     )
     parser.add_argument(
         "--json",
@@ -478,8 +537,11 @@ def main():
     args = parser.parse_args()
 
     # Determine orcid mapping
-    if args.authors_csv and os.path.isfile(args.authors_csv):
-        orcid_dict = load_orcids_from_csv(args.authors_csv)
+    if args.authors_path and os.path.isfile(args.authors_path):
+        if args.authors_path.lower().endswith((".yaml", ".yml")):
+            orcid_dict = load_orcids_from_yaml(args.authors_path)
+        else:
+            orcid_dict = load_orcids_from_csv(args.authors_path)
     else:
         orcid_dict = ORCID_IDS
 

@@ -390,6 +390,28 @@ class TestDDMMSSite(unittest.TestCase):
             if tf_path.exists():
                 tf_path.unlink()
 
+        # Test custom YAML news loading
+        with tempfile.NamedTemporaryFile("w+", encoding="utf-8", delete=False, suffix=".yaml") as tyf:
+            tyf.write("""- date: "2026 YAML Tag"
+  headline: "YAML Headline with link"
+  link: "https://example.com/yaml"
+- date: "2026 YAML Tag 2"
+  headline: "YAML Headline without link"
+""")
+            tyf_path = Path(tyf.name)
+
+        try:
+            custom_yaml_news = load_news(tyf_path)
+            self.assertEqual(len(custom_yaml_news), 2)
+            self.assertEqual(custom_yaml_news[0]["date"], "2026 YAML Tag")
+            self.assertEqual(custom_yaml_news[0]["headline"], "YAML Headline with link")
+            self.assertEqual(custom_yaml_news[0]["link"], "https://example.com/yaml")
+            self.assertEqual(custom_yaml_news[1]["date"], "2026 YAML Tag 2")
+            self.assertEqual(custom_yaml_news[1]["link"], "")
+        finally:
+            if tyf_path.exists():
+                tyf_path.unlink()
+
         # Fallback to DEFAULT_NEWS on non-existent file
         fallback = load_news(Path("/nonexistent/file.csv"))
         self.assertEqual(len(fallback), len(DEFAULT_NEWS))

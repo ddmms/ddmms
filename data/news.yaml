@@ -1,0 +1,34 @@
+# DDMMS News and Historical Milestones
+# Format: list of news items with date (or category), headline, and optional link
+
+- date: "2026 Milestone"
+  headline: "Roadmap for an atomistic machine-learning ecosystem published on arXiv (2609.39090)."
+  link: "https://arxiv.org/abs/2609.39090"
+
+- date: "2026 Release"
+  headline: "Goldilocks automated k-point sampling framework for Quantum ESPRESSO published in <em>Digital Discovery</em>."
+  link: "https://doi.org/10.1039/D4DD00045A"
+
+- date: "2026 Discovery"
+  headline: "uMOF universal benchmark database and ML interatomic potentials released for metal-organic frameworks."
+  link: ""
+
+- date: "Software Ecosystem"
+  headline: "aiida-mlip released, integrating janus-core workflows with full data provenance in AiiDA."
+  link: "https://github.com/stfc/aiida-mlip"
+
+- date: "2025 Workshop"
+  headline: "DDMMS team organized CCP5 workshop on Advanced Molecular Dynamics & Machine Learning."
+  link: "https://www.ccp5.ac.uk"
+
+- date: "2025 Grant"
+  headline: "UKRI PSDI funding awarded for High-Throughput Materials Simulation and Data Workflows."
+  link: "https://www.psdi.ac.uk"
+
+- date: "2025 Software"
+  headline: "Initial release of janus-core providing unified MLIP integration with ASE."
+  link: "https://github.com/stfc/janus-core"
+
+- date: "2024 Launch"
+  headline: "Establishment of the Data Driven Materials and Molecular Science group at STFC Daresbury Laboratory."
+  link: "https://www.scd.stfc.ac.uk"
