@@ -413,6 +413,59 @@ class TestDDMMSSite(unittest.TestCase):
         with self.assertRaises(FileNotFoundError):
             load_news(Path("/nonexistent/file.yaml"))
 
+    def test_load_research_yaml(self):
+        import tempfile
+        from build_site import load_research, generate_research_html
+
+        # Test loading the actual data/research.yaml
+        research_data = load_research()
+        self.assertIsInstance(research_data, dict)
+        self.assertIn("approach", research_data)
+        self.assertIn("themes", research_data)
+        self.assertGreaterEqual(len(research_data["themes"]), 6)
+
+        # Verify theme structure
+        for item in research_data["themes"]:
+            self.assertIn("tag", item)
+            self.assertIn("title", item)
+            self.assertIn("description", item)
+            self.assertTrue(item["tag"])
+            self.assertTrue(item["title"])
+            self.assertTrue(item["description"])
+
+        # Test custom YAML research loading
+        with tempfile.NamedTemporaryFile("w+", encoding="utf-8", delete=False, suffix=".yaml") as trf:
+            trf.write("""approach:
+  subtitle: "Custom research approach subtitle"
+
+themes:
+  - tag: "Custom Theme"
+    title: "Novel Materials Design"
+    description: "Custom description text for materials."
+    links:
+      - text: "Explore &rarr;"
+        url: "https://example.com/custom"
+""")
+            trf_path = Path(trf.name)
+
+        try:
+            custom_data = load_research(trf_path)
+            self.assertEqual(custom_data["approach"]["subtitle"], "Custom research approach subtitle")
+            self.assertEqual(len(custom_data["themes"]), 1)
+            self.assertEqual(custom_data["themes"][0]["title"], "Novel Materials Design")
+
+            rendered_html = generate_research_html(custom_data)
+            self.assertIn("Custom research approach subtitle", rendered_html)
+            self.assertIn("Novel Materials Design", rendered_html)
+            self.assertIn("https://example.com/custom", rendered_html)
+        finally:
+            if trf_path.exists():
+                trf_path.unlink()
+
+        # Non-existent file raises FileNotFoundError
+        with self.assertRaises(FileNotFoundError):
+            load_research(Path("/nonexistent/file.yaml"))
+
     def test_news_display_latest_four_and_historical_toggle(self):
         index_html = (BASE_DIR / "index.html").read_text(encoding="utf-8")
         main_js = (BASE_DIR / "assets" / "js" / "main.js").read_text(encoding="utf-8")

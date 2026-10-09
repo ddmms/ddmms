@@ -1,0 +1,78 @@
+approach:
+  subtitle: "From quantum-level potential energy surfaces to supercomputing molecular dynamics and macroscopic thermal transport."
+
+themes:
+  - id: mlips
+    tag: "Theme 1 • Physics-Informed AI"
+    title: "Foundation Machine-Learned Interatomic Potentials (MLIPs)"
+    description:
+      - "Accurate modeling of chemical reactivity, phase transitions, and defect dynamics requires potential energy surfaces that respect rotational, translational, and permutational invariances. We develop and extend equivariant graph neural network potentials such as MACE, SevenNet, and CHGNet."
+      - "Key research topics include the incorporation of polarisable long-range electrostatics (MACE-POLAR), optimal active-learning criteria that balance coverage and model uncertainty, and cross-learning strategies connecting molecular, surface, and inorganic solid phases."
+    links:
+      - text: "Explore Related Publications &rarr;"
+        url: "publications.html?search=MLIP"
+        class: "btn btn-outline"
+
+  - id: mofs
+    tag: "Theme 2 • Porous Materials"
+    title: "Metal-Organic Frameworks &amp; Nanoporous Networks"
+    description:
+      - "Metal-Organic Frameworks (MOFs) exhibit remarkable chemical modularity, ultra-high surface areas, and tunable mechanical properties such as negative thermal expansion (NTE). We curate the uMOF benchmark database and build dedicated ML potentials that enable high-throughput phonon calculations, thermodynamic stability screening, and gas adsorption modeling."
+    links:
+      - text: "Explore Related Publications &rarr;"
+        url: "publications.html?search=MOF"
+        class: "btn btn-outline"
+
+  - id: molten-salts
+    tag: "Theme 3 • Liquid State &amp; Clean Energy"
+    title: "Complex Fluids, Molten Salts &amp; Transport Phenomena"
+    description:
+      - "Molten salts serve as critical thermal storage media and coolants in next-generation nuclear and concentrated solar energy systems. We perform molecular dynamics simulations to quantify self-diffusion, ionic conductivity, shear viscosity, and thermal conductivity from first principles, testing fundamental theoretical bounds and experimental calibrations."
+    links:
+      - text: "Explore Related Publications &rarr;"
+        url: "publications.html?search=salt"
+        class: "btn btn-outline"
+
+  - id: workflows
+    tag: "Theme 4 • Autonomous Workflows"
+    title: "High-Throughput Simulation Workflows with janus-core &amp; aiida-mlip"
+    description:
+      - "Bridging the gap between interatomic potentials and scientific discovery requires seamless automation. With janus-core and the aiida-mlip plugin, we provide unified pipelines with full data provenance for geometry relaxation (BFGS, FIRE, FrechetCellFilter), equation of state fitting, full 6x6 elasticity stiffness tensors ($C_{ij}$), and climbing image nudged elastic band (CI-NEB) minimum energy pathways."
+    links:
+      - text: "Read Software Documentation &rarr;"
+        url: "code.html"
+        class: "btn btn-primary"
+
+  - id: goldilocks
+    tag: "Theme 5 • PSDI Data to Knowledge"
+    title: "Sustainable DFT &amp; k-Point Optimization (Goldilocks)"
+    description:
+      - "Computational electronic structure calculations represent a major fraction of workloads on national supercomputing services like ARCHER2. In collaboration with the <strong>PSDI (Physical Sciences Data Infrastructure) Data to Knowledge</strong> initiative, we develop <a href=\"https://goldilocks.ac.uk\" target=\"_blank\" rel=\"noopener noreferrer\"><strong>Goldilocks</strong> (goldilocks.ac.uk)</a> to predict optimal, sustainable k-point convergence parameters for Quantum ESPRESSO self-consistent field (SCF) calculations."
+      - "By balancing numerical accuracy with computational efficiency—never under-converged, never computationally wasteful—Goldilocks eliminates compute and electricity waste while preserving target accuracy. Peer-reviewed in RSC <em>Digital Discovery</em> (2026, DOI: 10.1039/d5dd00565e)."
+    links:
+      - text: "goldilocks.ac.uk &rarr;"
+        url: "https://goldilocks.ac.uk"
+        class: "btn btn-primary"
+      - text: "GitHub &rarr;"
+        url: "https://github.com/stfc/goldilocks"
+        class: "btn btn-outline"
+      - text: "Explore in Software &rarr;"
+        url: "code.html"
+        class: "btn btn-outline"
+
+  - id: ml-peg
+    tag: "Theme 6 • MLIP Benchmarking &amp; Validation"
+    title: "Machine Learning Performance and Extrapolation Guide (ML-PEG)"
+    description:
+      - "Evaluating machine-learned interatomic potentials requires going beyond simple training force and energy RMSE errors to evaluate true physical stability, phase behavior, and uncertainty quantification. The <strong>ML-PEG</strong> benchmarking platform establishes rigorous evaluation protocols to stress-test MLIPs across diverse chemical systems, out-of-distribution scenarios, and extrapolation limits."
+      - "Alongside standardized community benchmarks, ML-PEG provides an interactive web dashboard for transparently comparing foundation models and dataset baselines across materials discovery tasks."
+    links:
+      - text: "ml-peg.stfc.ac.uk &rarr;"
+        url: "https://ml-peg.stfc.ac.uk"
+        class: "btn btn-primary"
+      - text: "GitHub &rarr;"
+        url: "https://github.com/ddmms/ml-peg"
+        class: "btn btn-outline"
+      - text: "Explore in Software &rarr;"
+        url: "code.html"
+        class: "btn btn-outline"

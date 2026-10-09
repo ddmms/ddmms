@@ -1,4 +1,8 @@
-"""Research page component for the DDMMS website."""
+"""Research page component and data loader for the DDMMS website."""
+
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Union
+import yaml
 
 try:
     from .header import get_header
@@ -11,11 +15,178 @@ except (ImportError, ValueError):
         from src.components.header import get_header
         from src.components.footer import get_footer
 
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+RESEARCH_FILE = BASE_DIR / "data" / "research.yaml"
 
-def generate_research_html():
+
+def load_research(research_file: Optional[Union[str, Path]] = None) -> Dict[str, Any]:
+    """Load research approach and research themes from a YAML file (default: data/research.yaml).
+
+    Requires a valid YAML file provided by the user. Raises FileNotFoundError
+    if the file cannot be located.
+
+    Supported YAML format:
+      approach:
+        subtitle: "From quantum-level..."
+      themes:
+        - id: "mlips"
+          tag: "Theme 1 • Physics-Informed AI"
+          title: "Foundation Machine-Learned Interatomic Potentials (MLIPs)"
+          description:
+            - "Paragraph 1..."
+            - "Paragraph 2..."
+          links:
+            - text: "Explore Related Publications &rarr;"
+              url: "publications.html?search=MLIP"
+              class: "btn btn-outline"
+    """
+    target_path: Optional[Path] = None
+    if research_file is not None:
+        cand = Path(research_file)
+        if cand.is_file():
+            target_path = cand
+        else:
+            alt = BASE_DIR / research_file
+            if alt.is_file():
+                target_path = alt
+            else:
+                raise FileNotFoundError(f"Research YAML file not found: '{research_file}'")
+    else:
+        for cand in (RESEARCH_FILE, BASE_DIR / "data" / "research.yml"):
+            if cand.is_file():
+                target_path = cand
+                break
+        if target_path is None:
+            raise FileNotFoundError(f"Research YAML file not found at default location '{RESEARCH_FILE}'")
+
+    content = target_path.read_text(encoding="utf-8-sig")
+    parsed = yaml.safe_load(content)
+
+    if not parsed:
+        return {"approach": "", "themes": []}
+
+    if isinstance(parsed, list):
+        return {"approach": "", "themes": parsed}
+
+    if isinstance(parsed, dict):
+        approach = parsed.get("approach") or parsed.get("subtitle") or ""
+        themes = parsed.get("themes") or parsed.get("research_themes") or []
+        return {
+            "approach": approach,
+            "themes": themes,
+        }
+
+    return {"approach": "", "themes": []}
+
+
+def generate_research_html(
+    research_data: Optional[Union[Dict[str, Any], List[Dict[str, Any]]]] = None,
+    approach: Optional[Union[str, Dict[str, Any]]] = None,
+) -> str:
     """Generate the research page HTML."""
     header_html = get_header("research")
     footer_html = get_footer()
+
+    if research_data is None:
+        research_data = load_research()
+
+    themes: List[Dict[str, Any]] = []
+    if isinstance(research_data, dict):
+        if approach is None:
+            approach = research_data.get("approach", "")
+        raw_themes = research_data.get("themes") or research_data.get("research_themes") or []
+        if isinstance(raw_themes, list):
+            themes = raw_themes
+    elif isinstance(research_data, list):
+        themes = research_data
+
+    # Extract approach subtitle
+    subtitle = ""
+    if isinstance(approach, dict):
+        subtitle = str(approach.get("subtitle") or approach.get("description") or approach.get("text") or "").strip()
+    elif isinstance(approach, str):
+        subtitle = approach.strip()
+
+    section_header_html = ""
+    if subtitle:
+        section_header_html = f"""      <div class="section-header" style="text-align: left; margin-bottom: 2.5rem;">
+        <p class="section-subtitle">
+          {subtitle}
+        </p>
+      </div>"""
+    else:
+        section_header_html = """      <div class="section-header" style="text-align: left; margin-bottom: 2.5rem;">
+      </div>"""
+
+    cards = []
+    for theme in themes:
+        if not isinstance(theme, dict):
+            continue
+        tag = str(theme.get("tag") or "").strip()
+        title = str(theme.get("title") or "").strip()
+        desc = theme.get("description") or theme.get("desc") or ""
+
+        # Format paragraphs
+        desc_paragraphs = []
+        if isinstance(desc, list):
+            for i, p in enumerate(desc):
+                p_text = str(p).strip()
+                if not p_text:
+                    continue
+                style_attr = ' style="margin-top: 0.5rem;"' if i > 0 else ''
+                desc_paragraphs.append(f'            <p class="research-card-desc"{style_attr}>\n              {p_text}\n            </p>')
+        elif isinstance(desc, str) and desc.strip():
+            desc_paragraphs.append(f'            <p class="research-card-desc">\n              {desc.strip()}\n            </p>')
+
+        desc_html = "\n".join(desc_paragraphs)
+
+        # Format action buttons/links
+        raw_links = theme.get("links") or theme.get("buttons") or []
+        if not raw_links and (theme.get("link") or theme.get("url")):
+            raw_links = [{
+                "text": theme.get("link_text") or theme.get("text") or "Explore &rarr;",
+                "url": theme.get("link") or theme.get("url"),
+                "class": theme.get("class", "btn btn-outline"),
+            }]
+
+        link_elements = []
+        if isinstance(raw_links, list):
+            for link_item in raw_links:
+                if not isinstance(link_item, dict):
+                    continue
+                link_text = str(link_item.get("text") or link_item.get("title") or "Explore &rarr;").strip()
+                link_url = str(link_item.get("url") or link_item.get("link") or "").strip()
+                btn_class = str(link_item.get("class") or "btn btn-outline").strip()
+
+                if not link_url:
+                    continue
+
+                is_external = link_url.startswith("http://") or link_url.startswith("https://")
+                target_attr = ' target="_blank" rel="noopener noreferrer"' if is_external else ''
+
+                link_elements.append(
+                    f'<a href="{link_url}" class="{btn_class}"{target_attr}>{link_text}</a>'
+                )
+
+        actions_html = ""
+        if link_elements:
+            links_str = "\n            ".join(link_elements)
+            actions_html = f"""          <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            {links_str}
+          </div>"""
+
+        tag_html = f'<span class="research-tag">{tag}</span>\n            ' if tag else ''
+
+        cards.append(f"""        <article class="research-card">
+          <div class="research-card-top">
+            {tag_html}<h2 class="research-card-title">{title}</h2>
+{desc_html}
+          </div>
+{actions_html}
+        </article>""")
+
+    cards_html = "\n\n".join(cards)
+
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -34,109 +205,10 @@ def generate_research_html():
 
   <main id="main-content" style="padding-top: 3rem;">
     <div class="container">
-      <div class="section-header" style="text-align: left; margin-bottom: 2.5rem;">
-        <p class="section-subtitle">
-          From quantum-level potential energy surfaces to supercomputing molecular dynamics and macroscopic thermal transport.
-        </p>
-      </div>
+{section_header_html}
 
       <div class="research-grid" style="grid-template-columns: 1fr; gap: 2.5rem;">
-        <!-- Theme 1 -->
-        <article class="research-card">
-          <div class="research-card-top">
-            <span class="research-tag">Theme 1 &bull; Physics-Informed AI</span>
-            <h2 class="research-card-title">Foundation Machine-Learned Interatomic Potentials (MLIPs)</h2>
-            <p class="research-card-desc">
-              Accurate modeling of chemical reactivity, phase transitions, and defect dynamics requires potential energy surfaces that respect rotational, translational, and permutational invariances. We develop and extend equivariant graph neural network potentials such as MACE, SevenNet, and CHGNet.
-            </p>
-            <p class="research-card-desc" style="margin-top: 0.5rem;">
-              Key research topics include the incorporation of polarisable long-range electrostatics (MACE-POLAR), optimal active-learning criteria that balance coverage and model uncertainty, and cross-learning strategies connecting molecular, surface, and inorganic solid phases.
-            </p>
-          </div>
-          <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
-            <a href="publications.html?search=MLIP" class="btn btn-outline">Explore Related Publications &rarr;</a>
-          </div>
-        </article>
-
-        <!-- Theme 2 -->
-        <article class="research-card">
-          <div class="research-card-top">
-            <span class="research-tag">Theme 2 &bull; Porous Materials</span>
-            <h2 class="research-card-title">Metal-Organic Frameworks &amp; Nanoporous Networks</h2>
-            <p class="research-card-desc">
-              Metal-Organic Frameworks (MOFs) exhibit remarkable chemical modularity, ultra-high surface areas, and tunable mechanical properties such as negative thermal expansion (NTE). We curate the uMOF benchmark database and build dedicated ML potentials that enable high-throughput phonon calculations, thermodynamic stability screening, and gas adsorption modeling.
-            </p>
-          </div>
-          <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
-            <a href="publications.html?search=MOF" class="btn btn-outline">Explore Related Publications &rarr;</a>
-          </div>
-        </article>
-
-        <!-- Theme 3 -->
-        <article class="research-card">
-          <div class="research-card-top">
-            <span class="research-tag">Theme 3 &bull; Liquid State &amp; Clean Energy</span>
-            <h2 class="research-card-title">Complex Fluids, Molten Salts &amp; Transport Phenomena</h2>
-            <p class="research-card-desc">
-              Molten salts serve as critical thermal storage media and coolants in next-generation nuclear and concentrated solar energy systems. We perform molecular dynamics simulations to quantify self-diffusion, ionic conductivity, shear viscosity, and thermal conductivity from first principles, testing fundamental theoretical bounds and experimental calibrations.
-            </p>
-          </div>
-          <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
-            <a href="publications.html?search=salt" class="btn btn-outline">Explore Related Publications &rarr;</a>
-          </div>
-        </article>
-
-        <!-- Theme 4 -->
-        <article class="research-card">
-          <div class="research-card-top">
-            <span class="research-tag">Theme 4 &bull; Autonomous Workflows</span>
-            <h2 class="research-card-title">High-Throughput Simulation Workflows with janus-core &amp; aiida-mlip</h2>
-            <p class="research-card-desc">
-              Bridging the gap between interatomic potentials and scientific discovery requires seamless automation. With janus-core and the aiida-mlip plugin, we provide unified pipelines with full data provenance for geometry relaxation (BFGS, FIRE, FrechetCellFilter), equation of state fitting, full 6x6 elasticity stiffness tensors ($C_{{ij}}$), and climbing image nudged elastic band (CI-NEB) minimum energy pathways.
-            </p>
-          </div>
-          <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
-            <a href="code.html" class="btn btn-primary">Read Software Documentation &rarr;</a>
-          </div>
-        </article>
-
-        <!-- Theme 5 -->
-        <article class="research-card">
-          <div class="research-card-top">
-            <span class="research-tag">Theme 5 &bull; PSDI Data to Knowledge</span>
-            <h2 class="research-card-title">Sustainable DFT &amp; k-Point Optimization (Goldilocks)</h2>
-            <p class="research-card-desc">
-              Computational electronic structure calculations represent a major fraction of workloads on national supercomputing services like ARCHER2. In collaboration with the <strong>PSDI (Physical Sciences Data Infrastructure) Data to Knowledge</strong> initiative, we develop <a href="https://goldilocks.ac.uk" target="_blank" rel="noopener noreferrer"><strong>Goldilocks</strong> (goldilocks.ac.uk)</a> to predict optimal, sustainable k-point convergence parameters for Quantum ESPRESSO self-consistent field (SCF) calculations.
-            </p>
-            <p class="research-card-desc" style="margin-top: 0.5rem;">
-              By balancing numerical accuracy with computational efficiency—never under-converged, never computationally wasteful—Goldilocks eliminates compute and electricity waste while preserving target accuracy. Peer-reviewed in RSC <em>Digital Discovery</em> (2026, DOI: 10.1039/d5dd00565e).
-            </p>
-          </div>
-          <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); display: flex; gap: 0.75rem; flex-wrap: wrap;">
-            <a href="https://goldilocks.ac.uk" target="_blank" rel="noopener noreferrer" class="btn btn-primary">goldilocks.ac.uk &rarr;</a>
-            <a href="https://github.com/stfc/goldilocks" target="_blank" rel="noopener noreferrer" class="btn btn-outline">GitHub &rarr;</a>
-            <a href="code.html" class="btn btn-outline">Explore in Software &rarr;</a>
-          </div>
-        </article>
-
-        <!-- Theme 6 -->
-        <article class="research-card">
-          <div class="research-card-top">
-            <span class="research-tag">Theme 6 &bull; MLIP Benchmarking &amp; Validation</span>
-            <h2 class="research-card-title">Machine Learning Performance and Extrapolation Guide (ML-PEG)</h2>
-            <p class="research-card-desc">
-              Evaluating machine-learned interatomic potentials requires going beyond simple training force and energy RMSE errors to evaluate true physical stability, phase behavior, and uncertainty quantification. The <strong>ML-PEG</strong> benchmarking platform establishes rigorous evaluation protocols to stress-test MLIPs across diverse chemical systems, out-of-distribution scenarios, and extrapolation limits.
-            </p>
-            <p class="research-card-desc" style="margin-top: 0.5rem;">
-              Alongside standardized community benchmarks, ML-PEG provides an interactive web dashboard for transparently comparing foundation models and dataset baselines across materials discovery tasks.
-            </p>
-          </div>
-          <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); display: flex; gap: 0.75rem; flex-wrap: wrap;">
-            <a href="https://ml-peg.stfc.ac.uk" target="_blank" rel="noopener noreferrer" class="btn btn-primary">ml-peg.stfc.ac.uk &rarr;</a>
-            <a href="https://github.com/ddmms/ml-peg" target="_blank" rel="noopener noreferrer" class="btn btn-outline">GitHub &rarr;</a>
-            <a href="code.html" class="btn btn-outline">Explore in Software &rarr;</a>
-          </div>
-        </article>
+{cards_html}
       </div>
     </div>
   </main>
@@ -145,4 +217,3 @@ def generate_research_html():
   <script src="assets/js/main.js"></script>
 </body>
 </html>"""
-

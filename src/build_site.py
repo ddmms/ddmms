@@ -20,6 +20,7 @@ AUTHORS_CSV_FILE = BASE_DIR / "data" / "authors.csv"
 HEADER_FILE = BASE_DIR / "header.html"
 FOOTER_FILE = BASE_DIR / "footer.html"
 NEWS_FILE = BASE_DIR / "data" / "news.yaml"
+RESEARCH_FILE = BASE_DIR / "data" / "research.yaml"
 
 # Import modular components with flexible path resolution
 try:
@@ -30,7 +31,7 @@ try:
     from .components.code import generate_code_html
     from .components.publications import generate_publications_html
     from .components.people import generate_people_html
-    from .components.research import generate_research_html
+    from .components.research import generate_research_html, load_research
 except (ImportError, ValueError):
     try:
         from components.header import generate_header_html, get_header
@@ -40,7 +41,7 @@ except (ImportError, ValueError):
         from components.code import generate_code_html
         from components.publications import generate_publications_html
         from components.people import generate_people_html
-        from components.research import generate_research_html
+        from components.research import generate_research_html, load_research
     except ImportError:
         from src.components.header import generate_header_html, get_header
         from src.components.footer import generate_footer_html, get_footer
@@ -49,15 +50,17 @@ except (ImportError, ValueError):
         from src.components.code import generate_code_html
         from src.components.publications import generate_publications_html
         from src.components.people import generate_people_html
-        from src.components.research import generate_research_html
+        from src.components.research import generate_research_html, load_research
 
 __all__ = [
     "BASE_DIR",
     "PUBLICATIONS_FILE",
     "AUTHORS_FILE",
     "NEWS_FILE",
+    "RESEARCH_FILE",
     "load_data",
     "load_news",
+    "load_research",
     "generate_header_html",
     "get_header",
     "generate_footer_html",
@@ -141,10 +144,14 @@ def load_data():
 
 def main():
     """Generate all site pages using modular components."""
-    print("Loading publications, authors, and news...")
+    print("Loading publications, authors, news, and research...")
     pubs, authors = load_data()
     news = load_news()
-    print(f"Loaded {len(pubs)} publications, {len(authors)} authors, and {len(news)} news items.")
+    research_data = load_research()
+    print(
+        f"Loaded {len(pubs)} publications, {len(authors)} authors, "
+        f"{len(news)} news items, and {len(research_data.get('themes', []))} research themes."
+    )
 
     header_content = generate_header_html()
     footer_content = generate_footer_html()
@@ -155,7 +162,7 @@ def main():
         "index.html": generate_index_html(pubs, authors, news),
         "publications.html": generate_publications_html(pubs, authors),
         "people.html": generate_people_html(),
-        "research.html": generate_research_html(),
+        "research.html": generate_research_html(research_data),
         "code.html": generate_code_html(),
         "news.html": generate_news_html(news),
     }
