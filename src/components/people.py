@@ -1,4 +1,8 @@
-"""People page component for the DDMMS website."""
+"""People page component and data loader for the DDMMS website."""
+
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Union
+import yaml
 
 try:
     from .header import get_header
@@ -11,11 +15,247 @@ except (ImportError, ValueError):
         from src.components.header import get_header
         from src.components.footer import get_footer
 
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+PEOPLE_FILE = BASE_DIR / "data" / "people.yaml"
 
-def generate_people_html():
-    """Generate the people page HTML."""
+ORCID_SVG = (
+    '<svg viewBox="0 0 256 256" style="fill:#a6ce39;">'
+    '<path d="M256 128c0 70.7-57.3 128-128 128S0 198.7 0 128 57.3 0 128 0s128 57.3 128 128z"/>'
+    '<path fill="#fff" d="M86.3 186.2H70.9V79.1h15.4v107.1zM78.6 62.2c-5.5 0-10-4.5-10-10s4.5-10 10-10 10 4.5 10 10-4.5 10-10 10zm108.8 77.8c0 27.8-19.8 46.2-49.9 46.2H108V79.1h31.6c28.2 0 47.8 19.5 47.8 46.5v14.4zm-16.1-.7c0-20.7-13.8-32.9-33.1-32.9h-14.7v72.8h14.7c20 0 33.1-13.1 33.1-34.1v-5.8z"/>'
+    '</svg>'
+)
+
+
+def load_people(people_file: Optional[Union[str, Path]] = None) -> Dict[str, Any]:
+    """Load people sections, members, partner consortia, and opportunities from a YAML file.
+
+    Requires a valid YAML file provided by the user. Raises FileNotFoundError
+    if the file cannot be located.
+    """
+    target_path: Optional[Path] = None
+    if people_file is not None:
+        cand = Path(people_file)
+        if cand.is_file():
+            target_path = cand
+        else:
+            alt = BASE_DIR / people_file
+            if alt.is_file():
+                target_path = alt
+            else:
+                raise FileNotFoundError(f"People YAML file not found: '{people_file}'")
+    else:
+        for cand in (PEOPLE_FILE, BASE_DIR / "data" / "people.yml"):
+            if cand.is_file():
+                target_path = cand
+                break
+        if target_path is None:
+            raise FileNotFoundError(f"People YAML file not found at default location '{PEOPLE_FILE}'")
+
+    content = target_path.read_text(encoding="utf-8-sig")
+    parsed = yaml.safe_load(content)
+
+    if not parsed or not isinstance(parsed, dict):
+        return {"subtitle": "", "sections": []}
+
+    return parsed
+
+
+def generate_people_html(people_data: Optional[Dict[str, Any]] = None) -> str:
+    """Generate the people page HTML dynamically from people data."""
     header_html = get_header("people")
     footer_html = get_footer()
+
+    if people_data is None:
+        people_data = load_people()
+
+    subtitle = str(people_data.get("subtitle") or "").strip()
+    raw_sections = people_data.get("sections") or []
+
+    # Format subnav pills
+    subnav_links = []
+    for sec in raw_sections:
+        sec_id = sec.get("id", "")
+        nav_title = sec.get("nav_title") or sec.get("title") or sec_id
+        if sec_id:
+            subnav_links.append(f'        <a href="#{sec_id}" class="subnav-pill">{nav_title}</a>')
+    subnav_links.append('        <a href="#contact" class="subnav-pill">Join Us</a>')
+    subnav_pills_html = "\n".join(subnav_links)
+
+    # Format sections
+    sections_rendered = []
+    for sec in raw_sections:
+        sec_id = str(sec.get("id") or "").strip()
+        sec_title = str(sec.get("title") or "").strip()
+        sec_subtitle = str(sec.get("subtitle") or "").strip()
+        members = sec.get("members") or []
+
+        cards_rendered = []
+        for member in members:
+            name = str(member.get("name") or "").strip()
+            avatar = str(member.get("avatar") or "").strip()
+            role = str(member.get("role") or "").strip()
+            affiliation = str(member.get("affiliation") or "").strip()
+            bio = str(member.get("bio") or "").strip()
+            tenure = str(member.get("tenure") or "").strip()
+            destination = str(member.get("destination") or member.get("now") or "").strip()
+            tags = member.get("tags") or []
+            links = member.get("links") or []
+
+            # Avatar rendering
+            if (avatar.startswith("assets/") or avatar.startswith("http") or avatar.startswith("/") or
+                any(avatar.lower().endswith(ext) for ext in (".jpg", ".jpeg", ".png", ".svg", ".webp"))):
+                avatar_html = f"""              <div class="person-avatar">
+                <img src="{avatar}" alt="{name}">
+              </div>"""
+            elif avatar:
+                avatar_html = f"""              <div class="person-avatar">{avatar}</div>"""
+            else:
+                initials = "".join([part[0] for part in name.split() if part])[:2].upper()
+                avatar_html = f"""              <div class="person-avatar">{initials}</div>"""
+
+            # Title wrap extra items
+            tenure_html = f'\n                <span class="person-tenure">{tenure}</span>' if tenure else ''
+            if destination:
+                if not destination.startswith("<span>🎓</span>") and not destination.startswith("🎓"):
+                    destination_text = f"<span>🎓</span> Now: {destination}"
+                else:
+                    destination_text = destination
+                dest_html = f'\n                <div class="person-badge-dest">{destination_text}</div>'
+            else:
+                dest_html = ''
+
+            # Tags
+            if tags:
+                tag_spans = "\n              ".join(f'<span class="person-tag">{t}</span>' for t in tags if str(t).strip())
+                tags_html = f"""            <div class="person-tags">
+              {tag_spans}
+            </div>"""
+            else:
+                tags_html = ''
+
+            # Links
+            link_elements = []
+            for lnk in links:
+                if not isinstance(lnk, dict):
+                    continue
+                lnk_text = str(lnk.get("text") or lnk.get("title") or "").strip()
+                lnk_url = str(lnk.get("url") or lnk.get("link") or "#").strip()
+                is_orcid = (
+                    str(lnk.get("icon") or "").lower() == "orcid"
+                    or (lnk_text.lower() == "orcid" and "orcid.org" in lnk_url.lower())
+                )
+                if is_orcid and lnk_url != "#":
+                    link_elements.append(
+                        f"""              <a href="{lnk_url}" target="_blank" rel="noopener noreferrer" class="person-link-btn" title="ORCID Profile">
+                {ORCID_SVG}
+                <span>{lnk_text}</span>
+              </a>"""
+                    )
+                elif lnk_url.startswith("http://") or lnk_url.startswith("https://"):
+                    link_elements.append(
+                        f"""              <a href="{lnk_url}" target="_blank" rel="noopener noreferrer" class="person-link-btn">
+                <span>{lnk_text}</span>
+              </a>"""
+                    )
+                elif lnk_url.startswith("publications.html"):
+                    link_elements.append(
+                        f"""              <a href="{lnk_url}" class="person-link-btn">
+                <span>{lnk_text}</span>
+              </a>"""
+                    )
+                else:
+                    link_elements.append(
+                        f"""              <a href="{lnk_url}" class="person-link-btn">{lnk_text}</a>"""
+                    )
+
+            if link_elements:
+                links_str = "\n".join(link_elements)
+                links_html = f"""            <div class="person-links">
+{links_str}
+            </div>"""
+            else:
+                links_html = ''
+
+            parts = [
+                """          <article class="person-card">""",
+                """            <div class="person-header">""",
+                avatar_html,
+                """              <div class="person-title-wrap">""",
+                f"""                <h3>{name}</h3>""",
+                f"""                <div class="person-role">{role}</div>""",
+                f"""                <div class="person-affiliation">{affiliation}</div>{dest_html}{tenure_html}""",
+                """              </div>""",
+                """            </div>""",
+                f"""            <p class="person-bio">\n              {bio}\n            </p>""",
+            ]
+            if tags_html:
+                parts.append(tags_html)
+            if links_html:
+                parts.append(links_html)
+            parts.append("""          </article>""")
+
+            cards_rendered.append("\n".join(parts))
+
+        cards_html = "\n\n".join(cards_rendered)
+
+        # Extra section extras (e.g. partner consortia box in collaborators)
+        extra_box_html = ""
+        if sec_id == "collaborators":
+            partner_data = people_data.get("partner_consortia")
+            if partner_data and isinstance(partner_data, dict):
+                p_title = partner_data.get("title", "Partner Consortia & National Initiatives")
+                p_desc = partner_data.get("description", "")
+                p_links = partner_data.get("links") or []
+                p_links_rendered = "\n".join(
+                    f'            <a href="{pl.get("url")}" target="_blank" rel="noopener noreferrer" class="person-link-btn">{pl.get("text")}</a>'
+                    for pl in p_links if isinstance(pl, dict) and pl.get("url")
+                )
+                extra_box_html = f"""\n        <!-- Institutional Partners Box -->
+        <div style="margin-top: 2rem; background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.75rem;">
+          <h4 style="font-size: 1.15rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.5rem;">{p_title}</h4>
+          <p style="font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1rem;">
+            {p_desc}
+          </p>
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+{p_links_rendered}
+          </div>
+        </div>"""
+
+        sections_rendered.append(f"""      <!-- {sec_title} Section -->
+      <section id="{sec_id}" style="margin-bottom: 4rem;">
+        <div class="section-header" style="text-align: left; margin-bottom: 2rem;">
+          <h2 class="section-title" style="font-size: 1.85rem;">{sec_title}</h2>
+          <p class="section-subtitle">
+            {sec_subtitle}
+          </p>
+        </div>
+
+        <div class="people-grid">
+{cards_html}
+        </div>{extra_box_html}
+      </section>""")
+
+    all_sections_html = "\n\n".join(sections_rendered)
+
+    # Opportunities / Contact
+    opp_data = people_data.get("opportunities") or {}
+    opp_title = opp_data.get("title", "Join the Research Group")
+    opp_desc = opp_data.get("description", "We are always enthusiastic to collaborate with motivated graduate students, postdoctoral researchers, and academic visitors who wish to explore machine-learned interatomic potentials, extreme-scale molecular dynamics, or materials for sustainable energy technologies.")
+    opp_email = opp_data.get("email", "alin-marin.elena@stfc.ac.uk")
+
+    opportunities_html = f"""      <!-- Opportunities Section -->
+      <section style="margin-top: 4rem; background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2.5rem;" id="contact">
+        <div class="section-header" style="text-align: left; margin-bottom: 1.5rem; padding: 0;">
+          <h2 class="section-title" style="font-size: 1.85rem;">{opp_title}</h2>
+        </div>
+        <p style="color: var(--text-muted); font-size: 1.05rem; line-height: 1.7; max-width: 800px; margin-bottom: 1.5rem;">
+          {opp_desc}
+        </p>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+          <a href="mailto:{opp_email}" class="btn btn-primary"><span>✉</span> Get in Touch via Email</a>
+        </div>
+      </section>"""
+
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,358 +276,18 @@ def generate_people_html():
     <div class="container">
       <div class="section-header" style="text-align: left; margin-bottom: 2rem;">
         <p class="section-subtitle">
-          Our team comprises specialists in theoretical condensed matter physics, computational chemistry, software architecture, and AI for science.
+          {subtitle}
         </p>
       </div>
 
       <!-- Quick Section Navigation -->
       <nav class="subnav-pills" aria-label="People page quick navigation">
-        <a href="#core-team" class="subnav-pill">Core Team</a>
-        <a href="#former-members" class="subnav-pill">Former Members</a>
-        <a href="#collaborators" class="subnav-pill">Collaborators</a>
-        <a href="#visitors" class="subnav-pill">Visitors</a>
-        <a href="#contact" class="subnav-pill">Join Us</a>
+{subnav_pills_html}
       </nav>
 
-      <!-- Core Team Section -->
-      <section id="core-team" style="margin-bottom: 4rem;">
-        <div class="section-header" style="text-align: left; margin-bottom: 2rem;">
-          <h2 class="section-title" style="font-size: 1.85rem;">Core Members</h2>
-          <p class="section-subtitle">
-            Researchers and computational scientists.
-          </p>
-        </div>
+{all_sections_html}
 
-        <div class="people-grid">
-          <!-- Dr. Alin Marin Elena -->
-          <article class="person-card">
-            <div class="person-header">
-              <div class="person-avatar">
-                <img src="assets/images/alin_elena.jpg" alt="Dr. Alin Marin Elena">
-              </div>
-              <div class="person-title-wrap">
-                <h3>Dr. Alin Marin Elena</h3>
-                <div class="person-role">Group Leader &bull; Principal Computational Scientist</div>
-                <div class="person-affiliation">STFC SCD, UKRI | CCP5 Scientific Secretary</div>
-              </div>
-            </div>
-            <p class="person-bio">
-              Alin leads the Data Driven Materials and Molecular Science research group. His work centres on multiscale molecular dynamics algorithms, the architecture and scalable parallelisation of DL_POLY 5, physics-informed machine learning, and transport properties in complex liquids and molten salts.
-            </p>
-            <div class="person-tags">
-              <span class="person-tag">ML Interatomic Potentials</span>
-              <span class="person-tag">Molecular Dynamics</span>
-              <span class="person-tag">DL_POLY 5</span>
-              <span class="person-tag">Molten Salts</span>
-              <span class="person-tag">High Performance Computing</span>
-            </div>
-            <div class="person-links">
-              <a href="https://orcid.org/0000-0002-7013-6670" target="_blank" rel="noopener noreferrer" class="person-link-btn" title="ORCID Profile">
-                <svg viewBox="0 0 256 256" style="fill:#a6ce39;"><path d="M256 128c0 70.7-57.3 128-128 128S0 198.7 0 128 57.3 0 128 0s128 57.3 128 128z"/><path fill="#fff" d="M86.3 186.2H70.9V79.1h15.4v107.1zM78.6 62.2c-5.5 0-10-4.5-10-10s4.5-10 10-10 10 4.5 10 10-4.5 10-10 10zm108.8 77.8c0 27.8-19.8 46.2-49.9 46.2H108V79.1h31.6c28.2 0 47.8 19.5 47.8 46.5v14.4zm-16.1-.7c0-20.7-13.8-32.9-33.1-32.9h-14.7v72.8h14.7c20 0 33.1-13.1 33.1-34.1v-5.8z"/></svg>
-                <span>ORCID</span>
-              </a>
-              <a href="https://github.com/alin-elena" target="_blank" rel="noopener noreferrer" class="person-link-btn">
-                <span>GitHub</span>
-              </a>
-              <a href="publications.html?author=Alin%20Marin%20Elena" class="person-link-btn">
-                <span>Publications</span>
-              </a>
-            </div>
-          </article>
-
-          <!-- Elliott Kasoar -->
-          <article class="person-card">
-            <div class="person-header">
-              <div class="person-avatar">
-                <img src="assets/images/elliott_kasoar.jpg" alt="Elliott Kasoar">
-              </div>
-              <div class="person-title-wrap">
-                <h3>Elliott Kasoar</h3>
-                <div class="person-role">Computational Scientist &bull; Research Associate</div>
-                <div class="person-affiliation">STFC SCD, UKRI</div>
-              </div>
-            </div>
-            <p class="person-bio">
-              Elliott focuses on machine learning for atomic systems, equivariant foundation architectures (MACE), training set active learning, and automated atomistic simulation workflows. He is the lead designer and developer of janus-core.
-            </p>
-            <div class="person-tags">
-              <span class="person-tag">MACE Foundation Models</span>
-              <span class="person-tag">janus-core Lead</span>
-              <span class="person-tag">Active Learning</span>
-              <span class="person-tag">Workflow Automation</span>
-            </div>
-            <div class="person-links">
-              <a href="https://orcid.org/0009-0005-2015-9478" target="_blank" rel="noopener noreferrer" class="person-link-btn" title="ORCID Profile">
-                <svg viewBox="0 0 256 256" style="fill:#a6ce39;"><path d="M256 128c0 70.7-57.3 128-128 128S0 198.7 0 128 57.3 0 128 0s128 57.3 128 128z"/><path fill="#fff" d="M86.3 186.2H70.9V79.1h15.4v107.1zM78.6 62.2c-5.5 0-10-4.5-10-10s4.5-10 10-10 10 4.5 10 10-4.5 10-10 10zm108.8 77.8c0 27.8-19.8 46.2-49.9 46.2H108V79.1h31.6c28.2 0 47.8 19.5 47.8 46.5v14.4zm-16.1-.7c0-20.7-13.8-32.9-33.1-32.9h-14.7v72.8h14.7c20 0 33.1-13.1 33.1-34.1v-5.8z"/></svg>
-                <span>ORCID</span>
-              </a>
-              <a href="publications.html?author=Elliott%20Kasoar" class="person-link-btn">
-                <span>Publications</span>
-              </a>
-            </div>
-          </article>
-
-          <!-- Dr. Junwen Yin -->
-          <article class="person-card">
-            <div class="person-header">
-              <div class="person-avatar">
-                <img src="assets/images/junwen_yin.jpeg" alt="Dr. Junwen Yin">
-              </div>
-              <div class="person-title-wrap">
-                <h3>Dr. Junwen Yin</h3>
-                <div class="person-role">Computational Scientist &bull; Research Associate</div>
-                <div class="person-affiliation">STFC SCD, UKRI</div>
-              </div>
-            </div>
-            <p class="person-bio">
-              Junwen specializes in first-principles quantum chemistry, nonadiabatic electronic transitions, extended CP2K simulations, and modeling complex catalytic and photoactive interfaces under operational environments.
-            </p>
-            <div class="person-tags">
-              <span class="person-tag">Nonadiabatic Dynamics</span>
-              <span class="person-tag">CP2K Framework</span>
-              <span class="person-tag">DFT Total Energy</span>
-              <span class="person-tag">Catalytic Interfaces</span>
-            </div>
-            <div class="person-links">
-              <a href="https://orcid.org/0000-0001-7374-9352" target="_blank" rel="noopener noreferrer" class="person-link-btn" title="ORCID Profile">
-                <svg viewBox="0 0 256 256" style="fill:#a6ce39;"><path d="M256 128c0 70.7-57.3 128-128 128S0 198.7 0 128 57.3 0 128 0s128 57.3 128 128z"/><path fill="#fff" d="M86.3 186.2H70.9V79.1h15.4v107.1zM78.6 62.2c-5.5 0-10-4.5-10-10s4.5-10 10-10 10 4.5 10 10-4.5 10-10 10zm108.8 77.8c0 27.8-19.8 46.2-49.9 46.2H108V79.1h31.6c28.2 0 47.8 19.5 47.8 46.5v14.4zm-16.1-.7c0-20.7-13.8-32.9-33.1-32.9h-14.7v72.8h14.7c20 0 33.1-13.1 33.1-34.1v-5.8z"/></svg>
-                <span>ORCID</span>
-              </a>
-              <a href="publications.html?author=Junwen%20Yin" class="person-link-btn">
-                <span>Publications</span>
-              </a>
-            </div>
-          </article>
-        </div>
-      </section>
-
-      <!-- Former Members (Alumni) Section -->
-      <section id="former-members" style="margin-bottom: 4rem;">
-        <div class="section-header" style="text-align: left; margin-bottom: 2rem;">
-          <h2 class="section-title" style="font-size: 1.85rem;">Former Members</h2>
-          <p class="section-subtitle">
-            Researchers, engineers, and graduate scholars who contributed to DDMMS scientific software and research initiatives.
-          </p>
-        </div>
-
-        <div class="people-grid">
-          <!-- Former Member Placeholder 1 (Edit or duplicate as needed) -->
-          <article class="person-card">
-            <div class="person-header">
-              <div class="person-avatar">FM1</div>
-              <div class="person-title-wrap">
-                <h3>Former Member Name</h3>
-                <div class="person-role">Role / Position</div>
-                <div class="person-affiliation">DDMMS &bull; STFC SCD (Years, e.g. 2022&ndash;2024)</div>
-                <div class="person-badge-dest"><span>🎓</span> Now: Current Position / Destination</div>
-              </div>
-            </div>
-            <p class="person-bio">
-              Description of research topics, scientific contributions, or software packages developed while with the group.
-            </p>
-            <div class="person-tags">
-              <span class="person-tag">Research Area</span>
-              <span class="person-tag">Key Contribution</span>
-            </div>
-            <div class="person-links">
-              <a href="#" class="person-link-btn">ORCID</a>
-              <a href="#" class="person-link-btn">GitHub</a>
-            </div>
-          </article>
-
-          <!-- Former Member Placeholder 2 -->
-          <article class="person-card">
-            <div class="person-header">
-              <div class="person-avatar">FM2</div>
-              <div class="person-title-wrap">
-                <h3>Former Member Name</h3>
-                <div class="person-role">Role / Position</div>
-                <div class="person-affiliation">DDMMS &bull; STFC SCD (Years, e.g. 2023&ndash;2025)</div>
-                <div class="person-badge-dest"><span>🎓</span> Now: Current Position / Destination</div>
-              </div>
-            </div>
-            <p class="person-bio">
-              Description of research topics, scientific contributions, or software packages developed while with the group.
-            </p>
-            <div class="person-tags">
-              <span class="person-tag">Research Area</span>
-              <span class="person-tag">Key Contribution</span>
-            </div>
-            <div class="person-links">
-              <a href="#" class="person-link-btn">ORCID</a>
-              <a href="#" class="person-link-btn">GitHub</a>
-            </div>
-          </article>
-        </div>
-      </section>
-
-      <!-- Collaborators Section -->
-      <section id="collaborators" style="margin-bottom: 4rem;">
-        <div class="section-header" style="text-align: left; margin-bottom: 2rem;">
-          <h2 class="section-title" style="font-size: 1.85rem;">Collaborators</h2>
-          <p class="section-subtitle">
-            Academic collaborators, national laboratory partners, and international consortia advancing atomistic simulation and scientific machine learning.
-          </p>
-        </div>
-
-        <div class="people-grid">
-          <!-- Collaborator Placeholder 1 (Edit or duplicate as needed) -->
-          <article class="person-card">
-            <div class="person-header">
-              <div class="person-avatar">C1</div>
-              <div class="person-title-wrap">
-                <h3>Collaborator Name</h3>
-                <div class="person-role">Title / Role</div>
-                <div class="person-affiliation">Institution / Organization</div>
-              </div>
-            </div>
-            <p class="person-bio">
-              Description of collaborative research topics, joint projects, grants, or shared software development.
-            </p>
-            <div class="person-tags">
-              <span class="person-tag">Research Area</span>
-              <span class="person-tag">Joint Project</span>
-            </div>
-            <div class="person-links">
-              <a href="#" class="person-link-btn">Website / Profile &rarr;</a>
-              <a href="#" class="person-link-btn">ORCID</a>
-            </div>
-          </article>
-
-          <!-- Collaborator Placeholder 2 -->
-          <article class="person-card">
-            <div class="person-header">
-              <div class="person-avatar">C2</div>
-              <div class="person-title-wrap">
-                <h3>Collaborator Name</h3>
-                <div class="person-role">Title / Role</div>
-                <div class="person-affiliation">Institution / Organization</div>
-              </div>
-            </div>
-            <p class="person-bio">
-              Description of collaborative research topics, joint projects, grants, or shared software development.
-            </p>
-            <div class="person-tags">
-              <span class="person-tag">Research Area</span>
-              <span class="person-tag">Joint Project</span>
-            </div>
-            <div class="person-links">
-              <a href="#" class="person-link-btn">Website / Profile &rarr;</a>
-              <a href="#" class="person-link-btn">ORCID</a>
-            </div>
-          </article>
-
-          <!-- Collaborator Placeholder 3 -->
-          <article class="person-card">
-            <div class="person-header">
-              <div class="person-avatar">C3</div>
-              <div class="person-title-wrap">
-                <h3>Collaborator Name</h3>
-                <div class="person-role">Title / Role</div>
-                <div class="person-affiliation">Institution / Organization</div>
-              </div>
-            </div>
-            <p class="person-bio">
-              Description of collaborative research topics, joint projects, grants, or shared software development.
-            </p>
-            <div class="person-tags">
-              <span class="person-tag">Research Area</span>
-              <span class="person-tag">Joint Project</span>
-            </div>
-            <div class="person-links">
-              <a href="#" class="person-link-btn">Website / Profile &rarr;</a>
-              <a href="#" class="person-link-btn">ORCID</a>
-            </div>
-          </article>
-        </div>
-
-        <!-- Institutional Partners Box -->
-        <div style="margin-top: 2rem; background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.75rem;">
-          <h4 style="font-size: 1.15rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.5rem;">Partner Consortia &amp; National Initiatives</h4>
-          <p style="font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1rem;">
-            We collaborate closely with major national and international research networks to establish shared atomistic data standards and sustainable scientific infrastructure:
-          </p>
-          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
-            <a href="https://www.psdi.ac.uk" target="_blank" rel="noopener noreferrer" class="person-link-btn">PSDI Data to Knowledge &rarr;</a>
-            <a href="https://www.ccp5.ac.uk" target="_blank" rel="noopener noreferrer" class="person-link-btn">CCP5 (Condensed Phase Simulation) &rarr;</a>
-            <a href="https://mace-docs.readthedocs.io" target="_blank" rel="noopener noreferrer" class="person-link-btn">MACE Ecosystem &rarr;</a>
-            <a href="https://www.scd.stfc.ac.uk" target="_blank" rel="noopener noreferrer" class="person-link-btn">STFC Scientific Computing Department &rarr;</a>
-          </div>
-        </div>
-      </section>
-
-      <!-- Visitors Section -->
-      <section id="visitors" style="margin-bottom: 4rem;">
-        <div class="section-header" style="text-align: left; margin-bottom: 2rem;">
-          <h2 class="section-title" style="font-size: 1.85rem;">Visitors</h2>
-          <p class="section-subtitle">
-            Academic visitors, guest researchers, and sabbatical fellows who have visited the group to collaborate on atomistic simulations and machine learning.
-          </p>
-        </div>
-
-        <div class="people-grid">
-          <!-- Visitor Placeholder 1 (Edit or duplicate as needed) -->
-          <article class="person-card">
-            <div class="person-header">
-              <div class="person-avatar">V1</div>
-              <div class="person-title-wrap">
-                <h3>Visitor Name</h3>
-                <div class="person-role">Visiting Title / Role</div>
-                <div class="person-affiliation">Home Institution / Organization</div>
-                <span class="person-tenure">Visiting Tenure &bull; Year(s)</span>
-              </div>
-            </div>
-            <p class="person-bio">
-              Description of collaborative research topics, joint projects, visit goals, or simulation topics explored during the visit.
-            </p>
-            <div class="person-tags">
-              <span class="person-tag">Research Topic</span>
-              <span class="person-tag">Visit Scheme / Grant</span>
-            </div>
-            <div class="person-links">
-              <a href="#" class="person-link-btn">Website / Profile &rarr;</a>
-              <a href="#" class="person-link-btn">ORCID</a>
-            </div>
-          </article>
-
-          <!-- Visitor Placeholder 2 -->
-          <article class="person-card">
-            <div class="person-header">
-              <div class="person-avatar">V2</div>
-              <div class="person-title-wrap">
-                <h3>Visitor Name</h3>
-                <div class="person-role">Visiting Title / Role</div>
-                <div class="person-affiliation">Home Institution / Organization</div>
-                <span class="person-tenure">Visiting Tenure &bull; Year(s)</span>
-              </div>
-            </div>
-            <p class="person-bio">
-              Description of collaborative research topics, joint projects, visit goals, or simulation topics explored during the visit.
-            </p>
-            <div class="person-tags">
-              <span class="person-tag">Research Topic</span>
-              <span class="person-tag">Visit Scheme / Grant</span>
-            </div>
-            <div class="person-links">
-              <a href="#" class="person-link-btn">Website / Profile &rarr;</a>
-              <a href="#" class="person-link-btn">ORCID</a>
-            </div>
-          </article>
-        </div>
-      </section>
-
-      <!-- Opportunities Section -->
-      <section style="margin-top: 4rem; background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2.5rem;" id="contact">
-        <div class="section-header" style="text-align: left; margin-bottom: 1.5rem; padding: 0;">
-          <h2 class="section-title" style="font-size: 1.85rem;">Join the Research Group</h2>
-        </div>
-        <p style="color: var(--text-muted); font-size: 1.05rem; line-height: 1.7; max-width: 800px; margin-bottom: 1.5rem;">
-          We are always enthusiastic to collaborate with motivated graduate students, postdoctoral researchers, and academic visitors who wish to explore machine-learned interatomic potentials, extreme-scale molecular dynamics, or materials for sustainable energy technologies.
-        </p>
-        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-          <a href="mailto:alin-marin.elena@stfc.ac.uk" class="btn btn-primary"><span>✉</span> Get in Touch via Email</a>
-        </div>
-      </section>
+{opportunities_html}
     </div>
   </main>
 
@@ -396,4 +296,3 @@ def generate_people_html():
 </body>
 </html>
 """
-

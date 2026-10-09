@@ -1,0 +1,196 @@
+subtitle: "Our team comprises specialists in theoretical condensed matter physics, computational chemistry, software architecture, and AI for science."
+
+sections:
+  - id: "core-team"
+    nav_title: "Core Team"
+    title: "Core Members"
+    subtitle: "Researchers and computational scientists."
+    members:
+      - name: "Dr. Alin Marin Elena"
+        avatar: "assets/images/alin_elena.jpg"
+        role: "Group Leader &bull; Principal Computational Scientist"
+        affiliation: "STFC SCD, UKRI | CCP5 Scientific Secretary"
+        bio: "Alin leads the Data Driven Materials and Molecular Science research group. His work centres on multiscale molecular dynamics algorithms, the architecture and scalable parallelisation of DL_POLY 5, physics-informed machine learning, and transport properties in complex liquids and molten salts."
+        tags:
+          - "ML Interatomic Potentials"
+          - "Molecular Dynamics"
+          - "DL_POLY 5"
+          - "Molten Salts"
+          - "High Performance Computing"
+        links:
+          - text: "ORCID"
+            url: "https://orcid.org/0000-0002-7013-6670"
+            icon: "orcid"
+          - text: "GitHub"
+            url: "https://github.com/alin-elena"
+          - text: "Publications"
+            url: "publications.html?author=Alin%20Marin%20Elena"
+
+      - name: "Elliott Kasoar"
+        avatar: "assets/images/elliott_kasoar.jpg"
+        role: "Computational Scientist &bull; Research Associate"
+        affiliation: "STFC SCD, UKRI"
+        bio: "Elliott focuses on machine learning for atomic systems, equivariant foundation architectures (MACE), training set active learning, and automated atomistic simulation workflows. He is the lead designer and developer of janus-core."
+        tags:
+          - "MACE Foundation Models"
+          - "janus-core Lead"
+          - "Active Learning"
+          - "Workflow Automation"
+        links:
+          - text: "ORCID"
+            url: "https://orcid.org/0009-0005-2015-9478"
+            icon: "orcid"
+          - text: "Publications"
+            url: "publications.html?author=Elliott%20Kasoar"
+
+      - name: "Dr. Junwen Yin"
+        avatar: "assets/images/junwen_yin.jpeg"
+        role: "Computational Scientist &bull; Research Associate"
+        affiliation: "STFC SCD, UKRI"
+        bio: "Junwen specializes in first-principles quantum chemistry, nonadiabatic electronic transitions, extended CP2K simulations, and modeling complex catalytic and photoactive interfaces under operational environments."
+        tags:
+          - "Nonadiabatic Dynamics"
+          - "CP2K Framework"
+          - "DFT Total Energy"
+          - "Catalytic Interfaces"
+        links:
+          - text: "ORCID"
+            url: "https://orcid.org/0000-0001-7374-9352"
+            icon: "orcid"
+          - text: "Publications"
+            url: "publications.html?author=Junwen%20Yin"
+
+  - id: "former-members"
+    nav_title: "Former Members"
+    title: "Former Members"
+    subtitle: "Researchers, engineers, and graduate scholars who contributed to DDMMS scientific software and research initiatives."
+    members:
+      - name: "Former Member Name"
+        avatar: "FM1"
+        role: "Role / Position"
+        affiliation: "DDMMS &bull; STFC SCD (Years, e.g. 2022&ndash;2024)"
+        destination: "Current Position / Destination"
+        bio: "Description of research topics, scientific contributions, or software packages developed while with the group."
+        tags:
+          - "Research Area"
+          - "Key Contribution"
+        links:
+          - text: "ORCID"
+            url: "#"
+          - text: "GitHub"
+            url: "#"
+
+      - name: "Former Member Name"
+        avatar: "FM2"
+        role: "Role / Position"
+        affiliation: "DDMMS &bull; STFC SCD (Years, e.g. 2023&ndash;2025)"
+        destination: "Current Position / Destination"
+        bio: "Description of research topics, scientific contributions, or software packages developed while with the group."
+        tags:
+          - "Research Area"
+          - "Key Contribution"
+        links:
+          - text: "ORCID"
+            url: "#"
+          - text: "GitHub"
+            url: "#"
+
+  - id: "collaborators"
+    nav_title: "Collaborators"
+    title: "Collaborators"
+    subtitle: "Academic collaborators, national laboratory partners, and international consortia advancing atomistic simulation and scientific machine learning."
+    members:
+      - name: "Collaborator Name"
+        avatar: "C1"
+        role: "Title / Role"
+        affiliation: "Institution / Organization"
+        bio: "Description of collaborative research topics, joint projects, grants, or shared software development."
+        tags:
+          - "Research Area"
+          - "Joint Project"
+        links:
+          - text: "Website / Profile &rarr;"
+            url: "#"
+          - text: "ORCID"
+            url: "#"
+
+      - name: "Collaborator Name"
+        avatar: "C2"
+        role: "Title / Role"
+        affiliation: "Institution / Organization"
+        bio: "Description of collaborative research topics, joint projects, grants, or shared software development."
+        tags:
+          - "Research Area"
+          - "Joint Project"
+        links:
+          - text: "Website / Profile &rarr;"
+            url: "#"
+          - text: "ORCID"
+            url: "#"
+
+      - name: "Collaborator Name"
+        avatar: "C3"
+        role: "Title / Role"
+        affiliation: "Institution / Organization"
+        bio: "Description of collaborative research topics, joint projects, grants, or shared software development."
+        tags:
+          - "Research Area"
+          - "Joint Project"
+        links:
+          - text: "Website / Profile &rarr;"
+            url: "#"
+          - text: "ORCID"
+            url: "#"
+
+  - id: "visitors"
+    nav_title: "Visitors"
+    title: "Visitors"
+    subtitle: "Academic visitors, guest researchers, and sabbatical fellows who have visited the group to collaborate on atomistic simulations and machine learning."
+    members:
+      - name: "Visitor Name"
+        avatar: "V1"
+        role: "Visiting Title / Role"
+        affiliation: "Home Institution / Organization"
+        tenure: "Visiting Tenure &bull; Year(s)"
+        bio: "Description of collaborative research topics, joint projects, visit goals, or simulation topics explored during the visit."
+        tags:
+          - "Research Topic"
+          - "Visit Scheme / Grant"
+        links:
+          - text: "Website / Profile &rarr;"
+            url: "#"
+          - text: "ORCID"
+            url: "#"
+
+      - name: "Visitor Name"
+        avatar: "V2"
+        role: "Visiting Title / Role"
+        affiliation: "Home Institution / Organization"
+        tenure: "Visiting Tenure &bull; Year(s)"
+        bio: "Description of collaborative research topics, joint projects, visit goals, or simulation topics explored during the visit."
+        tags:
+          - "Research Topic"
+          - "Visit Scheme / Grant"
+        links:
+          - text: "Website / Profile &rarr;"
+            url: "#"
+          - text: "ORCID"
+            url: "#"
+
+partner_consortia:
+  title: "Partner Consortia & National Initiatives"
+  description: "We collaborate closely with major national and international research networks to establish shared atomistic data standards and sustainable scientific infrastructure:"
+  links:
+    - text: "PSDI Data to Knowledge &rarr;"
+      url: "https://www.psdi.ac.uk"
+    - text: "CCP5 (Condensed Phase Simulation) &rarr;"
+      url: "https://www.ccp5.ac.uk"
+    - text: "MACE Ecosystem &rarr;"
+      url: "https://mace-docs.readthedocs.io"
+    - text: "STFC Scientific Computing Department &rarr;"
+      url: "https://www.scd.stfc.ac.uk"
+
+opportunities:
+  title: "Join the Research Group"
+  description: "We are always enthusiastic to collaborate with motivated graduate students, postdoctoral researchers, and academic visitors who wish to explore machine-learned interatomic potentials, extreme-scale molecular dynamics, or materials for sustainable energy technologies."
+  email: "alin-marin.elena@stfc.ac.uk"

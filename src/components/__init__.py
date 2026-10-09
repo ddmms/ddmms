@@ -6,7 +6,7 @@ from .news import load_news, generate_news_html
 from .index import generate_index_html, generate_about_html
 from .code import generate_code_html
 from .publications import generate_publications_html, build_html_page, generate_html
-from .people import generate_people_html
+from .people import generate_people_html, load_people
 from .research import generate_research_html, load_research
 
 __all__ = [
@@ -22,6 +22,7 @@ __all__ = [
     "generate_publications_html",
     "build_html_page",
     "generate_html",
+    "load_people",
     "generate_people_html",
     "load_research",
     "generate_research_html",

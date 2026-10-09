@@ -466,6 +466,66 @@ themes:
         with self.assertRaises(FileNotFoundError):
             load_research(Path("/nonexistent/file.yaml"))
 
+    def test_load_people_yaml(self):
+        import tempfile
+        from build_site import load_people, generate_people_html
+
+        # Test loading the actual data/people.yaml
+        people_data = load_people()
+        self.assertIsInstance(people_data, dict)
+        self.assertIn("sections", people_data)
+        section_ids = [s["id"] for s in people_data["sections"]]
+        self.assertIn("core-team", section_ids)
+        self.assertIn("former-members", section_ids)
+        self.assertIn("collaborators", section_ids)
+        self.assertIn("visitors", section_ids)
+
+        # Verify core members include key researchers
+        core_section = next(s for s in people_data["sections"] if s["id"] == "core-team")
+        names = [m["name"] for m in core_section["members"]]
+        self.assertIn("Dr. Alin Marin Elena", names)
+        self.assertIn("Elliott Kasoar", names)
+        self.assertIn("Dr. Junwen Yin", names)
+
+        # Test custom YAML people loading
+        with tempfile.NamedTemporaryFile("w+", encoding="utf-8", delete=False, suffix=".yaml") as tpf:
+            tpf.write("""subtitle: "Custom team description."
+sections:
+  - id: "custom-group"
+    title: "Specialists"
+    subtitle: "Custom subgroup"
+    members:
+      - name: "Alice Wonderland"
+        role: "Quantum Architect"
+        affiliation: "Wonderland Lab"
+        bio: "Exploring rabbit holes in quantum algorithms."
+        tags:
+          - "Quantum"
+        links:
+          - text: "Profile"
+            url: "https://example.com/alice"
+""")
+            tpf_path = Path(tpf.name)
+
+        try:
+            custom_data = load_people(tpf_path)
+            self.assertEqual(custom_data["subtitle"], "Custom team description.")
+            self.assertEqual(len(custom_data["sections"]), 1)
+            self.assertEqual(custom_data["sections"][0]["members"][0]["name"], "Alice Wonderland")
+
+            rendered_html = generate_people_html(custom_data)
+            self.assertIn("Custom team description.", rendered_html)
+            self.assertIn("Specialists", rendered_html)
+            self.assertIn("Alice Wonderland", rendered_html)
+            self.assertIn("https://example.com/alice", rendered_html)
+        finally:
+            if tpf_path.exists():
+                tpf_path.unlink()
+
+        # Non-existent file raises FileNotFoundError
+        with self.assertRaises(FileNotFoundError):
+            load_people(Path("/nonexistent/file.yaml"))
+
     def test_news_display_latest_four_and_historical_toggle(self):
         index_html = (BASE_DIR / "index.html").read_text(encoding="utf-8")
         main_js = (BASE_DIR / "assets" / "js" / "main.js").read_text(encoding="utf-8")
