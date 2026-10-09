@@ -41,7 +41,7 @@ jobs:
 
       - name: Fetch publications from ORCID and generate site
         run: |
-          python pubs.py
+          python src/pubs.py
 
       - name: Run test suite
         run: |
@@ -51,7 +51,7 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: "Auto-update publications from ORCID [skip ci]"
-          file_pattern: "PUBLICATIONS.md index.html publications.html people.html research.html code.html publications.json data/authors.csv data/cache/*.json"
+          file_pattern: "data/authors.csv"
         continue-on-error: true
 
       - name: Setup GitHub Pages

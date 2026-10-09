@@ -6,10 +6,14 @@ import tempfile
 import unittest
 from unittest.mock import MagicMock, patch
 
-# Ensure src/ is on sys.path
-SRC_DIR = Path(__file__).resolve().parent.parent / "src"
+# Ensure project root and src/ are on sys.path
+BASE_DIR = Path(__file__).resolve().parent.parent
+SRC_DIR = BASE_DIR / "src"
 if str(SRC_DIR) not in sys.path:
     sys.path.insert(0, str(SRC_DIR))
+if str(BASE_DIR) not in sys.path:
+    sys.path.insert(0, str(BASE_DIR))
+
 
 from pubs import (
     ORCID_IDS,

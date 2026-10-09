@@ -9,11 +9,19 @@ from datetime import datetime, timezone
 import html
 import json
 import os
+from pathlib import Path
 import re
+import sys
 from typing import Any, Dict, List, Optional, Sequence, Union
 import requests
 
-DEFAULT_CSV_PATH = "data/authors.csv"
+try:
+    from . import build_site
+except (ImportError, ValueError):
+    import build_site
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+DEFAULT_CSV_PATH = str(BASE_DIR / "data" / "authors.csv")
 
 # Fallback dictionary if CSV is not found
 DEFAULT_ORCID_IDS: Dict[str, str] = {
@@ -29,7 +37,11 @@ def load_orcids_from_csv(csv_path: str = DEFAULT_CSV_PATH) -> Dict[str, str]:
     ORCID values are stripped of any leading URL prefixes (e.g. 'https://orcid.org/').
     """
     if not os.path.exists(csv_path):
-        raise FileNotFoundError(f"Authors CSV file not found at '{csv_path}'")
+        alt_path = os.path.join(str(BASE_DIR), csv_path)
+        if os.path.exists(alt_path):
+            csv_path = alt_path
+        else:
+            raise FileNotFoundError(f"Authors CSV file not found at '{csv_path}'")
 
     mapping: Dict[str, str] = {}
     orcid_pattern = re.compile(r"^(\d{4}-\d{4}-\d{4}-\d{3}[\dX])$", re.IGNORECASE)
@@ -72,6 +84,10 @@ def load_orcids_from_csv(csv_path: str = DEFAULT_CSV_PATH) -> Dict[str, str]:
 
 def get_configured_orcid_ids(csv_path: str = DEFAULT_CSV_PATH) -> Dict[str, str]:
     """Retrieve ORCID mapping from CSV if available, otherwise return default mapping."""
+    if not os.path.isfile(csv_path):
+        alt_path = os.path.join(str(BASE_DIR), csv_path)
+        if os.path.isfile(alt_path):
+            csv_path = alt_path
     if os.path.isfile(csv_path):
         try:
             loaded = load_orcids_from_csv(csv_path)
@@ -80,6 +96,7 @@ def get_configured_orcid_ids(csv_path: str = DEFAULT_CSV_PATH) -> Dict[str, str]
         except Exception as e:
             print(f"Warning: Could not read {csv_path}: {e}")
     return dict(DEFAULT_ORCID_IDS)
+
 
 
 # Initialized from CSV if present
@@ -1633,30 +1650,33 @@ def generate_html(
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Fetch and aggregate publications from ORCID.")
+    parser = argparse.ArgumentParser(
+        description="Aggregate publications for DDMMS research group members using ORCID API."
+    )
     parser.add_argument(
         "orcids",
         nargs="*",
         default=None,
-        help="ORCID IDs to fetch (format: 0000-0000-0000-000X). Overrides or filters CSV members.",
+        help="ORCID IDs to fetch (optional positional args). Overrides or filters CSV members.",
+    )
+    parser.add_argument(
+        "-o",
+        "--output",
+        default="PUBLICATIONS.md",
+        help="Output Markdown file path (default: PUBLICATIONS.md)",
     )
     parser.add_argument(
         "--csv",
         "--authors-csv",
         dest="authors_csv",
         default=DEFAULT_CSV_PATH,
-        help="Path to CSV file with orcid,name mapping (default: data/authors.csv)",
+        help="Path to CSV containing 'orcid,name' mappings (default: data/authors.csv)",
     )
     parser.add_argument(
-        "-o",
-        "--output",
-        default="PUBLICATIONS.md",
-        help="Output markdown file path (default: PUBLICATIONS.md)",
-    )
-    parser.add_argument(
-        "--html",
-        default="index.html",
-        help="Output HTML webpage file path for GitHub Pages (default: index.html)",
+        "--orcids",
+        nargs="+",
+        dest="flag_orcids",
+        help="List of ORCID IDs to fetch (overrides CSV configuration)",
     )
     parser.add_argument(
         "--json",
@@ -1669,14 +1689,24 @@ def main():
         help="Directory to cache ORCID API responses (default: data/cache)",
     )
     parser.add_argument(
+        "--html",
+        default=None,
+        help="Optional standalone HTML output file path (legacy single-page format)",
+    )
+    parser.add_argument(
         "--no-html",
         action="store_true",
-        help="Skip generating HTML webpage",
+        help="Skip standalone HTML webpage",
     )
     parser.add_argument(
         "--no-json",
         action="store_true",
         help="Skip exporting JSON",
+    )
+    parser.add_argument(
+        "--no-site",
+        action="store_true",
+        help="Skip rebuilding website HTML pages",
     )
     args = parser.parse_args()
 
@@ -1686,16 +1716,20 @@ def main():
     else:
         orcid_dict = ORCID_IDS
 
-    if args.orcids:
-        orcids_input = args.orcids
-        orcid_dict = {o: orcid_dict.get(o, o) for o in args.orcids}
+    selected_orcids = args.flag_orcids or (args.orcids if args.orcids else None)
+    if selected_orcids:
+        orcids_input = selected_orcids
+        orcid_dict = {o: orcid_dict.get(o, o) for o in selected_orcids}
     else:
         orcids_input = orcid_dict
 
+    print(f"Fetching / reading publications for {len(orcid_dict)} author(s)...")
     pubs = aggregate_publications(orcids_input, cache_dir=args.cache_dir)
 
     if not pubs:
         print("Warning: No publications found or fetched.")
+    else:
+        print(f"Aggregated {len(pubs)} unique publication records.")
 
     # Write Markdown
     if args.output:
@@ -1705,9 +1739,16 @@ def main():
     if not args.no_json and args.json:
         export_json(pubs, output_path=args.json)
 
-    # Write HTML
+    # Write standalone HTML if explicitly requested
     if not args.no_html and args.html:
         generate_html(pubs, orcid_dict=orcid_dict, output_path=args.html)
+
+    # Rebuild website
+    if not args.no_site:
+        print("Rebuilding website pages...")
+        build_site.main()
+
+    print("All tasks completed successfully!")
 
 
 if __name__ == "__main__":

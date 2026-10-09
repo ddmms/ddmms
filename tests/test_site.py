@@ -2,11 +2,24 @@ import unittest
 import os
 import json
 import re
+import sys
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+SRC_DIR = BASE_DIR / "src"
+if str(SRC_DIR) not in sys.path:
+    sys.path.insert(0, str(SRC_DIR))
+if str(BASE_DIR) not in sys.path:
+    sys.path.insert(0, str(BASE_DIR))
+
 
 class TestDDMMSSite(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        if not (BASE_DIR / "index.html").exists():
+            import build_site
+            build_site.main()
+
     def setUp(self):
         self.html_files = [
             "index.html",
@@ -15,6 +28,7 @@ class TestDDMMSSite(unittest.TestCase):
             "research.html",
             "code.html"
         ]
+
 
     def test_html_files_exist_and_non_empty(self):
         for fname in self.html_files:
@@ -41,12 +55,21 @@ class TestDDMMSSite(unittest.TestCase):
             "ddmms_for_dark_modes.svg",
             "ddmms_for_light_modes-with-text.svg",
             "ddmms_for_dark_modes-with-text.svg",
-            "ddmms.svg"
+            "ddmms.svg",
+            "janus-core.svg",
+            "aiida-mlip.svg",
+            "janus-core.png",
+            "aiida-mlip.png"
         ]
         logos_dir = BASE_DIR / "assets" / "logos"
         for logo in expected_logos:
             p = logos_dir / logo
             self.assertTrue(p.exists(), f"Logo {logo} missing in {logos_dir}")
+
+    def test_code_page_uses_logos_for_janus_core_and_aiida_mlip(self):
+        code_html = (BASE_DIR / "code.html").read_text(encoding="utf-8")
+        self.assertIn("assets/logos/janus-core.svg", code_html)
+        self.assertIn("assets/logos/aiida-mlip.svg", code_html)
 
     def test_publications_json_validity(self):
         p = BASE_DIR / "publications.json"

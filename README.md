@@ -1,115 +1,31 @@
-# Data Driven Materials and Molecular Science (DDMMS)
+# Building the DDMMS Website
 
-Welcome to the official website repository for the **Data Driven Materials and Molecular Science (DDMMS)** research group at the **Science and Technology Facilities Council (STFC)** Scientific Computing Department, **UK Research and Innovation (UKRI)**, Sci-Tech Daresbury.
+Instructions to build and serve the static website locally using [uv](https://docs.astral.sh/uv/).
 
----
+## Build Instructions
 
-## 🌟 Overview & Key Features
+### 1. Full Build (Fetch Publications & Generate Site)
 
-- **Comprehensive Navigation Menu**:
-  - **About**: Group mission, scientific philosophy, methodological pillars, and news milestones.
-  - **People**: Detailed researcher profiles (Dr. Alin Marin Elena, Elliott Kasoar, Dr. Junwen Yin), research tags, ORCID IDs, and open positions.
-  - **Research**: In-depth coverage of core themes (Foundation MLIPs, Metal-Organic Frameworks, Complex Fluids & Molten Salts, DL_POLY 5 Massively Parallel MD, and Automated Atomistic Workflows).
-  - **Publications**: Full interactive catalog integrated from the group's ORCID automated aggregation pipeline (`../pubs`), featuring live text search, author filtering, year filtering, sorting, BibTeX generation, citation copying, and DOI links.
-  - **Code**: Showcase of flagship open-source scientific tools developed by the group: `janus-core`, `aiida-mlip`, `ml-peg`, and `goldilocks`, with quick copy installation commands and links to repositories.
-- **Dedicated Multi-Page Architecture**:
-  - Independent, dedicated pages for each section ([`index.html`](index.html), [`people.html`](people.html), [`research.html`](research.html), [`publications.html`](publications.html), [`code.html`](code.html)) rather than a single linear page, ensuring optimal navigation, deep-linking, and fast loading.
-  - Landing page ([`index.html`](index.html)) provides the group mission, recent highlights, and news.
-- **Adaptive Dark / Light Themes**:
-  - Dynamically toggles logos between `ddmms_for_light_modes` and `ddmms_for_dark_modes` for pixel-perfect contrast.
-  - Persists preference via `localStorage` and respects system `prefers-color-scheme`.
-- **100% Mobile Friendly & Responsive**:
-  - Fluid typography and responsive CSS grid/flexbox layouts.
-  - Mobile hamburger drawer navigation with touch-friendly 44px+ hit targets.
-  - Full support for mobile phones, tablets, laptops, and ultra-wide displays.
-- **Offline & Standalone Ready**:
-  - Publication dataset is directly embedded into the HTML pages alongside JSON export files.
-  - Functions completely offline or when opened via local `file://` protocol, as well as on any static web host (GitHub Pages, Netlify, Nginx, Apache).
-
----
-
-## 📂 Project Structure
-
-```text
-.
-├── index.html              # Landing / About page (mission, recent highlights, news)
-├── people.html             # Dedicated People & team page (profiles, ORCID, contacts)
-├── research.html           # Dedicated Research themes page (scientific programs)
-├── publications.html       # Dedicated Publications portal (filters, search, BibTeX)
-├── code.html               # Dedicated Software page (janus-core, aiida-mlip, aiidalab-mlip, pack-mm, ml-peg, goldilocks)
-├── build_site.py           # Site generator synchronizing shared navigation & data
-├── publications.json       # Canonical publications dataset (ORCID aggregated)
-├── PUBLICATIONS.md          # Generated Markdown bibliography
-├── data/
-│   └── authors.csv         # Group member ORCID IDs and names mapping
-├── assets/
-│   ├── css/
-│   │   └── style.css       # Responsive, dark/light themed CSS design system
-│   ├── js/
-│   │   ├── main.js         # Theme toggle, mobile drawer navigation, utilities
-│   │   └── publications.js # Interactive publication filtering, search, & BibTeX
-│   └── logos/              # Official DDMMS vector SVGs and PNG logos
-└── tests/
-    └── test_site.py        # Automated test suite
-```
-
----
-
-## 🚀 Running Locally
-
-You can open `index.html` directly in any web browser, or serve it locally with Python:
+Fetch latest publication records from ORCID and rebuild all HTML pages, Markdown bibliography, and JSON feeds:
 
 ```bash
-# Serve current directory at http://localhost:8000
-python3 -m http.server 8000
+uv run --with requests python src/pubs.py
 ```
 
-Then visit [http://localhost:8000](http://localhost:8000) in your web browser.
+### 2. Fast Build (Regenerate HTML Pages from Local Data)
 
----
-
-## 🔄 Updating Publications & Automatic Deployment
-
-### Syncing Publications via ORCID
-
-To sync publications directly from the ORCID API, regenerate data, and rebuild all pages:
+Rebuild all HTML pages (`index.html`, `publications.html`, `people.html`, `research.html`, `code.html`) using existing local data without querying the ORCID API:
 
 ```bash
-python pubs.py
+uv run python src/build_site.py
 ```
 
-Options:
-- `--csv data/authors.csv`: Custom path to author mapping CSV
-- `--cache-dir data/cache`: Directory caching ORCID API responses
-- `-o PUBLICATIONS.md`: Output Markdown bibliography
-- `--json publications.json`: Output JSON feed
-- `--no-site`: Skip updating HTML site files
+## Preview Locally
 
-### Automated GitHub Actions Deployment
-
-The repository includes a GitHub Actions workflow in [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) that:
-1. Runs automatically on every `push` to `main` / `master`.
-2. Runs on a scheduled weekly cron (`0 5 * * 1`, every Monday morning) to sync publications from ORCID.
-3. Can be triggered manually via `workflow_dispatch`.
-4. Runs `python pubs.py` to aggregate records and rebuild the site.
-5. Runs the unit test suite (`python -m unittest discover tests`).
-6. Commits any updated publications data back to the repository.
-7. Deploys the static site to GitHub Pages.
-
----
-
-## 🧪 Testing
-
-Run all unit tests:
+Serve the repository root using Python's built-in HTTP server:
 
 ```bash
-python -m unittest discover tests
+uv run python -m http.server 8000
 ```
 
----
-
-## 📜 License
-
-Distributed under the terms of the BSD 3-Clause License.
-Copyright (c) 2026 Data Driven Materials and Molecular Science (DDMMS) & contributors.
-
+Open [http://localhost:8000](http://localhost:8000) in your browser.
