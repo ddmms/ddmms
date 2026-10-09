@@ -175,7 +175,7 @@ def generate_code_html():
         <article class="code-card">
           <div class="code-card-header">
             <div class="code-title-group">
-              <h3><img src="assets/logos/janus-core.svg" alt="janus-core logo" class="code-card-logo"> janus-core</h3>
+              <h3><img src="assets/logos/janus-core.svg" alt="janus-core logo" class="code-card-logo" width="19" height="19"> janus-core</h3>
             </div>
             <span class="badge" style="background:#dbeafe; color:#1e40af;">Python / ASE / CLI</span>
           </div>
@@ -205,7 +205,7 @@ def generate_code_html():
         <article class="code-card">
           <div class="code-card-header">
             <div class="code-title-group">
-              <h3><img src="assets/logos/aiida-mlip.svg" alt="aiida-mlip logo" class="code-card-logo"> aiida-mlip</h3>
+              <h3><img src="assets/logos/aiida-mlip.svg" alt="aiida-mlip logo" class="code-card-logo" width="19" height="19"> aiida-mlip</h3>
             </div>
             <span class="badge" style="background:#fef3c7; color:#92400e;">AiiDA / Workflows</span>
           </div>
@@ -233,7 +233,7 @@ def generate_code_html():
         <article class="code-card">
           <div class="code-card-header">
             <div class="code-title-group">
-              <h3><span>🧪</span> aiidalab-mlip</h3>
+              <h3><span class="code-card-icon">🧪</span> aiidalab-mlip</h3>
             </div>
             <span class="badge" style="background:#e0f2fe; color:#0369a1;">AiiDAlab / Web GUI</span>
           </div>
@@ -259,7 +259,7 @@ def generate_code_html():
         <article class="code-card">
           <div class="code-card-header">
             <div class="code-title-group">
-              <h3><span>📦</span> pack-mm</h3>
+              <h3><span class="code-card-icon">📦</span> pack-mm</h3>
             </div>
             <span class="badge" style="background:#fce7f3; color:#9d174d;">Python / Packing / CLI</span>
           </div>
@@ -287,7 +287,7 @@ def generate_code_html():
         <article class="code-card">
           <div class="code-card-header">
             <div class="code-title-group">
-              <h3><span>📊</span> ml-peg</h3>
+              <h3><span class="code-card-icon">📊</span> ml-peg</h3>
             </div>
             <span class="badge" style="background:#e0e7ff; color:#3730a3;">Benchmark / Guide</span>
           </div>
@@ -314,7 +314,7 @@ def generate_code_html():
         <article class="code-card">
           <div class="code-card-header">
             <div class="code-title-group">
-              <h3><span>🐻</span> goldilocks</h3>
+              <h3><span class="code-card-icon">🐻</span> goldilocks</h3>
             </div>
             <span class="badge" style="background:#ecfdf5; color:#065f46;">PSDI &bull; goldilocks.ac.uk</span>
           </div>

@@ -1091,11 +1091,23 @@ a:hover {
 
 .code-card-logo,
 .code-logo-img {
-  width: 28px;
-  height: 28px;
+  width: 19px;
+  height: 19px;
   object-fit: contain;
   flex-shrink: 0;
   display: inline-block;
+  vertical-align: middle;
+}
+
+.code-card-icon,
+.code-title-group h3 span {
+  font-size: 1.05rem;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 19px;
+  height: 19px;
   vertical-align: middle;
 }
 

@@ -269,6 +269,7 @@ class TestDDMMSSite(unittest.TestCase):
         self.assertIn("actions/configure-pages@v6", content)
         self.assertIn("actions/upload-pages-artifact@v5", content)
         self.assertIn("actions/deploy-pages@v5", content)
+        self.assertIn("actions/upload-artifact@v4", content)
         # Ensure deprecated Node 20 versions are no longer referenced
         self.assertNotIn("actions/checkout@v4", content)
         self.assertNotIn("actions/setup-python@v5", content)
@@ -276,6 +277,8 @@ class TestDDMMSSite(unittest.TestCase):
         self.assertNotIn("actions/configure-pages@v5", content)
         self.assertNotIn("actions/upload-pages-artifact@v3", content)
         self.assertNotIn("actions/deploy-pages@v4", content)
+        self.assertNotIn("actions/upload-artifact@v3", content)
+
 
     def test_math_rendering_and_katex_assets(self):
         for fname in self.html_files:
