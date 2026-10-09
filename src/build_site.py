@@ -33,7 +33,7 @@ try:
     from .components.index import generate_index_html, generate_about_html, load_mission
     from .components.code import generate_code_html, generate_software_html, load_software
     from .components.publications import generate_publications_html
-    from .components.people import generate_people_html, load_people
+    from .components.people import generate_people_html, load_people, generate_person_html, load_person
     from .components.research import generate_research_html, load_research
 except (ImportError, ValueError):
     try:
@@ -43,7 +43,7 @@ except (ImportError, ValueError):
         from components.index import generate_index_html, generate_about_html, load_mission
         from components.code import generate_code_html, generate_software_html, load_software
         from components.publications import generate_publications_html
-        from components.people import generate_people_html, load_people
+        from components.people import generate_people_html, load_people, generate_person_html, load_person
         from components.research import generate_research_html, load_research
     except ImportError:
         from src.components.header import generate_header_html, get_header
@@ -52,7 +52,7 @@ except (ImportError, ValueError):
         from src.components.index import generate_index_html, generate_about_html, load_mission
         from src.components.code import generate_code_html, generate_software_html, load_software
         from src.components.publications import generate_publications_html
-        from src.components.people import generate_people_html, load_people
+        from src.components.people import generate_people_html, load_people, generate_person_html, load_person
         from src.components.research import generate_research_html, load_research
 
 __all__ = [
@@ -182,6 +182,20 @@ def main():
         "code.html": generate_code_html(software_data),
         "news.html": generate_news_html(news),
     }
+
+    # Generate individual profile pages for core team members
+    for sec in people_data.get("sections", []):
+        if sec.get("id") == "core-team":
+            for member in sec.get("members", []):
+                page_filename = member.get("page")
+                slug = member.get("slug")
+                if page_filename:
+                    pages[page_filename] = generate_person_html(member, pubs)
+                    if "/" not in page_filename:
+                        pages[f"people/{page_filename}"] = generate_person_html(member, pubs, base_href="../")
+                elif slug:
+                    pages[f"{slug}.html"] = generate_person_html(member, pubs)
+                    pages[f"people/{slug}.html"] = generate_person_html(member, pubs, base_href="../")
 
     for filename, content in pages.items():
         out_path = BASE_DIR / filename

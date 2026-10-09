@@ -19,6 +19,8 @@ from ..components import (
     generate_html,
     load_people,
     generate_people_html,
+    load_person,
+    generate_person_html,
     load_research,
     generate_research_html,
 )
@@ -42,6 +44,8 @@ __all__ = [
     "generate_html",
     "load_people",
     "generate_people_html",
+    "load_person",
+    "generate_person_html",
     "load_research",
     "generate_research_html",
 ]

@@ -1,7 +1,10 @@
-"""People page component and data loader for the DDMMS website."""
+"""People page component, individual member page generator, and data loaders for the DDMMS website."""
 
+import html
 from pathlib import Path
+import re
 from typing import Any, Dict, List, Optional, Union
+from urllib.parse import quote
 import yaml
 
 try:
@@ -26,11 +29,50 @@ ORCID_SVG = (
 )
 
 
+def load_person(person_file: Union[str, Path]) -> Dict[str, Any]:
+    """Load an individual person's YAML file.
+
+    Raises FileNotFoundError if the file cannot be located.
+    """
+    target_path: Optional[Path] = None
+    cand = Path(person_file)
+    if cand.is_file():
+        target_path = cand
+    else:
+        alt = BASE_DIR / person_file
+        if alt.is_file():
+            target_path = alt
+        else:
+            alt2 = BASE_DIR / "data" / "people" / person_file
+            if alt2.is_file():
+                target_path = alt2
+            else:
+                raise FileNotFoundError(f"Person YAML file not found: '{person_file}'")
+
+    content = target_path.read_text(encoding="utf-8-sig")
+    parsed = yaml.safe_load(content)
+
+    if not parsed or not isinstance(parsed, dict):
+        return {}
+
+    name = str(parsed.get("name") or "").strip()
+    if "slug" not in parsed or not parsed["slug"]:
+        clean = re.sub(r"^(dr\.|prof\.|mr\.|ms\.|mrs\.)\s+", "", name, flags=re.I).strip().lower()
+        clean = re.sub(r"[^\w\s-]", "", clean)
+        parsed["slug"] = re.sub(r"[\s_]+", "-", clean)
+
+    if "page" not in parsed or not parsed["page"]:
+        parsed["page"] = f"{parsed['slug']}.html"
+
+    return parsed
+
+
 def load_people(people_file: Optional[Union[str, Path]] = None) -> Dict[str, Any]:
     """Load people sections, members, partner consortia, and opportunities from a YAML file.
 
-    Requires a valid YAML file provided by the user. Raises FileNotFoundError
-    if the file cannot be located.
+    Resolves individual member YAML files for core team members or any member
+    referencing a YAML file via `yaml:` or `file:`. Raises FileNotFoundError if
+    the people YAML file cannot be located.
     """
     target_path: Optional[Path] = None
     if people_file is not None:
@@ -56,6 +98,46 @@ def load_people(people_file: Optional[Union[str, Path]] = None) -> Dict[str, Any
 
     if not parsed or not isinstance(parsed, dict):
         return {"subtitle": "", "sections": []}
+
+    people_dir = target_path.parent
+    for sec in parsed.get("sections", []):
+        sec_id = str(sec.get("id") or "").strip()
+        members = sec.get("members") or []
+        resolved_members = []
+        for member in members:
+            if isinstance(member, str) and (member.endswith(".yaml") or member.endswith(".yml")):
+                cand_path = people_dir / member if (people_dir / member).is_file() else member
+                person_data = load_person(cand_path)
+                resolved_members.append(person_data)
+            elif isinstance(member, dict):
+                yaml_ref = member.get("yaml") or member.get("file")
+                if yaml_ref:
+                    cand_path = people_dir / yaml_ref if (people_dir / yaml_ref).is_file() else yaml_ref
+                    person_data = load_person(cand_path)
+                    # File data provides base, member dict can override
+                    merged = {**person_data, **member}
+                    merged.setdefault("slug", person_data.get("slug"))
+                    merged.setdefault("page", person_data.get("page"))
+                    resolved_members.append(merged)
+                else:
+                    # Core team member without explicit yaml key: check data/people/<slug>.yaml
+                    if sec_id == "core-team" and member.get("name"):
+                        name = member.get("name")
+                        clean = re.sub(r"^(dr\.|prof\.|mr\.|ms\.|mrs\.)\s+", "", name, flags=re.I).strip().lower()
+                        clean = re.sub(r"[^\w\s-]", "", clean)
+                        slug = re.sub(r"[\s_]+", "-", clean)
+                        for check_slug in (slug, slug.replace("dr-", "")):
+                            possible_file = people_dir / "people" / f"{check_slug}.yaml"
+                            if possible_file.is_file():
+                                person_data = load_person(possible_file)
+                                member = {**person_data, **member}
+                                break
+                        if "slug" not in member:
+                            member["slug"] = slug
+                        if "page" not in member:
+                            member["page"] = f"{member['slug']}.html"
+                    resolved_members.append(member)
+        sec["members"] = resolved_members
 
     return parsed
 
@@ -100,18 +182,34 @@ def generate_people_html(people_data: Optional[Dict[str, Any]] = None) -> str:
             destination = str(member.get("destination") or member.get("now") or "").strip()
             tags = member.get("tags") or []
             links = member.get("links") or []
+            page = member.get("page")
+
+            # Clickable name for members with an individual page
+            if page:
+                name_html = f'<a href="{page}" class="person-name-link">{name}</a>'
+            else:
+                name_html = name
 
             # Avatar rendering
             if (avatar.startswith("assets/") or avatar.startswith("http") or avatar.startswith("/") or
                 any(avatar.lower().endswith(ext) for ext in (".jpg", ".jpeg", ".png", ".svg", ".webp"))):
-                avatar_html = f"""              <div class="person-avatar">
+                avatar_inner = f"""              <div class="person-avatar">
                 <img src="{avatar}" alt="{name}">
               </div>"""
             elif avatar:
-                avatar_html = f"""              <div class="person-avatar">{avatar}</div>"""
+                avatar_inner = f"""              <div class="person-avatar">{avatar}</div>"""
             else:
                 initials = "".join([part[0] for part in name.split() if part])[:2].upper()
-                avatar_html = f"""              <div class="person-avatar">{initials}</div>"""
+                avatar_inner = f"""              <div class="person-avatar">{initials}</div>"""
+
+            if page:
+                avatar_html = (
+                    f'              <a href="{page}" class="person-avatar-link" aria-label="View profile of {name}">\n'
+                    f'{avatar_inner}\n'
+                    f'              </a>'
+                )
+            else:
+                avatar_html = avatar_inner
 
             # Title wrap extra items
             tenure_html = f'\n                <span class="person-tenure">{tenure}</span>' if tenure else ''
@@ -181,7 +279,7 @@ def generate_people_html(people_data: Optional[Dict[str, Any]] = None) -> str:
                 """            <div class="person-header">""",
                 avatar_html,
                 """              <div class="person-title-wrap">""",
-                f"""                <h3>{name}</h3>""",
+                f"""                <h3>{name_html}</h3>""",
                 f"""                <div class="person-role">{role}</div>""",
                 f"""                <div class="person-affiliation">{affiliation}</div>{dest_html}{tenure_html}""",
                 """              </div>""",
@@ -288,6 +386,276 @@ def generate_people_html(people_data: Optional[Dict[str, Any]] = None) -> str:
 {all_sections_html}
 
 {opportunities_html}
+    </div>
+  </main>
+
+{footer_html}
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
+"""
+
+
+def generate_person_html(
+    person_data: Dict[str, Any],
+    publications: Optional[List[Dict[str, Any]]] = None,
+    base_href: Optional[str] = None,
+) -> str:
+    """Generate a dedicated individual profile page for a team member."""
+    header_html = get_header("people")
+    footer_html = get_footer()
+
+    name = str(person_data.get("name") or "").strip()
+    role = str(person_data.get("role") or "").strip()
+    affiliation = str(person_data.get("affiliation") or "").strip()
+    avatar = str(person_data.get("avatar") or "").strip()
+    email = str(person_data.get("email") or "").strip()
+    bio = str(person_data.get("bio") or "").strip()
+    short_bio = str(person_data.get("short_bio") or "").strip()
+    tags = person_data.get("tags") or []
+    links = person_data.get("links") or []
+    research_interests = person_data.get("research_interests") or []
+    career_entries = person_data.get("education_and_career") or []
+
+    # Clean name without academic titles for publication searches
+    clean_name = re.sub(r"^(dr\.|prof\.|mr\.|ms\.|mrs\.)\s+", "", name, flags=re.I).strip()
+
+    # Meta description snippet
+    meta_desc = short_bio or bio[:160]
+    meta_desc_escaped = html.escape(re.sub(r"\s+", " ", meta_desc).strip())
+
+    # Base href tag for subdirectory placement if needed
+    base_tag = f'  <base href="{base_href}">\n' if base_href else ""
+
+    # Avatar element
+    if (avatar.startswith("assets/") or avatar.startswith("http") or avatar.startswith("/") or
+        any(avatar.lower().endswith(ext) for ext in (".jpg", ".jpeg", ".png", ".svg", ".webp"))):
+        avatar_html = f'<img src="{avatar}" alt="{name}" class="profile-header-avatar">'
+    elif avatar:
+        avatar_html = f'<div class="profile-header-avatar profile-header-avatar-text">{avatar}</div>'
+    else:
+        initials = "".join([part[0] for part in clean_name.split() if part])[:2].upper()
+        avatar_html = f'<div class="profile-header-avatar profile-header-avatar-text">{initials}</div>'
+
+    # Action / Social / Profile links
+    link_buttons = []
+    if email:
+        link_buttons.append(
+            f'<a href="mailto:{email}" class="person-link-btn" title="Send Email">'
+            f'<span>✉</span> <span>{email}</span></a>'
+        )
+
+    publications_found_in_links = False
+    for lnk in links:
+        if not isinstance(lnk, dict):
+            continue
+        lnk_text = str(lnk.get("text") or lnk.get("title") or "").strip()
+        lnk_url = str(lnk.get("url") or lnk.get("link") or "#").strip()
+        is_orcid = (
+            str(lnk.get("icon") or "").lower() == "orcid"
+            or (lnk_text.lower() == "orcid" and "orcid.org" in lnk_url.lower())
+        )
+        if lnk_text.lower() == "publications" or "publications.html" in lnk_url:
+            publications_found_in_links = True
+
+        if is_orcid and lnk_url != "#":
+            link_buttons.append(
+                f'<a href="{lnk_url}" target="_blank" rel="noopener noreferrer" class="person-link-btn" title="ORCID Profile">'
+                f'{ORCID_SVG} <span>{lnk_text}</span></a>'
+            )
+        elif lnk_url.startswith("http://") or lnk_url.startswith("https://"):
+            link_buttons.append(
+                f'<a href="{lnk_url}" target="_blank" rel="noopener noreferrer" class="person-link-btn">'
+                f'<span>{lnk_text}</span></a>'
+            )
+        elif lnk_url.startswith("publications.html"):
+            link_buttons.append(
+                f'<a href="{lnk_url}" class="person-link-btn"><span>{lnk_text}</span></a>'
+            )
+        else:
+            link_buttons.append(
+                f'<a href="{lnk_url}" class="person-link-btn">{lnk_text}</a>'
+            )
+
+    if not publications_found_in_links:
+        link_buttons.append(
+            f'<a href="publications.html?author={quote(clean_name)}" class="person-link-btn"><span>Publications</span></a>'
+        )
+
+    links_rendered = "\n            ".join(link_buttons)
+    links_block = f"""          <div class="profile-meta-links">
+            {links_rendered}
+          </div>""" if link_buttons else ""
+
+    # Biography text paragraphs
+    bio_paragraphs = "\n".join(f"          <p>{p.strip()}</p>" for p in bio.split("\n\n") if p.strip())
+
+    # Research Interests & Tags section
+    research_section = ""
+    if research_interests or tags:
+        interests_html = ""
+        if research_interests:
+            items_rendered = "\n".join(f"          <li>{item}</li>" for item in research_interests)
+            interests_html = f"""        <ul class="profile-interests-list">
+{items_rendered}
+        </ul>"""
+
+        tags_html = ""
+        if tags:
+            tag_spans = " ".join(f'<span class="person-tag">{t}</span>' for t in tags)
+            tags_html = f"""        <div class="person-tags" style="margin-top: 1.25rem;">
+          {tag_spans}
+        </div>"""
+
+        research_section = f"""      <!-- Research Focus Section -->
+      <section class="profile-section">
+        <h2 class="profile-section-title">Research Interests &amp; Focus</h2>
+{interests_html}
+{tags_html}
+      </section>"""
+
+    # Career / Education section
+    career_section = ""
+    if career_entries:
+        career_items = []
+        for c in career_entries:
+            if isinstance(c, dict):
+                c_role = c.get("role", "")
+                c_inst = c.get("institution", "")
+                career_items.append(
+                    f'          <li class="profile-career-item"><strong>{c_role}</strong> &mdash; <span>{c_inst}</span></li>'
+                )
+            elif isinstance(c, str):
+                career_items.append(f'          <li class="profile-career-item">{c}</li>')
+        if career_items:
+            career_items_rendered = "\n".join(career_items)
+            career_section = f"""      <!-- Appointments & Roles Section -->
+      <section class="profile-section">
+        <h2 class="profile-section-title">Appointments &amp; Roles</h2>
+        <ul class="profile-career-list">
+{career_items_rendered}
+        </ul>
+      </section>"""
+
+    # Publications matching
+    matched_pubs: List[Dict[str, Any]] = []
+    if publications:
+        clean_tokens = [tok for tok in clean_name.lower().split() if len(tok) > 1]
+        for pub in publications:
+            pub_authors = [str(a).lower() for a in pub.get("authors", [])]
+            matched = False
+            for a in pub_authors:
+                if clean_name.lower() in a:
+                    matched = True
+                    break
+                if len(clean_tokens) >= 2 and clean_tokens[0] in a and clean_tokens[-1] in a:
+                    matched = True
+                    break
+            if matched:
+                matched_pubs.append(pub)
+
+        def pub_sort_key(p: Dict[str, Any]) -> int:
+            try:
+                return int(p.get("year", 0))
+            except (ValueError, TypeError):
+                return 0
+
+        matched_pubs.sort(key=pub_sort_key, reverse=True)
+
+    pub_items_rendered = []
+    for p in matched_pubs[:5]:
+        p_title = p.get("title", "")
+        p_year = p.get("year", "")
+        p_journal = p.get("journal", "")
+        p_doi = p.get("doi", "")
+        p_authors = ", ".join(p.get("authors", [])[:4])
+        if len(p.get("authors", [])) > 4:
+            p_authors += " et al."
+
+        doi_badge = f'<a href="https://doi.org/{p_doi}" target="_blank" rel="noopener noreferrer" class="badge-doi">DOI: {p_doi}</a>' if p_doi else ""
+        journal_text = f"<em>{p_journal}</em>" if p_journal else ""
+        meta_parts = [part for part in [journal_text, str(p_year)] if part]
+        meta_str = " &bull; ".join(meta_parts)
+
+        pub_items_rendered.append(f"""          <div class="profile-pub-item">
+            <div class="profile-pub-title">{p_title}</div>
+            <div class="profile-pub-meta">
+              <span>{p_authors}</span>
+              <span>{meta_str}</span>
+              {doi_badge}
+            </div>
+          </div>""")
+
+    pubs_count_label = f" ({len(matched_pubs)})" if matched_pubs else ""
+    author_query = quote(clean_name)
+    pubs_list_html = "\n".join(pub_items_rendered) if pub_items_rendered else "          <p style='color: var(--text-muted);'>Publications aggregated via the DDMMS ORCID catalogue.</p>"
+
+    publications_section = f"""      <!-- Publications Section -->
+      <section class="profile-section">
+        <h2 class="profile-section-title">Recent Publications</h2>
+        <div class="profile-pubs-list">
+{pubs_list_html}
+        </div>
+        <div style="margin-top: 1.5rem; text-align: left;">
+          <a href="publications.html?author={author_query}" class="btn btn-primary">
+            View All Publications by {name}{pubs_count_label} &rarr;
+          </a>
+        </div>
+      </section>"""
+
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{name} | Data Driven Materials and Molecular Science</title>
+  <meta name="description" content="{meta_desc_escaped}">
+{base_tag}  <link rel="icon" type="image/svg+xml" href="assets/logos/ddmms.svg">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+</head>
+<body>
+{header_html}
+
+  <main id="main-content" style="padding-top: 2.5rem; padding-bottom: 4rem;">
+    <div class="container" style="max-width: 960px;">
+
+      <!-- Breadcrumb / Back Link -->
+      <div style="margin-bottom: 1.5rem;">
+        <a href="people.html" class="person-back-link">
+          &larr; Back to People
+        </a>
+      </div>
+
+      <!-- Person Profile Header Card -->
+      <article class="profile-header-card">
+        <div class="profile-header-avatar-wrap">
+          {avatar_html}
+        </div>
+        <div class="profile-header-details">
+          <h1 class="profile-header-name">{name}</h1>
+          <div class="profile-header-role">{role}</div>
+          <div class="profile-header-affiliation">{affiliation}</div>
+{links_block}
+        </div>
+      </article>
+
+      <!-- Biography Section -->
+      <section class="profile-section">
+        <h2 class="profile-section-title">Biography</h2>
+        <div class="profile-bio-text">
+{bio_paragraphs}
+        </div>
+      </section>
+
+{research_section}
+
+{career_section}
+
+{publications_section}
+
     </div>
   </main>
 

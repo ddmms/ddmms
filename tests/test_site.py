@@ -700,6 +700,83 @@ work_with_us:
         self.assertIn(".news-expand-btn", style_css)
         self.assertIn(".news-historical-divider", style_css)
 
+    def test_core_team_individual_yamls_and_loader(self):
+        from build_site import load_person, load_people
+
+        people_dir = BASE_DIR / "data" / "people"
+        expected_yamls = [
+            "alin-marin-elena.yaml",
+            "elliott-kasoar.yaml",
+            "junwen-yin.yaml",
+        ]
+        for yfile in expected_yamls:
+            p = people_dir / yfile
+            self.assertTrue(p.exists(), f"Individual YAML file {yfile} missing in {people_dir}")
+            data = load_person(p)
+            self.assertIn("name", data)
+            self.assertIn("slug", data)
+            self.assertIn("page", data)
+            self.assertIn("avatar", data)
+            self.assertIn("role", data)
+            self.assertIn("affiliation", data)
+            self.assertIn("bio", data)
+            self.assertIn("tags", data)
+            self.assertIn("links", data)
+
+        # Test load_people properly resolves core-team members from individual YAMLs
+        people_data = load_people()
+        core_sec = next(s for s in people_data["sections"] if s["id"] == "core-team")
+        self.assertEqual(len(core_sec["members"]), 3)
+        for m in core_sec["members"]:
+            self.assertIn(m["slug"], ["alin-marin-elena", "elliott-kasoar", "junwen-yin"])
+            self.assertTrue(m["page"].endswith(".html"))
+            self.assertTrue(len(m["bio"]) > 20)
+
+    def test_core_team_individual_pages_and_navigation(self):
+        people_html = (BASE_DIR / "people.html").read_text(encoding="utf-8")
+
+        # Clicking on the name of a core member links to their individual page
+        self.assertIn('<a href="alin-marin-elena.html" class="person-name-link">Dr. Alin Marin Elena</a>', people_html)
+        self.assertIn('<a href="elliott-kasoar.html" class="person-name-link">Elliott Kasoar</a>', people_html)
+        self.assertIn('<a href="junwen-yin.html" class="person-name-link">Dr. Junwen Yin</a>', people_html)
+
+        # Avatar is also clickable to their individual page
+        self.assertIn('href="alin-marin-elena.html" class="person-avatar-link"', people_html)
+        self.assertIn('href="elliott-kasoar.html" class="person-avatar-link"', people_html)
+        self.assertIn('href="junwen-yin.html" class="person-avatar-link"', people_html)
+
+        # Verify individual pages are generated and contain key sections
+        core_pages = [
+            ("alin-marin-elena.html", "Dr. Alin Marin Elena", "Alin Marin Elena"),
+            ("elliott-kasoar.html", "Elliott Kasoar", "Elliott Kasoar"),
+            ("junwen-yin.html", "Dr. Junwen Yin", "Junwen Yin"),
+        ]
+        for page_name, full_name, search_name in core_pages:
+            page_path = BASE_DIR / page_name
+            self.assertTrue(page_path.exists(), f"Profile page {page_name} was not generated")
+            content = page_path.read_text(encoding="utf-8")
+
+            # Title and header details
+            self.assertIn(full_name, content)
+            self.assertIn("profile-header-card", content)
+            self.assertIn("profile-header-avatar", content)
+
+            # Back link to team/people page
+            self.assertIn('href="people.html"', content)
+            self.assertIn("Back to People", content)
+
+            # Biography and Research Interests
+            self.assertIn("Biography", content)
+            self.assertIn("Research Interests", content)
+
+            # Publications section and link
+            self.assertIn("Publications", content)
+            self.assertIn("publications.html?author=", content)
+
+            # Also verify file in people/ subdirectory exists
+            sub_path = BASE_DIR / "people" / page_name
+            self.assertTrue(sub_path.exists(), f"Subdirectory profile page people/{page_name} was not generated")
+
 
 if __name__ == "__main__":
     unittest.main()
