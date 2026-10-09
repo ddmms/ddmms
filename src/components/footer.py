@@ -52,3 +52,4 @@ def get_footer(full_markup=False):
     if full_markup:
         return generate_footer_html()
     return '  <div id="site-footer" data-include-footer></div>'
+

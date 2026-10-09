@@ -67,3 +67,4 @@ def get_header(active_page="home", full_markup=False):
     if full_markup:
         return generate_header_html()
     return '  <div id="site-header" data-include-header></div>'
+

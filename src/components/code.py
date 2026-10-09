@@ -217,3 +217,4 @@ def generate_code_html():
   <script src="assets/js/main.js"></script>
 </body>
 </html>"""
+

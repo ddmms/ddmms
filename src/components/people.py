@@ -396,3 +396,4 @@ def generate_people_html():
 </body>
 </html>
 """
+

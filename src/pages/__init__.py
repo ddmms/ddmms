@@ -12,6 +12,8 @@ from ..components import (
     generate_about_html,
     generate_code_html,
     generate_publications_html,
+    build_html_page,
+    generate_html,
     generate_people_html,
     generate_research_html,
 )
@@ -28,6 +30,8 @@ __all__ = [
     "generate_about_html",
     "generate_code_html",
     "generate_publications_html",
+    "build_html_page",
+    "generate_html",
     "generate_people_html",
     "generate_research_html",
 ]

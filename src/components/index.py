@@ -150,3 +150,4 @@ def generate_index_html(pubs=None, authors=None, news=None):
 def generate_about_html():
     """Alias for generate_index_html."""
     return generate_index_html()
+
