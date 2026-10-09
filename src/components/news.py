@@ -1,6 +1,7 @@
 """News component and data loader for the DDMMS website."""
 
 from pathlib import Path
+from typing import Any, Dict, List, Optional, Union
 import yaml
 
 try:
@@ -16,110 +17,51 @@ except (ImportError, ValueError):
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 NEWS_FILE = BASE_DIR / "data" / "news.yaml"
-NEWS_CSV_FILE = BASE_DIR / "data" / "news.csv"
-
-DEFAULT_NEWS = [
-    {
-        "date": "2026 Milestone",
-        "headline": "Roadmap for an atomistic machine-learning ecosystem published on arXiv (2609.39090).",
-        "link": "https://arxiv.org/abs/2609.39090",
-    },
-    {
-        "date": "2026 Release",
-        "headline": "Goldilocks automated k-point sampling framework for Quantum ESPRESSO published in <em>Digital Discovery</em>.",
-        "link": "https://doi.org/10.1039/D4DD00045A",
-    },
-    {
-        "date": "2026 Discovery",
-        "headline": "uMOF universal benchmark database and ML interatomic potentials released for metal-organic frameworks.",
-        "link": "",
-    },
-    {
-        "date": "Software Ecosystem",
-        "headline": "aiida-mlip released, integrating janus-core workflows with full data provenance in AiiDA.",
-        "link": "https://github.com/stfc/aiida-mlip",
-    },
-]
 
 
-def load_news(news_file=None):
-    """Load news items from YAML file (data/news.yaml) or fallback CSV file.
+def load_news(news_file: Optional[Union[str, Path]] = None) -> List[Dict[str, str]]:
+    """Load news items from a YAML file (default: data/news.yaml).
+
+    Requires a valid YAML file provided by the user. Raises FileNotFoundError
+    if the file cannot be located.
 
     Supported YAML format:
       - date: "2026 Milestone"
         headline: "Roadmap..."
         link: "https://..."
-
-    Supported CSV row format:
-      Date or Category | Headline [ | Optional Link URL ]
     """
-    if news_file is None:
-        news_file = NEWS_FILE
-        if not news_file.exists():
-            for alt_name in ("news.yml", "news.csv"):
-                cand = BASE_DIR / "data" / alt_name
-                if cand.exists():
-                    news_file = cand
-                    break
+    target_path: Optional[Path] = None
+    if news_file is not None:
+        cand = Path(news_file)
+        if cand.is_file():
+            target_path = cand
+        else:
+            alt = BASE_DIR / news_file
+            if alt.is_file():
+                target_path = alt
+            else:
+                raise FileNotFoundError(f"News YAML file not found: '{news_file}'")
+    else:
+        for cand in (NEWS_FILE, BASE_DIR / "data" / "news.yml"):
+            if cand.is_file():
+                target_path = cand
+                break
+        if target_path is None:
+            raise FileNotFoundError(f"News YAML file not found at default location '{NEWS_FILE}'")
 
-    target_path = Path(news_file)
-    if not target_path.exists():
-        alt_path = BASE_DIR / news_file
-        if alt_path.exists():
-            target_path = alt_path
+    content = target_path.read_text(encoding="utf-8-sig")
+    parsed = yaml.safe_load(content)
 
-    news_items = []
-    if target_path.exists():
-        content = target_path.read_text(encoding="utf-8-sig")
-        is_yaml = target_path.suffix.lower() in (".yaml", ".yml") or ("\n- " in content or content.startswith("- "))
-        parsed = None
-        if is_yaml:
-            try:
-                parsed = yaml.safe_load(content)
-            except Exception:
-                parsed = None
-
-        if parsed:
-            raw_list = parsed if isinstance(parsed, list) else parsed.get("news", [])
-            if isinstance(raw_list, list):
-                for item in raw_list:
-                    if not isinstance(item, dict):
-                        continue
-                    date_tag = str(item.get("date") or item.get("category") or "News").strip()
-                    headline = str(item.get("headline") or item.get("title") or "").strip()
-                    link = str(item.get("link") or item.get("url") or "").strip()
-                    if headline:
-                        news_items.append({
-                            "date": date_tag,
-                            "headline": headline,
-                            "link": link,
-                        })
-
-        # Fallback to pipe-separated CSV parsing if not YAML or no items loaded
-        if not news_items:
-            for line in content.splitlines():
-                clean_line = line.strip()
-                if not clean_line or clean_line.startswith("#"):
+    news_items: List[Dict[str, str]] = []
+    if parsed:
+        raw_list = parsed if isinstance(parsed, list) else parsed.get("news", [])
+        if isinstance(raw_list, list):
+            for item in raw_list:
+                if not isinstance(item, dict):
                     continue
-                parts = clean_line.split("|")
-                if len(parts) >= 3:
-                    date_tag = parts[0].strip()
-                    last_part = parts[-1].strip()
-                    if len(parts) > 3 and (last_part.startswith("http://") or last_part.startswith("https://") or last_part.startswith("/") or not last_part):
-                        headline = "|".join(parts[1:-1]).strip()
-                        link = last_part
-                    else:
-                        headline = parts[1].strip()
-                        link = parts[2].strip()
-                elif len(parts) == 2:
-                    date_tag = parts[0].strip()
-                    headline = parts[1].strip()
-                    link = ""
-                else:
-                    date_tag = "News"
-                    headline = parts[0].strip()
-                    link = ""
-
+                date_tag = str(item.get("date") or item.get("category") or "News").strip()
+                headline = str(item.get("headline") or item.get("title") or "").strip()
+                link = str(item.get("link") or item.get("url") or "").strip()
                 if headline:
                     news_items.append({
                         "date": date_tag,
@@ -127,7 +69,7 @@ def load_news(news_file=None):
                         "link": link,
                     })
 
-    return news_items if news_items else [dict(item) for item in DEFAULT_NEWS]
+    return news_items
 
 
 def generate_news_html(news=None):
@@ -166,8 +108,7 @@ def generate_news_html(news=None):
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>News &amp; Milestones | Data Driven Materials and Molecular Science</title>
-  <meta name="description" content="All historical news, publications, software releases, and milestones from the Data Driven
-  Materials and Molecular Science group at SCD-STFC-UKRI.">
+  <meta name="description" content="All historical news, publications, software releases, and milestones from the Data Driven Materials and Molecular Science group at STFC Daresbury Laboratory.">
   <link rel="icon" type="image/svg+xml" href="assets/logos/ddmms.svg">
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">

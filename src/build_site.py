@@ -20,13 +20,12 @@ AUTHORS_CSV_FILE = BASE_DIR / "data" / "authors.csv"
 HEADER_FILE = BASE_DIR / "header.html"
 FOOTER_FILE = BASE_DIR / "footer.html"
 NEWS_FILE = BASE_DIR / "data" / "news.yaml"
-NEWS_CSV_FILE = BASE_DIR / "data" / "news.csv"
 
 # Import modular components with flexible path resolution
 try:
     from .components.header import generate_header_html, get_header
     from .components.footer import generate_footer_html, get_footer
-    from .components.news import DEFAULT_NEWS, load_news, generate_news_html
+    from .components.news import load_news, generate_news_html
     from .components.index import generate_index_html, generate_about_html
     from .components.code import generate_code_html
     from .components.publications import generate_publications_html
@@ -36,7 +35,7 @@ except (ImportError, ValueError):
     try:
         from components.header import generate_header_html, get_header
         from components.footer import generate_footer_html, get_footer
-        from components.news import DEFAULT_NEWS, load_news, generate_news_html
+        from components.news import load_news, generate_news_html
         from components.index import generate_index_html, generate_about_html
         from components.code import generate_code_html
         from components.publications import generate_publications_html
@@ -45,7 +44,7 @@ except (ImportError, ValueError):
     except ImportError:
         from src.components.header import generate_header_html, get_header
         from src.components.footer import generate_footer_html, get_footer
-        from src.components.news import DEFAULT_NEWS, load_news, generate_news_html
+        from src.components.news import load_news, generate_news_html
         from src.components.index import generate_index_html, generate_about_html
         from src.components.code import generate_code_html
         from src.components.publications import generate_publications_html
@@ -57,7 +56,6 @@ __all__ = [
     "PUBLICATIONS_FILE",
     "AUTHORS_FILE",
     "NEWS_FILE",
-    "DEFAULT_NEWS",
     "load_data",
     "load_news",
     "generate_header_html",

@@ -364,11 +364,11 @@ class TestDDMMSSite(unittest.TestCase):
         content = (BASE_DIR / "header.html").read_text(encoding="utf-8")
         self.assertIn('<a href="index.html" class="brand-link"', content)
 
-    def test_load_news_csv_abstraction(self):
+    def test_load_news_yaml(self):
         import tempfile
-        from build_site import load_news, DEFAULT_NEWS
+        from build_site import load_news
 
-        # Test loading the actual data/news.csv
+        # Test loading the actual data/news.yaml
         news = load_news()
         self.assertIsInstance(news, list)
         self.assertGreaterEqual(len(news), 4)
@@ -386,38 +386,6 @@ class TestDDMMSSite(unittest.TestCase):
                 has_unlinked_item = True
         self.assertTrue(has_linked_item, "Expected at least one news item with a link")
         self.assertTrue(has_unlinked_item, "Expected at least one news item without a link")
-
-        # Test pipe delimiter parsing with comments and custom file
-        with tempfile.NamedTemporaryFile("w+", encoding="utf-8", delete=False) as tf:
-            tf.write("# Comment line\n")
-            tf.write("2026 Tag|Headline with link|https://example.com/test\n")
-            tf.write("2026 Tag2|Headline with | another pipe inside|https://example.com/pipe\n")
-            tf.write("2026 Tag3|Headline without link|\n")
-            tf.write("\n")
-            tf.write("Tag Only Headline\n")
-            tf_path = Path(tf.name)
-
-        try:
-            custom_news = load_news(tf_path)
-            self.assertEqual(len(custom_news), 4)
-            self.assertEqual(custom_news[0]["date"], "2026 Tag")
-            self.assertEqual(custom_news[0]["headline"], "Headline with link")
-            self.assertEqual(custom_news[0]["link"], "https://example.com/test")
-
-            self.assertEqual(custom_news[1]["date"], "2026 Tag2")
-            self.assertEqual(custom_news[1]["headline"], "Headline with | another pipe inside")
-            self.assertEqual(custom_news[1]["link"], "https://example.com/pipe")
-
-            self.assertEqual(custom_news[2]["date"], "2026 Tag3")
-            self.assertEqual(custom_news[2]["headline"], "Headline without link")
-            self.assertEqual(custom_news[2]["link"], "")
-
-            self.assertEqual(custom_news[3]["date"], "News")
-            self.assertEqual(custom_news[3]["headline"], "Tag Only Headline")
-            self.assertEqual(custom_news[3]["link"], "")
-        finally:
-            if tf_path.exists():
-                tf_path.unlink()
 
         # Test custom YAML news loading
         with tempfile.NamedTemporaryFile("w+", encoding="utf-8", delete=False, suffix=".yaml") as tyf:
@@ -441,9 +409,9 @@ class TestDDMMSSite(unittest.TestCase):
             if tyf_path.exists():
                 tyf_path.unlink()
 
-        # Fallback to DEFAULT_NEWS on non-existent file
-        fallback = load_news(Path("/nonexistent/file.csv"))
-        self.assertEqual(len(fallback), len(DEFAULT_NEWS))
+        # Non-existent file raises FileNotFoundError
+        with self.assertRaises(FileNotFoundError):
+            load_news(Path("/nonexistent/file.yaml"))
 
     def test_news_display_latest_four_and_historical_toggle(self):
         index_html = (BASE_DIR / "index.html").read_text(encoding="utf-8")
