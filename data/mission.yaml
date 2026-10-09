@@ -7,7 +7,7 @@ paragraphs:
   - "Our core mission is to eliminate this trade-off by constructing robust, physics-informed machine-learned interatomic potentials (MLIPs), creating automated calculation workflows, and running extreme-scale simulations on high-performance computing facilities."
 
 work_with_us:
-  title: "Work With Us"
+  title: "Collaborate With Us"
   description: "We welcome prospective PhD researchers, postdocs, and international scientific visitors interested in machine-learning interatomic potentials, molecular dynamics algorithms, and porous materials."
   button_text: "Contact the Group"
   button_link: "people.html#contact"
