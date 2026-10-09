@@ -740,6 +740,57 @@ a:hover {
   color: var(--text);
 }
 
+.news-header-clickable {
+  cursor: pointer;
+  user-select: none;
+  justify-content: space-between;
+  border-radius: var(--radius-sm);
+  padding: 0.35rem 0.5rem;
+  margin: -0.35rem -0.5rem 1.25rem -0.5rem;
+  transition: var(--transition);
+}
+
+.news-header-clickable:hover {
+  background: var(--bg-alt);
+  color: var(--primary);
+}
+
+.news-header-clickable:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.news-toggle-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--primary);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 9999px;
+  padding: 0.2rem 0.55rem;
+  transition: var(--transition);
+  margin-left: auto;
+}
+
+.news-header-clickable:hover .news-toggle-indicator {
+  border-color: var(--primary);
+  background: var(--card-bg);
+}
+
+.news-historical-divider {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px dashed var(--border);
+}
+
 .news-list {
   list-style: none;
   display: flex;

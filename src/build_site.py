@@ -17,7 +17,57 @@ HEADER_FILE = BASE_DIR / "header.html"
 INCLUDES_HEADER_FILE = BASE_DIR / "_includes" / "header.html"
 FOOTER_FILE = BASE_DIR / "footer.html"
 INCLUDES_FOOTER_FILE = BASE_DIR / "_includes" / "footer.html"
+NEWS_FILE = BASE_DIR / "data" / "news.csv"
 
+DEFAULT_NEWS = [
+    {
+        "date": "2026 Milestone",
+        "headline": "Roadmap for an atomistic machine-learning ecosystem published on arXiv (2609.39090).",
+    },
+    {
+        "date": "2026 Release",
+        "headline": "Goldilocks automated k-point sampling framework for Quantum ESPRESSO published in <em>Digital Discovery</em>.",
+    },
+    {
+        "date": "2026 Discovery",
+        "headline": "uMOF universal benchmark database and ML interatomic potentials released for metal-organic frameworks.",
+    },
+    {
+        "date": "Software Ecosystem",
+        "headline": "aiida-mlip released, integrating janus-core workflows with full data provenance in AiiDA.",
+    },
+]
+
+
+def load_news(news_file=None):
+    """Load news items from pipe-separated CSV file (data/news.csv)."""
+    if news_file is None:
+        news_file = NEWS_FILE
+
+    target_path = Path(news_file)
+    if not target_path.exists():
+        alt_path = BASE_DIR / news_file
+        if alt_path.exists():
+            target_path = alt_path
+
+    news_items = []
+    if target_path.exists():
+        with open(target_path, "r", encoding="utf-8-sig") as f:
+            for line in f:
+                clean_line = line.strip()
+                if not clean_line or clean_line.startswith("#"):
+                    continue
+                parts = clean_line.split("|")
+                if len(parts) >= 2:
+                    date_tag = parts[0].strip()
+                    headline = "|".join(parts[1:]).strip()
+                else:
+                    date_tag = "News"
+                    headline = parts[0].strip()
+                if headline:
+                    news_items.append({"date": date_tag, "headline": headline})
+
+    return news_items if news_items else [dict(item) for item in DEFAULT_NEWS]
 
 
 def load_data():
@@ -165,9 +215,59 @@ def get_footer(full_markup=False):
 
 
 
-def generate_index_html(pubs=None, authors=None):
+def generate_index_html(pubs=None, authors=None, news=None):
     header_html = get_header("index")
     footer_html = get_footer()
+
+    if news is None:
+        news = load_news()
+
+    total_count = len(news)
+    latest_news = news[:4]
+    historical_news = news[4:]
+
+    def render_news_items(items):
+        rendered = []
+        for item in items:
+            date_val = item.get("date", "")
+            headline_val = item.get("headline", "")
+            rendered.append(f"""              <li class="news-item">
+                <div class="news-date">{date_val}</div>
+                <div class="news-headline">{headline_val}</div>
+              </li>""")
+        return "\n".join(rendered)
+
+    latest_news_html = render_news_items(latest_news)
+
+    if historical_news:
+        historical_news_html = render_news_items(historical_news)
+        news_section_html = f"""          <div class="news-box" style="margin-bottom: 1.5rem;" id="news-section">
+            <h3 class="news-box-title news-header-clickable" id="news-header-toggle" role="button" tabindex="0" aria-expanded="false" aria-controls="news-historical-wrap" title="Click to view all historical news" data-total-count="{total_count}">
+              <span><span>📢</span> Recent Highlights &amp; News</span>
+              <span class="news-toggle-indicator" id="news-toggle-indicator" aria-hidden="true">
+                <span id="news-toggle-badge" class="news-toggle-badge">History ({total_count})</span>
+                <span id="news-toggle-arrow" class="news-toggle-arrow">&darr;</span>
+              </span>
+            </h3>
+            <ul class="news-list" id="news-list">
+{latest_news_html}
+            </ul>
+            <div id="news-historical-wrap" class="news-historical-wrap" style="display: none;">
+              <div class="news-historical-divider">Historical Archive ({len(historical_news)} earlier milestones)</div>
+              <ul class="news-list news-historical-list" id="news-historical-list" style="margin-top: 0.85rem;">
+{historical_news_html}
+              </ul>
+            </div>
+          </div>"""
+    else:
+        news_section_html = f"""          <div class="news-box" style="margin-bottom: 1.5rem;" id="news-section">
+            <h3 class="news-box-title" id="news-header-toggle">
+              <span><span>📢</span> Recent Highlights &amp; News</span>
+            </h3>
+            <ul class="news-list" id="news-list">
+{latest_news_html}
+            </ul>
+          </div>"""
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -210,27 +310,7 @@ def generate_index_html(pubs=None, authors=None):
         </div>
 
         <div class="about-sidebar">
-          <div class="news-box" style="margin-bottom: 1.5rem;">
-            <h3 class="news-box-title"><span>📢</span> Recent Highlights &amp; News</h3>
-            <ul class="news-list">
-              <li class="news-item">
-                <div class="news-date">2026 Milestone</div>
-                <div class="news-headline">Roadmap for an atomistic machine-learning ecosystem published on arXiv (2609.39090).</div>
-              </li>
-              <li class="news-item">
-                <div class="news-date">2026 Release</div>
-                <div class="news-headline">Goldilocks automated k-point sampling framework for Quantum ESPRESSO published in <em>Digital Discovery</em>.</div>
-              </li>
-              <li class="news-item">
-                <div class="news-date">2026 Discovery</div>
-                <div class="news-headline">uMOF universal benchmark database and ML interatomic potentials released for metal-organic frameworks.</div>
-              </li>
-              <li class="news-item">
-                <div class="news-date">Software Ecosystem</div>
-                <div class="news-headline">aiida-mlip released, integrating janus-core workflows with full data provenance in AiiDA.</div>
-              </li>
-            </ul>
-          </div>
+{news_section_html}
 
           <div class="news-box">
             <h3 class="news-box-title"><span>🤝</span> Work With Us</h3>
@@ -1116,9 +1196,10 @@ def generate_research_html():
 
 
 def main():
-    print("Loading publications and authors...")
+    print("Loading publications, authors, and news...")
     pubs, authors = load_data()
-    print(f"Loaded {len(pubs)} publications and {len(authors)} authors.")
+    news = load_news()
+    print(f"Loaded {len(pubs)} publications, {len(authors)} authors, and {len(news)} news items.")
 
     header_content = generate_header_html()
     footer_content = generate_footer_html()
@@ -1128,7 +1209,7 @@ def main():
         "_includes/header.html": header_content,
         "footer.html": footer_content,
         "_includes/footer.html": footer_content,
-        "index.html": generate_index_html(pubs, authors),
+        "index.html": generate_index_html(pubs, authors, news),
         "publications.html": generate_publications_html(pubs, authors),
         "people.html": generate_people_html(),
         "research.html": generate_research_html(),

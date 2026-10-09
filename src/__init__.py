@@ -25,6 +25,7 @@ from .build_site import (
     get_footer,
     get_header,
     load_data,
+    load_news,
 )
 
 __all__ = [
@@ -50,5 +51,6 @@ __all__ = [
     "get_footer",
     "get_header",
     "load_data",
+    "load_news",
 ]
 

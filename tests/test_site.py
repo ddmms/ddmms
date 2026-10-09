@@ -334,6 +334,84 @@ class TestDDMMSSite(unittest.TestCase):
             content = (BASE_DIR / fname).read_text(encoding="utf-8")
             self.assertIn('<a href="index.html" class="brand-link"', content)
 
+    def test_load_news_csv_abstraction(self):
+        import tempfile
+        from build_site import load_news, DEFAULT_NEWS
+
+        # Test loading the actual data/news.csv
+        news = load_news()
+        self.assertIsInstance(news, list)
+        self.assertGreaterEqual(len(news), 4)
+        for item in news:
+            self.assertIn("date", item)
+            self.assertIn("headline", item)
+            self.assertTrue(item["date"])
+            self.assertTrue(item["headline"])
+
+        # Test pipe delimiter parsing with comments and custom file
+        with tempfile.NamedTemporaryFile("w+", encoding="utf-8", delete=False) as tf:
+            tf.write("# Comment line\n")
+            tf.write("2026 Tag|Headline with | another pipe inside\n")
+            tf.write("\n")
+            tf.write("Tag Only Headline\n")
+            tf_path = Path(tf.name)
+
+        try:
+            custom_news = load_news(tf_path)
+            self.assertEqual(len(custom_news), 2)
+            self.assertEqual(custom_news[0]["date"], "2026 Tag")
+            self.assertEqual(custom_news[0]["headline"], "Headline with | another pipe inside")
+            self.assertEqual(custom_news[1]["date"], "News")
+            self.assertEqual(custom_news[1]["headline"], "Tag Only Headline")
+        finally:
+            if tf_path.exists():
+                tf_path.unlink()
+
+        # Fallback to DEFAULT_NEWS on non-existent file
+        fallback = load_news(Path("/nonexistent/file.csv"))
+        self.assertEqual(len(fallback), len(DEFAULT_NEWS))
+
+    def test_news_display_latest_four_and_historical_toggle(self):
+        index_html = (BASE_DIR / "index.html").read_text(encoding="utf-8")
+        main_js = (BASE_DIR / "assets" / "js" / "main.js").read_text(encoding="utf-8")
+        style_css = (BASE_DIR / "assets" / "css" / "style.css").read_text(encoding="utf-8")
+
+        # News container and header toggle
+        self.assertIn('id="news-section"', index_html)
+        self.assertIn('id="news-header-toggle"', index_html)
+        self.assertIn('class="news-box-title news-header-clickable"', index_html)
+        self.assertIn('role="button"', index_html)
+        self.assertIn('tabindex="0"', index_html)
+        self.assertIn('aria-expanded="false"', index_html)
+        self.assertIn('aria-controls="news-historical-wrap"', index_html)
+        self.assertIn('data-total-count=', index_html)
+
+        # Primary list has exactly 4 items
+        news_list_match = re.search(r'<ul class="news-list" id="news-list">(.*?)</ul>', index_html, re.DOTALL)
+        self.assertIsNotNone(news_list_match, "Primary #news-list not found in index.html")
+        latest_items = re.findall(r'<li class="news-item">', news_list_match.group(1))
+        self.assertEqual(len(latest_items), 4, "Primary #news-list must display exactly the latest 4 items")
+
+        # Historical items hidden under #news-historical-wrap
+        self.assertIn('id="news-historical-wrap"', index_html)
+        self.assertIn('style="display: none;"', index_html)
+        self.assertIn('id="news-historical-list"', index_html)
+        hist_list_match = re.search(r'<ul class="news-list news-historical-list" id="news-historical-list"[^>]*>(.*?)</ul>', index_html, re.DOTALL)
+        self.assertIsNotNone(hist_list_match, "#news-historical-list not found")
+        hist_items = re.findall(r'<li class="news-item">', hist_list_match.group(1))
+        self.assertGreaterEqual(len(hist_items), 1, "Historical list should contain remaining items")
+
+        # JavaScript toggle logic
+        self.assertIn("initNewsToggle", main_js)
+        self.assertIn("news-header-toggle", main_js)
+        self.assertIn("news-historical-wrap", main_js)
+        self.assertIn("aria-expanded", main_js)
+
+        # CSS styling
+        self.assertIn(".news-header-clickable", style_css)
+        self.assertIn(".news-toggle-indicator", style_css)
+        self.assertIn(".news-historical-divider", style_css)
+
 
 if __name__ == "__main__":
     unittest.main()
