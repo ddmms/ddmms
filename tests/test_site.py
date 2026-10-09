@@ -279,6 +279,26 @@ class TestDDMMSSite(unittest.TestCase):
         self.assertIn("brand-link", header)
         self.assertIn("nav-desktop", header)
 
+    def test_header_template_file_reading(self):
+        import build_site
+        import tempfile
+        template_content = '<header class="custom-header">Custom Header</header>'
+        with tempfile.NamedTemporaryFile("w+", encoding="utf-8", delete=False, suffix=".html") as tf:
+            tf.write(template_content)
+            tf_path = Path(tf.name)
+
+        try:
+            rendered = build_site.generate_header_html(template_file=tf_path)
+            self.assertIn('<header class="custom-header">Custom Header</header>', rendered)
+        finally:
+            if tf_path.exists():
+                tf_path.unlink()
+
+    def test_header_template_missing_raises_error(self):
+        import build_site
+        with self.assertRaises(FileNotFoundError):
+            build_site.generate_header_html(template_file="/nonexistent/header_template.html")
+
     def test_all_pages_reuse_header(self):
         for fname in self.html_files:
             content = (BASE_DIR / fname).read_text(encoding="utf-8")
