@@ -18,7 +18,7 @@ def generate_footer_html() -> str:
             <li><a href="people.html">People</a></li>
             <li><a href="research.html">Research Themes</a></li>
             <li><a href="publications.html">Publications</a></li>
-            <li><a href="code.html">Code &amp; Software</a></li>
+            <li><a href="code.html">Software</a></li>
           </ul>
         </div>
 
