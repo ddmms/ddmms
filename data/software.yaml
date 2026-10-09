@@ -1,0 +1,127 @@
+subtitle: "Community-driven, well-tested, and reproducible scientific tools developed by the Data Driven Materials and Molecular Science group."
+
+packages:
+  - id: janus-core
+    name: "janus-core"
+    logo: "assets/logos/janus-core.svg"
+    badge:
+      text: "Python / ASE / CLI"
+      style: "background:#dbeafe; color:#1e40af;"
+    description: "Tools for materials modeling with machine-learned interatomic potentials (MACE, SevenNet, CHGNet, M3GNet). Provides a simple, robust CLI and Python API with full ASE calculator support."
+    install: "pip install janus-core"
+    features:
+      - "Single-point energies, forces, stress tensors, and Hessians"
+      - "Geometry optimization with FrechetCellFilter and BFGS/FIRE"
+      - "Molecular dynamics in NVE, NVT, and NPT ensembles with thermostat/barostat logging"
+      - "Automated equation of state (EOS) and full 6x6 elasticity stiffness tensors ($C_{ij}$)"
+      - "Phonon band structures &amp; DOS via Phonopy integration"
+      - "Minimum Energy Pathways with Climbing-Image NEB"
+    links:
+      - text: "GitHub Repository &rarr;"
+        url: "https://github.com/stfc/janus-core"
+      - text: "Documentation"
+        url: "https://stfc.github.io/janus-core"
+      - text: "PyPI"
+        url: "https://pypi.org/project/janus-core/"
+
+  - id: aiida-mlip
+    name: "aiida-mlip"
+    logo: "assets/logos/aiida-mlip.svg"
+    badge:
+      text: "AiiDA / Workflows"
+      style: "background:#fef3c7; color:#92400e;"
+    description: "An open-source AiiDA plugin integrating the janus-core library to manage automated workflows for machine learning interatomic potentials (MLIPs) with complete data provenance."
+    install: "pip install aiida-mlip"
+    features:
+      - "Full provenance graphs recording every calculation input, output, and potential parameter"
+      - "Automated single-point, geometry optimization, and molecular dynamics workchains"
+      - "Scalable execution across local workstations and remote HPC clusters"
+      - "Integrates directly with the wider AiiDA simulation and materials informatics ecosystem"
+    links:
+      - text: "GitHub Repository &rarr;"
+        url: "https://github.com/stfc/aiida-mlip"
+      - text: "Documentation"
+        url: "https://stfc.github.io/aiida-mlip"
+      - text: "PyPI"
+        url: "https://pypi.org/project/aiida-mlip/"
+
+  - id: aiidalab-mlip
+    name: "aiidalab-mlip"
+    icon: "🧪"
+    badge:
+      text: "AiiDAlab / Web GUI"
+      style: "background:#e0f2fe; color:#0369a1;"
+    description: "An interactive browser-based AiiDAlab application for configuring and running machine learning interatomic potential calculations with AiiDA and aiida-mlip."
+    install: "pip install aiidalab-mlip"
+    features:
+      - "Interactive web interface for submitting MLIP simulations without writing boilerplate code"
+      - "Structure loading from CIF, XYZ, and standard crystallography formats with 3D visualization"
+      - "Direct integration with pre-trained foundation models (MACE-MP and others)"
+      - "Interactive single-point energy, force evaluations, and geometry optimizations with full AiiDA provenance"
+    links:
+      - text: "GitHub Repository &rarr;"
+        url: "https://github.com/stfc/aiidalab-mlip"
+
+  - id: pack-mm
+    name: "pack-mm"
+    icon: "📦"
+    badge:
+      text: "Python / Packing / CLI"
+      style: "background:#fce7f3; color:#9d174d;"
+    description: "A Python package and CLI for building realistic atomistic and molecular systems for materials modeling, utilizing machine-learned interatomic potentials (via janus-core) with Monte Carlo and Molecular Dynamics routines."
+    install: "pip install pack-mm"
+    features:
+      - "Generates realistic packed starting configurations for complex liquids, interfaces, and porous frameworks"
+      - "Uses janus-core for MLIP interactions, with MACE-MP foundation models enabled by default"
+      - "High-performance packing leveraging Monte Carlo, Molecular Dynamics, and hybrid MC/MD relaxation"
+      - "Full Python API and intuitive CLI with support for both CPU and CUDA GPU acceleration"
+    links:
+      - text: "GitHub Repository &rarr;"
+        url: "https://github.com/ddmms/pack-mm"
+      - text: "Documentation"
+        url: "https://ddmms.github.io/pack-mm"
+      - text: "PyPI"
+        url: "https://pypi.org/project/pack-mm/"
+
+  - id: ml-peg
+    name: "ml-peg"
+    icon: "📊"
+    badge:
+      text: "Benchmark / Guide"
+      style: "background:#e0e7ff; color:#3730a3;"
+    description: "Machine Learning Performance and Extrapolation Guide. A comprehensive benchmarking framework and interactive performance guide to evaluate MLIPs across diverse chemical systems, extrapolations, and physical observables."
+    install: "git clone https://github.com/ddmms/ml-peg.git"
+    features:
+      - "Evaluates model performance beyond basic force/energy errors to actual physical stability"
+      - "Tests out-of-distribution generalization, extrapolation limits, and uncertainty quantification"
+      - "Interactive web dashboard for comparing foundation models and dataset baselines"
+      - "Open-source protocols for standardized community potential verification"
+    links:
+      - text: "GitHub Repository &rarr;"
+        url: "https://github.com/ddmms/ml-peg"
+      - text: "Live Platform &rarr;"
+        url: "https://ml-peg.stfc.ac.uk"
+
+  - id: goldilocks
+    name: "goldilocks"
+    icon: "🐻"
+    badge:
+      text: "PSDI &bull; goldilocks.ac.uk"
+      style: "background:#ecfdf5; color:#065f46;"
+    description: "A web application and library for automated generation of input files with optimised k-point meshes for Quantum ESPRESSO self-consistent field (SCF) calculations. Developed as part of the <strong>PSDI (Physical Sciences Data Infrastructure) Data to Knowledge</strong> initiative to eliminate computational waste and improve sustainability on national supercomputers like ARCHER2."
+    install: "pip install goldilocks"
+    features:
+      - "Part of the UKRI PSDI Data to Knowledge national infrastructure framework"
+      - "Predicts \"Goldilocks\" k-point convergence parameters to reduce compute waste and carbon footprint"
+      - "Dedicated project portal hosted at <a href=\"https://goldilocks.ac.uk\" target=\"_blank\" rel=\"noopener noreferrer\">goldilocks.ac.uk</a>"
+      - "Interactive web interface deployed on Streamlit Community Cloud"
+      - "Peer-reviewed and published in RSC <em>Digital Discovery</em> (2026, DOI: 10.1039/d5dd00565e)"
+    links:
+      - text: "goldilocks.ac.uk &rarr;"
+        url: "https://goldilocks.ac.uk"
+      - text: "GitHub Repo &rarr;"
+        url: "https://github.com/stfc/goldilocks"
+      - text: "Streamlit App"
+        url: "https://goldilocks.streamlit.app"
+      - text: "Paper (Digital Discovery)"
+        url: "https://doi.org/10.1039/d5dd00565e"

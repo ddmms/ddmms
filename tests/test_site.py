@@ -526,6 +526,59 @@ sections:
         with self.assertRaises(FileNotFoundError):
             load_people(Path("/nonexistent/file.yaml"))
 
+    def test_load_software_yaml(self):
+        import tempfile
+        from build_site import load_software, generate_code_html
+
+        # Test loading the actual data/software.yaml
+        software_data = load_software()
+        self.assertIsInstance(software_data, dict)
+        self.assertIn("packages", software_data)
+        pkg_ids = [p["id"] for p in software_data["packages"]]
+        expected_pkgs = ["janus-core", "aiida-mlip", "aiidalab-mlip", "pack-mm", "ml-peg", "goldilocks"]
+        for exp in expected_pkgs:
+            self.assertIn(exp, pkg_ids)
+
+        # Test custom YAML software loading
+        with tempfile.NamedTemporaryFile("w+", encoding="utf-8", delete=False, suffix=".yaml") as tsf:
+            tsf.write("""subtitle: "Custom software tools suite."
+packages:
+  - id: custom-tool
+    name: "custom-tool"
+    icon: "🚀"
+    badge:
+      text: "CLI / HPC"
+      style: "background:#eef2ff; color:#4338ca;"
+    description: "High speed materials generator."
+    install: "pip install custom-tool"
+    features:
+      - "Ultra fast batching"
+    links:
+      - text: "Repository"
+        url: "https://example.com/custom-tool"
+""")
+            tsf_path = Path(tsf.name)
+
+        try:
+            custom_data = load_software(tsf_path)
+            self.assertEqual(custom_data["subtitle"], "Custom software tools suite.")
+            self.assertEqual(len(custom_data["packages"]), 1)
+            self.assertEqual(custom_data["packages"][0]["name"], "custom-tool")
+
+            rendered_html = generate_code_html(custom_data)
+            self.assertIn("Custom software tools suite.", rendered_html)
+            self.assertIn("custom-tool", rendered_html)
+            self.assertIn("pip install custom-tool", rendered_html)
+            self.assertIn("Ultra fast batching", rendered_html)
+            self.assertIn("https://example.com/custom-tool", rendered_html)
+        finally:
+            if tsf_path.exists():
+                tsf_path.unlink()
+
+        # Non-existent file raises FileNotFoundError
+        with self.assertRaises(FileNotFoundError):
+            load_software(Path("/nonexistent/file.yaml"))
+
     def test_news_display_latest_four_and_historical_toggle(self):
         index_html = (BASE_DIR / "index.html").read_text(encoding="utf-8")
         main_js = (BASE_DIR / "assets" / "js" / "main.js").read_text(encoding="utf-8")

@@ -22,6 +22,7 @@ FOOTER_FILE = BASE_DIR / "footer.html"
 NEWS_FILE = BASE_DIR / "data" / "news.yaml"
 RESEARCH_FILE = BASE_DIR / "data" / "research.yaml"
 PEOPLE_FILE = BASE_DIR / "data" / "people.yaml"
+SOFTWARE_FILE = BASE_DIR / "data" / "software.yaml"
 
 # Import modular components with flexible path resolution
 try:
@@ -29,7 +30,7 @@ try:
     from .components.footer import generate_footer_html, get_footer
     from .components.news import load_news, generate_news_html
     from .components.index import generate_index_html, generate_about_html
-    from .components.code import generate_code_html
+    from .components.code import generate_code_html, generate_software_html, load_software
     from .components.publications import generate_publications_html
     from .components.people import generate_people_html, load_people
     from .components.research import generate_research_html, load_research
@@ -39,7 +40,7 @@ except (ImportError, ValueError):
         from components.footer import generate_footer_html, get_footer
         from components.news import load_news, generate_news_html
         from components.index import generate_index_html, generate_about_html
-        from components.code import generate_code_html
+        from components.code import generate_code_html, generate_software_html, load_software
         from components.publications import generate_publications_html
         from components.people import generate_people_html, load_people
         from components.research import generate_research_html, load_research
@@ -48,7 +49,7 @@ except (ImportError, ValueError):
         from src.components.footer import generate_footer_html, get_footer
         from src.components.news import load_news, generate_news_html
         from src.components.index import generate_index_html, generate_about_html
-        from src.components.code import generate_code_html
+        from src.components.code import generate_code_html, generate_software_html, load_software
         from src.components.publications import generate_publications_html
         from src.components.people import generate_people_html, load_people
         from src.components.research import generate_research_html, load_research
@@ -60,10 +61,12 @@ __all__ = [
     "NEWS_FILE",
     "RESEARCH_FILE",
     "PEOPLE_FILE",
+    "SOFTWARE_FILE",
     "load_data",
     "load_news",
     "load_research",
     "load_people",
+    "load_software",
     "generate_header_html",
     "get_header",
     "generate_footer_html",
@@ -71,6 +74,7 @@ __all__ = [
     "generate_index_html",
     "generate_about_html",
     "generate_code_html",
+    "generate_software_html",
     "generate_publications_html",
     "generate_people_html",
     "generate_research_html",
@@ -147,16 +151,17 @@ def load_data():
 
 def main():
     """Generate all site pages using modular components."""
-    print("Loading publications, authors, news, research, and people...")
+    print("Loading publications, authors, news, research, people, and software...")
     pubs, authors = load_data()
     news = load_news()
     research_data = load_research()
     people_data = load_people()
+    software_data = load_software()
     total_people = sum(len(s.get("members", [])) for s in people_data.get("sections", []))
     print(
         f"Loaded {len(pubs)} publications, {len(authors)} authors, "
         f"{len(news)} news items, {len(research_data.get('themes', []))} research themes, "
-        f"and {total_people} people records."
+        f"{total_people} people records, and {len(software_data.get('packages', []))} software packages."
     )
 
     header_content = generate_header_html()
@@ -169,7 +174,7 @@ def main():
         "publications.html": generate_publications_html(pubs, authors),
         "people.html": generate_people_html(people_data),
         "research.html": generate_research_html(research_data),
-        "code.html": generate_code_html(),
+        "code.html": generate_code_html(software_data),
         "news.html": generate_news_html(news),
     }
 

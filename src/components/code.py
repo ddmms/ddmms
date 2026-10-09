@@ -1,4 +1,8 @@
-"""Code & Software page component for the DDMMS website."""
+"""Code & Software page component and data loader for the DDMMS website."""
+
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Union
+import yaml
 
 try:
     from .header import get_header
@@ -11,11 +15,184 @@ except (ImportError, ValueError):
         from src.components.header import get_header
         from src.components.footer import get_footer
 
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+SOFTWARE_FILE = BASE_DIR / "data" / "software.yaml"
 
-def generate_code_html():
-    """Generate the code & software page HTML."""
+
+def load_software(software_file: Optional[Union[str, Path]] = None) -> Dict[str, Any]:
+    """Load software packages and showcase tools from a YAML file (default: data/software.yaml).
+
+    Requires a valid YAML file provided by the user. Raises FileNotFoundError
+    if the file cannot be located.
+    """
+    target_path: Optional[Path] = None
+    if software_file is not None:
+        cand = Path(software_file)
+        if cand.is_file():
+            target_path = cand
+        else:
+            alt = BASE_DIR / software_file
+            if alt.is_file():
+                target_path = alt
+            else:
+                raise FileNotFoundError(f"Software YAML file not found: '{software_file}'")
+    else:
+        for cand in (SOFTWARE_FILE, BASE_DIR / "data" / "software.yml"):
+            if cand.is_file():
+                target_path = cand
+                break
+        if target_path is None:
+            raise FileNotFoundError(f"Software YAML file not found at default location '{SOFTWARE_FILE}'")
+
+    content = target_path.read_text(encoding="utf-8-sig")
+    parsed = yaml.safe_load(content)
+
+    if not parsed:
+        return {"subtitle": "", "packages": []}
+
+    if isinstance(parsed, list):
+        return {"subtitle": "", "packages": parsed}
+
+    if isinstance(parsed, dict):
+        subtitle = str(parsed.get("subtitle") or "").strip()
+        packages = parsed.get("packages") or parsed.get("software") or parsed.get("tools") or []
+        return {
+            "subtitle": subtitle,
+            "packages": packages,
+        }
+
+    return {"subtitle": "", "packages": []}
+
+
+def generate_code_html(
+    software_data: Optional[Union[Dict[str, Any], List[Dict[str, Any]]]] = None,
+) -> str:
+    """Generate the code & software page HTML dynamically from software data."""
     header_html = get_header("code")
     footer_html = get_footer()
+
+    if software_data is None:
+        software_data = load_software()
+
+    subtitle = ""
+    packages: List[Dict[str, Any]] = []
+
+    if isinstance(software_data, dict):
+        subtitle = str(software_data.get("subtitle") or "").strip()
+        raw_packages = software_data.get("packages") or software_data.get("software") or software_data.get("tools") or []
+        if isinstance(raw_packages, list):
+            packages = raw_packages
+    elif isinstance(software_data, list):
+        packages = software_data
+
+    cards = []
+    for pkg in packages:
+        if not isinstance(pkg, dict):
+            continue
+        pkg_id = str(pkg.get("id") or "").strip()
+        name = str(pkg.get("name") or pkg.get("title") or pkg_id).strip()
+        logo = str(pkg.get("logo") or "").strip()
+        icon = str(pkg.get("icon") or "").strip()
+        description = str(pkg.get("description") or pkg.get("desc") or "").strip()
+        install_cmd = str(pkg.get("install") or pkg.get("command") or "").strip()
+        features = pkg.get("features") or []
+        links = pkg.get("links") or []
+
+        # Logo / Icon
+        if logo:
+            icon_html = f'<img src="{logo}" alt="{name} logo" class="code-card-logo" width="19" height="19"> '
+        elif icon:
+            icon_html = f'<span class="code-card-icon">{icon}</span> '
+        else:
+            icon_html = ''
+
+        # Badge
+        badge_data = pkg.get("badge")
+        badge_html = ""
+        if badge_data:
+            if isinstance(badge_data, dict):
+                badge_text = str(badge_data.get("text") or "").strip()
+                badge_style = str(badge_data.get("style") or "").strip()
+                style_attr = f' style="{badge_style}"' if badge_style else ''
+                badge_html = f'<span class="badge"{style_attr}>{badge_text}</span>'
+            elif isinstance(badge_data, str):
+                badge_html = f'<span class="badge">{badge_data.strip()}</span>'
+
+        # Install command snippet
+        install_box_html = ""
+        if install_cmd:
+            install_box_html = f"""          <div class="code-install-box">
+            <code>{install_cmd}</code>
+            <button class="copy-snippet-btn" data-code="{install_cmd}" title="Copy command">📋</button>
+          </div>"""
+
+        # Features
+        features_list_html = ""
+        if isinstance(features, list) and features:
+            items_str = "\n".join(f'            <li>{f}</li>' for f in features if str(f).strip())
+            features_list_html = f"""          <ul class="code-features-list">
+{items_str}
+          </ul>"""
+
+        # Links
+        links_html = ""
+        link_elements = []
+        if isinstance(links, list):
+            for lnk in links:
+                if not isinstance(lnk, dict):
+                    continue
+                lnk_text = str(lnk.get("text") or lnk.get("title") or "").strip()
+                lnk_url = str(lnk.get("url") or lnk.get("link") or "#").strip()
+                if not lnk_text or not lnk_url:
+                    continue
+                is_external = lnk_url.startswith("http://") or lnk_url.startswith("https://")
+                target_attr = ' target="_blank" rel="noopener noreferrer"' if is_external else ''
+                link_elements.append(
+                    f'<a href="{lnk_url}"{target_attr} class="person-link-btn">{lnk_text}</a>'
+                )
+
+        if link_elements:
+            links_str = "\n            ".join(link_elements)
+            links_html = f"""          <div class="person-links">
+            {links_str}
+          </div>"""
+
+        parts = [
+            f"""        <!-- {name} -->""",
+            """        <article class="code-card">""",
+            """          <div class="code-card-header">""",
+            """            <div class="code-title-group">""",
+            f"""              <h3>{icon_html}{name}</h3>""",
+            """            </div>""",
+        ]
+        if badge_html:
+            parts.append(f"""            {badge_html}""")
+        parts.append("""          </div>""")
+        if description:
+            parts.append(f"""          <p class="code-desc">\n            {description}\n          </p>""")
+        if install_box_html:
+            parts.append(install_box_html)
+        if features_list_html:
+            parts.append(features_list_html)
+        if links_html:
+            parts.append(links_html)
+        parts.append("""        </article>""")
+
+        cards.append("\n".join(parts))
+
+    cards_html = "\n\n".join(cards)
+
+    subtitle_html = ""
+    if subtitle:
+        subtitle_html = f"""      <div class="section-header" style="text-align: left; margin-bottom: 2.5rem;">
+        <p class="section-subtitle">
+          {subtitle}
+        </p>
+      </div>"""
+    else:
+        subtitle_html = """      <div class="section-header" style="text-align: left; margin-bottom: 2.5rem;">
+      </div>"""
+
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -34,181 +211,10 @@ def generate_code_html():
 
   <main id="main-content" style="padding-top: 3rem;">
     <div class="container">
-      <div class="section-header" style="text-align: left; margin-bottom: 2.5rem;">
-        <p class="section-subtitle">
-          Community-driven, well-tested, and reproducible scientific tools developed by the Data Driven Materials and Molecular Science group.
-        </p>
-      </div>
+{subtitle_html}
 
       <div class="code-grid" style="grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));">
-        <!-- janus-core -->
-        <article class="code-card">
-          <div class="code-card-header">
-            <div class="code-title-group">
-              <h3><img src="assets/logos/janus-core.svg" alt="janus-core logo" class="code-card-logo" width="19" height="19"> janus-core</h3>
-            </div>
-            <span class="badge" style="background:#dbeafe; color:#1e40af;">Python / ASE / CLI</span>
-          </div>
-          <p class="code-desc">
-            Tools for materials modeling with machine-learned interatomic potentials (MACE, SevenNet, CHGNet, M3GNet). Provides a simple, robust CLI and Python API with full ASE calculator support.
-          </p>
-          <div class="code-install-box">
-            <code>pip install janus-core</code>
-            <button class="copy-snippet-btn" data-code="pip install janus-core" title="Copy command">📋</button>
-          </div>
-          <ul class="code-features-list">
-            <li>Single-point energies, forces, stress tensors, and Hessians</li>
-            <li>Geometry optimization with FrechetCellFilter and BFGS/FIRE</li>
-            <li>Molecular dynamics in NVE, NVT, and NPT ensembles with thermostat/barostat logging</li>
-            <li>Automated equation of state (EOS) and full 6x6 elasticity stiffness tensors ($C_{{ij}}$)</li>
-            <li>Phonon band structures &amp; DOS via Phonopy integration</li>
-            <li>Minimum Energy Pathways with Climbing-Image NEB</li>
-          </ul>
-          <div class="person-links">
-            <a href="https://github.com/stfc/janus-core" target="_blank" rel="noopener noreferrer" class="person-link-btn">GitHub Repository &rarr;</a>
-            <a href="https://stfc.github.io/janus-core" target="_blank" rel="noopener noreferrer" class="person-link-btn">Documentation</a>
-            <a href="https://pypi.org/project/janus-core/" target="_blank" rel="noopener noreferrer" class="person-link-btn">PyPI</a>
-          </div>
-        </article>
-
-        <!-- aiida-mlip -->
-        <article class="code-card">
-          <div class="code-card-header">
-            <div class="code-title-group">
-              <h3><img src="assets/logos/aiida-mlip.svg" alt="aiida-mlip logo" class="code-card-logo" width="19" height="19"> aiida-mlip</h3>
-            </div>
-            <span class="badge" style="background:#fef3c7; color:#92400e;">AiiDA / Workflows</span>
-          </div>
-          <p class="code-desc">
-            An open-source AiiDA plugin integrating the janus-core library to manage automated workflows for machine learning interatomic potentials (MLIPs) with complete data provenance.
-          </p>
-          <div class="code-install-box">
-            <code>pip install aiida-mlip</code>
-            <button class="copy-snippet-btn" data-code="pip install aiida-mlip" title="Copy command">📋</button>
-          </div>
-          <ul class="code-features-list">
-            <li>Full provenance graphs recording every calculation input, output, and potential parameter</li>
-            <li>Automated single-point, geometry optimization, and molecular dynamics workchains</li>
-            <li>Scalable execution across local workstations and remote HPC clusters</li>
-            <li>Integrates directly with the wider AiiDA simulation and materials informatics ecosystem</li>
-          </ul>
-          <div class="person-links">
-            <a href="https://github.com/stfc/aiida-mlip" target="_blank" rel="noopener noreferrer" class="person-link-btn">GitHub Repository &rarr;</a>
-            <a href="https://stfc.github.io/aiida-mlip" target="_blank" rel="noopener noreferrer" class="person-link-btn">Documentation</a>
-            <a href="https://pypi.org/project/aiida-mlip/" target="_blank" rel="noopener noreferrer" class="person-link-btn">PyPI</a>
-          </div>
-        </article>
-
-        <!-- aiidalab-mlip -->
-        <article class="code-card">
-          <div class="code-card-header">
-            <div class="code-title-group">
-              <h3><span class="code-card-icon">🧪</span> aiidalab-mlip</h3>
-            </div>
-            <span class="badge" style="background:#e0f2fe; color:#0369a1;">AiiDAlab / Web GUI</span>
-          </div>
-          <p class="code-desc">
-            An interactive browser-based AiiDAlab application for configuring and running machine learning interatomic potential calculations with AiiDA and aiida-mlip.
-          </p>
-          <div class="code-install-box">
-            <code>pip install aiidalab-mlip</code>
-            <button class="copy-snippet-btn" data-code="pip install aiidalab-mlip" title="Copy command">📋</button>
-          </div>
-          <ul class="code-features-list">
-            <li>Interactive web interface for submitting MLIP simulations without writing boilerplate code</li>
-            <li>Structure loading from CIF, XYZ, and standard crystallography formats with 3D visualization</li>
-            <li>Direct integration with pre-trained foundation models (MACE-MP and others)</li>
-            <li>Interactive single-point energy, force evaluations, and geometry optimizations with full AiiDA provenance</li>
-          </ul>
-          <div class="person-links">
-            <a href="https://github.com/stfc/aiidalab-mlip" target="_blank" rel="noopener noreferrer" class="person-link-btn">GitHub Repository &rarr;</a>
-          </div>
-        </article>
-
-        <!-- pack-mm -->
-        <article class="code-card">
-          <div class="code-card-header">
-            <div class="code-title-group">
-              <h3><span class="code-card-icon">📦</span> pack-mm</h3>
-            </div>
-            <span class="badge" style="background:#fce7f3; color:#9d174d;">Python / Packing / CLI</span>
-          </div>
-          <p class="code-desc">
-            A Python package and CLI for building realistic atomistic and molecular systems for materials modeling, utilizing machine-learned interatomic potentials (via janus-core) with Monte Carlo and Molecular Dynamics routines.
-          </p>
-          <div class="code-install-box">
-            <code>pip install pack-mm</code>
-            <button class="copy-snippet-btn" data-code="pip install pack-mm" title="Copy command">📋</button>
-          </div>
-          <ul class="code-features-list">
-            <li>Generates realistic packed starting configurations for complex liquids, interfaces, and porous frameworks</li>
-            <li>Uses janus-core for MLIP interactions, with MACE-MP foundation models enabled by default</li>
-            <li>High-performance packing leveraging Monte Carlo, Molecular Dynamics, and hybrid MC/MD relaxation</li>
-            <li>Full Python API and intuitive CLI with support for both CPU and CUDA GPU acceleration</li>
-          </ul>
-          <div class="person-links">
-            <a href="https://github.com/ddmms/pack-mm" target="_blank" rel="noopener noreferrer" class="person-link-btn">GitHub Repository &rarr;</a>
-            <a href="https://ddmms.github.io/pack-mm" target="_blank" rel="noopener noreferrer" class="person-link-btn">Documentation</a>
-            <a href="https://pypi.org/project/pack-mm/" target="_blank" rel="noopener noreferrer" class="person-link-btn">PyPI</a>
-          </div>
-        </article>
-
-        <!-- ml-peg -->
-        <article class="code-card">
-          <div class="code-card-header">
-            <div class="code-title-group">
-              <h3><span class="code-card-icon">📊</span> ml-peg</h3>
-            </div>
-            <span class="badge" style="background:#e0e7ff; color:#3730a3;">Benchmark / Guide</span>
-          </div>
-          <p class="code-desc">
-            Machine Learning Performance and Extrapolation Guide. A comprehensive benchmarking framework and interactive performance guide to evaluate MLIPs across diverse chemical systems, extrapolations, and physical observables.
-          </p>
-          <div class="code-install-box">
-            <code>git clone https://github.com/ddmms/ml-peg.git</code>
-            <button class="copy-snippet-btn" data-code="git clone https://github.com/ddmms/ml-peg.git" title="Copy command">📋</button>
-          </div>
-          <ul class="code-features-list">
-            <li>Evaluates model performance beyond basic force/energy errors to actual physical stability</li>
-            <li>Tests out-of-distribution generalization, extrapolation limits, and uncertainty quantification</li>
-            <li>Interactive web dashboard for comparing foundation models and dataset baselines</li>
-            <li>Open-source protocols for standardized community potential verification</li>
-          </ul>
-          <div class="person-links">
-            <a href="https://github.com/ddmms/ml-peg" target="_blank" rel="noopener noreferrer" class="person-link-btn">GitHub Repository &rarr;</a>
-            <a href="https://ml-peg.stfc.ac.uk" target="_blank" rel="noopener noreferrer" class="person-link-btn">Live Platform &rarr;</a>
-          </div>
-        </article>
-
-        <!-- goldilocks -->
-        <article class="code-card">
-          <div class="code-card-header">
-            <div class="code-title-group">
-              <h3><span class="code-card-icon">🐻</span> goldilocks</h3>
-            </div>
-            <span class="badge" style="background:#ecfdf5; color:#065f46;">PSDI &bull; goldilocks.ac.uk</span>
-          </div>
-          <p class="code-desc">
-            A web application and library for automated generation of input files with optimised k-point meshes for Quantum ESPRESSO self-consistent field (SCF) calculations. Developed as part of the <strong>PSDI (Physical Sciences Data Infrastructure) Data to Knowledge</strong> initiative to eliminate computational waste and improve sustainability on national supercomputers like ARCHER2.
-          </p>
-          <div class="code-install-box">
-            <code>pip install goldilocks</code>
-            <button class="copy-snippet-btn" data-code="pip install goldilocks" title="Copy command">📋</button>
-          </div>
-          <ul class="code-features-list">
-            <li>Part of the UKRI PSDI Data to Knowledge national infrastructure framework</li>
-            <li>Predicts "Goldilocks" k-point convergence parameters to reduce compute waste and carbon footprint</li>
-            <li>Dedicated project portal hosted at <a href="https://goldilocks.ac.uk" target="_blank" rel="noopener noreferrer">goldilocks.ac.uk</a></li>
-            <li>Interactive web interface deployed on Streamlit Community Cloud</li>
-            <li>Peer-reviewed and published in RSC <em>Digital Discovery</em> (2026, DOI: 10.1039/d5dd00565e)</li>
-          </ul>
-          <div class="person-links">
-            <a href="https://goldilocks.ac.uk" target="_blank" rel="noopener noreferrer" class="person-link-btn">goldilocks.ac.uk &rarr;</a>
-            <a href="https://github.com/stfc/goldilocks" target="_blank" rel="noopener noreferrer" class="person-link-btn">GitHub Repo &rarr;</a>
-            <a href="https://goldilocks.streamlit.app" target="_blank" rel="noopener noreferrer" class="person-link-btn">Streamlit App</a>
-            <a href="https://doi.org/10.1039/d5dd00565e" target="_blank" rel="noopener noreferrer" class="person-link-btn">Paper (Digital Discovery)</a>
-          </div>
-        </article>
+{cards_html}
       </div>
     </div>
   </main>
@@ -218,3 +224,5 @@ def generate_code_html():
 </body>
 </html>"""
 
+
+generate_software_html = generate_code_html
