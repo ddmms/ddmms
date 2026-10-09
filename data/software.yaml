@@ -106,23 +106,19 @@ packages:
     name: "goldilocks"
     icon: "🐻"
     badge:
-      text: "PSDI &bull; goldilocks.ac.uk"
+      text: "goldilocks.ac.uk"
       style: "background:#ecfdf5; color:#065f46;"
     description: "A web application and library for automated generation of input files with optimised k-point meshes for Quantum ESPRESSO self-consistent field (SCF) calculations. Developed as part of the <strong>PSDI (Physical Sciences Data Infrastructure) Data to Knowledge</strong> initiative to eliminate computational waste and improve sustainability on national supercomputers like ARCHER2."
     install: "pip install goldilocks"
     features:
-      - "Part of the UKRI PSDI Data to Knowledge national infrastructure framework"
       - "Predicts \"Goldilocks\" k-point convergence parameters to reduce compute waste and carbon footprint"
       - "Dedicated project portal hosted at <a href=\"https://goldilocks.ac.uk\" target=\"_blank\" rel=\"noopener noreferrer\">goldilocks.ac.uk</a>"
-      - "Interactive web interface deployed on Streamlit Community Cloud"
       - "Peer-reviewed and published in RSC <em>Digital Discovery</em> (2026, DOI: 10.1039/d5dd00565e)"
     links:
       - text: "goldilocks.ac.uk &rarr;"
         url: "https://goldilocks.ac.uk"
       - text: "GitHub Repo &rarr;"
         url: "https://github.com/stfc/goldilocks"
-      - text: "Streamlit App"
-        url: "https://goldilocks.streamlit.app"
       - text: "Paper (Digital Discovery)"
         url: "https://doi.org/10.1039/d5dd00565e"
 
