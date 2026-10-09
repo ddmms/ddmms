@@ -63,7 +63,12 @@ class TestDDMMSSite(unittest.TestCase):
             "janus-core.svg",
             "aiida-mlip.svg",
             "janus-core.png",
-            "aiida-mlip.png"
+            "aiida-mlip.png",
+            "pack-mm.svg",
+            "pack-mm-light-text.svg",
+            "pack-mm-light-notext.svg",
+            "pack-mm-dark-text.svg",
+            "pack-mm-dark-notext.svg",
         ]
         logos_dir = BASE_DIR / "assets" / "logos"
         for logo in expected_logos:
@@ -74,6 +79,7 @@ class TestDDMMSSite(unittest.TestCase):
         code_html = (BASE_DIR / "code.html").read_text(encoding="utf-8")
         self.assertIn("assets/logos/janus-core.svg", code_html)
         self.assertIn("assets/logos/aiida-mlip.svg", code_html)
+        self.assertIn("assets/logos/pack-mm.svg", code_html)
 
     def test_publications_json_validity(self):
         p = BASE_DIR / "publications.json"

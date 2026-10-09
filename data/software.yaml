@@ -64,7 +64,7 @@ packages:
 
   - id: pack-mm
     name: "pack-mm"
-    icon: "📦"
+    logo: "assets/logos/pack-mm.svg"
     badge:
       text: "Python / Packing / CLI"
       style: "background:#fce7f3; color:#9d174d;"
