@@ -274,21 +274,21 @@ def generate_index_html(pubs=None, authors=None, news=None):
     if historical_news:
         historical_news_html = render_news_items(historical_news)
         news_section_html = f"""          <div class="news-box" style="margin-bottom: 1.5rem;" id="news-section">
-            <h3 class="news-box-title news-header-clickable" id="news-header-toggle" role="button" tabindex="0" aria-expanded="false" aria-controls="news-historical-wrap" title="Click to view all {total_count} news updates" data-total-count="{total_count}">
+            <h3 class="news-box-title news-header-clickable" id="news-header-toggle" role="button" tabindex="0" aria-expanded="false" aria-controls="news-historical-wrap" title="Click to view all {total_count} news updates or open history page" data-total-count="{total_count}">
               <span><span>📢</span> Recent Highlights &amp; News</span>
-              <span class="news-toggle-indicator" id="news-toggle-indicator" aria-hidden="true">
-                <span id="news-toggle-badge" class="news-toggle-badge">View all ({total_count})</span>
-                <span id="news-toggle-arrow" class="news-toggle-arrow">&darr;</span>
-              </span>
+              <a href="news.html" class="news-toggle-indicator" id="news-history-link" title="Open complete historical news page">
+                <span id="news-toggle-badge" class="news-toggle-badge">All News &amp; History ({total_count})</span>
+                <span id="news-toggle-arrow" class="news-toggle-arrow">&rarr;</span>
+              </a>
             </h3>
             <ul class="news-list" id="news-list">
 {latest_news_html}
             </ul>
             <div class="news-toggle-bar">
-              <button type="button" class="news-expand-btn" id="news-expand-btn" aria-expanded="false" aria-controls="news-historical-wrap" title="Toggle full news archive">
-                <span id="news-expand-btn-text">View all {total_count} news updates</span>
-                <span id="news-expand-btn-icon" class="news-expand-btn-icon">&darr;</span>
-              </button>
+              <a href="news.html" class="news-expand-btn" id="news-expand-btn" title="Open complete historical news archive">
+                <span id="news-expand-btn-text">View all {total_count} news updates &amp; history archive</span>
+                <span id="news-expand-btn-icon" class="news-expand-btn-icon">&rarr;</span>
+              </a>
             </div>
             <div id="news-historical-wrap" class="news-historical-wrap" style="display: none;">
               <div class="news-historical-divider">Historical Archive ({len(historical_news)} earlier milestones)</div>
@@ -1233,6 +1233,78 @@ def generate_research_html():
 </html>"""
 
 
+def generate_news_html(news=None):
+    """Generate the dedicated historical news & milestones archive page."""
+    header_html = get_header("about")
+    footer_html = get_footer()
+
+    if news is None:
+        news = load_news()
+
+    news_cards = []
+    for item in news:
+        date_val = item.get("date", "")
+        headline_val = item.get("headline", "")
+        link_val = (item.get("link") or "").strip()
+        if link_val:
+            is_external = link_val.startswith("http://") or link_val.startswith("https://")
+            target_attr = ' target="_blank" rel="noopener noreferrer"' if is_external else ''
+            headline_html = f'<a href="{link_val}" class="news-headline-link"{target_attr}>{headline_val} <span class="news-link-arrow" aria-hidden="true">&rarr;</span></a>'
+            action_btn = f'<a href="{link_val}" class="btn btn-sm btn-outline"{target_attr} style="margin-top: 0.65rem; display: inline-flex; align-items: center; gap: 0.35rem;">Visit Resource &rarr;</a>'
+        else:
+            headline_html = headline_val
+            action_btn = ''
+
+        news_cards.append(f"""        <article class="news-card-archive" style="background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.5rem; box-shadow: var(--shadow-sm); position: relative; border-left: 4px solid var(--accent-teal);">
+          <div class="news-date">{date_val}</div>
+          <div class="news-headline" style="font-size: 1.05rem; line-height: 1.5; margin-top: 0.35rem;">{headline_html}</div>
+          {f'<div style="margin-top: 0.5rem;">{action_btn}</div>' if action_btn else ''}
+        </article>""")
+
+    news_cards_html = "\n".join(news_cards)
+
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>News &amp; Milestones | Data Driven Materials and Molecular Science</title>
+  <meta name="description" content="All historical news, publications, software releases, and milestones from the Data Driven Materials and Molecular Science group at STFC Daresbury Laboratory.">
+  <link rel="icon" type="image/svg+xml" href="assets/logos/ddmms.svg">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+</head>
+<body>
+{header_html}
+
+  <main id="main-content" style="padding-top: 3rem;">
+    <div class="container">
+      <div class="section-header" style="text-align: left; margin-bottom: 2.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <h1 class="section-title">News &amp; Historical Milestones</h1>
+            <p class="section-subtitle">
+              Chronological archive of research milestones, software releases, funded grants, and community workshops.
+            </p>
+          </div>
+          <a href="index.html" class="btn btn-outline" style="align-self: center;">&larr; Back to About</a>
+        </div>
+      </div>
+
+      <div class="news-archive-grid" style="display: flex; flex-direction: column; gap: 1.25rem; max-width: 860px;">
+{news_cards_html}
+      </div>
+    </div>
+  </main>
+
+{footer_html}
+  <script src="assets/js/main.js"></script>
+</body>
+</html>"""
+
+
 def main():
     print("Loading publications, authors, and news...")
     pubs, authors = load_data()
@@ -1252,6 +1324,7 @@ def main():
         "people.html": generate_people_html(),
         "research.html": generate_research_html(),
         "code.html": generate_code_html(),
+        "news.html": generate_news_html(news),
     }
 
     for filename, content in pages.items():

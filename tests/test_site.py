@@ -30,7 +30,8 @@ class TestDDMMSSite(unittest.TestCase):
             "publications.html",
             "people.html",
             "research.html",
-            "code.html"
+            "code.html",
+            "news.html"
         ]
 
 
@@ -408,11 +409,20 @@ class TestDDMMSSite(unittest.TestCase):
         self.assertIn('aria-controls="news-historical-wrap"', index_html)
         self.assertIn('data-total-count=', index_html)
 
-        # Prominent toggle expand button below latest news
+        # Prominent toggle expand button and history page link to news.html
         self.assertIn('id="news-expand-btn"', index_html)
         self.assertIn('class="news-toggle-bar"', index_html)
-        self.assertIn('class="news-expand-btn"', index_html)
+        self.assertIn('href="news.html"', index_html)
+        self.assertIn('id="news-history-link"', index_html)
         self.assertIn('id="news-expand-btn-text"', index_html)
+
+        # Dedicated news.html historical page exists and renders all milestones
+        news_html_path = BASE_DIR / "news.html"
+        self.assertTrue(news_html_path.exists(), "news.html page must exist")
+        news_html_content = news_html_path.read_text(encoding="utf-8")
+        self.assertIn("News &amp; Historical Milestones", news_html_content)
+        self.assertIn("Roadmap for an atomistic machine-learning ecosystem", news_html_content)
+        self.assertIn("Establishment of the Data Driven Materials and Molecular Science group", news_html_content)
 
         # Primary list has exactly 4 items
         news_list_match = re.search(r'<ul class="news-list" id="news-list">(.*?)</ul>', index_html, re.DOTALL)
@@ -439,16 +449,17 @@ class TestDDMMSSite(unittest.TestCase):
         # JavaScript toggle logic handles both header and button
         self.assertIn("initNewsToggle", main_js)
         self.assertIn("news-header-toggle", main_js)
-        self.assertIn("news-expand-btn", main_js)
         self.assertIn("news-historical-wrap", main_js)
-        self.assertIn("aria-expanded", main_js)
 
-        # CSS styling
+        # CSS styling: category uses distinct teal color, different from primary blue hyperlink
+        self.assertIn(".news-date", style_css)
+        self.assertIn("var(--accent-teal)", style_css)
+        self.assertIn(".news-headline-link", style_css)
+        self.assertIn("var(--primary)", style_css)
         self.assertIn(".news-header-clickable", style_css)
         self.assertIn(".news-toggle-indicator", style_css)
         self.assertIn(".news-toggle-bar", style_css)
         self.assertIn(".news-expand-btn", style_css)
-        self.assertIn(".news-headline-link", style_css)
         self.assertIn(".news-historical-divider", style_css)
 
 
