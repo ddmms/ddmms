@@ -1,0 +1,147 @@
+"""Research page component for the DDMMS website."""
+
+try:
+    from .header import get_header
+    from .footer import get_footer
+except (ImportError, ValueError):
+    try:
+        from components.header import get_header
+        from components.footer import get_footer
+    except ImportError:
+        from src.components.header import get_header
+        from src.components.footer import get_footer
+
+
+def generate_research_html():
+    """Generate the research page HTML."""
+    header_html = get_header("research")
+    footer_html = get_footer()
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Research | Data Driven Materials and Molecular Science</title>
+  <meta name="description" content="Research areas of the Data Driven Materials and Molecular Science group: MLIPs, MOFs, molten salts, and automated workflows.">
+  <link rel="icon" type="image/svg+xml" href="assets/logos/ddmms.svg">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+</head>
+<body>
+{header_html}
+
+  <main id="main-content" style="padding-top: 3rem;">
+    <div class="container">
+      <div class="section-header" style="text-align: left; margin-bottom: 2.5rem;">
+        <p class="section-subtitle">
+          From quantum-level potential energy surfaces to supercomputing molecular dynamics and macroscopic thermal transport.
+        </p>
+      </div>
+
+      <div class="research-grid" style="grid-template-columns: 1fr; gap: 2.5rem;">
+        <!-- Theme 1 -->
+        <article class="research-card">
+          <div class="research-card-top">
+            <span class="research-tag">Theme 1 &bull; Physics-Informed AI</span>
+            <h2 class="research-card-title">Foundation Machine-Learned Interatomic Potentials (MLIPs)</h2>
+            <p class="research-card-desc">
+              Accurate modeling of chemical reactivity, phase transitions, and defect dynamics requires potential energy surfaces that respect rotational, translational, and permutational invariances. We develop and extend equivariant graph neural network potentials such as MACE, SevenNet, and CHGNet.
+            </p>
+            <p class="research-card-desc" style="margin-top: 0.5rem;">
+              Key research topics include the incorporation of polarisable long-range electrostatics (MACE-POLAR), optimal active-learning criteria that balance coverage and model uncertainty, and cross-learning strategies connecting molecular, surface, and inorganic solid phases.
+            </p>
+          </div>
+          <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+            <a href="publications.html?search=MLIP" class="btn btn-outline">Explore Related Publications &rarr;</a>
+          </div>
+        </article>
+
+        <!-- Theme 2 -->
+        <article class="research-card">
+          <div class="research-card-top">
+            <span class="research-tag">Theme 2 &bull; Porous Materials</span>
+            <h2 class="research-card-title">Metal-Organic Frameworks &amp; Nanoporous Networks</h2>
+            <p class="research-card-desc">
+              Metal-Organic Frameworks (MOFs) exhibit remarkable chemical modularity, ultra-high surface areas, and tunable mechanical properties such as negative thermal expansion (NTE). We curate the uMOF benchmark database and build dedicated ML potentials that enable high-throughput phonon calculations, thermodynamic stability screening, and gas adsorption modeling.
+            </p>
+          </div>
+          <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+            <a href="publications.html?search=MOF" class="btn btn-outline">Explore Related Publications &rarr;</a>
+          </div>
+        </article>
+
+        <!-- Theme 3 -->
+        <article class="research-card">
+          <div class="research-card-top">
+            <span class="research-tag">Theme 3 &bull; Liquid State &amp; Clean Energy</span>
+            <h2 class="research-card-title">Complex Fluids, Molten Salts &amp; Transport Phenomena</h2>
+            <p class="research-card-desc">
+              Molten salts serve as critical thermal storage media and coolants in next-generation nuclear and concentrated solar energy systems. We perform molecular dynamics simulations to quantify self-diffusion, ionic conductivity, shear viscosity, and thermal conductivity from first principles, testing fundamental theoretical bounds and experimental calibrations.
+            </p>
+          </div>
+          <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+            <a href="publications.html?search=salt" class="btn btn-outline">Explore Related Publications &rarr;</a>
+          </div>
+        </article>
+
+        <!-- Theme 4 -->
+        <article class="research-card">
+          <div class="research-card-top">
+            <span class="research-tag">Theme 4 &bull; Autonomous Workflows</span>
+            <h2 class="research-card-title">High-Throughput Simulation Workflows with janus-core &amp; aiida-mlip</h2>
+            <p class="research-card-desc">
+              Bridging the gap between interatomic potentials and scientific discovery requires seamless automation. With janus-core and the aiida-mlip plugin, we provide unified pipelines with full data provenance for geometry relaxation (BFGS, FIRE, FrechetCellFilter), equation of state fitting, full 6x6 elasticity stiffness tensors ($C_{{ij}}$), and climbing image nudged elastic band (CI-NEB) minimum energy pathways.
+            </p>
+          </div>
+          <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+            <a href="code.html" class="btn btn-primary">Read Software Documentation &rarr;</a>
+          </div>
+        </article>
+
+        <!-- Theme 5 -->
+        <article class="research-card">
+          <div class="research-card-top">
+            <span class="research-tag">Theme 5 &bull; PSDI Data to Knowledge</span>
+            <h2 class="research-card-title">Sustainable DFT &amp; k-Point Optimization (Goldilocks)</h2>
+            <p class="research-card-desc">
+              Computational electronic structure calculations represent a major fraction of workloads on national supercomputing services like ARCHER2. In collaboration with the <strong>PSDI (Physical Sciences Data Infrastructure) Data to Knowledge</strong> initiative, we develop <a href="https://goldilocks.ac.uk" target="_blank" rel="noopener noreferrer"><strong>Goldilocks</strong> (goldilocks.ac.uk)</a> to predict optimal, sustainable k-point convergence parameters for Quantum ESPRESSO self-consistent field (SCF) calculations.
+            </p>
+            <p class="research-card-desc" style="margin-top: 0.5rem;">
+              By balancing numerical accuracy with computational efficiency—never under-converged, never computationally wasteful—Goldilocks eliminates compute and electricity waste while preserving target accuracy. Peer-reviewed in RSC <em>Digital Discovery</em> (2026, DOI: 10.1039/d5dd00565e).
+            </p>
+          </div>
+          <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <a href="https://goldilocks.ac.uk" target="_blank" rel="noopener noreferrer" class="btn btn-primary">goldilocks.ac.uk &rarr;</a>
+            <a href="https://github.com/stfc/goldilocks" target="_blank" rel="noopener noreferrer" class="btn btn-outline">GitHub &rarr;</a>
+            <a href="code.html" class="btn btn-outline">Explore in Software &rarr;</a>
+          </div>
+        </article>
+
+        <!-- Theme 6 -->
+        <article class="research-card">
+          <div class="research-card-top">
+            <span class="research-tag">Theme 6 &bull; MLIP Benchmarking &amp; Validation</span>
+            <h2 class="research-card-title">Machine Learning Performance and Extrapolation Guide (ML-PEG)</h2>
+            <p class="research-card-desc">
+              Evaluating machine-learned interatomic potentials requires going beyond simple training force and energy RMSE errors to evaluate true physical stability, phase behavior, and uncertainty quantification. The <strong>ML-PEG</strong> benchmarking platform establishes rigorous evaluation protocols to stress-test MLIPs across diverse chemical systems, out-of-distribution scenarios, and extrapolation limits.
+            </p>
+            <p class="research-card-desc" style="margin-top: 0.5rem;">
+              Alongside standardized community benchmarks, ML-PEG provides an interactive web dashboard for transparently comparing foundation models and dataset baselines across materials discovery tasks.
+            </p>
+          </div>
+          <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <a href="https://ml-peg.stfc.ac.uk" target="_blank" rel="noopener noreferrer" class="btn btn-primary">ml-peg.stfc.ac.uk &rarr;</a>
+            <a href="https://github.com/ddmms/ml-peg" target="_blank" rel="noopener noreferrer" class="btn btn-outline">GitHub &rarr;</a>
+            <a href="code.html" class="btn btn-outline">Explore in Software &rarr;</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </main>
+
+{footer_html}
+  <script src="assets/js/main.js"></script>
+</body>
+</html>"""
