@@ -43,10 +43,9 @@ class TestDDMMSSite(unittest.TestCase):
 
     def test_required_nav_menu_items(self):
         required_items = ["about", "people", "research", "publications", "software"]
-        for fname in ["header.html", "_includes/header.html"]:
-            content = (BASE_DIR / fname).read_text(encoding="utf-8").lower()
-            for item in required_items:
-                self.assertIn(item, content, f"Menu item '{item}' missing from {fname}")
+        content = (BASE_DIR / "header.html").read_text(encoding="utf-8").lower()
+        for item in required_items:
+            self.assertIn(item, content, f"Menu item '{item}' missing from header.html")
 
     def test_mobile_friendly_viewport(self):
         viewport_regex = re.compile(r'<meta\s+name=["\']viewport["\']\s+content=["\'][^"\']*width=device-width[^"\']*["\']', re.IGNORECASE)
@@ -156,7 +155,7 @@ class TestDDMMSSite(unittest.TestCase):
         self.assertIn("assets/images/junwen_yin.jpeg", (BASE_DIR / "people.html").read_text(encoding="utf-8"))
 
     def test_separate_navigation_links(self):
-        for fname in ["header.html", "_includes/header.html", "footer.html", "_includes/footer.html"]:
+        for fname in ["header.html", "footer.html"]:
             content = (BASE_DIR / fname).read_text(encoding="utf-8")
             self.assertIn('href="index.html"', content, f"Separate link index.html missing in {fname}")
             self.assertIn('href="people.html"', content, f"Separate link people.html missing in {fname}")
@@ -165,10 +164,9 @@ class TestDDMMSSite(unittest.TestCase):
             self.assertIn('href="code.html"', content, f"Separate link code.html missing in {fname}")
 
     def test_no_software_and_feeds_in_footer(self):
-        for fname in ["footer.html", "_includes/footer.html"]:
-            content = (BASE_DIR / fname).read_text(encoding="utf-8")
-            self.assertNotIn("Software &amp; Feeds", content, f"Found Software & Feeds in {fname}")
-            self.assertNotIn("Software & Feeds", content, f"Found Software & Feeds in {fname}")
+        content = (BASE_DIR / "footer.html").read_text(encoding="utf-8")
+        self.assertNotIn("Software &amp; Feeds", content, "Found Software & Feeds in footer.html")
+        self.assertNotIn("Software & Feeds", content, "Found Software & Feeds in footer.html")
 
     def test_css_and_js_assets_exist(self):
         self.assertTrue((BASE_DIR / "assets" / "css" / "style.css").exists())
@@ -210,10 +208,6 @@ class TestDDMMSSite(unittest.TestCase):
         self.assertIn("footer-links", footer_content)
         self.assertIn("Affiliations", footer_content)
 
-    def test_includes_footer_file_exists(self):
-        includes_footer = BASE_DIR / "_includes" / "footer.html"
-        self.assertTrue(includes_footer.exists(), "_includes/footer.html does not exist")
-
     def test_build_site_get_footer_container(self):
         import build_site
         footer = build_site.get_footer()
@@ -249,10 +243,6 @@ class TestDDMMSSite(unittest.TestCase):
         self.assertIn("brand-link", header_content)
         self.assertIn("nav-desktop", header_content)
         self.assertIn("mobile-drawer", header_content)
-
-    def test_includes_header_file_exists(self):
-        includes_header = BASE_DIR / "_includes" / "header.html"
-        self.assertTrue(includes_header.exists(), "_includes/header.html does not exist")
 
     def test_build_site_get_header_container(self):
         import build_site
@@ -331,9 +321,8 @@ class TestDDMMSSite(unittest.TestCase):
         self.assertLess(highlights_pos, contact_pos, "Recent Highlights & News must appear above Contact")
 
         # Brand links point to index.html as landing page
-        for fname in ["header.html", "_includes/header.html"]:
-            content = (BASE_DIR / fname).read_text(encoding="utf-8")
-            self.assertIn('<a href="index.html" class="brand-link"', content)
+        content = (BASE_DIR / "header.html").read_text(encoding="utf-8")
+        self.assertIn('<a href="index.html" class="brand-link"', content)
 
     def test_load_news_csv_abstraction(self):
         import tempfile

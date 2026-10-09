@@ -65,7 +65,6 @@ jobs:
             news.html
             header.html
             footer.html
-            _includes/
             publications.json
             PUBLICATIONS.md
 

@@ -18,9 +18,7 @@ PUBLICATIONS_FILE = BASE_DIR / "publications.json"
 AUTHORS_FILE = BASE_DIR / "data" / "authors.yaml"
 AUTHORS_CSV_FILE = BASE_DIR / "data" / "authors.csv"
 HEADER_FILE = BASE_DIR / "header.html"
-INCLUDES_HEADER_FILE = BASE_DIR / "_includes" / "header.html"
 FOOTER_FILE = BASE_DIR / "footer.html"
-INCLUDES_FOOTER_FILE = BASE_DIR / "_includes" / "footer.html"
 NEWS_FILE = BASE_DIR / "data" / "news.yaml"
 NEWS_CSV_FILE = BASE_DIR / "data" / "news.csv"
 
@@ -155,9 +153,7 @@ def main():
 
     pages = {
         "header.html": header_content,
-        "_includes/header.html": header_content,
         "footer.html": footer_content,
-        "_includes/footer.html": footer_content,
         "index.html": generate_index_html(pubs, authors, news),
         "publications.html": generate_publications_html(pubs, authors),
         "people.html": generate_people_html(),
