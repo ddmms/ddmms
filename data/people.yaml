@@ -8,9 +8,10 @@ sections:
     members:
       - name: "Dr. Alin Marin Elena"
         avatar: "assets/images/alin_elena.jpg"
-        role: "Group Leader &bull; Principal Computational Scientist"
+        role: "Group Leader &bull; Computational Scientist(Principal)"
         affiliation: "STFC SCD, UKRI | CCP5 Scientific Secretary"
-        bio: "Alin leads the Data Driven Materials and Molecular Science research group. His work centres on multiscale molecular dynamics algorithms, the architecture and scalable parallelisation of DL_POLY 5, physics-informed machine learning, and transport properties in complex liquids and molten salts."
+        bio: "Alin leads the Data Driven Materials and Molecular Science research group.
+        Current work focuses on physics-informed machine learning -- machine learnt interatomic potentials --, transport properties in complex liquids and molten salts, porous materials, and explaining experimental results via atomistic modelling."
         tags:
           - "ML Interatomic Potentials"
           - "MACE Foundation Models"
@@ -18,6 +19,7 @@ sections:
           - "Molecular Dynamics"
           - "Molten Salts"
           - "Porous Materials"
+          - "Experiment vs Modelling"
           - "High Performance Computing"
         links:
           - text: "ORCID"
