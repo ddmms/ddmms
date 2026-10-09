@@ -78,7 +78,7 @@ def generate_people_html(people_data: Optional[Dict[str, Any]] = None) -> str:
         nav_title = sec.get("nav_title") or sec.get("title") or sec_id
         if sec_id:
             subnav_links.append(f'        <a href="#{sec_id}" class="subnav-pill">{nav_title}</a>')
-    subnav_links.append('        <a href="#contact" class="subnav-pill">Join Us</a>')
+    subnav_links.append('        <a href="#contact" class="subnav-pill">Collaborate with Us</a>')
     subnav_pills_html = "\n".join(subnav_links)
 
     # Format sections
