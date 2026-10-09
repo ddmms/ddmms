@@ -238,6 +238,11 @@ class TestDDMMSSite(unittest.TestCase):
             if tf_path.exists():
                 tf_path.unlink()
 
+    def test_footer_template_missing_raises_error(self):
+        import build_site
+        with self.assertRaises(FileNotFoundError):
+            build_site.generate_footer_html(template_file="/nonexistent/footer_template.html")
+
     def test_all_pages_reuse_footer(self):
         for fname in self.html_files:
             content = (BASE_DIR / fname).read_text(encoding="utf-8")
