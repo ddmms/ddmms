@@ -166,7 +166,8 @@ def generate_news_html(news=None):
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>News &amp; Milestones | Data Driven Materials and Molecular Science</title>
-  <meta name="description" content="All historical news, publications, software releases, and milestones from the Data Driven Materials and Molecular Science group at STFC Daresbury Laboratory.">
+  <meta name="description" content="All historical news, publications, software releases, and milestones from the Data Driven
+  Materials and Molecular Science group at SCD-STFC-UKRI.">
   <link rel="icon" type="image/svg+xml" href="assets/logos/ddmms.svg">
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">

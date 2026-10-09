@@ -54,7 +54,7 @@ def generate_people_html():
         <div class="section-header" style="text-align: left; margin-bottom: 2rem;">
           <h2 class="section-title" style="font-size: 1.85rem;">Core Members</h2>
           <p class="section-subtitle">
-            Researchers and computational scientists leading DDMMS programs at STFC Daresbury Laboratory.
+            Researchers and computational scientists.
           </p>
         </div>
 
@@ -321,7 +321,7 @@ def generate_people_html():
         <div class="section-header" style="text-align: left; margin-bottom: 2rem;">
           <h2 class="section-title" style="font-size: 1.85rem;">Visitors</h2>
           <p class="section-subtitle">
-            Academic visitors, guest researchers, and sabbatical fellows who have visited the group at Sci-Tech Daresbury to collaborate on atomistic simulations and machine learning.
+            Academic visitors, guest researchers, and sabbatical fellows who have visited the group to collaborate on atomistic simulations and machine learning.
           </p>
         </div>
 

@@ -114,7 +114,9 @@ def generate_index_html(pubs=None, authors=None, news=None):
         <div class="about-text">
           <h3>The Group Mission</h3>
           <p>
-            The <strong>Data Driven Materials and Molecular Science (DDMMS)</strong> group is hosted within the Scientific Computing Department (SCD) of the Science and Technology Facilities Council (STFC), part of UK Research and Innovation (UKRI), based at Sci-Tech Daresbury.
+            The <strong>Data Driven Materials and Molecular Science (DDMMS)</strong> group is hosted within the Scientific Computing
+            Department (SCD) of the Science and Technology Facilities Council (STFC), part of UK Research and Innovation (UKRI),
+            based at Daresbury and Rutherford Appleton Laboratories.
           </p>
           <p>
             Computational materials science has long faced a fundamental trade-off: high-accuracy quantum mechanical calculations (such as density functional theory and post-Hartree-Fock) are computationally expensive and limited to small systems, whereas classical empirical force fields scale to millions of atoms but suffer from fixed functional forms and limited chemical transferability.
