@@ -1,0 +1,13 @@
+title: "The Group Mission"
+subtitle: "Uniting statistical physics, quantum mechanics, and artificial intelligence to explore matter at the atomic level."
+
+paragraphs:
+  - "The <strong>Data Driven Materials and Molecular Science (DDMMS)</strong> group is hosted within the Scientific Computing Department (SCD) of the Science and Technology Facilities Council (STFC), part of UK Research and Innovation (UKRI), based at Daresbury and Rutherford Appleton Laboratories."
+  - "Computational materials science has long faced a fundamental trade-off: high-accuracy quantum mechanical calculations (such as density functional theory and post-Hartree-Fock) are computationally expensive and limited to small systems, whereas classical empirical force fields scale to millions of atoms but suffer from fixed functional forms and limited chemical transferability."
+  - "Our core mission is to eliminate this trade-off by constructing robust, physics-informed machine-learned interatomic potentials (MLIPs), creating automated calculation workflows, and running extreme-scale simulations on high-performance computing facilities."
+
+work_with_us:
+  title: "Work With Us"
+  description: "We welcome prospective PhD researchers, postdocs, and international scientific visitors interested in machine-learning interatomic potentials, molecular dynamics algorithms, and porous materials."
+  button_text: "Contact the Group"
+  button_link: "people.html#contact"

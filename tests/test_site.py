@@ -579,6 +579,53 @@ packages:
         with self.assertRaises(FileNotFoundError):
             load_software(Path("/nonexistent/file.yaml"))
 
+    def test_load_mission_yaml(self):
+        import tempfile
+        from build_site import load_mission, generate_index_html
+
+        # Test loading the actual data/mission.yaml
+        mission_data = load_mission()
+        self.assertIsInstance(mission_data, dict)
+        self.assertIn("title", mission_data)
+        self.assertIn("paragraphs", mission_data)
+        self.assertEqual(mission_data["title"], "The Group Mission")
+        self.assertGreaterEqual(len(mission_data["paragraphs"]), 3)
+
+        # Test custom YAML mission loading
+        with tempfile.NamedTemporaryFile("w+", encoding="utf-8", delete=False, suffix=".yaml") as tmf:
+            tmf.write("""title: "Custom Group Vision"
+subtitle: "Pioneering atomic intelligence."
+paragraphs:
+  - "Custom mission paragraph one describing high accuracy simulation."
+  - "Custom mission paragraph two detailing open-source pipelines."
+work_with_us:
+  title: "Join Our Team"
+  description: "Exciting opportunities for researchers."
+  button_text: "Apply Now"
+  button_link: "https://example.com/apply"
+""")
+            tmf_path = Path(tmf.name)
+
+        try:
+            custom_data = load_mission(tmf_path)
+            self.assertEqual(custom_data["title"], "Custom Group Vision")
+            self.assertEqual(custom_data["subtitle"], "Pioneering atomic intelligence.")
+            self.assertEqual(len(custom_data["paragraphs"]), 2)
+
+            rendered_html = generate_index_html(mission=custom_data)
+            self.assertIn("Custom Group Vision", rendered_html)
+            self.assertIn("Pioneering atomic intelligence.", rendered_html)
+            self.assertIn("Custom mission paragraph one describing high accuracy simulation.", rendered_html)
+            self.assertIn("Join Our Team", rendered_html)
+            self.assertIn("https://example.com/apply", rendered_html)
+        finally:
+            if tmf_path.exists():
+                tmf_path.unlink()
+
+        # Non-existent file raises FileNotFoundError
+        with self.assertRaises(FileNotFoundError):
+            load_mission(Path("/nonexistent/file.yaml"))
+
     def test_news_display_latest_four_and_historical_toggle(self):
         index_html = (BASE_DIR / "index.html").read_text(encoding="utf-8")
         main_js = (BASE_DIR / "assets" / "js" / "main.js").read_text(encoding="utf-8")

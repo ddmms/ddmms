@@ -23,13 +23,14 @@ NEWS_FILE = BASE_DIR / "data" / "news.yaml"
 RESEARCH_FILE = BASE_DIR / "data" / "research.yaml"
 PEOPLE_FILE = BASE_DIR / "data" / "people.yaml"
 SOFTWARE_FILE = BASE_DIR / "data" / "software.yaml"
+MISSION_FILE = BASE_DIR / "data" / "mission.yaml"
 
 # Import modular components with flexible path resolution
 try:
     from .components.header import generate_header_html, get_header
     from .components.footer import generate_footer_html, get_footer
     from .components.news import load_news, generate_news_html
-    from .components.index import generate_index_html, generate_about_html
+    from .components.index import generate_index_html, generate_about_html, load_mission
     from .components.code import generate_code_html, generate_software_html, load_software
     from .components.publications import generate_publications_html
     from .components.people import generate_people_html, load_people
@@ -39,7 +40,7 @@ except (ImportError, ValueError):
         from components.header import generate_header_html, get_header
         from components.footer import generate_footer_html, get_footer
         from components.news import load_news, generate_news_html
-        from components.index import generate_index_html, generate_about_html
+        from components.index import generate_index_html, generate_about_html, load_mission
         from components.code import generate_code_html, generate_software_html, load_software
         from components.publications import generate_publications_html
         from components.people import generate_people_html, load_people
@@ -48,7 +49,7 @@ except (ImportError, ValueError):
         from src.components.header import generate_header_html, get_header
         from src.components.footer import generate_footer_html, get_footer
         from src.components.news import load_news, generate_news_html
-        from src.components.index import generate_index_html, generate_about_html
+        from src.components.index import generate_index_html, generate_about_html, load_mission
         from src.components.code import generate_code_html, generate_software_html, load_software
         from src.components.publications import generate_publications_html
         from src.components.people import generate_people_html, load_people
@@ -62,11 +63,13 @@ __all__ = [
     "RESEARCH_FILE",
     "PEOPLE_FILE",
     "SOFTWARE_FILE",
+    "MISSION_FILE",
     "load_data",
     "load_news",
     "load_research",
     "load_people",
     "load_software",
+    "load_mission",
     "generate_header_html",
     "get_header",
     "generate_footer_html",
@@ -151,17 +154,19 @@ def load_data():
 
 def main():
     """Generate all site pages using modular components."""
-    print("Loading publications, authors, news, research, people, and software...")
+    print("Loading publications, authors, news, research, people, software, and mission...")
     pubs, authors = load_data()
     news = load_news()
     research_data = load_research()
     people_data = load_people()
     software_data = load_software()
+    mission_data = load_mission()
     total_people = sum(len(s.get("members", [])) for s in people_data.get("sections", []))
     print(
         f"Loaded {len(pubs)} publications, {len(authors)} authors, "
         f"{len(news)} news items, {len(research_data.get('themes', []))} research themes, "
-        f"{total_people} people records, and {len(software_data.get('packages', []))} software packages."
+        f"{total_people} people records, {len(software_data.get('packages', []))} software packages, "
+        f"and group mission."
     )
 
     header_content = generate_header_html()
@@ -170,7 +175,7 @@ def main():
     pages = {
         "header.html": header_content,
         "footer.html": footer_content,
-        "index.html": generate_index_html(pubs, authors, news),
+        "index.html": generate_index_html(pubs, authors, news, mission=mission_data),
         "publications.html": generate_publications_html(pubs, authors),
         "people.html": generate_people_html(people_data),
         "research.html": generate_research_html(research_data),

@@ -1,6 +1,8 @@
-"""Index / About page component for the DDMMS website."""
+"""Index / About page component and data loader for the DDMMS website."""
 
 from pathlib import Path
+from typing import Any, Dict, List, Optional, Union
+import yaml
 
 try:
     from .header import get_header
@@ -16,14 +18,135 @@ except (ImportError, ValueError):
         from src.components.footer import get_footer
         from src.components.news import load_news
 
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+MISSION_FILE = BASE_DIR / "data" / "mission.yaml"
 
-def generate_index_html(pubs=None, authors=None, news=None):
-    """Generate the index / about homepage HTML."""
+
+def load_mission(mission_file: Optional[Union[str, Path]] = None) -> Dict[str, Any]:
+    """Load group mission and index metadata from a YAML file (default: data/mission.yaml).
+
+    Requires a valid YAML file provided by the user. Raises FileNotFoundError
+    if the file cannot be located.
+    """
+    target_path: Optional[Path] = None
+    if mission_file is not None:
+        cand = Path(mission_file)
+        if cand.is_file():
+            target_path = cand
+        else:
+            alt = BASE_DIR / mission_file
+            if alt.is_file():
+                target_path = alt
+            else:
+                raise FileNotFoundError(f"Mission YAML file not found: '{mission_file}'")
+    else:
+        for cand in (
+            MISSION_FILE,
+            BASE_DIR / "data" / "mission.yml",
+            BASE_DIR / "data" / "index.yaml",
+            BASE_DIR / "data" / "index.yml",
+        ):
+            if cand.is_file():
+                target_path = cand
+                break
+        if target_path is None:
+            raise FileNotFoundError(f"Mission YAML file not found at default location '{MISSION_FILE}'")
+
+    content = target_path.read_text(encoding="utf-8-sig")
+    parsed = yaml.safe_load(content)
+
+    if not parsed:
+        return {"title": "The Group Mission", "subtitle": "", "paragraphs": []}
+
+    if isinstance(parsed, list):
+        return {"title": "The Group Mission", "subtitle": "", "paragraphs": parsed}
+
+    if isinstance(parsed, dict):
+        title = str(parsed.get("title") or "The Group Mission").strip()
+        subtitle = str(parsed.get("subtitle") or "").strip()
+        raw_paragraphs = (
+            parsed.get("paragraphs")
+            or parsed.get("mission")
+            or parsed.get("content")
+            or parsed.get("description")
+            or []
+        )
+        if isinstance(raw_paragraphs, str):
+            paragraphs = [p.strip() for p in raw_paragraphs.split("\n\n") if p.strip()]
+        elif isinstance(raw_paragraphs, list):
+            paragraphs = [str(p).strip() for p in raw_paragraphs if str(p).strip()]
+        else:
+            paragraphs = []
+
+        work_with_us = parsed.get("work_with_us") or {}
+        return {
+            "title": title,
+            "subtitle": subtitle,
+            "paragraphs": paragraphs,
+            "work_with_us": work_with_us,
+        }
+
+    return {"title": "The Group Mission", "subtitle": "", "paragraphs": []}
+
+
+load_index = load_mission
+
+
+def generate_index_html(
+    pubs=None,
+    authors=None,
+    news=None,
+    mission: Optional[Union[Dict[str, Any], List[str], str]] = None,
+):
+    """Generate the index / about homepage HTML dynamically."""
     header_html = get_header("index")
     footer_html = get_footer()
 
     if news is None:
         news = load_news()
+
+    if mission is None:
+        mission = load_mission()
+
+    # Extract mission data
+    if isinstance(mission, dict):
+        mission_title = str(mission.get("title") or "The Group Mission").strip()
+        mission_subtitle = str(mission.get("subtitle") or "").strip()
+        raw_paragraphs = mission.get("paragraphs") or mission.get("mission") or []
+        if isinstance(raw_paragraphs, str):
+            raw_paragraphs = [p.strip() for p in raw_paragraphs.split("\n\n") if p.strip()]
+        wwu_data = mission.get("work_with_us") or {}
+    elif isinstance(mission, list):
+        mission_title = "The Group Mission"
+        mission_subtitle = ""
+        raw_paragraphs = mission
+        wwu_data = {}
+    elif isinstance(mission, str):
+        mission_title = "The Group Mission"
+        mission_subtitle = ""
+        raw_paragraphs = [p.strip() for p in mission.split("\n\n") if p.strip()]
+        wwu_data = {}
+    else:
+        mission_title = "The Group Mission"
+        mission_subtitle = ""
+        raw_paragraphs = []
+        wwu_data = {}
+
+    mission_paragraphs_html = "\n".join(
+        f"""          <p>
+            {str(p).strip()}
+          </p>"""
+        for p in raw_paragraphs
+        if str(p).strip()
+    )
+
+    wwu_title = str(wwu_data.get("title") or "Work With Us").strip()
+    wwu_desc = str(
+        wwu_data.get("description")
+        or "We welcome prospective PhD researchers, postdocs, and international scientific visitors interested in machine-learning interatomic potentials, molecular dynamics algorithms, and porous materials."
+    ).strip()
+    wwu_btn_text = str(wwu_data.get("button_text") or "Contact the Group").strip()
+    wwu_btn_link = str(wwu_data.get("button_link") or "people.html#contact").strip()
 
     total_count = len(news)
     latest_news = news[:4]
@@ -86,6 +209,17 @@ def generate_index_html(pubs=None, authors=None, news=None):
             </ul>
           </div>"""
 
+    subtitle_header_html = ""
+    if mission_subtitle:
+        subtitle_header_html = f"""      <div class="section-header" style="text-align: left; margin-bottom: 2.5rem;">
+        <p class="section-subtitle">
+          {mission_subtitle}
+        </p>
+      </div>"""
+    else:
+        subtitle_header_html = """      <div class="section-header" style="text-align: left; margin-bottom: 2.5rem;">
+      </div>"""
+
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -104,39 +238,23 @@ def generate_index_html(pubs=None, authors=None, news=None):
 
   <main id="main-content" style="padding-top: 3rem;">
     <div class="container">
-      <div class="section-header" style="text-align: left; margin-bottom: 2.5rem;">
-        <p class="section-subtitle">
-          Uniting statistical physics, quantum mechanics, and artificial intelligence to explore matter at the atomic level.
-        </p>
-      </div>
+{subtitle_header_html}
 
       <div class="about-grid">
         <div class="about-text">
-          <h3>The Group Mission</h3>
-          <p>
-            The <strong>Data Driven Materials and Molecular Science (DDMMS)</strong> group is hosted within the Scientific Computing
-            Department (SCD) of the Science and Technology Facilities Council (STFC), part of UK Research and Innovation (UKRI),
-            based at Daresbury and Rutherford Appleton Laboratories.
-          </p>
-          <p>
-            Computational materials science has long faced a fundamental trade-off: high-accuracy quantum mechanical calculations (such as density functional theory and post-Hartree-Fock) are computationally expensive and limited to small systems, whereas classical empirical force fields scale to millions of atoms but suffer from fixed functional forms and limited chemical transferability.
-          </p>
-          <p>
-            Our core mission is to eliminate this trade-off by constructing robust, physics-informed machine-learned interatomic potentials (MLIPs), creating automated calculation workflows, and running extreme-scale simulations on high-performance computing facilities.
-          </p>
-
-
+          <h3>{mission_title}</h3>
+{mission_paragraphs_html}
         </div>
 
         <div class="about-sidebar">
 {news_section_html}
 
           <div class="news-box">
-            <h3 class="news-box-title"><span>🤝</span> Work With Us</h3>
+            <h3 class="news-box-title"><span>🤝</span> {wwu_title}</h3>
             <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1rem;">
-              We welcome prospective PhD researchers, postdocs, and international scientific visitors interested in machine-learning interatomic potentials, molecular dynamics algorithms, and porous materials.
+              {wwu_desc}
             </p>
-            <a href="people.html#contact" class="btn btn-primary" style="width: 100%;">Contact the Group</a>
+            <a href="{wwu_btn_link}" class="btn btn-primary" style="width: 100%;">{wwu_btn_text}</a>
           </div>
         </div>
       </div>
@@ -149,7 +267,6 @@ def generate_index_html(pubs=None, authors=None, news=None):
 </html>"""
 
 
-def generate_about_html():
+def generate_about_html(*args, **kwargs):
     """Alias for generate_index_html."""
-    return generate_index_html()
-
+    return generate_index_html(*args, **kwargs)
