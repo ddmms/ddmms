@@ -366,34 +366,63 @@
   // --- News Section Toggle ---
   function initNewsToggle() {
     const headerToggle = document.getElementById('news-header-toggle');
+    const expandBtn = document.getElementById('news-expand-btn');
     const historicalWrap = document.getElementById('news-historical-wrap');
     const toggleBadge = document.getElementById('news-toggle-badge');
     const toggleArrow = document.getElementById('news-toggle-arrow');
-    if (!headerToggle || !historicalWrap) return;
+    const expandBtnText = document.getElementById('news-expand-btn-text');
+    const expandBtnIcon = document.getElementById('news-expand-btn-icon');
+    if (!historicalWrap || (!headerToggle && !expandBtn)) return;
 
-    function toggleNews() {
-      const isExpanded = headerToggle.getAttribute('aria-expanded') === 'true';
-      const nextExpanded = !isExpanded;
-      headerToggle.setAttribute('aria-expanded', String(nextExpanded));
+    const totalCount = (headerToggle && headerToggle.getAttribute('data-total-count')) || 'all';
+
+    function setExpandedState(nextExpanded) {
+      if (headerToggle) {
+        headerToggle.setAttribute('aria-expanded', String(nextExpanded));
+      }
+      if (expandBtn) {
+        expandBtn.setAttribute('aria-expanded', String(nextExpanded));
+      }
       historicalWrap.style.display = nextExpanded ? 'block' : 'none';
+
       if (toggleArrow) {
         toggleArrow.innerHTML = nextExpanded ? '&uarr;' : '&darr;';
       }
       if (toggleBadge) {
-        const totalCount = headerToggle.getAttribute('data-total-count') || '';
-        toggleBadge.textContent = nextExpanded
-          ? 'Show latest 4'
-          : (totalCount ? `History (${totalCount})` : 'Show all');
+        toggleBadge.textContent = nextExpanded ? 'Show latest 4' : `View all (${totalCount})`;
+      }
+
+      if (expandBtnText) {
+        expandBtnText.textContent = nextExpanded ? 'Show latest 4 news' : `View all ${totalCount} news updates`;
+      }
+      if (expandBtnIcon) {
+        expandBtnIcon.innerHTML = nextExpanded ? '&uarr;' : '&darr;';
       }
     }
 
-    headerToggle.addEventListener('click', toggleNews);
-    headerToggle.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        toggleNews();
+    function toggleNews(e) {
+      if (e && e.target && e.target.closest('a')) {
+        return; // Allow direct link navigation without triggering accordion toggle
       }
-    });
+      const currentExpanded = (headerToggle ? headerToggle.getAttribute('aria-expanded') : (expandBtn && expandBtn.getAttribute('aria-expanded'))) === 'true';
+      setExpandedState(!currentExpanded);
+    }
+
+    if (headerToggle && !headerToggle._newsToggleBound) {
+      headerToggle._newsToggleBound = true;
+      headerToggle.addEventListener('click', toggleNews);
+      headerToggle.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          toggleNews();
+        }
+      });
+    }
+
+    if (expandBtn && !expandBtn._newsToggleBound) {
+      expandBtn._newsToggleBound = true;
+      expandBtn.addEventListener('click', toggleNews);
+    }
   }
 
   function initDynamicIncludes() {

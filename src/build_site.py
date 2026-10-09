@@ -23,24 +23,32 @@ DEFAULT_NEWS = [
     {
         "date": "2026 Milestone",
         "headline": "Roadmap for an atomistic machine-learning ecosystem published on arXiv (2609.39090).",
+        "link": "https://arxiv.org/abs/2609.39090",
     },
     {
         "date": "2026 Release",
         "headline": "Goldilocks automated k-point sampling framework for Quantum ESPRESSO published in <em>Digital Discovery</em>.",
+        "link": "https://doi.org/10.1039/D4DD00045A",
     },
     {
         "date": "2026 Discovery",
         "headline": "uMOF universal benchmark database and ML interatomic potentials released for metal-organic frameworks.",
+        "link": "",
     },
     {
         "date": "Software Ecosystem",
         "headline": "aiida-mlip released, integrating janus-core workflows with full data provenance in AiiDA.",
+        "link": "https://github.com/stfc/aiida-mlip",
     },
 ]
 
 
 def load_news(news_file=None):
-    """Load news items from pipe-separated CSV file (data/news.csv)."""
+    """Load news items from pipe-separated CSV file (data/news.csv).
+
+    Supported row format:
+        Date or Category | Headline [ | Optional Link URL ]
+    """
     if news_file is None:
         news_file = NEWS_FILE
 
@@ -58,14 +66,30 @@ def load_news(news_file=None):
                 if not clean_line or clean_line.startswith("#"):
                     continue
                 parts = clean_line.split("|")
-                if len(parts) >= 2:
+                if len(parts) >= 3:
                     date_tag = parts[0].strip()
-                    headline = "|".join(parts[1:]).strip()
+                    last_part = parts[-1].strip()
+                    if len(parts) > 3 and (last_part.startswith("http://") or last_part.startswith("https://") or last_part.startswith("/") or not last_part):
+                        headline = "|".join(parts[1:-1]).strip()
+                        link = last_part
+                    else:
+                        headline = parts[1].strip()
+                        link = parts[2].strip()
+                elif len(parts) == 2:
+                    date_tag = parts[0].strip()
+                    headline = parts[1].strip()
+                    link = ""
                 else:
                     date_tag = "News"
                     headline = parts[0].strip()
+                    link = ""
+
                 if headline:
-                    news_items.append({"date": date_tag, "headline": headline})
+                    news_items.append({
+                        "date": date_tag,
+                        "headline": headline,
+                        "link": link,
+                    })
 
     return news_items if news_items else [dict(item) for item in DEFAULT_NEWS]
 
@@ -231,9 +255,17 @@ def generate_index_html(pubs=None, authors=None, news=None):
         for item in items:
             date_val = item.get("date", "")
             headline_val = item.get("headline", "")
+            link_val = (item.get("link") or "").strip()
+            if link_val:
+                is_external = link_val.startswith("http://") or link_val.startswith("https://")
+                target_attr = ' target="_blank" rel="noopener noreferrer"' if is_external else ''
+                headline_html = f'<a href="{link_val}" class="news-headline-link"{target_attr}>{headline_val} <span class="news-link-arrow" aria-hidden="true">&rarr;</span></a>'
+            else:
+                headline_html = headline_val
+
             rendered.append(f"""              <li class="news-item">
                 <div class="news-date">{date_val}</div>
-                <div class="news-headline">{headline_val}</div>
+                <div class="news-headline">{headline_html}</div>
               </li>""")
         return "\n".join(rendered)
 
@@ -242,16 +274,22 @@ def generate_index_html(pubs=None, authors=None, news=None):
     if historical_news:
         historical_news_html = render_news_items(historical_news)
         news_section_html = f"""          <div class="news-box" style="margin-bottom: 1.5rem;" id="news-section">
-            <h3 class="news-box-title news-header-clickable" id="news-header-toggle" role="button" tabindex="0" aria-expanded="false" aria-controls="news-historical-wrap" title="Click to view all historical news" data-total-count="{total_count}">
+            <h3 class="news-box-title news-header-clickable" id="news-header-toggle" role="button" tabindex="0" aria-expanded="false" aria-controls="news-historical-wrap" title="Click to view all {total_count} news updates" data-total-count="{total_count}">
               <span><span>📢</span> Recent Highlights &amp; News</span>
               <span class="news-toggle-indicator" id="news-toggle-indicator" aria-hidden="true">
-                <span id="news-toggle-badge" class="news-toggle-badge">History ({total_count})</span>
+                <span id="news-toggle-badge" class="news-toggle-badge">View all ({total_count})</span>
                 <span id="news-toggle-arrow" class="news-toggle-arrow">&darr;</span>
               </span>
             </h3>
             <ul class="news-list" id="news-list">
 {latest_news_html}
             </ul>
+            <div class="news-toggle-bar">
+              <button type="button" class="news-expand-btn" id="news-expand-btn" aria-expanded="false" aria-controls="news-historical-wrap" title="Toggle full news archive">
+                <span id="news-expand-btn-text">View all {total_count} news updates</span>
+                <span id="news-expand-btn-icon" class="news-expand-btn-icon">&darr;</span>
+              </button>
+            </div>
             <div id="news-historical-wrap" class="news-historical-wrap" style="display: none;">
               <div class="news-historical-divider">Historical Archive ({len(historical_news)} earlier milestones)</div>
               <ul class="news-list news-historical-list" id="news-historical-list" style="margin-top: 0.85rem;">

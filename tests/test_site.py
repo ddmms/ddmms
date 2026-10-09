@@ -342,27 +342,49 @@ class TestDDMMSSite(unittest.TestCase):
         news = load_news()
         self.assertIsInstance(news, list)
         self.assertGreaterEqual(len(news), 4)
+        has_linked_item = False
+        has_unlinked_item = False
         for item in news:
             self.assertIn("date", item)
             self.assertIn("headline", item)
+            self.assertIn("link", item)
             self.assertTrue(item["date"])
             self.assertTrue(item["headline"])
+            if item["link"]:
+                has_linked_item = True
+            else:
+                has_unlinked_item = True
+        self.assertTrue(has_linked_item, "Expected at least one news item with a link")
+        self.assertTrue(has_unlinked_item, "Expected at least one news item without a link")
 
         # Test pipe delimiter parsing with comments and custom file
         with tempfile.NamedTemporaryFile("w+", encoding="utf-8", delete=False) as tf:
             tf.write("# Comment line\n")
-            tf.write("2026 Tag|Headline with | another pipe inside\n")
+            tf.write("2026 Tag|Headline with link|https://example.com/test\n")
+            tf.write("2026 Tag2|Headline with | another pipe inside|https://example.com/pipe\n")
+            tf.write("2026 Tag3|Headline without link|\n")
             tf.write("\n")
             tf.write("Tag Only Headline\n")
             tf_path = Path(tf.name)
 
         try:
             custom_news = load_news(tf_path)
-            self.assertEqual(len(custom_news), 2)
+            self.assertEqual(len(custom_news), 4)
             self.assertEqual(custom_news[0]["date"], "2026 Tag")
-            self.assertEqual(custom_news[0]["headline"], "Headline with | another pipe inside")
-            self.assertEqual(custom_news[1]["date"], "News")
-            self.assertEqual(custom_news[1]["headline"], "Tag Only Headline")
+            self.assertEqual(custom_news[0]["headline"], "Headline with link")
+            self.assertEqual(custom_news[0]["link"], "https://example.com/test")
+
+            self.assertEqual(custom_news[1]["date"], "2026 Tag2")
+            self.assertEqual(custom_news[1]["headline"], "Headline with | another pipe inside")
+            self.assertEqual(custom_news[1]["link"], "https://example.com/pipe")
+
+            self.assertEqual(custom_news[2]["date"], "2026 Tag3")
+            self.assertEqual(custom_news[2]["headline"], "Headline without link")
+            self.assertEqual(custom_news[2]["link"], "")
+
+            self.assertEqual(custom_news[3]["date"], "News")
+            self.assertEqual(custom_news[3]["headline"], "Tag Only Headline")
+            self.assertEqual(custom_news[3]["link"], "")
         finally:
             if tf_path.exists():
                 tf_path.unlink()
@@ -386,11 +408,24 @@ class TestDDMMSSite(unittest.TestCase):
         self.assertIn('aria-controls="news-historical-wrap"', index_html)
         self.assertIn('data-total-count=', index_html)
 
+        # Prominent toggle expand button below latest news
+        self.assertIn('id="news-expand-btn"', index_html)
+        self.assertIn('class="news-toggle-bar"', index_html)
+        self.assertIn('class="news-expand-btn"', index_html)
+        self.assertIn('id="news-expand-btn-text"', index_html)
+
         # Primary list has exactly 4 items
         news_list_match = re.search(r'<ul class="news-list" id="news-list">(.*?)</ul>', index_html, re.DOTALL)
         self.assertIsNotNone(news_list_match, "Primary #news-list not found in index.html")
         latest_items = re.findall(r'<li class="news-item">', news_list_match.group(1))
         self.assertEqual(len(latest_items), 4, "Primary #news-list must display exactly the latest 4 items")
+
+        # News items with links render anchor tags, while unlinked items render plain text
+        self.assertIn('class="news-headline-link"', index_html)
+        self.assertIn('target="_blank"', index_html)
+        self.assertIn('rel="noopener noreferrer"', index_html)
+        self.assertIn('https://arxiv.org/abs/2609.39090', index_html)
+        self.assertIn('uMOF universal benchmark database', index_html)
 
         # Historical items hidden under #news-historical-wrap
         self.assertIn('id="news-historical-wrap"', index_html)
@@ -401,15 +436,19 @@ class TestDDMMSSite(unittest.TestCase):
         hist_items = re.findall(r'<li class="news-item">', hist_list_match.group(1))
         self.assertGreaterEqual(len(hist_items), 1, "Historical list should contain remaining items")
 
-        # JavaScript toggle logic
+        # JavaScript toggle logic handles both header and button
         self.assertIn("initNewsToggle", main_js)
         self.assertIn("news-header-toggle", main_js)
+        self.assertIn("news-expand-btn", main_js)
         self.assertIn("news-historical-wrap", main_js)
         self.assertIn("aria-expanded", main_js)
 
         # CSS styling
         self.assertIn(".news-header-clickable", style_css)
         self.assertIn(".news-toggle-indicator", style_css)
+        self.assertIn(".news-toggle-bar", style_css)
+        self.assertIn(".news-expand-btn", style_css)
+        self.assertIn(".news-headline-link", style_css)
         self.assertIn(".news-historical-divider", style_css)
 
 
