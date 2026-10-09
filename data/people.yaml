@@ -13,16 +13,18 @@ sections:
         bio: "Alin leads the Data Driven Materials and Molecular Science research group. His work centres on multiscale molecular dynamics algorithms, the architecture and scalable parallelisation of DL_POLY 5, physics-informed machine learning, and transport properties in complex liquids and molten salts."
         tags:
           - "ML Interatomic Potentials"
+          - "MACE Foundation Models"
+          - "Rare Event Sampling"
           - "Molecular Dynamics"
-          - "DL_POLY 5"
           - "Molten Salts"
+          - "Porous Materials"
           - "High Performance Computing"
         links:
           - text: "ORCID"
             url: "https://orcid.org/0000-0002-7013-6670"
             icon: "orcid"
           - text: "GitHub"
-            url: "https://github.com/alin-elena"
+            url: "https://github.com/alinelena"
           - text: "Publications"
             url: "publications.html?author=Alin%20Marin%20Elena"
 
@@ -34,7 +36,6 @@ sections:
         tags:
           - "MACE Foundation Models"
           - "janus-core Lead"
-          - "Active Learning"
           - "Workflow Automation"
         links:
           - text: "ORCID"
@@ -178,7 +179,7 @@ sections:
             url: "#"
 
 partner_consortia:
-  title: "Partner Consortia & National Initiatives"
+  title: "Collaborative Research Networks"
   description: "We collaborate closely with major national and international research networks to establish shared atomistic data standards and sustainable scientific infrastructure:"
   links:
     - text: "PSDI Data to Knowledge &rarr;"
@@ -194,3 +195,4 @@ opportunities:
   title: "Join the Research Group"
   description: "We are always enthusiastic to collaborate with motivated graduate students, postdoctoral researchers, and academic visitors who wish to explore machine-learned interatomic potentials, extreme-scale molecular dynamics, or materials for sustainable energy technologies."
   email: "alin-marin.elena@stfc.ac.uk"
+
