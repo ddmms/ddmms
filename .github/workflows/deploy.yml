@@ -58,6 +58,9 @@ jobs:
             people.html
             research.html
             code.html
+            header.html
+            footer.html
+            _includes/
             publications.json
             PUBLICATIONS.md
 

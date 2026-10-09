@@ -20,6 +20,8 @@ from .pubs import (
 )
 from .build_site import (
     build_site,
+    generate_footer_html,
+    generate_header_html,
     get_footer,
     get_header,
     load_data,
@@ -43,6 +45,8 @@ __all__ = [
     "normalize_title",
     "select_best_summary",
     "build_site",
+    "generate_footer_html",
+    "generate_header_html",
     "get_footer",
     "get_header",
     "load_data",

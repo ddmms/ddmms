@@ -16,7 +16,11 @@ if str(BASE_DIR) not in sys.path:
 class TestDDMMSSite(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        if not (BASE_DIR / "index.html").exists():
+        if (
+            not (BASE_DIR / "index.html").exists()
+            or not (BASE_DIR / "header.html").exists()
+            or not (BASE_DIR / "footer.html").exists()
+        ):
             import build_site
             build_site.main()
 
@@ -214,6 +218,15 @@ class TestDDMMSSite(unittest.TestCase):
         footer = build_site.get_footer()
         self.assertIn('id="site-footer"', footer)
         self.assertIn('data-include-footer', footer)
+        full_footer = build_site.get_footer(full_markup=True)
+        self.assertIn('<footer class="site-footer">', full_footer)
+
+    def test_build_site_generate_footer_html(self):
+        import build_site
+        footer = build_site.generate_footer_html()
+        self.assertIn('<footer class="site-footer">', footer)
+        self.assertIn("footer-grid", footer)
+        self.assertIn("Affiliations", footer)
 
     def test_all_pages_reuse_footer(self):
         for fname in self.html_files:
@@ -245,6 +258,15 @@ class TestDDMMSSite(unittest.TestCase):
         header = build_site.get_header()
         self.assertIn('id="site-header"', header)
         self.assertIn('data-include-header', header)
+        full_header = build_site.get_header(full_markup=True)
+        self.assertIn('<header class="site-header"', full_header)
+
+    def test_build_site_generate_header_html(self):
+        import build_site
+        header = build_site.generate_header_html()
+        self.assertIn('<header class="site-header"', header)
+        self.assertIn("brand-link", header)
+        self.assertIn("nav-desktop", header)
 
     def test_all_pages_reuse_header(self):
         for fname in self.html_files:
