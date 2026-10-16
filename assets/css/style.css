@@ -109,6 +109,14 @@ body {
   -moz-osx-font-smoothing: grayscale;
   transition: background-color 0.25s ease, color 0.25s ease;
   overflow-x: hidden;
+  /* Line-wrapping rule for the whole site: body text fills its column, and the
+     browser avoids leaving a single word on the last line. Inherited by all text. */
+  text-wrap: pretty;
+}
+
+h1, h2, h3, h4 {
+  /* headings break into lines of similar length */
+  text-wrap: balance;
 }
 
 img, svg {
@@ -1834,7 +1842,6 @@ a:hover {
   font-size: 0.9rem;
   color: var(--text-muted);
   line-height: 1.6;
-  max-width: 320px;
 }
 
 .footer-col h5 {
@@ -2003,7 +2010,6 @@ a:hover {
   letter-spacing: -0.03em;
   line-height: 1.05;
   color: #ffffff;
-  text-wrap: balance;
 }
 
 .slide-desc {
@@ -2058,13 +2064,13 @@ a:hover {
   gap: 2.25rem;
 }
 
-/* the group name stays on one line on desktop */
+/* the group name stays on one line on desktop; text fills the full width */
 .carousel-slide-org .slide-content {
   max-width: none;
 }
 
 .carousel-slide-org .slide-desc {
-  max-width: 760px;
+  max-width: none;
   font-size: 1.08rem;
 }
 
