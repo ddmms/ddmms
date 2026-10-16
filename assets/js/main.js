@@ -185,7 +185,7 @@
         <img id="site-logo" class="brand-logo-img" src="assets/logos/ddmms_for_light_modes.svg" alt="Data Driven Materials and Molecular Science">
         <div class="brand-text-block">
           <span class="brand-title-main">DDMMS</span>
-          <span class="brand-title-sub">Data Driven Materials &amp; Molecular Science Group</span>
+          <span class="brand-title-sub">Data Driven Materials &amp; Molecular Science</span>
         </div>
       </a>
 

@@ -8,8 +8,7 @@ paragraphs:
 affiliations:
   title: "Our Home at STFC"
   slides:
-    - eyebrow: "DDMMS"
-      title: "Data Driven Materials and Molecular Science Group"
+    - title: "Data Driven Materials and Molecular Science Group"
       description: "We are a research group in the Computational Materials and Molecular Science (CMMS) theme of the UKRI-STFC Scientific Computing Department (SCD), an international centre of excellence for advanced computing."
       hierarchy:
         - short: "UKRI"
@@ -27,11 +26,6 @@ affiliations:
         - short: "DDMMS"
           name: "Data Driven Materials & Molecular Science"
           badge: "Our group"
-      links:
-        - text: "UKRI-STFC Scientific Computing"
-          url: "https://www.sc.stfc.ac.uk/"
-        - text: "CMMS theme"
-          url: "https://www.sc.stfc.ac.uk/research-and-expertise/computational-materials-and-molecular-science/"
     - eyebrow: "Work site · Cheshire"
       title: "Daresbury Laboratory"
       image: "assets/images/daresbury_laboratory.jpg"

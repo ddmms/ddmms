@@ -118,13 +118,15 @@ def render_affiliations_carousel_html(affiliations: Optional[Dict[str, Any]]) ->
             for link in (slide.get("links") or [])
             if isinstance(link, dict) and link.get("url")
         )
-        content_html = f"""              <div class="slide-content">
-                <span class="slide-eyebrow">{slide.get("eyebrow", "")}</span>
-                <h2 class="slide-title">{slide_title}</h2>
-                <p class="slide-desc">{slide.get("description", "")}</p>
+        eyebrow = str(slide.get("eyebrow") or "").strip()
+        eyebrow_html = f'\n                <span class="slide-eyebrow">{eyebrow}</span>' if eyebrow else ""
+        links_block_html = f"""
                 <div class="slide-links">
 {links_html}
-                </div>
+                </div>""" if links_html else ""
+        content_html = f"""              <div class="slide-content">{eyebrow_html}
+                <h2 class="slide-title">{slide_title}</h2>
+                <p class="slide-desc">{slide.get("description", "")}</p>{links_block_html}
               </div>"""
 
         if hierarchy:
