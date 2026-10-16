@@ -132,7 +132,7 @@ def generate_code_html(
         # Features
         features_list_html = ""
         if isinstance(features, list) and features:
-            items_str = "\n".join(f'            <li>{f}</li>' for f in features if str(f).strip())
+            items_str = "\n".join(f'            <li><span>{f}</span></li>' for f in features if str(f).strip())
             features_list_html = f"""          <ul class="code-features-list">
 {items_str}
           </ul>"""

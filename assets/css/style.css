@@ -1526,7 +1526,7 @@ a:hover {
   font-size: 0.85rem;
   color: var(--text-muted);
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: 0.4rem;
 }
 
