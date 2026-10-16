@@ -4,20 +4,20 @@ Instructions to build and serve the static website locally using [uv](https://do
 
 ## Build Instructions
 
-### 1. Full Build (Fetch Publications & Generate Site)
+### 1. Fetch Publications
 
-Fetch latest publication records from ORCID and rebuild all HTML pages, Markdown bibliography, and JSON feeds:
+Fetch the latest publication records from ORCID and write them to `publications.json` and `PUBLICATIONS.md`. This step does **not** generate HTML pages. Run it on first setup and whenever you want to refresh the publication list:
 
 ```bash
-uv run --with requests python src/pubs.py
+uv run --with requests --with pyyaml python src/pubs.py
 ```
 
-### 2. Fast Build (Regenerate HTML Pages from Local Data)
+### 2. Generate HTML Pages
 
-Rebuild all HTML pages (`index.html`, `publications.html`, `people.html`, `research.html`, `code.html`) using existing local data without querying the ORCID API:
+Build all HTML pages from local data (including `publications.json`). Always run this step, including after step 1:
 
 ```bash
-uv run python src/build_site.py
+uv run --with pyyaml python src/build_site.py
 ```
 
 ## Preview Locally
