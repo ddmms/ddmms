@@ -813,20 +813,54 @@ contact:
 
         teaching_html = (BASE_DIR / "teaching.html").read_text(encoding="utf-8")
         self.assertIn("<title>Teaching | Data Driven Materials and Molecular Science</title>", teaching_html)
+
+        # One section per category, each with a jump link at the top
+        categories = [
+            ("summer-schools", "Summer Schools"),
+            ("workshops", "Workshops"),
+            ("phd", "PhD Programme"),
+            ("graduate-scheme", "STFC Graduate Scheme"),
+            ("placements", "STFC Industrial and Summer Placements"),
+        ]
+        for cat_id, cat_title in categories:
+            self.assertIn(f'<section class="teaching-category" id="{cat_id}">', teaching_html)
+            self.assertIn(f'<h2 class="home-heading">{cat_title}</h2>', teaching_html)
+            self.assertIn(f'<a href="#{cat_id}" class="subnav-pill">{cat_title}</a>', teaching_html)
+
         self.assertIn("CCP5 Summer School", teaching_html)
         self.assertIn('href="https://spring2026.camml.ac.uk"', teaching_html)
+        self.assertIn('href="https://stfccareers.co.uk/graduates/"', teaching_html)
+        self.assertIn('href="https://stfccareers.co.uk/students/"', teaching_html)
+        self.assertIn('href="collaborate.html#contact"', teaching_html)
+        # Workshops has no entries yet
+        self.assertEqual(teaching_html.count("Details coming soon."), 1)
 
         with tempfile.NamedTemporaryFile("w+", encoding="utf-8", delete=False, suffix=".yaml") as tf:
             tf.write("""title: "Courses"
-events:
-  - year: "2030"
-    title: "Linked School"
-    role: "Lecturers"
-    description: "A week of lectures."
-    url: "https://example.com/school"
-  - year: "2029"
-    title: "Unlinked Workshop"
-  - year: "2028"
+categories:
+  - id: "schools"
+    title: "Schools"
+    events:
+      - year: "2030"
+        title: "Linked School"
+        role: "Lecturers"
+        description: "A week of lectures."
+        url: "https://example.com/school"
+      - year: "2029"
+        title: "Unlinked Workshop"
+      - year: "2028"
+  - id: "scheme"
+    title: "A Scheme"
+    description: "About the scheme."
+    links:
+      - text: "External"
+        url: "https://example.com/scheme"
+      - text: "Internal"
+        url: "collaborate.html#contact"
+      - text: "No URL"
+  - id: "empty"
+    title: "Empty"
+  - id: "untitled"
 """)
             tf_path = Path(tf.name)
         try:
@@ -835,8 +869,14 @@ events:
             self.assertIn('href="https://example.com/school"', rendered)
             self.assertIn('<span class="teaching-role">Lecturers</span>', rendered)
             self.assertIn("A week of lectures.", rendered)
-            self.assertIn('<h2 class="teaching-title">Unlinked Workshop</h2>', rendered)
+            self.assertIn('<h3 class="teaching-title">Unlinked Workshop</h3>', rendered)
             self.assertEqual(rendered.count('class="teaching-item"'), 2, "events without a title are skipped")
+            self.assertIn('<p class="teaching-category-desc">About the scheme.</p>', rendered)
+            self.assertIn('href="https://example.com/scheme" target="_blank"', rendered)
+            self.assertIn('<a href="collaborate.html#contact" class="person-link-btn">', rendered)
+            self.assertNotIn("No URL", rendered, "links without a url are skipped")
+            self.assertEqual(rendered.count("Details coming soon."), 1, "only the empty category gets the placeholder")
+            self.assertEqual(rendered.count('class="teaching-category"'), 3, "categories without a title are skipped")
         finally:
             tf_path.unlink()
 

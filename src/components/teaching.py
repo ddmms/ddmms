@@ -54,10 +54,7 @@ def generate_teaching_html(teaching: Optional[Dict[str, Any]] = None) -> str:
         str(teaching.get("intro") or "").strip(),
     )
 
-    rows = []
-    for event in teaching.get("events") or []:
-        if not isinstance(event, dict) or not event.get("title"):
-            continue
+    def render_event(event: Dict[str, Any]) -> str:
         title = str(event.get("title")).strip()
         url = str(event.get("url") or "").strip()
         if url:
@@ -65,16 +62,63 @@ def generate_teaching_html(teaching: Optional[Dict[str, Any]] = None) -> str:
         else:
             title_html = title
         role = str(event.get("role") or "").strip()
-        role_html = f'\n            <span class="teaching-role">{role}</span>' if role else ""
+        role_html = f'\n              <span class="teaching-role">{role}</span>' if role else ""
         desc = str(event.get("description") or "").strip()
-        desc_html = f'\n            <p class="teaching-desc">{desc}</p>' if desc else ""
-        rows.append(f"""        <li class="teaching-item">
-          <span class="teaching-year">{event.get("year", "")}</span>
-          <div class="teaching-body">
-            <h2 class="teaching-title">{title_html}</h2>{role_html}{desc_html}
-          </div>
-        </li>""")
-    rows_html = "\n".join(rows)
+        desc_html = f'\n              <p class="teaching-desc">{desc}</p>' if desc else ""
+        return f"""          <li class="teaching-item">
+            <span class="teaching-year">{event.get("year", "")}</span>
+            <div class="teaching-body">
+              <h3 class="teaching-title">{title_html}</h3>{role_html}{desc_html}
+            </div>
+          </li>"""
+
+    def render_link(link: Dict[str, Any]) -> str:
+        url = str(link.get("url")).strip()
+        text = link.get("text", "")
+        # Internal links stay in the same tab; external ones open a new tab
+        if url.startswith(("http://", "https://")):
+            return f'          <a href="{html.escape(url, quote=True)}" target="_blank" rel="noopener noreferrer" class="person-link-btn">{text}&nbsp;<span aria-hidden="true">&#8599;</span></a>'
+        return f'          <a href="{html.escape(url, quote=True)}" class="person-link-btn">{text}&nbsp;<span aria-hidden="true">&rarr;</span></a>'
+
+    categories = [c for c in (teaching.get("categories") or []) if isinstance(c, dict) and c.get("title")]
+    subnav_links = []
+    category_blocks = []
+    for cat in categories:
+        cat_id = str(cat.get("id") or "").strip()
+        cat_title = str(cat.get("title")).strip()
+        if cat_id:
+            subnav_links.append(f'        <a href="#{html.escape(cat_id, quote=True)}" class="subnav-pill">{cat_title}</a>')
+        id_attr = f' id="{html.escape(cat_id, quote=True)}"' if cat_id else ""
+
+        desc = str(cat.get("description") or "").strip()
+        desc_html = f'\n        <p class="teaching-category-desc">{desc}</p>' if desc else ""
+        links = [render_link(l) for l in (cat.get("links") or []) if isinstance(l, dict) and l.get("url")]
+        links_html = "\n".join(links)
+        links_block = f"""
+        <div class="link-buttons">
+{links_html}
+        </div>""" if links else ""
+        events = [render_event(e) for e in (cat.get("events") or []) if isinstance(e, dict) and e.get("title")]
+        events_html = "\n".join(events)
+        events_block = f"""
+        <ul class="teaching-list">
+{events_html}
+        </ul>""" if events else ""
+        empty_html = "" if (desc or links or events) else '\n        <p class="list-empty">Details coming soon.</p>'
+
+        category_blocks.append(f"""      <section class="teaching-category"{id_attr}>
+        <h2 class="home-heading">{cat_title}</h2>{desc_html}{links_block}{events_block}{empty_html}
+      </section>""")
+
+    subnav_html = ""
+    if len(subnav_links) > 1:
+        subnav_pills_html = "\n".join(subnav_links)
+        subnav_html = f"""      <nav class="subnav-pills" aria-label="Teaching page quick navigation">
+{subnav_pills_html}
+      </nav>
+
+"""
+    categories_html = "\n\n".join(category_blocks)
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -82,7 +126,7 @@ def generate_teaching_html(teaching: Optional[Dict[str, Any]] = None) -> str:
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Teaching | Data Driven Materials and Molecular Science</title>
-  <meta name="description" content="Schools, workshops and training organised or taught by the Data Driven Materials and Molecular Science group at STFC.">
+  <meta name="description" content="Summer schools, workshops, PhD projects, the STFC Graduate Scheme and STFC placements with the Data Driven Materials and Molecular Science group.">
   <link rel="icon" type="image/svg+xml" href="assets/logos/ddmms.svg">
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
@@ -97,9 +141,7 @@ def generate_teaching_html(teaching: Optional[Dict[str, Any]] = None) -> str:
 
     <section class="home-section">
       <div class="container">
-        <ul class="teaching-list">
-{rows_html}
-        </ul>
+{subnav_html}{categories_html}
       </div>
     </section>
   </main>

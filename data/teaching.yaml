@@ -1,17 +1,47 @@
 title: "Teaching &amp; Training"
-intro: "Schools, workshops and training events organised or taught by DDMMS members."
+intro: "Schools and workshops run by DDMMS members, and the routes for students and graduates to train with us at STFC."
 
-# Newest first. Each event: year, title, optional role, description and url.
-events:
-  - year: "2026"
-    title: "CCP5 Summer School"
-    role: "Organisers"
-    url: "https://summer2026.ccp5.ac.uk"
-  - year: "2026"
-    title: "CaMML Spring School"
-    role: "Organisers"
-    url: "https://spring2026.camml.ac.uk"
-  - year: "2025"
-    title: "CCP5 Summer School"
-    role: "Organisers"
-    url: "https://summer2025.ccp5.ac.uk"
+# Each category: id (used for the jump link), title, optional description,
+# links (text + url) and events (newest first: year, title, optional role,
+# description and url). A category with none of these shows "Details coming soon."
+categories:
+  - id: "summer-schools"
+    title: "Summer Schools"
+    events:
+      - year: "2026"
+        title: "CCP5 Summer School"
+        role: "Organisers"
+        url: "https://summer2026.ccp5.ac.uk"
+      - year: "2026"
+        title: "CaMML Spring School"
+        role: "Organisers"
+        url: "https://spring2026.camml.ac.uk"
+      - year: "2025"
+        title: "CCP5 Summer School"
+        role: "Organisers"
+        url: "https://summer2025.ccp5.ac.uk"
+
+  - id: "workshops"
+    title: "Workshops"
+    events: []
+
+  - id: "phd"
+    title: "PhD Programme"
+    description: "Interested in a PhD project with DDMMS? Get in touch to discuss current opportunities."
+    links:
+      - text: "Contact the group"
+        url: "collaborate.html#contact"
+
+  - id: "graduate-scheme"
+    title: "STFC Graduate Scheme"
+    description: "STFC's graduate programme is a permanent role in a department, with a two-year core training programme alongside technical training, mentoring towards professional registration, and a three-month placement in another STFC department. Computing is one of its five pathways. Applicants need, or are on course for, at least a 2:1 in a relevant subject."
+    links:
+      - text: "STFC Graduate Programme"
+        url: "https://stfccareers.co.uk/graduates/"
+
+  - id: "placements"
+    title: "STFC Industrial and Summer Placements"
+    description: "Undergraduates can work alongside STFC scientists and engineers on a year-long industrial placement during their degree, or on a summer placement. Both are aligned with the STFC graduate programme."
+    links:
+      - text: "STFC Industrial and Summer Placements"
+        url: "https://stfccareers.co.uk/students/"
