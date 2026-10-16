@@ -1,0 +1,18 @@
+eyebrow: "Training & schools"
+title: "Teaching &amp; Training"
+intro: "Schools, workshops and training events organised or taught by DDMMS members."
+
+# Newest first. Each event: year, title, optional role, description and url.
+events:
+  - year: "2026"
+    title: "CCP5 Summer School"
+    role: "Organisers"
+    url: "https://summer2026.ccp5.ac.uk"
+  - year: "2026"
+    title: "CaMML Spring School"
+    role: "Organisers"
+    url: "https://spring2026.camml.ac.uk"
+  - year: "2025"
+    title: "CCP5 Summer School"
+    role: "Organisers"
+    url: "https://summer2025.ccp5.ac.uk"

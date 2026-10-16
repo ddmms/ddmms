@@ -24,6 +24,8 @@ RESEARCH_FILE = BASE_DIR / "data" / "research.yaml"
 PEOPLE_FILE = BASE_DIR / "data" / "people.yaml"
 SOFTWARE_FILE = BASE_DIR / "data" / "software.yaml"
 MISSION_FILE = BASE_DIR / "data" / "mission.yaml"
+COLLABORATE_FILE = BASE_DIR / "data" / "collaborate.yaml"
+TEACHING_FILE = BASE_DIR / "data" / "teaching.yaml"
 
 # Import modular components with flexible path resolution
 try:
@@ -35,6 +37,8 @@ try:
     from .components.publications import generate_publications_html
     from .components.people import generate_people_html, load_people, generate_person_html, load_person
     from .components.research import generate_research_html, load_research
+    from .components.collaborate import generate_collaborate_html, load_collaborate
+    from .components.teaching import generate_teaching_html, load_teaching
 except (ImportError, ValueError):
     try:
         from components.header import generate_header_html, get_header
@@ -45,6 +49,8 @@ except (ImportError, ValueError):
         from components.publications import generate_publications_html
         from components.people import generate_people_html, load_people, generate_person_html, load_person
         from components.research import generate_research_html, load_research
+        from components.collaborate import generate_collaborate_html, load_collaborate
+        from components.teaching import generate_teaching_html, load_teaching
     except ImportError:
         from src.components.header import generate_header_html, get_header
         from src.components.footer import generate_footer_html, get_footer
@@ -54,6 +60,8 @@ except (ImportError, ValueError):
         from src.components.publications import generate_publications_html
         from src.components.people import generate_people_html, load_people, generate_person_html, load_person
         from src.components.research import generate_research_html, load_research
+        from src.components.collaborate import generate_collaborate_html, load_collaborate
+        from src.components.teaching import generate_teaching_html, load_teaching
 
 __all__ = [
     "BASE_DIR",
@@ -64,12 +72,16 @@ __all__ = [
     "PEOPLE_FILE",
     "SOFTWARE_FILE",
     "MISSION_FILE",
+    "COLLABORATE_FILE",
+    "TEACHING_FILE",
     "load_data",
     "load_news",
     "load_research",
     "load_people",
     "load_software",
     "load_mission",
+    "load_collaborate",
+    "load_teaching",
     "generate_header_html",
     "get_header",
     "generate_footer_html",
@@ -82,6 +94,8 @@ __all__ = [
     "generate_people_html",
     "generate_research_html",
     "generate_news_html",
+    "generate_collaborate_html",
+    "generate_teaching_html",
     "build_site",
     "main",
 ]
@@ -161,6 +175,8 @@ def main():
     people_data = load_people()
     software_data = load_software()
     mission_data = load_mission()
+    collaborate_data = load_collaborate()
+    teaching_data = load_teaching()
     total_people = sum(len(s.get("members", [])) for s in people_data.get("sections", []))
     print(
         f"Loaded {len(pubs)} publications, {len(authors)} authors, "
@@ -181,6 +197,8 @@ def main():
         "research.html": generate_research_html(research_data),
         "code.html": generate_code_html(software_data),
         "news.html": generate_news_html(news),
+        "teaching.html": generate_teaching_html(teaching_data),
+        "collaborate.html": generate_collaborate_html(collaborate_data),
     }
 
     # Generate individual profile pages for core team members

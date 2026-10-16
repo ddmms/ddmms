@@ -31,7 +31,9 @@ class TestDDMMSSite(unittest.TestCase):
             "people.html",
             "research.html",
             "code.html",
-            "news.html"
+            "news.html",
+            "teaching.html",
+            "collaborate.html"
         ]
 
 
@@ -42,7 +44,7 @@ class TestDDMMSSite(unittest.TestCase):
             self.assertGreater(p.stat().st_size, 1000, f"{fname} is suspiciously small")
 
     def test_required_nav_menu_items(self):
-        required_items = ["about", "people", "research", "publications", "software"]
+        required_items = ["home", "people", "publications", "research", "software", "teaching", "news", "collaborate"]
         content = (BASE_DIR / "header.html").read_text(encoding="utf-8").lower()
         for item in required_items:
             self.assertIn(item, content, f"Menu item '{item}' missing from header.html")
@@ -168,6 +170,9 @@ class TestDDMMSSite(unittest.TestCase):
             self.assertIn('href="research.html"', content, f"Separate link research.html missing in {fname}")
             self.assertIn('href="publications.html"', content, f"Separate link publications.html missing in {fname}")
             self.assertIn('href="code.html"', content, f"Separate link code.html missing in {fname}")
+            self.assertIn('href="collaborate.html"', content, f"Separate link collaborate.html missing in {fname}")
+            self.assertIn('href="news.html"', content, f"Separate link news.html missing in {fname}")
+            self.assertIn('href="teaching.html"', content, f"Separate link teaching.html missing in {fname}")
 
     def test_no_software_and_feeds_in_footer(self):
         content = (BASE_DIR / "footer.html").read_text(encoding="utf-8")
@@ -182,15 +187,13 @@ class TestDDMMSSite(unittest.TestCase):
     def test_people_page_sections(self):
         people_html = (BASE_DIR / "people.html").read_text(encoding="utf-8").lower()
         self.assertIn("core members", people_html)
-        self.assertIn("former members", people_html)
-        self.assertIn("collaborator", people_html)
-        self.assertIn("visitor", people_html)
+        # Collaborators stays visible because it holds the research networks list
+        self.assertIn("collaborative research networks", people_html)
 
-    def test_people_page_collaborators_and_visitors_content(self):
+    def test_people_page_has_no_placeholders(self):
         people_html = (BASE_DIR / "people.html").read_text(encoding="utf-8")
-        self.assertIn("Collaborator Name", people_html, "Collaborator placeholder missing")
-        self.assertIn("Former Member Name", people_html, "Former Member placeholder missing")
-        self.assertIn("Visitor Name", people_html, "Visitor placeholder missing")
+        for placeholder in ("Collaborator Name", "Former Member Name", "Visitor Name", 'href="#"'):
+            self.assertNotIn(placeholder, people_html, f"Placeholder {placeholder!r} should not be published")
         # Ensure specific names are removed
         self.assertNotIn("Matteo Salvalaglio", people_html)
         self.assertNotIn("Jacob Wilkins", people_html)
@@ -200,10 +203,28 @@ class TestDDMMSSite(unittest.TestCase):
     def test_people_subnav_anchors(self):
         people_html = (BASE_DIR / "people.html").read_text(encoding="utf-8")
         self.assertIn('id="core-team"', people_html)
-        self.assertIn('id="former-members"', people_html)
         self.assertIn('id="collaborators"', people_html)
-        self.assertIn('id="visitors"', people_html)
         self.assertIn('id="contact"', people_html)
+        # Empty sections (and their jump links) are hidden until members are added
+        for empty_id in ("former-members", "visitors"):
+            self.assertNotIn(f'id="{empty_id}"', people_html)
+            self.assertNotIn(f'href="#{empty_id}"', people_html)
+
+    def test_people_sections_hidden_until_filled(self):
+        from components.people import generate_people_html
+
+        rendered = generate_people_html({
+            "sections": [
+                {"id": "former-members", "title": "Former Members", "members": [
+                    {"name": "Real Person", "role": "Postdoc", "affiliation": "STFC"},
+                ]},
+                {"id": "visitors", "title": "Visitors", "members": []},
+            ],
+        })
+        self.assertIn('id="former-members"', rendered)
+        self.assertIn("Real Person", rendered)
+        self.assertNotIn('id="visitors"', rendered)
+        self.assertNotIn('href="#visitors"', rendered)
 
     def test_reusable_footer_file_exists_and_valid(self):
         footer_path = BASE_DIR / "footer.html"
@@ -357,14 +378,10 @@ class TestDDMMSSite(unittest.TestCase):
     def test_about_page_highlights_and_landing_page(self):
         index_html = (BASE_DIR / "index.html").read_text(encoding="utf-8")
         self.assertIn("Recent Highlights &amp; News", index_html)
-        self.assertIn("Collaborate With Us", index_html)
-        self.assertIn("Contact the Group", index_html)
-        # Ensure Recent Highlights & News appears above Work With Us / Contact
-        highlights_pos = index_html.find("Recent Highlights &amp; News")
-        contact_pos = index_html.find("Contact the Group")
-        self.assertNotEqual(highlights_pos, -1)
-        self.assertNotEqual(contact_pos, -1)
-        self.assertLess(highlights_pos, contact_pos, "Recent Highlights & News must appear above Contact")
+        # Homepage is a single column: no sidebar, and collaboration lives on its own page
+        self.assertNotIn('class="about-grid"', index_html)
+        self.assertNotIn("Collaborate With Us", index_html)
+        self.assertLess(index_html.index('id="mission"'), index_html.index('id="news-section"'))
 
         # Brand links point to index.html as landing page
         content = (BASE_DIR / "header.html").read_text(encoding="utf-8")
@@ -604,11 +621,6 @@ subtitle: "Pioneering atomic intelligence."
 paragraphs:
   - "Custom mission paragraph one describing high accuracy simulation."
   - "Custom mission paragraph two detailing open-source pipelines."
-work_with_us:
-  title: "Join Our Team"
-  description: "Exciting opportunities for researchers."
-  button_text: "Apply Now"
-  button_link: "https://example.com/apply"
 """)
             tmf_path = Path(tmf.name)
 
@@ -622,8 +634,7 @@ work_with_us:
             self.assertIn("Custom Group Vision", rendered_html)
             self.assertIn("Pioneering atomic intelligence.", rendered_html)
             self.assertIn("Custom mission paragraph one describing high accuracy simulation.", rendered_html)
-            self.assertIn("Join Our Team", rendered_html)
-            self.assertIn("https://example.com/apply", rendered_html)
+            self.assertIn('<p class="home-lead">', rendered_html)
         finally:
             if tmf_path.exists():
                 tmf_path.unlink()
@@ -631,6 +642,169 @@ work_with_us:
         # Non-existent file raises FileNotFoundError
         with self.assertRaises(FileNotFoundError):
             load_mission(Path("/nonexistent/file.yaml"))
+
+    def test_index_affiliations_carousel(self):
+        index_html = (BASE_DIR / "index.html").read_text(encoding="utf-8")
+        main_js = (BASE_DIR / "assets" / "js" / "main.js").read_text(encoding="utf-8")
+
+        # Carousel sits at the top of the page, before the mission text
+        self.assertIn('class="hero-carousel"', index_html)
+        self.assertIn("data-carousel", index_html)
+        self.assertLess(index_html.index('class="hero-carousel"'), index_html.index('id="mission"'))
+        # The old tagline was removed from the homepage
+        self.assertNotIn("Using statistical physics, quantum mechanics", index_html)
+
+        for title in ("UKRI-STFC Scientific Computing", "Daresbury Laboratory", "Rutherford Appleton Laboratory"):
+            self.assertIn(f'<h2 class="slide-title">{title}</h2>', index_html)
+        for url in (
+            "https://www.ukri.org/",
+            "https://www.ukri.org/councils/stfc/",
+            "https://www.sc.stfc.ac.uk/",
+            "https://www.sc.stfc.ac.uk/research-and-expertise/computational-materials-and-molecular-science/",
+            "https://www.ukri.org/who-we-are/stfc/facilities/daresbury-laboratory/",
+            "https://www.ukri.org/who-we-are/stfc/facilities/rutherford-appleton-laboratory/",
+        ):
+            self.assertIn(f'href="{url}"', index_html)
+
+        # Prev/next buttons and one dot per slide, wired up in main.js
+        self.assertIn('class="carousel-btn carousel-prev"', index_html)
+        self.assertIn('class="carousel-btn carousel-next"', index_html)
+        self.assertEqual(index_html.count('class="carousel-dot"'), 3)
+        self.assertIn("function initCarousels()", main_js)
+
+        # Organisational chain ends with the DDMMS group highlighted
+        for short in ("UKRI", "STFC", "SCD", "CMMS", "DDMMS"):
+            self.assertIn(f'<span class="org-chain-short">{short}</span>', index_html)
+        self.assertEqual(index_html.count("org-chain-step is-current"), 1)
+
+        # Work-site photos are referenced and exist on disk
+        for img in ("daresbury_laboratory.jpg", "rutherford_appleton_laboratory.jpg"):
+            self.assertIn(f'src="assets/images/{img}"', index_html)
+            self.assertTrue((BASE_DIR / "assets" / "images" / img).is_file(), f"Missing image {img}")
+
+    def test_render_affiliations_carousel_html(self):
+        from components.index import render_affiliations_carousel_html
+
+        self.assertEqual(render_affiliations_carousel_html(None), "")
+        self.assertEqual(render_affiliations_carousel_html({"title": "No slides"}), "")
+
+        rendered = render_affiliations_carousel_html({
+            "title": "Where We Work",
+            "slides": [
+                {
+                    "title": "Org Slide",
+                    "hierarchy": [
+                        {"short": "A", "name": "Alpha", "url": "https://example.com/alpha"},
+                        {"short": "B", "name": "Beta", "badge": "Us"},
+                    ],
+                    "links": [{"text": "Org site", "url": "https://example.com/org"}],
+                },
+                {
+                    "title": "Photo Slide",
+                    "image": "assets/images/site.jpg",
+                    "image_alt": 'Site "main" building',
+                    "image_position": "20% 50%",
+                    "text_side": "right",
+                },
+            ],
+        })
+        self.assertIn('aria-label="Where We Work"', rendered)
+        self.assertIn('aria-label="1 of 2: Org Slide"', rendered)
+        self.assertIn('<ol class="org-chain" aria-label="Organisational hierarchy: A &gt; B">', rendered)
+        self.assertIn('<a href="https://example.com/alpha" class="org-chain-name org-chain-link"', rendered)
+        self.assertIn('<span class="org-chain-name">Beta</span>', rendered)
+        self.assertIn('<span class="org-chain-badge">Us</span>', rendered)
+        self.assertEqual(rendered.count("is-current"), 1)
+        self.assertIn('href="https://example.com/org"', rendered)
+        self.assertIn('alt="Site &quot;main&quot; building"', rendered)
+        self.assertIn('style="object-position: 20% 50%;"', rendered)
+        self.assertIn('class="carousel-slide carousel-slide-photo slide-text-right"', rendered)
+        self.assertEqual(rendered.count('class="carousel-dot"'), 2)
+
+        # A single slide needs no prev/next controls
+        single = render_affiliations_carousel_html({"slides": [{"title": "Only"}]})
+        self.assertNotIn("carousel-controls", single)
+
+    def test_collaborate_page(self):
+        import tempfile
+        from components.collaborate import load_collaborate, generate_collaborate_html
+
+        collab_html = (BASE_DIR / "collaborate.html").read_text(encoding="utf-8")
+        self.assertIn("<title>Collaborate | Data Driven Materials and Molecular Science</title>", collab_html)
+        self.assertIn('<h1 class="page-hero-title">Collaborate With Us</h1>', collab_html)
+        self.assertNotIn('class="feature-list"', collab_html, "no filler lists without real content")
+        self.assertIn('href="mailto:', collab_html)
+
+        data = load_collaborate()
+        self.assertEqual(data["title"], "Collaborate With Us")
+
+        with tempfile.NamedTemporaryFile("w+", encoding="utf-8", delete=False, suffix=".yaml") as tf:
+            tf.write("""title: "Join Us"
+intro: "Custom intro."
+sections:
+  - title: "Roles"
+    items: ["Role A", "Role B"]
+contact:
+  title: "Say hello"
+  description: "Write to us."
+  email: "someone@example.com"
+""")
+            tf_path = Path(tf.name)
+        try:
+            rendered = generate_collaborate_html(load_collaborate(tf_path))
+            self.assertIn('<h1 class="page-hero-title">Join Us</h1>', rendered)
+            self.assertIn('<span class="feature-index">02</span>', rendered)
+            self.assertIn('<span class="feature-label">Role B</span>', rendered)
+            self.assertIn('href="mailto:someone@example.com"', rendered)
+            self.assertIn("Say hello", rendered)
+        finally:
+            tf_path.unlink()
+
+        with self.assertRaises(FileNotFoundError):
+            load_collaborate(Path("/nonexistent/collaborate.yaml"))
+
+    def test_teaching_page(self):
+        import tempfile
+        from components.teaching import load_teaching, generate_teaching_html
+
+        teaching_html = (BASE_DIR / "teaching.html").read_text(encoding="utf-8")
+        self.assertIn("<title>Teaching | Data Driven Materials and Molecular Science</title>", teaching_html)
+        self.assertIn("CCP5 Summer School", teaching_html)
+        self.assertIn('href="https://spring2026.camml.ac.uk"', teaching_html)
+
+        with tempfile.NamedTemporaryFile("w+", encoding="utf-8", delete=False, suffix=".yaml") as tf:
+            tf.write("""title: "Courses"
+events:
+  - year: "2030"
+    title: "Linked School"
+    role: "Lecturers"
+    description: "A week of lectures."
+    url: "https://example.com/school"
+  - year: "2029"
+    title: "Unlinked Workshop"
+  - year: "2028"
+""")
+            tf_path = Path(tf.name)
+        try:
+            rendered = generate_teaching_html(load_teaching(tf_path))
+            self.assertIn('<h1 class="page-hero-title">Courses</h1>', rendered)
+            self.assertIn('href="https://example.com/school"', rendered)
+            self.assertIn('<span class="teaching-role">Lecturers</span>', rendered)
+            self.assertIn("A week of lectures.", rendered)
+            self.assertIn('<h2 class="teaching-title">Unlinked Workshop</h2>', rendered)
+            self.assertEqual(rendered.count('class="teaching-item"'), 2, "events without a title are skipped")
+        finally:
+            tf_path.unlink()
+
+        with self.assertRaises(FileNotFoundError):
+            load_teaching(Path("/nonexistent/teaching.yaml"))
+
+    def test_inner_pages_share_flat_page_hero(self):
+        for fname in ("people.html", "publications.html", "research.html", "code.html",
+                      "news.html", "teaching.html", "collaborate.html", "junwen-yin.html"):
+            content = (BASE_DIR / fname).read_text(encoding="utf-8")
+            self.assertIn('<section class="page-hero">', content, f"{fname} is missing the shared page hero")
+            self.assertEqual(content.count('<h1 '), 1, f"{fname} should have exactly one h1")
 
     def test_news_display_latest_four_and_historical_toggle(self):
         index_html = (BASE_DIR / "index.html").read_text(encoding="utf-8")
