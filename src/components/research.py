@@ -33,7 +33,6 @@ def load_research(research_file: Optional[Union[str, Path]] = None) -> Dict[str,
         subtitle: "From quantum-level..."
       themes:
         - id: "mlips"
-          tag: "Interest 1 • Physics-Informed AI"
           title: "Foundation Machine-Learned Interatomic Potentials (MLIPs)"
           description:
             - "Paragraph 1..."
@@ -120,7 +119,6 @@ def generate_research_html(
     for theme in themes:
         if not isinstance(theme, dict):
             continue
-        tag = str(theme.get("tag") or "").strip()
         title = str(theme.get("title") or "").strip()
         desc = theme.get("description") or theme.get("desc") or ""
 
@@ -173,11 +171,9 @@ def generate_research_html(
             {links_str}
           </div>"""
 
-        tag_html = f'<span class="research-tag">{tag}</span>\n            ' if tag else ''
-
         cards.append(f"""        <article class="research-card">
           <div class="research-card-top">
-            {tag_html}<h2 class="research-card-title">{title}</h2>
+            <h2 class="research-card-title">{title}</h2>
 {desc_html}
           </div>
 {actions_html}

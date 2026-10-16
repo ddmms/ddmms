@@ -458,10 +458,8 @@ class TestDDMMSSite(unittest.TestCase):
 
         # Verify theme structure
         for item in research_data["themes"]:
-            self.assertIn("tag", item)
             self.assertIn("title", item)
             self.assertIn("description", item)
-            self.assertTrue(item["tag"])
             self.assertTrue(item["title"])
             self.assertTrue(item["description"])
 
@@ -490,6 +488,9 @@ themes:
             self.assertIn("Custom research approach subtitle", rendered_html)
             self.assertIn("Novel Materials Design", rendered_html)
             self.assertIn("https://example.com/custom", rendered_html)
+            # No small uppercase labels above theme titles; a leftover tag is ignored
+            self.assertNotIn("Custom Theme", rendered_html)
+            self.assertNotIn("research-tag", rendered_html)
         finally:
             if trf_path.exists():
                 trf_path.unlink()
