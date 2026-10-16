@@ -113,6 +113,11 @@ class TestDDMMSSite(unittest.TestCase):
         footer_html = (BASE_DIR / "footer.html").read_text(encoding="utf-8")
         research_html = (BASE_DIR / "research.html").read_text(encoding="utf-8")
         self.assertIn("goldilocks.ac.uk", code_html, "goldilocks.ac.uk not found in code.html")
+        # Goldilocks pipeline and agent; feature text is one inline span so bold words stay in the sentence
+        for pkg in ("goldilocks-data", "goldilocks-ml", "goldilocks-core", "goldilocks-agent"):
+            self.assertIn(f"<li><span><strong>{pkg}</strong>", code_html)
+        # No install command until one works
+        self.assertNotIn("pip install goldilocks", code_html)
         self.assertIn("goldilocks.ac.uk", research_html, "goldilocks.ac.uk not found in research.html")
         self.assertIn("ml-peg", research_html.lower(), "ml-peg not found in research.html")
         self.assertIn("psdi", footer_html.lower(), "PSDI reference missing in footer.html")
@@ -120,7 +125,7 @@ class TestDDMMSSite(unittest.TestCase):
 
     def test_research_cards_include_goldilocks_and_ml_peg(self):
         research_html = (BASE_DIR / "research.html").read_text(encoding="utf-8")
-        self.assertIn("Sustainable DFT &amp; k-Point Optimization (Goldilocks)", research_html)
+        self.assertIn("Sustainable DFT through Data-Driven Agents (Goldilocks)", research_html)
         self.assertIn("Machine Learning Performance and Extrapolation Guide (ML-PEG)", research_html)
 
     def test_key_facts_card_removed(self):

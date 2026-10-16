@@ -40,10 +40,10 @@ themes:
         class: "btn btn-primary"
 
   - id: goldilocks
-    title: "Sustainable DFT &amp; k-Point Optimization (Goldilocks)"
+    title: "Sustainable DFT through Data-Driven Agents (Goldilocks)"
     description:
-      - "Computational electronic structure calculations represent a major fraction of workloads on national supercomputing services like ARCHER2. In collaboration with the <strong>PSDI (Physical Sciences Data Infrastructure) Data to Knowledge</strong> initiative, we develop <a href=\"https://goldilocks.ac.uk\" target=\"_blank\" rel=\"noopener noreferrer\"><strong>Goldilocks</strong> (goldilocks.ac.uk)</a> to predict optimal, sustainable k-point convergence parameters for Quantum ESPRESSO self-consistent field (SCF) calculations."
-      - "By balancing numerical accuracy with computational efficiency—never under-converged, never computationally wasteful—Goldilocks eliminates compute and electricity waste while preserving target accuracy. Peer-reviewed in RSC <em>Digital Discovery</em> (2026, DOI: 10.1039/d5dd00565e)."
+      - "Electronic-structure calculations make up a large share of the work on national supercomputers such as ARCHER2, and choosing their settings by trial and error wastes compute and electricity. With the <strong>PSDI (Physical Sciences Data Infrastructure) Data to Knowledge</strong> initiative, we develop <a href=\"https://goldilocks.ac.uk\" target=\"_blank\" rel=\"noopener noreferrer\"><strong>Goldilocks</strong> (goldilocks.ac.uk)</a>, which recommends the settings for a DFT calculation from a crystal structure, records the basis for each recommendation, and generates the input files and submission script needed to run it: never under-converged, never wasteful."
+      - "Goldilocks is a data-driven pipeline. <strong>goldilocks-data</strong> runs AiiDA convergence campaigns with real DFT calculations, <strong>goldilocks-ml</strong> trains and evaluates models on the results, and <strong>goldilocks-core</strong> applies them to new structures; each stage publishes its datasets or models on PSDI before the next stage uses them. <strong>goldilocks-agent</strong>, in development, adds an AI assistant that orchestrates these workflows, post-processes results and explains its recommendations in plain language. The k-point work is peer-reviewed in RSC <em>Digital Discovery</em> (2026, DOI: 10.1039/d5dd00565e)."
     links:
       - text: "goldilocks.ac.uk &rarr;"
         url: "https://goldilocks.ac.uk"
