@@ -256,6 +256,13 @@ a:hover {
   font-weight: 700;
 }
 
+@media (max-width: 1200px) {
+  /* make room for all eight nav items on narrower desktops */
+  .brand-title-sub {
+    display: none;
+  }
+}
+
 @media (max-width: 1150px) {
   .nav-item a {
     font-size: 0.92rem;
@@ -2004,6 +2011,7 @@ a:hover {
   letter-spacing: -0.03em;
   line-height: 1.05;
   color: #ffffff;
+  text-wrap: balance;
 }
 
 .slide-desc {

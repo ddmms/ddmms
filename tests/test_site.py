@@ -654,7 +654,7 @@ paragraphs:
         # The old tagline was removed from the homepage
         self.assertNotIn("Using statistical physics, quantum mechanics", index_html)
 
-        for title in ("UKRI-STFC Scientific Computing", "Daresbury Laboratory", "Rutherford Appleton Laboratory"):
+        for title in ("Data Driven Materials and Molecular Science Group", "Daresbury Laboratory", "Rutherford Appleton Laboratory"):
             self.assertIn(f'<h2 class="slide-title">{title}</h2>', index_html)
         for url in (
             "https://www.ukri.org/",

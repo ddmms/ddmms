@@ -8,9 +8,9 @@ paragraphs:
 affiliations:
   title: "Our Home at STFC"
   slides:
-    - eyebrow: "Department"
-      title: "UKRI-STFC Scientific Computing"
-      description: "DDMMS is a group in the Computational Materials and Molecular Science (CMMS) theme of STFC's Scientific Computing Department (SCD), an international centre of excellence for advanced computing."
+    - eyebrow: "DDMMS"
+      title: "Data Driven Materials and Molecular Science Group"
+      description: "We are a research group in the Computational Materials and Molecular Science (CMMS) theme of the UKRI-STFC Scientific Computing Department (SCD), an international centre of excellence for advanced computing."
       hierarchy:
         - short: "UKRI"
           name: "UK Research and Innovation"
