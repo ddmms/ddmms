@@ -65,12 +65,62 @@ def generate_teaching_html(teaching: Optional[Dict[str, Any]] = None) -> str:
         role_html = f'\n              <span class="teaching-role">{role}</span>' if role else ""
         desc = str(event.get("description") or "").strip()
         desc_html = f'\n              <p class="teaching-desc">{desc}</p>' if desc else ""
-        return f"""          <li class="teaching-item">
+        # Optional photo, shown to the right of the entry
+        image = str(event.get("image") or "").strip()
+        item_cls = "teaching-item"
+        image_html = ""
+        if image:
+            item_cls += " has-image"
+            alt = html.escape(str(event.get("image_alt") or title), quote=True)
+            image_html = f'\n            <img class="teaching-image" src="{html.escape(image, quote=True)}" alt="{alt}" loading="lazy">'
+        return f"""          <li class="{item_cls}">
             <span class="teaching-year">{event.get("year", "")}</span>
             <div class="teaching-body">
               <h3 class="teaching-title">{title_html}</h3>{role_html}{desc_html}
-            </div>
+            </div>{image_html}
           </li>"""
+
+    def external_link(url: str, text: str) -> str:
+        return f'<a href="{html.escape(url, quote=True)}" target="_blank" rel="noopener noreferrer">{text}&nbsp;<span aria-hidden="true">&#8599;</span></a>'
+
+    def render_project(project: Dict[str, Any]) -> str:
+        """An ongoing PhD project: status badge, title, who/where, then a short description."""
+        title = str(project.get("title")).strip()
+        url = str(project.get("url") or "").strip()
+        title_html = external_link(url, title) if url else title
+        status = str(project.get("status") or "").strip()
+        status_html = f'\n            <span class="project-status">{status}</span>' if status else ""
+
+        programme = str(project.get("programme") or "").strip()
+        programme_url = str(project.get("programme_url") or "").strip()
+        if programme and programme_url:
+            programme = external_link(programme_url, programme)
+        meta = [
+            ("PhD student", str(project.get("student") or "").strip()),
+            ("Supervisors", str(project.get("supervisors") or "").strip()),
+            ("University", str(project.get("university") or "").strip()),
+            ("Programme", programme),
+            ("Started", str(project.get("started") or "").strip()),
+            ("Duration", str(project.get("duration") or "").strip()),
+        ]
+        meta_rows = "\n".join(
+            f"""              <dt>{label}</dt>
+              <dd>{value}</dd>"""
+            for label, value in meta if value
+        )
+        meta_html = f"""
+            <dl class="project-meta">
+{meta_rows}
+            </dl>""" if meta_rows else ""
+        desc = str(project.get("description") or "").strip()
+        desc_html = f'\n            <p class="project-desc">{desc}</p>' if desc else ""
+        return f"""          <li class="project-card">{status_html}
+            <h3 class="project-title">{title_html}</h3>{meta_html}{desc_html}
+          </li>"""
+
+    def initials(name: str) -> str:
+        parts = name.split()
+        return (parts[0][0] + (parts[-1][0] if len(parts) > 1 else "")).upper()
 
     def render_link(link: Dict[str, Any]) -> str:
         url = str(link.get("url")).strip()
@@ -104,10 +154,30 @@ def generate_teaching_html(teaching: Optional[Dict[str, Any]] = None) -> str:
         <ul class="teaching-list">
 {events_html}
         </ul>""" if events else ""
-        empty_html = "" if (desc or links or events) else '\n        <p class="list-empty">Details coming soon.</p>'
+        projects = [render_project(p) for p in (cat.get("projects") or []) if isinstance(p, dict) and p.get("title")]
+        projects_html = "\n".join(projects)
+        projects_block = f"""
+        <ul class="project-list">
+{projects_html}
+        </ul>""" if projects else ""
+        # People on this route (e.g. graduates who trained in the group)
+        members = [str(m.get("name")).strip() for m in (cat.get("members") or []) if isinstance(m, dict) and m.get("name")]
+        members_block = ""
+        if members:
+            chips = "\n".join(
+                f'          <li class="member-chip"><span class="member-initials" aria-hidden="true">{initials(name)}</span>{name}</li>'
+                for name in members
+            )
+            members_title = str(cat.get("members_title") or "Members").strip()
+            members_block = f"""
+        <h3 class="teaching-subheading">{members_title}</h3>
+        <ul class="member-list">
+{chips}
+        </ul>"""
+        empty_html = "" if (desc or links or events or projects or members) else '\n        <p class="list-empty">Details coming soon.</p>'
 
         category_blocks.append(f"""      <section class="teaching-category"{id_attr}>
-        <h2 class="home-heading">{cat_title}</h2>{desc_html}{links_block}{events_block}{empty_html}
+        <h2 class="home-heading">{cat_title}</h2>{desc_html}{events_block}{projects_block}{members_block}{links_block}{empty_html}
       </section>""")
 
     subnav_html = ""
@@ -126,7 +196,7 @@ def generate_teaching_html(teaching: Optional[Dict[str, Any]] = None) -> str:
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Teaching | Data Driven Materials and Molecular Science</title>
-  <meta name="description" content="Summer schools, workshops, PhD projects, the STFC Graduate Scheme and STFC placements with the Data Driven Materials and Molecular Science group.">
+  <meta name="description" content="Schools, workshops, PhD projects, the STFC Graduate Scheme and STFC placements with the Data Driven Materials and Molecular Science group.">
   <link rel="icon" type="image/svg+xml" href="assets/logos/ddmms.svg">
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">

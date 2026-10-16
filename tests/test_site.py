@@ -816,7 +816,7 @@ contact:
 
         # One section per category, each with a jump link at the top
         categories = [
-            ("summer-schools", "Summer Schools"),
+            ("schools", "Schools"),
             ("workshops", "Workshops"),
             ("phd", "PhD Programme"),
             ("graduate-scheme", "STFC Graduate Scheme"),
@@ -828,10 +828,38 @@ contact:
             self.assertIn(f'<a href="#{cat_id}" class="subnav-pill">{cat_title}</a>', teaching_html)
 
         self.assertIn("CCP5 Summer School", teaching_html)
+        self.assertIn('href="https://www.ccpnth.ac.uk/events/ai4nth2026/"', teaching_html)
         self.assertIn('href="https://spring2026.camml.ac.uk"', teaching_html)
         self.assertIn('href="https://stfccareers.co.uk/graduates/"', teaching_html)
         self.assertIn('href="https://stfccareers.co.uk/students/"', teaching_html)
         self.assertIn('href="collaborate.html#contact"', teaching_html)
+        # Ongoing PhD project as a card under PhD Programme, not a dated list entry
+        phd_block = teaching_html[teaching_html.index('id="phd"'):teaching_html.index('id="graduate-scheme"')]
+        self.assertIn('<li class="project-card">', phd_block)
+        self.assertNotIn('class="teaching-item', phd_block)
+        self.assertIn('<span class="project-status">In progress</span>', phd_block)
+        self.assertIn("Properties of Functional Oxides", phd_block)
+        self.assertIn("<dd>Atharva Anturkar</dd>", phd_block)
+        self.assertIn("<dd>Prof Alexander Shluger and Dr Junwen Yin</dd>", phd_block)
+        self.assertIn('href="https://www.adalovelacecentre.ac.uk/phd-projects/"', phd_block)
+        self.assertIn("www.ucl.ac.uk/mathematical-physical-sciences/data-intensive-science-and-industry", phd_block)
+        # The contact invitation comes after the project, not before it
+        self.assertLess(phd_block.index("project-card"), phd_block.index('href="collaborate.html#contact"'))
+        # Students are listed with their project, not on the People page
+        people_html = (BASE_DIR / "people.html").read_text(encoding="utf-8")
+        self.assertNotIn("Atharva Anturkar", people_html)
+        # Every event photo referenced in teaching.yaml exists on disk
+        for cat in load_teaching().get("categories") or []:
+            for event in cat.get("events") or []:
+                if event.get("image"):
+                    self.assertTrue((BASE_DIR / event["image"]).is_file(), f"Missing image {event['image']}")
+        self.assertIn("Lecturer: Junwen Yin", teaching_html)
+        # Past graduates listed under the Graduate Scheme, names only
+        grad_block = teaching_html[teaching_html.index('id="graduate-scheme"'):teaching_html.index('id="placements"')]
+        self.assertIn('<h3 class="teaching-subheading">Past graduates in DDMMS</h3>', grad_block)
+        for name in ("Muhammad Mohsin", "Jessica Gould", "Willow Sparks"):
+            self.assertIn(f"{name}</li>", grad_block)
+        self.assertNotIn("@stfc.ac.uk", grad_block)
         # Workshops has no entries yet
         self.assertEqual(teaching_html.count("Details coming soon."), 1)
 
@@ -848,6 +876,8 @@ categories:
         url: "https://example.com/school"
       - year: "2029"
         title: "Unlinked Workshop"
+        image: "assets/images/workshop.jpg"
+        image_alt: "Group photo"
       - year: "2028"
   - id: "scheme"
     title: "A Scheme"
@@ -861,6 +891,25 @@ categories:
   - id: "empty"
     title: "Empty"
   - id: "untitled"
+  - id: "phd"
+    title: "Doctoral"
+    projects:
+      - title: "Linked Project"
+        url: "https://example.com/project"
+        status: "In progress"
+        student: "Student Name"
+        programme: "Some Programme"
+        programme_url: "https://example.com/programme"
+        description: "What the project does."
+      - title: "Bare Project"
+      - status: "No title"
+    members:
+      - name: "Ada Lovelace"
+      - name: "Plato"
+      - role: "No name"
+    links:
+      - text: "Ask us"
+        url: "collaborate.html#contact"
 """)
             tf_path = Path(tf.name)
         try:
@@ -870,13 +919,32 @@ categories:
             self.assertIn('<span class="teaching-role">Lecturers</span>', rendered)
             self.assertIn("A week of lectures.", rendered)
             self.assertIn('<h3 class="teaching-title">Unlinked Workshop</h3>', rendered)
-            self.assertEqual(rendered.count('class="teaching-item"'), 2, "events without a title are skipped")
+            self.assertEqual(rendered.count('class="teaching-item'), 2, "events without a title are skipped")
+            self.assertIn('<li class="teaching-item has-image">', rendered)
+            self.assertIn('<img class="teaching-image" src="assets/images/workshop.jpg" alt="Group photo" loading="lazy">', rendered)
             self.assertIn('<p class="teaching-category-desc">About the scheme.</p>', rendered)
             self.assertIn('href="https://example.com/scheme" target="_blank"', rendered)
             self.assertIn('<a href="collaborate.html#contact" class="person-link-btn">', rendered)
             self.assertNotIn("No URL", rendered, "links without a url are skipped")
             self.assertEqual(rendered.count("Details coming soon."), 1, "only the empty category gets the placeholder")
-            self.assertEqual(rendered.count('class="teaching-category"'), 3, "categories without a title are skipped")
+            self.assertEqual(rendered.count('class="teaching-category"'), 4, "categories without a title are skipped")
+            # Project cards: optional fields are left out when missing
+            self.assertEqual(rendered.count('<li class="project-card">'), 2, "projects without a title are skipped")
+            self.assertIn('<span class="project-status">In progress</span>', rendered)
+            self.assertIn("<dt>PhD student</dt>", rendered)
+            self.assertIn("<dd>Student Name</dd>", rendered)
+            self.assertNotIn("<dt>Supervisors</dt>", rendered)
+            self.assertIn('href="https://example.com/programme"', rendered)
+            self.assertIn('<p class="project-desc">What the project does.</p>', rendered)
+            self.assertIn('<h3 class="project-title">Bare Project</h3>', rendered)
+            doctoral = rendered[rendered.index('id="phd"'):]
+            # Members: default heading, initials, entries without a name skipped
+            self.assertIn('<h3 class="teaching-subheading">Members</h3>', doctoral)
+            self.assertIn('<span class="member-initials" aria-hidden="true">AL</span>Ada Lovelace</li>', doctoral)
+            self.assertIn('<span class="member-initials" aria-hidden="true">P</span>Plato</li>', doctoral)
+            self.assertEqual(doctoral.count('class="member-chip"'), 2)
+            self.assertLess(doctoral.index("member-list"), doctoral.index("Ask us"), "links come after the members")
+            self.assertLess(doctoral.index("project-list"), doctoral.index("Ask us"), "links come after the projects")
         finally:
             tf_path.unlink()
 
