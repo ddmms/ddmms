@@ -26,6 +26,8 @@ SOFTWARE_FILE = BASE_DIR / "data" / "software.yaml"
 MISSION_FILE = BASE_DIR / "data" / "mission.yaml"
 COLLABORATE_FILE = BASE_DIR / "data" / "collaborate.yaml"
 TEACHING_FILE = BASE_DIR / "data" / "teaching.yaml"
+TALKS_FILE = BASE_DIR / "data" / "talks.yaml"
+AWARDS_FILE = BASE_DIR / "data" / "awards.yaml"
 
 # Import modular components with flexible path resolution
 try:
@@ -39,6 +41,8 @@ try:
     from .components.research import generate_research_html, load_research
     from .components.collaborate import generate_collaborate_html, load_collaborate
     from .components.teaching import generate_teaching_html, load_teaching
+    from .components.talks import generate_talks_html, load_talks
+    from .components.awards import generate_awards_html, load_awards
 except (ImportError, ValueError):
     try:
         from components.header import generate_header_html, get_header
@@ -51,6 +55,8 @@ except (ImportError, ValueError):
         from components.research import generate_research_html, load_research
         from components.collaborate import generate_collaborate_html, load_collaborate
         from components.teaching import generate_teaching_html, load_teaching
+        from components.talks import generate_talks_html, load_talks
+        from components.awards import generate_awards_html, load_awards
     except ImportError:
         from src.components.header import generate_header_html, get_header
         from src.components.footer import generate_footer_html, get_footer
@@ -62,6 +68,8 @@ except (ImportError, ValueError):
         from src.components.research import generate_research_html, load_research
         from src.components.collaborate import generate_collaborate_html, load_collaborate
         from src.components.teaching import generate_teaching_html, load_teaching
+        from src.components.talks import generate_talks_html, load_talks
+        from src.components.awards import generate_awards_html, load_awards
 
 __all__ = [
     "BASE_DIR",
@@ -74,6 +82,8 @@ __all__ = [
     "MISSION_FILE",
     "COLLABORATE_FILE",
     "TEACHING_FILE",
+    "TALKS_FILE",
+    "AWARDS_FILE",
     "load_data",
     "load_news",
     "load_research",
@@ -82,6 +92,8 @@ __all__ = [
     "load_mission",
     "load_collaborate",
     "load_teaching",
+    "load_talks",
+    "load_awards",
     "generate_header_html",
     "get_header",
     "generate_footer_html",
@@ -96,6 +108,8 @@ __all__ = [
     "generate_news_html",
     "generate_collaborate_html",
     "generate_teaching_html",
+    "generate_talks_html",
+    "generate_awards_html",
     "build_site",
     "main",
 ]
@@ -177,6 +191,8 @@ def main():
     mission_data = load_mission()
     collaborate_data = load_collaborate()
     teaching_data = load_teaching()
+    talks_data = load_talks()
+    awards_data = load_awards()
     total_people = sum(len(s.get("members", [])) for s in people_data.get("sections", []))
     print(
         f"Loaded {len(pubs)} publications, {len(authors)} authors, "
@@ -197,7 +213,9 @@ def main():
         "research.html": generate_research_html(research_data),
         "code.html": generate_code_html(software_data),
         "news.html": generate_news_html(news),
+        "talks.html": generate_talks_html(talks_data),
         "teaching.html": generate_teaching_html(teaching_data),
+        "awards.html": generate_awards_html(awards_data),
         "collaborate.html": generate_collaborate_html(collaborate_data),
     }
 

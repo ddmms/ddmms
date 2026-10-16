@@ -256,8 +256,8 @@ a:hover {
   font-weight: 700;
 }
 
-@media (max-width: 1200px) {
-  /* make room for all eight nav items on narrower desktops */
+@media (max-width: 1300px) {
+  /* make room for all ten nav items on narrower desktops */
   .brand-title-sub {
     display: none;
   }
@@ -2792,12 +2792,16 @@ a.org-chain-link:hover {
   border-top: 0;
 }
 
-/* Teaching: year on the left, event on the right */
-.teaching-list {
+/* Teaching, Talks and Awards: year on the left, entry on the right */
+.teaching-list,
+.talks-list,
+.awards-list {
   list-style: none;
 }
 
-.teaching-item {
+.teaching-item,
+.talk-item,
+.award-item {
   display: grid;
   grid-template-columns: 6rem minmax(0, 1fr);
   gap: 1.5rem;
@@ -2805,12 +2809,16 @@ a.org-chain-link:hover {
   border-top: 1px solid var(--border);
 }
 
-.teaching-item:first-child {
+.teaching-item:first-child,
+.talk-item:first-child,
+.award-item:first-child {
   padding-top: 0;
   border-top: 0;
 }
 
-.teaching-year {
+.teaching-year,
+.talk-year,
+.award-year {
   font-size: 1.5rem;
   font-weight: 800;
   line-height: 1.2;
@@ -2821,21 +2829,28 @@ a.org-chain-link:hover {
   color: transparent;
 }
 
-.teaching-title {
+.teaching-title,
+.talk-title,
+.award-title {
   font-size: 1.15rem;
   font-weight: 700;
   line-height: 1.4;
 }
 
-.teaching-title a {
+.teaching-title a,
+.talk-title a,
+.award-title a {
   color: var(--text);
 }
 
-.teaching-title a:hover {
+.teaching-title a:hover,
+.talk-title a:hover,
+.award-title a:hover {
   color: var(--primary);
 }
 
-.teaching-role {
+.teaching-role,
+.talk-type {
   display: inline-block;
   margin-top: 0.3rem;
   font-size: 0.75rem;
@@ -2845,9 +2860,23 @@ a.org-chain-link:hover {
   color: var(--accent-teal);
 }
 
-.teaching-desc {
+/* speaker and event, or recipient and awarding body */
+.talk-meta,
+.award-meta {
+  margin-top: 0.3rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.teaching-desc,
+.talk-desc,
+.award-desc {
   margin-top: 0.4rem;
   line-height: 1.7;
+  color: var(--text-muted);
+}
+
+.list-empty {
   color: var(--text-muted);
 }
 
@@ -2860,7 +2889,9 @@ a.org-chain-link:hover {
   .page-hero .profile-header-avatar {
     max-height: 160px;
   }
-  .teaching-item {
+  .teaching-item,
+  .talk-item,
+  .award-item {
     grid-template-columns: 1fr;
     gap: 0.25rem;
   }

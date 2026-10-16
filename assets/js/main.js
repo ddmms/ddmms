@@ -194,9 +194,11 @@
           <li class="nav-item"><a href="index.html">Home</a></li>
           <li class="nav-item"><a href="people.html">People</a></li>
           <li class="nav-item"><a href="publications.html">Publications</a></li>
+          <li class="nav-item"><a href="talks.html">Talks</a></li>
           <li class="nav-item"><a href="research.html">Research</a></li>
           <li class="nav-item"><a href="code.html">Software</a></li>
           <li class="nav-item"><a href="teaching.html">Teaching</a></li>
+          <li class="nav-item"><a href="awards.html">Awards</a></li>
           <li class="nav-item"><a href="news.html">News</a></li>
           <li class="nav-item"><a href="collaborate.html">Collaborate</a></li>
         </ul>
@@ -223,9 +225,11 @@
         <li class="mobile-nav-item"><a href="index.html"><span>Home</span><span>&rarr;</span></a></li>
         <li class="mobile-nav-item"><a href="people.html"><span>People</span><span>&rarr;</span></a></li>
         <li class="mobile-nav-item"><a href="publications.html"><span>Publications</span><span>&rarr;</span></a></li>
+        <li class="mobile-nav-item"><a href="talks.html"><span>Talks</span><span>&rarr;</span></a></li>
         <li class="mobile-nav-item"><a href="research.html"><span>Research</span><span>&rarr;</span></a></li>
         <li class="mobile-nav-item"><a href="code.html"><span>Software</span><span>&rarr;</span></a></li>
         <li class="mobile-nav-item"><a href="teaching.html"><span>Teaching</span><span>&rarr;</span></a></li>
+        <li class="mobile-nav-item"><a href="awards.html"><span>Awards</span><span>&rarr;</span></a></li>
         <li class="mobile-nav-item"><a href="news.html"><span>News</span><span>&rarr;</span></a></li>
         <li class="mobile-nav-item"><a href="collaborate.html"><span>Collaborate</span><span>&rarr;</span></a></li>
       </ul>

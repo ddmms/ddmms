@@ -33,7 +33,9 @@ class TestDDMMSSite(unittest.TestCase):
             "code.html",
             "news.html",
             "teaching.html",
-            "collaborate.html"
+            "collaborate.html",
+            "talks.html",
+            "awards.html"
         ]
 
 
@@ -44,7 +46,7 @@ class TestDDMMSSite(unittest.TestCase):
             self.assertGreater(p.stat().st_size, 1000, f"{fname} is suspiciously small")
 
     def test_required_nav_menu_items(self):
-        required_items = ["home", "people", "publications", "research", "software", "teaching", "news", "collaborate"]
+        required_items = ["home", "people", "publications", "talks", "research", "software", "teaching", "awards", "news", "collaborate"]
         content = (BASE_DIR / "header.html").read_text(encoding="utf-8").lower()
         for item in required_items:
             self.assertIn(item, content, f"Menu item '{item}' missing from header.html")
@@ -173,6 +175,8 @@ class TestDDMMSSite(unittest.TestCase):
             self.assertIn('href="collaborate.html"', content, f"Separate link collaborate.html missing in {fname}")
             self.assertIn('href="news.html"', content, f"Separate link news.html missing in {fname}")
             self.assertIn('href="teaching.html"', content, f"Separate link teaching.html missing in {fname}")
+            self.assertIn('href="talks.html"', content, f"Separate link talks.html missing in {fname}")
+            self.assertIn('href="awards.html"', content, f"Separate link awards.html missing in {fname}")
 
     def test_no_software_and_feeds_in_footer(self):
         content = (BASE_DIR / "footer.html").read_text(encoding="utf-8")
@@ -803,9 +807,95 @@ events:
         with self.assertRaises(FileNotFoundError):
             load_teaching(Path("/nonexistent/teaching.yaml"))
 
+    def test_talks_page(self):
+        import tempfile
+        from components.talks import load_talks, generate_talks_html
+
+        talks_html = (BASE_DIR / "talks.html").read_text(encoding="utf-8")
+        self.assertIn("<title>Talks | Data Driven Materials and Molecular Science</title>", talks_html)
+
+        # No talks yet: an empty-state line instead of an empty list
+        rendered = generate_talks_html({"title": "Talks", "talks": []})
+        self.assertIn('<p class="list-empty">', rendered)
+        self.assertNotIn('class="talks-list"', rendered)
+
+        with tempfile.NamedTemporaryFile("w+", encoding="utf-8", delete=False, suffix=".yaml") as tf:
+            tf.write("""title: "Seminars"
+talks:
+  - year: "2030"
+    title: "Linked Talk"
+    type: "Invited talk"
+    speaker: "Ada Lovelace"
+    event: "Big Conference, Manchester"
+    description: "About machine-learned potentials."
+    url: "https://example.com/slides"
+  - year: "2029"
+    title: "Unlinked Talk"
+  - year: "2028"
+""")
+            tf_path = Path(tf.name)
+        try:
+            rendered = generate_talks_html(load_talks(tf_path))
+            self.assertIn('<h1 class="page-hero-title">Seminars</h1>', rendered)
+            self.assertIn('href="https://example.com/slides"', rendered)
+            self.assertIn('<span class="talk-type">Invited talk</span>', rendered)
+            self.assertIn('<p class="talk-meta">Ada Lovelace &middot; Big Conference, Manchester</p>', rendered)
+            self.assertIn("About machine-learned potentials.", rendered)
+            self.assertIn('<h2 class="talk-title">Unlinked Talk</h2>', rendered)
+            self.assertEqual(rendered.count('class="talk-item"'), 2, "talks without a title are skipped")
+            self.assertNotIn('<p class="list-empty">', rendered)
+        finally:
+            tf_path.unlink()
+
+        with self.assertRaises(FileNotFoundError):
+            load_talks(Path("/nonexistent/talks.yaml"))
+
+    def test_awards_page(self):
+        import tempfile
+        from components.awards import load_awards, generate_awards_html
+
+        awards_html = (BASE_DIR / "awards.html").read_text(encoding="utf-8")
+        self.assertIn("<title>Awards | Data Driven Materials and Molecular Science</title>", awards_html)
+
+        # No awards yet: an empty-state line instead of an empty list
+        rendered = generate_awards_html({"title": "Awards", "awards": []})
+        self.assertIn('<p class="list-empty">', rendered)
+        self.assertNotIn('class="awards-list"', rendered)
+
+        with tempfile.NamedTemporaryFile("w+", encoding="utf-8", delete=False, suffix=".yaml") as tf:
+            tf.write("""title: "Honours"
+awards:
+  - year: "2030"
+    title: "Linked Prize"
+    recipient: "Ada Lovelace"
+    awarded_by: "Royal Society of Chemistry"
+    description: "For outstanding work."
+    url: "https://example.com/prize"
+  - year: "2029"
+    title: "Unlinked Fellowship"
+    recipient: "Alan Turing"
+  - year: "2028"
+""")
+            tf_path = Path(tf.name)
+        try:
+            rendered = generate_awards_html(load_awards(tf_path))
+            self.assertIn('<h1 class="page-hero-title">Honours</h1>', rendered)
+            self.assertIn('href="https://example.com/prize"', rendered)
+            self.assertIn('<p class="award-meta">Ada Lovelace &middot; Royal Society of Chemistry</p>', rendered)
+            self.assertIn('<p class="award-meta">Alan Turing</p>', rendered)
+            self.assertIn("For outstanding work.", rendered)
+            self.assertIn('<h2 class="award-title">Unlinked Fellowship</h2>', rendered)
+            self.assertEqual(rendered.count('class="award-item"'), 2, "awards without a title are skipped")
+        finally:
+            tf_path.unlink()
+
+        with self.assertRaises(FileNotFoundError):
+            load_awards(Path("/nonexistent/awards.yaml"))
+
     def test_inner_pages_share_flat_page_hero(self):
         for fname in ("people.html", "publications.html", "research.html", "code.html",
-                      "news.html", "teaching.html", "collaborate.html", "junwen-yin.html"):
+                      "news.html", "teaching.html", "collaborate.html", "talks.html",
+                      "awards.html", "junwen-yin.html"):
             content = (BASE_DIR / fname).read_text(encoding="utf-8")
             self.assertIn('<section class="page-hero">', content, f"{fname} is missing the shared page hero")
             self.assertEqual(content.count('<h1 '), 1, f"{fname} should have exactly one h1")
