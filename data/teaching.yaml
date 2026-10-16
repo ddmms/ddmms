@@ -1,14 +1,15 @@
 title: "Teaching &amp; Training"
-intro: "Schools and workshops run by DDMMS members, and the routes for students and graduates to train with us at STFC."
+intro: "Schools and workshops run by DDMMS members, PhD projects we co-supervise and graduates who trained with us. For current openings, see Opportunities."
 
-# Each category: id (used for the jump link), title, optional description,
-# events (newest first: year, title, optional role, description, url, and
-# image + image_alt for a photo, e.g. image: "assets/images/event.jpg"),
-# projects (ongoing PhD projects: title, url, status, student, supervisors,
-# university, programme, programme_url, started, duration, description),
-# members (people on this route: name; heading set by members_title)
-# and links (text + url, shown last). A category with none of these shows
-# "Details coming soon."
+# Each category: id (used for the jump link), title, optional description and:
+#   events  - dated list, newest first: year, title, optional role, description,
+#             url, and image + image_alt for a photo (e.g. "assets/images/event.jpg")
+#   cards   - boxed entries: title, url, status (badge), details (label + value,
+#             optional url), description and links (buttons inside the card)
+#   members - name chips, with an optional members_title heading
+#   links   - buttons (text + url), shown last
+# A category with none of these shows "Details coming soon."
+# Open calls (events to apply for, PhD and STFC schemes) live in data/opportunities.yaml.
 categories:
   - id: "schools"
     title: "Schools"
@@ -40,37 +41,30 @@ categories:
   - id: "phd"
     title: "PhD Programme"
     description: "PhD projects co-supervised by DDMMS members with partner universities."
-    projects:
+    cards:
       - title: "Properties of Functional Oxides – Using machine learning and atomistic simulations to improve AI technologies"
         url: "https://www.ucl.ac.uk/mathematical-physical-sciences/data-intensive-science-and-industry/study-here/available-phd-projects/projects-mssl-space-science-computational-physical-sciences"
         status: "In progress"
-        student: "Atharva Anturkar"
-        supervisors: "Prof Alexander Shluger and Dr Junwen Yin"
-        university: "University College London (UCL)"
-        programme: "ALC PhD programme"
-        programme_url: "https://www.adalovelacecentre.ac.uk/phd-projects/"
-        started: "2026"
-        duration: "4 years"
+        details:
+          - label: "PhD student"
+            value: "Atharva Anturkar"
+          - label: "Supervisors"
+            value: "Prof Alexander Shluger and Dr Junwen Yin"
+          - label: "University"
+            value: "University College London (UCL)"
+          - label: "Programme"
+            value: "ALC PhD programme"
+            url: "https://www.adalovelacecentre.ac.uk/phd-projects/"
+          - label: "Started"
+            value: "2026"
+          - label: "Duration"
+            value: "4 years"
         description: "Building machine-learned interatomic potentials and running large-scale molecular dynamics of ferroelectric HfO<sub>2</sub>-based films for ultra-low-power memory in AI hardware, validated against X-ray diffraction at Diamond Light Source (I07), and extending janus-core."
-    links:
-      - text: "Interested in a PhD? Contact the group"
-        url: "collaborate.html#contact"
 
   - id: "graduate-scheme"
     title: "STFC Graduate Scheme"
-    description: "STFC's graduate programme is a permanent role in a department, with a two-year core training programme alongside technical training, mentoring towards professional registration, and a three-month placement in another STFC department. Computing is one of its five pathways. Applicants need, or are on course for, at least a 2:1 in a relevant subject."
     members_title: "Past graduates in DDMMS"
     members:
       - name: "Muhammad Mohsin"
       - name: "Jessica Gould"
       - name: "Willow Sparks"
-    links:
-      - text: "STFC Graduate Programme"
-        url: "https://stfccareers.co.uk/graduates/"
-
-  - id: "placements"
-    title: "STFC Industrial and Summer Placements"
-    description: "Undergraduates can work alongside STFC scientists and engineers on a year-long industrial placement during their degree, or on a summer placement. Both are aligned with the STFC graduate programme."
-    links:
-      - text: "STFC Industrial and Summer Placements"
-        url: "https://stfccareers.co.uk/students/"

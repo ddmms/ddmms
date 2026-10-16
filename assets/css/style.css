@@ -256,14 +256,14 @@ a:hover {
   font-weight: 700;
 }
 
-@media (max-width: 1300px) {
-  /* make room for all ten nav items on narrower desktops */
+@media (max-width: 1440px) {
+  /* make room for all eleven nav items on narrower desktops */
   .brand-title-sub {
     display: none;
   }
 }
 
-@media (max-width: 1150px) {
+@media (max-width: 1280px) {
   .nav-item a {
     font-size: 0.92rem;
   }
@@ -2782,34 +2782,34 @@ a.org-chain-link:hover {
   border-radius: var(--radius-md);
 }
 
-/* Teaching: one block per category, separated by a rule */
-.teaching-category + .teaching-category {
+/* Teaching and Opportunities: one block per category, separated by a rule */
+.category-section + .category-section {
   margin-top: 2.5rem;
   padding-top: 2.5rem;
   border-top: 1px solid var(--border);
 }
 
-.teaching-category-desc {
+.category-desc {
   margin-bottom: 1rem;
   line-height: 1.7;
   color: var(--text-muted);
 }
 
-/* Teaching: ongoing PhD projects */
-.project-list {
+/* Boxed entries (PhD projects, upcoming events) */
+.card-list {
   display: grid;
   gap: 1.25rem;
   list-style: none;
 }
 
-.project-card {
+.info-card {
   padding: 1.5rem 1.75rem;
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   background: var(--card-bg);
 }
 
-.project-status {
+.card-status {
   display: inline-block;
   margin-bottom: 0.75rem;
   padding: 0.15rem 0.7rem;
@@ -2820,43 +2820,47 @@ a.org-chain-link:hover {
   color: var(--accent-teal);
 }
 
-.project-title {
+.card-title {
   font-size: 1.2rem;
   font-weight: 700;
   line-height: 1.4;
 }
 
-.project-title a {
+.card-title a {
   color: var(--text);
 }
 
-.project-title a:hover {
+.card-title a:hover {
   color: var(--primary);
 }
 
-.project-meta {
+.card-meta {
   display: grid;
   grid-template-columns: max-content minmax(0, 1fr);
   gap: 0.35rem 1.5rem;
   margin: 1rem 0;
 }
 
-.project-meta dt {
+.card-meta dt {
   color: var(--text-muted);
 }
 
-.project-meta dd {
+.card-meta dd {
   font-weight: 600;
   color: var(--text);
 }
 
-.project-desc {
+.card-desc {
   line-height: 1.7;
   color: var(--text-muted);
 }
 
-/* Teaching: people currently on a route, as name chips */
-.teaching-subheading {
+.info-card .link-buttons {
+  margin-top: 1rem;
+}
+
+/* People on a route, as name chips */
+.category-subheading {
   margin: 1.5rem 0 0.75rem;
   font-size: 1.05rem;
   font-weight: 700;
@@ -2896,7 +2900,7 @@ a.org-chain-link:hover {
 
 /* invitation buttons close a category, after any list */
 .teaching-list + .link-buttons,
-.project-list + .link-buttons,
+.card-list + .link-buttons,
 .member-list + .link-buttons {
   margin-top: 1.5rem;
 }
@@ -2997,7 +3001,8 @@ a.org-chain-link:hover {
 /* ==========================================================================
    Mobile & Responsive Queries
    ========================================================================== */
-@media (max-width: 992px) {
+/* Eleven nav items no longer fit on one line below this width */
+@media (max-width: 1100px) {
   .nav-desktop {
     display: none;
   }
@@ -3007,6 +3012,9 @@ a.org-chain-link:hover {
   .mobile-drawer {
     display: block;
   }
+}
+
+@media (max-width: 992px) {
   .hero-grid {
     grid-template-columns: 1fr;
     gap: 2.5rem;
