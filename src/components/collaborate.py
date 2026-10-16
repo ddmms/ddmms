@@ -124,7 +124,7 @@ def generate_collaborate_html(collaborate: Optional[Dict[str, Any]] = None) -> s
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Collaborate | Data Driven Materials and Molecular Science</title>
-  <meta name="description" content="PhD, postdoctoral and visiting research opportunities with the Data Driven Materials and Molecular Science group at STFC.">
+  <meta name="description" content="Research collaborations, partner networks and how to get in touch with the Data Driven Materials and Molecular Science group at STFC.">
   <link rel="icon" type="image/svg+xml" href="assets/logos/ddmms.svg">
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">

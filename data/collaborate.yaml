@@ -1,5 +1,5 @@
 title: "Collaborate With Us"
-intro: "We welcome prospective PhD researchers, postdocs, and international scientific visitors interested in machine-learning interatomic potentials, molecular dynamics algorithms, and porous materials."
+intro: "We work with universities and national research networks on machine-learned interatomic potentials, high-throughput simulation workflows and open-source software such as janus-core and aiida-mlip. For PhD projects, STFC schemes and upcoming schools, see <a href=\"opportunities.html\">Opportunities</a>."
 
 collaborators:
   title: "Collaborators"
@@ -18,6 +18,6 @@ collaborators:
 
 contact:
   title: "Get in touch"
-  description: "Interested in a PhD project, a postdoctoral position or a research visit? Email the group to start a conversation."
+  description: "Have a research question, dataset or software idea you would like to work on with us? Email the group to discuss a collaboration, a research visit or a PhD project."
   email: "alin-marin.elena@stfc.ac.uk"
   button_text: "Email the group"

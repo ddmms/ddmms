@@ -2401,6 +2401,16 @@ a.org-chain-link:hover {
   color: rgba(226, 232, 240, 0.9);
 }
 
+.page-hero-intro a {
+  color: #7dd3fc;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.page-hero-intro a:hover {
+  color: #ffffff;
+}
+
 /* Numbered feature row (no card boxes) */
 .feature-list {
   list-style: none;

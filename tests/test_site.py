@@ -757,6 +757,9 @@ paragraphs:
         self.assertIn('<h1 class="page-hero-title">Collaborate With Us</h1>', collab_html)
         self.assertNotIn('class="feature-list"', collab_html, "no filler lists without real content")
         self.assertIn('href="mailto:', collab_html)
+        # About research collaboration; recruitment lives on the Opportunities page
+        self.assertNotIn("prospective PhD", collab_html)
+        self.assertIn('<a href="opportunities.html">Opportunities</a>', collab_html)
         # Collaborators and research networks, moved here from the People page
         self.assertIn('<section class="home-section" id="collaborators">', collab_html)
         self.assertIn('<h3 class="network-title">Collaborative Research Networks</h3>', collab_html)
@@ -827,7 +830,8 @@ contact:
             self.assertIn(f'<section class="category-section" id="{cat_id}">', teaching_html)
             self.assertIn(f'<h2 class="home-heading">{cat_title}</h2>', teaching_html)
             self.assertIn(f'<a href="#{cat_id}" class="subnav-pill">{cat_title}</a>', teaching_html)
-        # Open calls live on the Opportunities page now
+        # Open calls live on the Opportunities page now, linked from the intro
+        self.assertIn('<a href="opportunities.html">Opportunities</a>', teaching_html)
         self.assertNotIn('id="placements"', teaching_html)
         self.assertNotIn("stfccareers.co.uk", teaching_html)
         self.assertNotIn('href="collaborate.html#contact"', teaching_html)
