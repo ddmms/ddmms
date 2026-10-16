@@ -189,7 +189,6 @@ def generate_code_html(
     hero_html = render_page_hero(
         str(page_meta.get("title") or "Software &amp; Tools"),
         subtitle,
-        str(page_meta.get("eyebrow") or "Open source"),
     )
 
     return f"""<!DOCTYPE html>

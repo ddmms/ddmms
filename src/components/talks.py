@@ -52,7 +52,6 @@ def generate_talks_html(talks: Optional[Dict[str, Any]] = None) -> str:
     hero_html = render_page_hero(
         str(talks.get("title") or "Talks"),
         str(talks.get("intro") or "").strip(),
-        str(talks.get("eyebrow") or "").strip(),
     )
 
     rows = []

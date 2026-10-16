@@ -114,7 +114,6 @@ def generate_research_html(
     hero_html = render_page_hero(
         str(page_meta.get("title") or "Research Themes"),
         subtitle,
-        str(page_meta.get("eyebrow") or "What we study"),
     )
 
     cards = []

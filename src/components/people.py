@@ -158,7 +158,6 @@ def generate_people_html(people_data: Optional[Dict[str, Any]] = None) -> str:
     hero_html = render_page_hero(
         str(people_data.get("title") or "Meet the Team"),
         subtitle,
-        str(people_data.get("eyebrow") or "Who we are"),
     )
 
     # Format subnav pills

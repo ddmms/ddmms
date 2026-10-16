@@ -104,7 +104,6 @@ def generate_news_html(news=None):
     hero_html = render_page_hero(
         "News &amp; Historical Milestones",
         "Chronological archive of research milestones, software releases, funded grants, and community workshops.",
-        "Updates",
     )
 
     return f"""<!DOCTYPE html>

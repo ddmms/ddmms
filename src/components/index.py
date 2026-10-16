@@ -118,13 +118,11 @@ def render_affiliations_carousel_html(affiliations: Optional[Dict[str, Any]]) ->
             for link in (slide.get("links") or [])
             if isinstance(link, dict) and link.get("url")
         )
-        eyebrow = str(slide.get("eyebrow") or "").strip()
-        eyebrow_html = f'\n                <span class="slide-eyebrow">{eyebrow}</span>' if eyebrow else ""
         links_block_html = f"""
                 <div class="slide-links">
 {links_html}
                 </div>""" if links_html else ""
-        content_html = f"""              <div class="slide-content">{eyebrow_html}
+        content_html = f"""              <div class="slide-content">
                 <h2 class="slide-title">{slide_title}</h2>
                 <p class="slide-desc">{slide.get("description", "")}</p>{links_block_html}
               </div>"""
@@ -344,7 +342,6 @@ def generate_index_html(
 
     <section class="home-section" id="mission">
       <div class="container home-narrow">
-        <span class="home-eyebrow">About DDMMS</span>
         <h2 class="home-heading">{mission_title}</h2>{subtitle_html}
         <div class="home-prose">
 {mission_paragraphs_html}
@@ -354,7 +351,6 @@ def generate_index_html(
 
     <section class="home-section home-section-alt" id="news">
       <div class="container home-narrow">
-        <span class="home-eyebrow">What's new</span>
 {news_section_html}
       </div>
     </section>

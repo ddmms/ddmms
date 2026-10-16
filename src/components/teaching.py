@@ -52,7 +52,6 @@ def generate_teaching_html(teaching: Optional[Dict[str, Any]] = None) -> str:
     hero_html = render_page_hero(
         str(teaching.get("title") or "Teaching &amp; Training"),
         str(teaching.get("intro") or "").strip(),
-        str(teaching.get("eyebrow") or "").strip(),
     )
 
     rows = []

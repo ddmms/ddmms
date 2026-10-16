@@ -52,7 +52,6 @@ def generate_awards_html(awards: Optional[Dict[str, Any]] = None) -> str:
     hero_html = render_page_hero(
         str(awards.get("title") or "Awards"),
         str(awards.get("intro") or "").strip(),
-        str(awards.get("eyebrow") or "").strip(),
     )
 
     rows = []

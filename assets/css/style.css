@@ -1997,14 +1997,6 @@ a:hover {
   max-width: 720px;
 }
 
-.slide-eyebrow {
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #7dd3fc;
-}
-
 .slide-title {
   font-size: clamp(1.9rem, 2.8vw, 2.6rem);
   font-weight: 800;
@@ -2319,16 +2311,6 @@ a.org-chain-link:hover {
   background: var(--bg-alt);
 }
 
-.home-eyebrow {
-  display: inline-block;
-  margin-bottom: 0.5rem;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--accent-teal);
-}
-
 .home-heading {
   margin-bottom: 1.1rem;
   font-size: clamp(1.6rem, 2.6vw, 2.2rem);
@@ -2403,16 +2385,8 @@ a.org-chain-link:hover {
   padding-top: 2.5rem;
 }
 
-.page-hero-eyebrow {
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #7dd3fc;
-}
-
 .page-hero-title {
-  margin: 0.5rem 0 0.9rem;
+  margin: 0 0 0.9rem;
   font-size: clamp(2rem, 3.6vw, 2.9rem);
   font-weight: 800;
   letter-spacing: -0.03em;

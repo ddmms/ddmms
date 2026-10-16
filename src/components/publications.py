@@ -28,7 +28,6 @@ def generate_publications_html(pubs, authors):
     hero_html = render_page_hero(
         "Publications &amp; Preprints",
         "Comprehensive, real-time bibliography aggregated via the ORCID Public API for members of Data Driven Materials and Molecular Science.",
-        "Research output",
     )
 
     content = f"""<!DOCTYPE html>

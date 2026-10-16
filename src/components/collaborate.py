@@ -49,7 +49,6 @@ def generate_collaborate_html(collaborate: Optional[Dict[str, Any]] = None) -> s
     if collaborate is None:
         collaborate = load_collaborate()
 
-    eyebrow = str(collaborate.get("eyebrow") or "").strip()
     title = str(collaborate.get("title") or "Collaborate With Us").strip()
     intro = str(collaborate.get("intro") or "").strip()
 
@@ -58,7 +57,7 @@ def generate_collaborate_html(collaborate: Optional[Dict[str, Any]] = None) -> s
     button_text = str(contact.get("button_text") or "Email the group").strip()
     mailto = f"mailto:{html.escape(email, quote=True)}" if email else ""
 
-    hero_html = render_page_hero(title, intro, eyebrow)
+    hero_html = render_page_hero(title, intro)
 
     sections_html = []
     for sec in collaborate.get("sections") or []:

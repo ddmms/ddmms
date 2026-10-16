@@ -660,8 +660,10 @@ paragraphs:
 
         for title in ("Data Driven Materials and Molecular Science Group", "Daresbury Laboratory", "Rutherford Appleton Laboratory"):
             self.assertIn(f'<h2 class="slide-title">{title}</h2>', index_html)
-        # The department slide has no eyebrow or buttons, and its title sits above the chain
-        self.assertNotIn('<span class="slide-eyebrow"></span>', index_html)
+        # No small uppercase labels above headings; the department slide has no buttons
+        # and its title sits above the chain
+        for label_cls in ("slide-eyebrow", "home-eyebrow"):
+            self.assertNotIn(label_cls, index_html)
         self.assertEqual(index_html.count('class="slide-links"'), 2)
         self.assertLess(index_html.index("Molecular Science Group</h2>"), index_html.index('class="org-chain"'))
         for url in (
