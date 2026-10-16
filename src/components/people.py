@@ -492,6 +492,9 @@ def generate_person_html(
             if isinstance(c, dict):
                 c_role = c.get("role", "")
                 c_inst = c.get("institution", "")
+                c_url = str(c.get("url") or "").strip()
+                if c_url:
+                    c_inst = f'<a href="{html.escape(c_url, quote=True)}" target="_blank" rel="noopener noreferrer">{c_inst}</a>'
                 career_items.append(
                     f'          <li class="profile-career-item"><strong>{c_role}</strong> &mdash; <span>{c_inst}</span></li>'
                 )

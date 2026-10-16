@@ -3,7 +3,7 @@ slug: "junwen-yin"
 page: "junwen-yin.html"
 avatar: "assets/images/junwen_yin.jpeg"
 role: "Computational Scientist"
-affiliation: "STFC SCD, UKRI"
+affiliation: "STFC SCD, UKRI | ETSF Member"
 email: "junwen.yin@stfc.ac.uk"
 bio: "Junwen specializes in first-principles quantum chemistry, nonadiabatic electronic transitions, extended CP2K simulations, and modeling complex catalytic and photoactive interfaces under operational environments."
 short_bio: "Computational scientist specializing in first-principles quantum chemistry, nonadiabatic electronic dynamics, CP2K simulations, and operando catalytic interfaces."
@@ -29,4 +29,7 @@ links:
 education_and_career:
   - role: "Computational Scientist"
     institution: "STFC Scientific Computing Department, UKRI"
+  - role: "Member"
+    institution: "European Theoretical Spectroscopy Facility (ETSF)"
+    url: "https://sites.unimi.it/etsf/"
 

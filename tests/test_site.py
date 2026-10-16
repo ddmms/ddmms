@@ -1081,6 +1081,13 @@ awards:
             sub_path = BASE_DIR / "people" / page_name
             self.assertTrue(sub_path.exists(), f"Subdirectory profile page people/{page_name} was not generated")
 
+        # Career entries with a url link the institution name
+        junwen_html = (BASE_DIR / "junwen-yin.html").read_text(encoding="utf-8")
+        self.assertIn(
+            '<a href="https://sites.unimi.it/etsf/" target="_blank" rel="noopener noreferrer">European Theoretical Spectroscopy Facility (ETSF)</a>',
+            junwen_html,
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
