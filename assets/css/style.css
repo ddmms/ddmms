@@ -2593,39 +2593,26 @@ a.org-chain-link:hover {
   margin-top: 3rem;
 }
 
-.people-extra {
+/* Collaborate page: research networks under Collaborators */
+.network-title {
   margin-top: 2rem;
-  padding-top: 1.25rem;
-  border-top: 1px solid var(--border);
-}
-
-.section-header + .people-extra {
-  margin-top: 0;
-  padding-top: 0;
-  border-top: 0;
-}
-
-.people-extra-title {
   margin-bottom: 0.4rem;
   font-size: 1.1rem;
   font-weight: 700;
   color: var(--text);
 }
 
-.people-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-}
-
-.people-actions .contact-btn {
-  margin-top: 0;
-}
-
-.people-extra-desc {
+.network-desc {
   margin-bottom: 1rem;
   line-height: 1.7;
   color: var(--text-muted);
+}
+
+/* Row of link buttons (Collaborate networks, Teaching programmes) */
+.link-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
 }
 
 /* Section jump links as flat text, like the main navigation */

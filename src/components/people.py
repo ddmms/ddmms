@@ -160,22 +160,25 @@ def generate_people_html(people_data: Optional[Dict[str, Any]] = None) -> str:
         subtitle,
     )
 
-    # Format subnav pills
-    def has_content(sec):
-        if sec.get("members"):
-            return True
-        return sec.get("id") == "collaborators" and isinstance(people_data.get("partner_consortia"), dict)
+    # Sections without members are hidden until someone is added
+    raw_sections = [sec for sec in raw_sections if sec.get("members")]
 
-    raw_sections = [sec for sec in raw_sections if has_content(sec)]
-
+    # Format subnav pills (only worth showing when there is more than one section)
     subnav_links = []
     for sec in raw_sections:
         sec_id = sec.get("id", "")
         nav_title = sec.get("nav_title") or sec.get("title") or sec_id
         if sec_id:
             subnav_links.append(f'        <a href="#{sec_id}" class="subnav-pill">{nav_title}</a>')
-    subnav_links.append('        <a href="#contact" class="subnav-pill">Collaborate with Us</a>')
-    subnav_pills_html = "\n".join(subnav_links)
+    subnav_html = ""
+    if len(subnav_links) > 1:
+        subnav_pills_html = "\n".join(subnav_links)
+        subnav_html = f"""      <!-- Quick Section Navigation -->
+      <nav class="subnav-pills" aria-label="People page quick navigation">
+{subnav_pills_html}
+      </nav>
+
+"""
 
     # Format sections
     sections_rendered = []
@@ -314,29 +317,6 @@ def generate_people_html(people_data: Optional[Dict[str, Any]] = None) -> str:
 {cards_html}
         </div>""" if cards_rendered else ""
 
-        # Extra section extras (e.g. partner consortia box in collaborators)
-        extra_box_html = ""
-        if sec_id == "collaborators":
-            partner_data = people_data.get("partner_consortia")
-            if partner_data and isinstance(partner_data, dict):
-                p_title = partner_data.get("title", "Partner Consortia & National Initiatives")
-                p_desc = partner_data.get("description", "")
-                p_links = partner_data.get("links") or []
-                p_links_rendered = "\n".join(
-                    f'            <a href="{pl.get("url")}" target="_blank" rel="noopener noreferrer" class="person-link-btn">{pl.get("text")}</a>'
-                    for pl in p_links if isinstance(pl, dict) and pl.get("url")
-                )
-                extra_box_html = f"""\n        <!-- Institutional Partners Box -->
-        <div class="people-extra">
-          <h3 class="people-extra-title">{p_title}</h3>
-          <p class="people-extra-desc">
-            {p_desc}
-          </p>
-          <div class="people-actions">
-{p_links_rendered}
-          </div>
-        </div>"""
-
         sections_rendered.append(f"""      <!-- {sec_title} Section -->
       <section id="{sec_id}" class="people-section">
         <div class="section-header">
@@ -346,30 +326,10 @@ def generate_people_html(people_data: Optional[Dict[str, Any]] = None) -> str:
           </p>
         </div>
 
-{grid_html}{extra_box_html}
+{grid_html}
       </section>""")
 
     all_sections_html = "\n\n".join(sections_rendered)
-
-    # Opportunities / Contact
-    opp_data = people_data.get("opportunities") or {}
-    opp_title = opp_data.get("title", "Join the Research Group")
-    opp_desc = opp_data.get("description", "We are always enthusiastic to collaborate with motivated graduate students, postdoctoral researchers, and academic visitors who wish to explore machine-learned interatomic potentials, extreme-scale molecular dynamics, or materials for sustainable energy technologies.")
-    opp_email = opp_data.get("email", "alin-marin.elena@stfc.ac.uk")
-
-    opportunities_html = f"""      <!-- Opportunities Section -->
-      <section class="people-section" id="contact">
-        <div class="section-header">
-          <h2 class="section-title">{opp_title}</h2>
-        </div>
-        <p class="people-extra-desc">
-          {opp_desc}
-        </p>
-        <div class="people-actions">
-          <a href="mailto:{opp_email}" class="btn btn-primary contact-btn"><span>✉</span> Get in Touch via Email</a>
-          <a href="collaborate.html" class="btn btn-outline contact-btn">More on the Collaborate page &rarr;</a>
-        </div>
-      </section>"""
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -377,7 +337,7 @@ def generate_people_html(people_data: Optional[Dict[str, Any]] = None) -> str:
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>People | Data Driven Materials and Molecular Science</title>
-  <meta name="description" content="Meet the researchers, developers, former members, collaborators, and visitors in the Data Driven Materials and Molecular Science group.">
+  <meta name="description" content="Meet the researchers, developers, former members and visitors in the Data Driven Materials and Molecular Science group.">
   <link rel="icon" type="image/svg+xml" href="assets/logos/ddmms.svg">
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
@@ -392,14 +352,7 @@ def generate_people_html(people_data: Optional[Dict[str, Any]] = None) -> str:
 
     <section class="home-section">
       <div class="container">
-      <!-- Quick Section Navigation -->
-      <nav class="subnav-pills" aria-label="People page quick navigation">
-{subnav_pills_html}
-      </nav>
-
-{all_sections_html}
-
-{opportunities_html}
+{subnav_html}{all_sections_html}
       </div>
     </section>
   </main>

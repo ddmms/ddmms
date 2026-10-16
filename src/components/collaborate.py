@@ -80,6 +80,29 @@ def generate_collaborate_html(collaborate: Optional[Dict[str, Any]] = None) -> s
       </div>
     </section>""")
 
+    collaborators = collaborate.get("collaborators")
+    if isinstance(collaborators, dict):
+        intro_html = f'\n        <p class="home-lead">{collaborators["intro"]}</p>' if collaborators.get("intro") else ""
+        network_links = "\n".join(
+            f'          <a href="{html.escape(str(link.get("url")), quote=True)}" target="_blank" rel="noopener noreferrer" class="person-link-btn">{link.get("text", "")}</a>'
+            for link in (collaborators.get("networks") or [])
+            if isinstance(link, dict) and link.get("url")
+        )
+        networks_html = ""
+        if network_links:
+            networks_intro = collaborators.get("networks_intro")
+            networks_intro_html = f'\n        <p class="network-desc">{networks_intro}</p>' if networks_intro else ""
+            networks_html = f"""
+        <h3 class="network-title">{collaborators.get("networks_title", "Research Networks")}</h3>{networks_intro_html}
+        <div class="link-buttons">
+{network_links}
+        </div>"""
+        sections_html.append(f"""    <section class="home-section" id="collaborators">
+      <div class="container">
+        <h2 class="home-heading">{collaborators.get("title", "Collaborators")}</h2>{intro_html}{networks_html}
+      </div>
+    </section>""")
+
     contact_html = ""
     if contact:
         contact_btn = f"""

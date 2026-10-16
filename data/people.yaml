@@ -33,35 +33,9 @@ sections:
     #       - text: "ORCID"
     #         url: "https://orcid.org/..."
 
-  - id: "collaborators"
-    nav_title: "Collaborators"
-    title: "Collaborators"
-    subtitle: "Academic collaborators, national laboratory partners, and international consortia advancing atomistic simulation and scientific machine learning."
-    members: []
-    # Same entry format as former-members above.
-
   - id: "visitors"
     nav_title: "Visitors"
     title: "Visitors"
     subtitle: "Academic visitors, guest researchers, and sabbatical fellows who have visited the group to collaborate on atomistic simulations and machine learning."
     members: []
     # Same entry format as former-members above (use tenure: for visit dates).
-
-partner_consortia:
-  title: "Collaborative Research Networks"
-  description: "We collaborate closely with major national and international research networks to establish shared atomistic data standards and sustainable scientific infrastructure:"
-  links:
-    - text: "PSDI Data to Knowledge &rarr;"
-      url: "https://www.psdi.ac.uk"
-    - text: "CCP5 (Condensed Phase Simulation) &rarr;"
-      url: "https://www.ccp5.ac.uk"
-    - text: "MACE Ecosystem &rarr;"
-      url: "https://mace-docs.readthedocs.io"
-    - text: "STFC Scientific Computing Department &rarr;"
-      url: "https://www.scd.stfc.ac.uk"
-
-opportunities:
-  title: "Collaborate With Us"
-  description: "We are always enthusiastic to collaborate with motivated graduate students, postdoctoral researchers, and academic visitors who wish to explore machine-learned interatomic potentials, extreme-scale molecular dynamics, or materials for sustainable energy technologies."
-  email: "alin-marin.elena@stfc.ac.uk"
-

@@ -1,6 +1,21 @@
 title: "Collaborate With Us"
 intro: "We welcome prospective PhD researchers, postdocs, and international scientific visitors interested in machine-learning interatomic potentials, molecular dynamics algorithms, and porous materials."
 
+collaborators:
+  title: "Collaborators"
+  intro: "Academic collaborators, national laboratory partners, and international consortia advancing atomistic simulation and scientific machine learning."
+  networks_title: "Collaborative Research Networks"
+  networks_intro: "We collaborate closely with major national and international research networks to establish shared atomistic data standards and sustainable scientific infrastructure:"
+  networks:
+    - text: "PSDI Data to Knowledge &rarr;"
+      url: "https://www.psdi.ac.uk"
+    - text: "CCP5 (Condensed Phase Simulation) &rarr;"
+      url: "https://www.ccp5.ac.uk"
+    - text: "MACE Ecosystem &rarr;"
+      url: "https://mace-docs.readthedocs.io"
+    - text: "STFC Scientific Computing Department &rarr;"
+      url: "https://www.scd.stfc.ac.uk"
+
 contact:
   title: "Get in touch"
   description: "Interested in a PhD project, a postdoctoral position or a research visit? Email the group to start a conversation."

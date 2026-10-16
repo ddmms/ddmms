@@ -191,8 +191,9 @@ class TestDDMMSSite(unittest.TestCase):
     def test_people_page_sections(self):
         people_html = (BASE_DIR / "people.html").read_text(encoding="utf-8").lower()
         self.assertIn("core members", people_html)
-        # Collaborators stays visible because it holds the research networks list
-        self.assertIn("collaborative research networks", people_html)
+        # Collaborators, research networks and the contact block live on the Collaborate page
+        self.assertNotIn("collaborative research networks", people_html)
+        self.assertNotIn("get in touch via email", people_html)
 
     def test_people_page_has_no_placeholders(self):
         people_html = (BASE_DIR / "people.html").read_text(encoding="utf-8")
@@ -207,12 +208,14 @@ class TestDDMMSSite(unittest.TestCase):
     def test_people_subnav_anchors(self):
         people_html = (BASE_DIR / "people.html").read_text(encoding="utf-8")
         self.assertIn('id="core-team"', people_html)
-        self.assertIn('id="collaborators"', people_html)
-        self.assertIn('id="contact"', people_html)
+        for moved_id in ("collaborators", "contact"):
+            self.assertNotIn(f'id="{moved_id}"', people_html)
         # Empty sections (and their jump links) are hidden until members are added
         for empty_id in ("former-members", "visitors"):
             self.assertNotIn(f'id="{empty_id}"', people_html)
             self.assertNotIn(f'href="#{empty_id}"', people_html)
+        # With only the core team left, the jump links are not worth showing
+        self.assertNotIn('class="subnav-pills"', people_html)
 
     def test_people_sections_hidden_until_filled(self):
         from components.people import generate_people_html
@@ -504,7 +507,6 @@ themes:
         section_ids = [s["id"] for s in people_data["sections"]]
         self.assertIn("core-team", section_ids)
         self.assertIn("former-members", section_ids)
-        self.assertIn("collaborators", section_ids)
         self.assertIn("visitors", section_ids)
 
         # Verify core members include key researchers
@@ -545,6 +547,15 @@ sections:
             self.assertIn("Specialists", rendered_html)
             self.assertIn("Alice Wonderland", rendered_html)
             self.assertIn("https://example.com/alice", rendered_html)
+            self.assertNotIn('class="subnav-pills"', rendered_html, "one section needs no jump links")
+
+            two_sections = {"sections": [
+                {"id": "a", "title": "A", "members": [{"name": "Person A"}]},
+                {"id": "b", "title": "B", "members": [{"name": "Person B"}]},
+            ]}
+            rendered_html = generate_people_html(two_sections)
+            self.assertIn('<a href="#a" class="subnav-pill">A</a>', rendered_html)
+            self.assertIn('<a href="#b" class="subnav-pill">B</a>', rendered_html)
         finally:
             if tpf_path.exists():
                 tpf_path.unlink()
@@ -744,6 +755,12 @@ paragraphs:
         self.assertIn('<h1 class="page-hero-title">Collaborate With Us</h1>', collab_html)
         self.assertNotIn('class="feature-list"', collab_html, "no filler lists without real content")
         self.assertIn('href="mailto:', collab_html)
+        # Collaborators and research networks, moved here from the People page
+        self.assertIn('<section class="home-section" id="collaborators">', collab_html)
+        self.assertIn('<h3 class="network-title">Collaborative Research Networks</h3>', collab_html)
+        for url in ("https://www.psdi.ac.uk", "https://www.ccp5.ac.uk", "https://mace-docs.readthedocs.io", "https://www.scd.stfc.ac.uk"):
+            self.assertIn(f'href="{url}"', collab_html)
+        self.assertLess(collab_html.index('id="collaborators"'), collab_html.index('id="contact"'))
 
         data = load_collaborate()
         self.assertEqual(data["title"], "Collaborate With Us")
@@ -767,6 +784,23 @@ contact:
             self.assertIn('<span class="feature-label">Role B</span>', rendered)
             self.assertIn('href="mailto:someone@example.com"', rendered)
             self.assertIn("Say hello", rendered)
+            self.assertNotIn('id="collaborators"', rendered, "no collaborators block without data")
+
+            rendered = generate_collaborate_html({
+                "title": "Join Us",
+                "collaborators": {
+                    "title": "Partners",
+                    "intro": "Who we work with.",
+                    "networks_title": "Networks",
+                    "networks": [{"text": "Net A", "url": "https://example.com/a"}, {"text": "No URL"}],
+                },
+            })
+            self.assertIn('<h2 class="home-heading">Partners</h2>', rendered)
+            self.assertIn('<p class="home-lead">Who we work with.</p>', rendered)
+            self.assertIn('<h3 class="network-title">Networks</h3>', rendered)
+            self.assertIn('<div class="link-buttons">', rendered)
+            self.assertIn('href="https://example.com/a"', rendered)
+            self.assertNotIn("No URL", rendered, "links without a url are skipped")
         finally:
             tf_path.unlink()
 
