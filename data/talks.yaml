@@ -1,0 +1,12 @@
+title: "Talks"
+intro: "Invited and contributed talks given by DDMMS members at conferences, workshops and seminars."
+
+# Newest first. Each talk: year, title, optional type (e.g. "Invited talk"),
+# speaker, event, description and url (slides or recording). Example:
+#   - year: "2026"
+#     title: "Talk title"
+#     type: "Invited talk"
+#     speaker: "Speaker Name"
+#     event: "Conference name, City"
+#     url: "https://example.com/slides"
+talks: []

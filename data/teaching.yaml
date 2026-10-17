@@ -1,0 +1,70 @@
+title: "Teaching &amp; Training"
+intro: "Schools and workshops run by DDMMS members, PhD projects we co-supervise and graduates who trained with us. For current openings, see <a href=\"opportunities.html\">Opportunities</a>."
+
+# Each category: id (used for the jump link), title, optional description and:
+#   events  - dated list, newest first: year, title, optional role, description,
+#             url, and image + image_alt for a photo (e.g. "assets/images/event.jpg")
+#   cards   - boxed entries: title, url, status (badge), details (label + value,
+#             optional url), description and links (buttons inside the card)
+#   members - name chips, with an optional members_title heading
+#   links   - buttons (text + url), shown last
+# A category with none of these shows "Details coming soon."
+# Open calls (events to apply for, PhD and STFC schemes) live in data/opportunities.yaml.
+categories:
+  - id: "schools"
+    title: "Schools"
+    events:
+      - year: "2026"
+        title: "AI for Nuclear Thermal Hydraulics Summer School"
+        role: "Lecturer: Junwen Yin"
+        description: "A five-day summer school at Daresbury Laboratory (13–17 July 2026), organised by CCP-NTH, introducing machine learning as a practical engineering tool for nuclear thermal hydraulics."
+        url: "https://www.ccpnth.ac.uk/events/ai4nth2026/"
+        image: "assets/images/ai4nth2026.jpg"
+        image_alt: "Junwen Yin lecturing on decision trees at the AI for Nuclear Thermal Hydraulics Summer School"
+      - year: "2026"
+        title: "CCP5 Summer School"
+        role: "Organisers"
+        url: "https://summer2026.ccp5.ac.uk"
+      - year: "2026"
+        title: "CaMML Spring School"
+        role: "Organisers"
+        url: "https://spring2026.camml.ac.uk"
+      - year: "2025"
+        title: "CCP5 Summer School"
+        role: "Organisers"
+        url: "https://summer2025.ccp5.ac.uk"
+
+  - id: "workshops"
+    title: "Workshops"
+    events: []
+
+  - id: "phd"
+    title: "PhD Programme"
+    description: "PhD projects co-supervised by DDMMS members with partner universities."
+    cards:
+      - title: "Properties of Functional Oxides – Using machine learning and atomistic simulations to improve AI technologies"
+        url: "https://www.ucl.ac.uk/mathematical-physical-sciences/data-intensive-science-and-industry/study-here/available-phd-projects/projects-mssl-space-science-computational-physical-sciences"
+        status: "In progress"
+        details:
+          - label: "PhD student"
+            value: "Atharva Anturkar"
+          - label: "Supervisors"
+            value: "Prof Alexander Shluger and Dr Junwen Yin"
+          - label: "University"
+            value: "University College London (UCL)"
+          - label: "Programme"
+            value: "ALC PhD programme"
+            url: "https://www.adalovelacecentre.ac.uk/phd-projects/"
+          - label: "Started"
+            value: "2026"
+          - label: "Duration"
+            value: "4 years"
+        description: "Building machine-learned interatomic potentials and running large-scale molecular dynamics of ferroelectric HfO<sub>2</sub>-based films for ultra-low-power memory in AI hardware, validated against X-ray diffraction at Diamond Light Source (I07), and extending janus-core."
+
+  - id: "graduate-scheme"
+    title: "STFC Graduate Scheme"
+    members_title: "Past graduates in DDMMS"
+    members:
+      - name: "Muhammad Mohsin"
+      - name: "Jessica Gould"
+      - name: "Willow Sparks"

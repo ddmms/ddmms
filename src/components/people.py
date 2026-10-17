@@ -10,13 +10,16 @@ import yaml
 try:
     from .header import get_header
     from .footer import get_footer
+    from .layout import render_page_hero
 except (ImportError, ValueError):
     try:
         from components.header import get_header
         from components.footer import get_footer
+        from components.layout import render_page_hero
     except ImportError:
         from src.components.header import get_header
         from src.components.footer import get_footer
+        from src.components.layout import render_page_hero
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 PEOPLE_FILE = BASE_DIR / "data" / "people.yaml"
@@ -152,16 +155,30 @@ def generate_people_html(people_data: Optional[Dict[str, Any]] = None) -> str:
 
     subtitle = str(people_data.get("subtitle") or "").strip()
     raw_sections = people_data.get("sections") or []
+    hero_html = render_page_hero(
+        str(people_data.get("title") or "Meet the Team"),
+        subtitle,
+    )
 
-    # Format subnav pills
+    # Sections without members are hidden until someone is added
+    raw_sections = [sec for sec in raw_sections if sec.get("members")]
+
+    # Format subnav pills (only worth showing when there is more than one section)
     subnav_links = []
     for sec in raw_sections:
         sec_id = sec.get("id", "")
         nav_title = sec.get("nav_title") or sec.get("title") or sec_id
         if sec_id:
             subnav_links.append(f'        <a href="#{sec_id}" class="subnav-pill">{nav_title}</a>')
-    subnav_links.append('        <a href="#contact" class="subnav-pill">Collaborate with Us</a>')
-    subnav_pills_html = "\n".join(subnav_links)
+    subnav_html = ""
+    if len(subnav_links) > 1:
+        subnav_pills_html = "\n".join(subnav_links)
+        subnav_html = f"""      <!-- Quick Section Navigation -->
+      <nav class="subnav-pills" aria-label="People page quick navigation">
+{subnav_pills_html}
+      </nav>
+
+"""
 
     # Format sections
     sections_rendered = []
@@ -295,64 +312,24 @@ def generate_people_html(people_data: Optional[Dict[str, Any]] = None) -> str:
             cards_rendered.append("\n".join(parts))
 
         cards_html = "\n\n".join(cards_rendered)
-
-        # Extra section extras (e.g. partner consortia box in collaborators)
-        extra_box_html = ""
-        if sec_id == "collaborators":
-            partner_data = people_data.get("partner_consortia")
-            if partner_data and isinstance(partner_data, dict):
-                p_title = partner_data.get("title", "Partner Consortia & National Initiatives")
-                p_desc = partner_data.get("description", "")
-                p_links = partner_data.get("links") or []
-                p_links_rendered = "\n".join(
-                    f'            <a href="{pl.get("url")}" target="_blank" rel="noopener noreferrer" class="person-link-btn">{pl.get("text")}</a>'
-                    for pl in p_links if isinstance(pl, dict) and pl.get("url")
-                )
-                extra_box_html = f"""\n        <!-- Institutional Partners Box -->
-        <div style="margin-top: 2rem; background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.75rem;">
-          <h4 style="font-size: 1.15rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.5rem;">{p_title}</h4>
-          <p style="font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1rem;">
-            {p_desc}
-          </p>
-          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
-{p_links_rendered}
-          </div>
-        </div>"""
+        grid_html = f"""
+        <div class="people-grid">
+{cards_html}
+        </div>""" if cards_rendered else ""
 
         sections_rendered.append(f"""      <!-- {sec_title} Section -->
-      <section id="{sec_id}" style="margin-bottom: 4rem;">
-        <div class="section-header" style="text-align: left; margin-bottom: 2rem;">
-          <h2 class="section-title" style="font-size: 1.85rem;">{sec_title}</h2>
+      <section id="{sec_id}" class="people-section">
+        <div class="section-header">
+          <h2 class="section-title">{sec_title}</h2>
           <p class="section-subtitle">
             {sec_subtitle}
           </p>
         </div>
 
-        <div class="people-grid">
-{cards_html}
-        </div>{extra_box_html}
+{grid_html}
       </section>""")
 
     all_sections_html = "\n\n".join(sections_rendered)
-
-    # Opportunities / Contact
-    opp_data = people_data.get("opportunities") or {}
-    opp_title = opp_data.get("title", "Join the Research Group")
-    opp_desc = opp_data.get("description", "We are always enthusiastic to collaborate with motivated graduate students, postdoctoral researchers, and academic visitors who wish to explore machine-learned interatomic potentials, extreme-scale molecular dynamics, or materials for sustainable energy technologies.")
-    opp_email = opp_data.get("email", "alin-marin.elena@stfc.ac.uk")
-
-    opportunities_html = f"""      <!-- Opportunities Section -->
-      <section style="margin-top: 4rem; background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2.5rem;" id="contact">
-        <div class="section-header" style="text-align: left; margin-bottom: 1.5rem; padding: 0;">
-          <h2 class="section-title" style="font-size: 1.85rem;">{opp_title}</h2>
-        </div>
-        <p style="color: var(--text-muted); font-size: 1.05rem; line-height: 1.7; max-width: 800px; margin-bottom: 1.5rem;">
-          {opp_desc}
-        </p>
-        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-          <a href="mailto:{opp_email}" class="btn btn-primary"><span>✉</span> Get in Touch via Email</a>
-        </div>
-      </section>"""
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -360,7 +337,7 @@ def generate_people_html(people_data: Optional[Dict[str, Any]] = None) -> str:
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>People | Data Driven Materials and Molecular Science</title>
-  <meta name="description" content="Meet the researchers, developers, former members, collaborators, and visitors in the Data Driven Materials and Molecular Science group.">
+  <meta name="description" content="Meet the researchers, developers, former members and visitors in the Data Driven Materials and Molecular Science group.">
   <link rel="icon" type="image/svg+xml" href="assets/logos/ddmms.svg">
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
@@ -370,23 +347,14 @@ def generate_people_html(people_data: Optional[Dict[str, Any]] = None) -> str:
 <body>
 {header_html}
 
-  <main id="main-content" style="padding-top: 3rem;">
-    <div class="container">
-      <div class="section-header" style="text-align: left; margin-bottom: 2rem;">
-        <p class="section-subtitle">
-          {subtitle}
-        </p>
+  <main id="main-content">
+{hero_html}
+
+    <section class="home-section">
+      <div class="container">
+{subnav_html}{all_sections_html}
       </div>
-
-      <!-- Quick Section Navigation -->
-      <nav class="subnav-pills" aria-label="People page quick navigation">
-{subnav_pills_html}
-      </nav>
-
-{all_sections_html}
-
-{opportunities_html}
-    </div>
+    </section>
   </main>
 
 {footer_html}
@@ -432,7 +400,7 @@ def generate_person_html(
     if (avatar.startswith("assets/") or avatar.startswith("http") or avatar.startswith("/") or
         any(avatar.lower().endswith(ext) for ext in (".jpg", ".jpeg", ".png", ".svg", ".webp"))):
         avatar_src = f"{rel_prefix}{avatar}" if (rel_prefix and avatar.startswith("assets/")) else avatar
-        avatar_html = f'<img src="{avatar_src}" alt="{name}" class="profile-header-avatar" style="max-height: 300px; height: auto; width: auto; max-width: 100%; object-fit: cover;">'
+        avatar_html = f'<img src="{avatar_src}" alt="{name}" class="profile-header-avatar">'
     elif avatar:
         avatar_html = f'<div class="profile-header-avatar profile-header-avatar-text">{avatar}</div>'
     else:
@@ -524,6 +492,9 @@ def generate_person_html(
             if isinstance(c, dict):
                 c_role = c.get("role", "")
                 c_inst = c.get("institution", "")
+                c_url = str(c.get("url") or "").strip()
+                if c_url:
+                    c_inst = f'<a href="{html.escape(c_url, quote=True)}" target="_blank" rel="noopener noreferrer">{c_inst}</a>'
                 career_items.append(
                     f'          <li class="profile-career-item"><strong>{c_role}</strong> &mdash; <span>{c_inst}</span></li>'
                 )
@@ -621,29 +592,26 @@ def generate_person_html(
 <body>
 {header_html}
 
-  <main id="main-content" style="padding-top: 2.5rem; padding-bottom: 4rem;">
-    <div class="container" style="max-width: 960px;">
-
-      <!-- Breadcrumb / Back Link -->
-      <div style="margin-bottom: 1.5rem;">
-        <a href="people.html" class="person-back-link">
-          &larr; Back to People
-        </a>
-      </div>
-
-      <!-- Person Profile Header Card -->
-      <article class="profile-header-card">
-        <div class="profile-header-avatar-wrap">
-          {avatar_html}
-        </div>
-        <div class="profile-header-details">
-          <h1 class="profile-header-name">{name}</h1>
-          <div class="profile-header-role">{role}</div>
-          <div class="profile-header-affiliation">{affiliation}</div>
+  <main id="main-content">
+    <section class="page-hero">
+      <div class="container">
+        <div class="profile-header-card">
+          <div class="profile-header-avatar-wrap">
+            {avatar_html}
+          </div>
+          <div class="profile-header-details">
+            <a href="people.html" class="person-back-link">&larr; Back to People</a>
+            <h1 class="page-hero-title profile-header-name">{name}</h1>
+            <div class="profile-header-role">{role}</div>
+            <div class="profile-header-affiliation">{affiliation}</div>
 {links_block}
+          </div>
         </div>
-      </article>
+      </div>
+    </section>
 
+    <section class="home-section">
+      <div class="container">
       <!-- Biography Section -->
       <section class="profile-section">
         <h2 class="profile-section-title">Biography</h2>
@@ -657,8 +625,8 @@ def generate_person_html(
 {career_section}
 
 {publications_section}
-
-    </div>
+      </div>
+    </section>
   </main>
 
 {footer_html}

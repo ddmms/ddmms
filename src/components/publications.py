@@ -7,13 +7,16 @@ from typing import Any, Dict, List, Optional
 try:
     from .header import get_header
     from .footer import get_footer
+    from .layout import render_page_hero
 except (ImportError, ValueError):
     try:
         from components.header import get_header
         from components.footer import get_footer
+        from components.layout import render_page_hero
     except ImportError:
         from src.components.header import get_header
         from src.components.footer import get_footer
+        from src.components.layout import render_page_hero
 
 
 def generate_publications_html(pubs, authors):
@@ -22,6 +25,10 @@ def generate_publications_html(pubs, authors):
     footer_html = get_footer()
     pubs_json_str = json.dumps(pubs)
     authors_json_str = json.dumps(authors)
+    hero_html = render_page_hero(
+        "Publications &amp; Preprints",
+        "Comprehensive, real-time bibliography aggregated via the ORCID Public API for members of Data Driven Materials and Molecular Science.",
+    )
 
     content = f"""<!DOCTYPE html>
 <html lang="en">
@@ -39,31 +46,28 @@ def generate_publications_html(pubs, authors):
 <body>
 {header_html}
 
-  <main id="main-content" style="padding-top: 2.5rem;">
-    <div class="container" id="pubs-app-root">
-      <div class="section-header" style="text-align: left; margin-bottom: 2rem;">
-        <p class="section-subtitle">
-          Comprehensive, real-time bibliography aggregated via the ORCID Public API for members of Data Driven Materials and Molecular Science.
-        </p>
-      </div>
+  <main id="main-content">
+{hero_html}
 
+    <section class="home-section">
+    <div class="container" id="pubs-app-root">
       <!-- Quick Metrics Summary -->
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
-        <div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.1rem; box-shadow: var(--shadow-sm);">
-          <div style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; color: var(--text-muted);">Total Articles</div>
-          <div id="stat-total-pubs" style="font-size: 1.85rem; font-weight: 800; color: var(--primary); margin-top: 0.2rem;">{len(pubs)}</div>
+      <div class="pub-stats">
+        <div class="pub-stat">
+          <div class="pub-stat-value" id="stat-total-pubs">{len(pubs)}</div>
+          <div class="pub-stat-label">Total Articles</div>
         </div>
-        <div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.1rem; box-shadow: var(--shadow-sm);">
-          <div style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; color: var(--text-muted);">Group Authors</div>
-          <div id="stat-authors" style="font-size: 1.85rem; font-weight: 800; color: var(--primary); margin-top: 0.2rem;">{len(authors)}</div>
+        <div class="pub-stat">
+          <div class="pub-stat-value" id="stat-authors">{len(authors)}</div>
+          <div class="pub-stat-label">Group Authors</div>
         </div>
-        <div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.1rem; box-shadow: var(--shadow-sm);">
-          <div style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; color: var(--text-muted);">Years Span</div>
-          <div id="stat-years" style="font-size: 1.85rem; font-weight: 800; color: var(--primary); margin-top: 0.2rem;">-</div>
+        <div class="pub-stat">
+          <div class="pub-stat-value" id="stat-years">-</div>
+          <div class="pub-stat-label">Years Span</div>
         </div>
-        <div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.1rem; box-shadow: var(--shadow-sm);">
-          <div style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; color: var(--text-muted);">Journals &amp; Venues</div>
-          <div id="stat-venues" style="font-size: 1.85rem; font-weight: 800; color: var(--primary); margin-top: 0.2rem;">-</div>
+        <div class="pub-stat">
+          <div class="pub-stat-value" id="stat-venues">-</div>
+          <div class="pub-stat-label">Journals &amp; Venues</div>
         </div>
       </div>
 
@@ -130,6 +134,7 @@ def generate_publications_html(pubs, authors):
       <!-- Publication Cards List -->
       <div class="pubs-container"></div>
     </div>
+    </section>
   </main>
 
 {footer_html}

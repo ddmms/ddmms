@@ -7,13 +7,16 @@ import yaml
 try:
     from .header import get_header
     from .footer import get_footer
+    from .layout import render_page_hero
 except (ImportError, ValueError):
     try:
         from components.header import get_header
         from components.footer import get_footer
+        from components.layout import render_page_hero
     except ImportError:
         from src.components.header import get_header
         from src.components.footer import get_footer
+        from src.components.layout import render_page_hero
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 RESEARCH_FILE = BASE_DIR / "data" / "research.yaml"
@@ -30,7 +33,6 @@ def load_research(research_file: Optional[Union[str, Path]] = None) -> Dict[str,
         subtitle: "From quantum-level..."
       themes:
         - id: "mlips"
-          tag: "Interest 1 • Physics-Informed AI"
           title: "Foundation Machine-Learned Interatomic Potentials (MLIPs)"
           description:
             - "Paragraph 1..."
@@ -107,22 +109,16 @@ def generate_research_html(
     elif isinstance(approach, str):
         subtitle = approach.strip()
 
-    section_header_html = ""
-    if subtitle:
-        section_header_html = f"""      <div class="section-header" style="text-align: left; margin-bottom: 2.5rem;">
-        <p class="section-subtitle">
-          {subtitle}
-        </p>
-      </div>"""
-    else:
-        section_header_html = """      <div class="section-header" style="text-align: left; margin-bottom: 2.5rem;">
-      </div>"""
+    page_meta = research_data if isinstance(research_data, dict) else {}
+    hero_html = render_page_hero(
+        str(page_meta.get("title") or "Research Themes"),
+        subtitle,
+    )
 
     cards = []
     for theme in themes:
         if not isinstance(theme, dict):
             continue
-        tag = str(theme.get("tag") or "").strip()
         title = str(theme.get("title") or "").strip()
         desc = theme.get("description") or theme.get("desc") or ""
 
@@ -171,15 +167,13 @@ def generate_research_html(
         actions_html = ""
         if link_elements:
             links_str = "\n            ".join(link_elements)
-            actions_html = f"""          <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            actions_html = f"""          <div class="research-actions">
             {links_str}
           </div>"""
 
-        tag_html = f'<span class="research-tag">{tag}</span>\n            ' if tag else ''
-
         cards.append(f"""        <article class="research-card">
           <div class="research-card-top">
-            {tag_html}<h2 class="research-card-title">{title}</h2>
+            <h2 class="research-card-title">{title}</h2>
 {desc_html}
           </div>
 {actions_html}
@@ -203,14 +197,16 @@ def generate_research_html(
 <body>
 {header_html}
 
-  <main id="main-content" style="padding-top: 3rem;">
-    <div class="container">
-{section_header_html}
+  <main id="main-content">
+{hero_html}
 
-      <div class="research-grid" style="grid-template-columns: 1fr; gap: 2.5rem;">
+    <section class="home-section">
+      <div class="container">
+        <div class="research-grid">
 {cards_html}
+        </div>
       </div>
-    </div>
+    </section>
   </main>
 
 {footer_html}

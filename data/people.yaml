@@ -19,134 +19,23 @@ sections:
     nav_title: "Former Members"
     title: "Former Members"
     subtitle: "Researchers, engineers, and graduate scholars who contributed to DDMMS scientific software and research initiatives."
-    members:
-      - name: "Former Member Name"
-        avatar: "FM1"
-        role: "Role / Position"
-        affiliation: "DDMMS &bull; STFC SCD (Years, e.g. 2022&ndash;2024)"
-        destination: "Current Position / Destination"
-        bio: "Description of research topics, scientific contributions, or software packages developed while with the group."
-        tags:
-          - "Research Area"
-          - "Key Contribution"
-        links:
-          - text: "ORCID"
-            url: "#"
-          - text: "GitHub"
-            url: "#"
-
-      - name: "Former Member Name"
-        avatar: "FM2"
-        role: "Role / Position"
-        affiliation: "DDMMS &bull; STFC SCD (Years, e.g. 2023&ndash;2025)"
-        destination: "Current Position / Destination"
-        bio: "Description of research topics, scientific contributions, or software packages developed while with the group."
-        tags:
-          - "Research Area"
-          - "Key Contribution"
-        links:
-          - text: "ORCID"
-            url: "#"
-          - text: "GitHub"
-            url: "#"
-
-  - id: "collaborators"
-    nav_title: "Collaborators"
-    title: "Collaborators"
-    subtitle: "Academic collaborators, national laboratory partners, and international consortia advancing atomistic simulation and scientific machine learning."
-    members:
-      - name: "Collaborator Name"
-        avatar: "C1"
-        role: "Title / Role"
-        affiliation: "Institution / Organization"
-        bio: "Description of collaborative research topics, joint projects, grants, or shared software development."
-        tags:
-          - "Research Area"
-          - "Joint Project"
-        links:
-          - text: "Website / Profile &rarr;"
-            url: "#"
-          - text: "ORCID"
-            url: "#"
-
-      - name: "Collaborator Name"
-        avatar: "C2"
-        role: "Title / Role"
-        affiliation: "Institution / Organization"
-        bio: "Description of collaborative research topics, joint projects, grants, or shared software development."
-        tags:
-          - "Research Area"
-          - "Joint Project"
-        links:
-          - text: "Website / Profile &rarr;"
-            url: "#"
-          - text: "ORCID"
-            url: "#"
-
-      - name: "Collaborator Name"
-        avatar: "C3"
-        role: "Title / Role"
-        affiliation: "Institution / Organization"
-        bio: "Description of collaborative research topics, joint projects, grants, or shared software development."
-        tags:
-          - "Research Area"
-          - "Joint Project"
-        links:
-          - text: "Website / Profile &rarr;"
-            url: "#"
-          - text: "ORCID"
-            url: "#"
+    members: []
+    # Sections with no members are hidden on the People page. To add someone:
+    # members:
+    #   - name: "Full Name"
+    #     avatar: "assets/images/photo.jpg"   # or initials, e.g. "FN"
+    #     role: "Role / Position"
+    #     affiliation: "DDMMS &bull; STFC SCD (2022&ndash;2024)"
+    #     destination: "Current position"   # former members only
+    #     bio: "One or two sentences."
+    #     tags: ["Topic A", "Topic B"]
+    #     links:
+    #       - text: "ORCID"
+    #         url: "https://orcid.org/..."
 
   - id: "visitors"
     nav_title: "Visitors"
     title: "Visitors"
     subtitle: "Academic visitors, guest researchers, and sabbatical fellows who have visited the group to collaborate on atomistic simulations and machine learning."
-    members:
-      - name: "Visitor Name"
-        avatar: "V1"
-        role: "Visiting Title / Role"
-        affiliation: "Home Institution / Organization"
-        tenure: "Visiting Tenure &bull; Year(s)"
-        bio: "Description of collaborative research topics, joint projects, visit goals, or simulation topics explored during the visit."
-        tags:
-          - "Research Topic"
-          - "Visit Scheme / Grant"
-        links:
-          - text: "Website / Profile &rarr;"
-            url: "#"
-          - text: "ORCID"
-            url: "#"
-
-      - name: "Visitor Name"
-        avatar: "V2"
-        role: "Visiting Title / Role"
-        affiliation: "Home Institution / Organization"
-        tenure: "Visiting Tenure &bull; Year(s)"
-        bio: "Description of collaborative research topics, joint projects, visit goals, or simulation topics explored during the visit."
-        tags:
-          - "Research Topic"
-          - "Visit Scheme / Grant"
-        links:
-          - text: "Website / Profile &rarr;"
-            url: "#"
-          - text: "ORCID"
-            url: "#"
-
-partner_consortia:
-  title: "Collaborative Research Networks"
-  description: "We collaborate closely with major national and international research networks to establish shared atomistic data standards and sustainable scientific infrastructure:"
-  links:
-    - text: "PSDI Data to Knowledge &rarr;"
-      url: "https://www.psdi.ac.uk"
-    - text: "CCP5 (Condensed Phase Simulation) &rarr;"
-      url: "https://www.ccp5.ac.uk"
-    - text: "MACE Ecosystem &rarr;"
-      url: "https://mace-docs.readthedocs.io"
-    - text: "STFC Scientific Computing Department &rarr;"
-      url: "https://www.scd.stfc.ac.uk"
-
-opportunities:
-  title: "Collaborate With Us"
-  description: "We are always enthusiastic to collaborate with motivated graduate students, postdoctoral researchers, and academic visitors who wish to explore machine-learned interatomic potentials, extreme-scale molecular dynamics, or materials for sustainable energy technologies."
-  email: "alin-marin.elena@stfc.ac.uk"
-
+    members: []
+    # Same entry format as former-members above (use tenure: for visit dates).

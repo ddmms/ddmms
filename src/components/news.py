@@ -7,13 +7,16 @@ import yaml
 try:
     from .header import get_header
     from .footer import get_footer
+    from .layout import render_page_hero
 except (ImportError, ValueError):
     try:
         from components.header import get_header
         from components.footer import get_footer
+        from components.layout import render_page_hero
     except ImportError:
         from src.components.header import get_header
         from src.components.footer import get_footer
+        from src.components.layout import render_page_hero
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 NEWS_FILE = BASE_DIR / "data" / "news.yaml"
@@ -89,18 +92,19 @@ def generate_news_html(news=None):
             is_external = link_val.startswith("http://") or link_val.startswith("https://")
             target_attr = ' target="_blank" rel="noopener noreferrer"' if is_external else ''
             headline_html = f'<a href="{link_val}" class="news-headline-link"{target_attr}>{headline_val} <span class="news-link-arrow" aria-hidden="true">&rarr;</span></a>'
-            action_btn = f'<a href="{link_val}" class="btn btn-sm btn-outline"{target_attr} style="margin-top: 0.65rem; display: inline-flex; align-items: center; gap: 0.35rem;">Visit Resource &rarr;</a>'
         else:
             headline_html = headline_val
-            action_btn = ''
 
-        news_cards.append(f"""        <article class="news-card-archive" style="background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.5rem; box-shadow: var(--shadow-sm); position: relative; border-left: 4px solid var(--accent-teal);">
-          <div class="news-date">{date_val}</div>
-          <div class="news-headline" style="font-size: 1.05rem; line-height: 1.5; margin-top: 0.35rem;">{headline_html}</div>
-          {f'<div style="margin-top: 0.5rem;">{action_btn}</div>' if action_btn else ''}
-        </article>""")
+        news_cards.append(f"""          <li class="news-item">
+            <div class="news-date">{date_val}</div>
+            <div class="news-headline">{headline_html}</div>
+          </li>""")
 
     news_cards_html = "\n".join(news_cards)
+    hero_html = render_page_hero(
+        "News &amp; Historical Milestones",
+        "Chronological archive of research milestones, software releases, funded grants, and community workshops.",
+    )
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -118,24 +122,16 @@ def generate_news_html(news=None):
 <body>
 {header_html}
 
-  <main id="main-content" style="padding-top: 3rem;">
-    <div class="container">
-      <div class="section-header" style="text-align: left; margin-bottom: 2.5rem;">
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
-          <div>
-            <h1 class="section-title">News &amp; Historical Milestones</h1>
-            <p class="section-subtitle">
-              Chronological archive of research milestones, software releases, funded grants, and community workshops.
-            </p>
-          </div>
-          <a href="index.html" class="btn btn-outline" style="align-self: center;">&larr; Back to About</a>
-        </div>
-      </div>
+  <main id="main-content">
+{hero_html}
 
-      <div class="news-archive-grid" style="display: flex; flex-direction: column; gap: 1.25rem; max-width: 860px;">
+    <section class="home-section">
+      <div class="container">
+        <ul class="news-list news-archive-list">
 {news_cards_html}
+        </ul>
       </div>
-    </div>
+    </section>
   </main>
 
 {footer_html}

@@ -1,0 +1,56 @@
+title: "Opportunities"
+intro: "Upcoming events and ways to study, train and work with DDMMS at STFC."
+
+# Same format as data/teaching.yaml. Each category: id (used for the jump
+# link), title, optional description, events, cards, members and links.
+# Cards: title, url, status (badge), details (label + value, optional url),
+# description and links (buttons inside the card).
+categories:
+  - id: "events"
+    title: "Events"
+    cards:
+      - title: "CaMML Spring School 2027"
+        url: "https://spring2027.camml.ac.uk"
+        status: "Apply by 26 November 2026"
+        details:
+          - label: "Dates"
+            value: "5–9 April 2027"
+          - label: "Location"
+            value: "STFC Daresbury Laboratory, UK"
+          - label: "For"
+            value: "PhD students in materials and molecular simulation who can code but are new to machine learning; a limited number of places may be available for industrial applicants"
+          - label: "Key dates"
+            value: "Apply by 26 November 2026 · outcome by 17 December 2026 · payment by 13 February 2027"
+          - label: "Fee"
+            value: "£250 per student, including 5 nights' accommodation, breakfast, lunches, coffee breaks, the school BBQ and poster session refreshments"
+          - label: "Places"
+            value: "Limited to 40; if oversubscribed, the organisers will favour a diverse group of attendees"
+          - label: "Organised by"
+            value: "PSDI and AIchemy, with support from STFC-SCD, CCP5, CCP9 and CECAM"
+        description: "The Chemical and Materials Machine Learning School is an international training course on the latest machine learning methods for atomistic simulation of materials and molecules. Talks and hands-on sessions cover the basics of machine learning, machine learning interatomic potentials and graph neural networks, and attendees can present a poster on their work."
+        links:
+          - text: "Event website and applications"
+            url: "https://spring2027.camml.ac.uk"
+
+  - id: "phd"
+    title: "PhD Projects"
+    description: "DDMMS members co-supervise PhD projects with partner universities, including through the STFC Ada Lovelace Centre (ALC) PhD programme."
+    links:
+      - text: "Interested in a PhD? Contact the group"
+        url: "collaborate.html#contact"
+      - text: "ALC PhD projects"
+        url: "https://www.adalovelacecentre.ac.uk/phd-projects/"
+
+  - id: "graduate-scheme"
+    title: "STFC Graduate Scheme"
+    description: "STFC's graduate programme is a permanent role in a department, with a two-year core training programme alongside technical training, mentoring towards professional registration, and a three-month placement in another STFC department. Computing is one of its five pathways. Applicants need, or are on course for, at least a 2:1 in a relevant subject."
+    links:
+      - text: "STFC Graduate Programme"
+        url: "https://stfccareers.co.uk/graduates/"
+
+  - id: "placements"
+    title: "STFC Industrial and Summer Placements"
+    description: "Undergraduates can work alongside STFC scientists and engineers on a year-long industrial placement during their degree, or on a summer placement. Both are aligned with the STFC graduate programme."
+    links:
+      - text: "STFC Industrial and Summer Placements"
+        url: "https://stfccareers.co.uk/students/"

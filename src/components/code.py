@@ -7,13 +7,16 @@ import yaml
 try:
     from .header import get_header
     from .footer import get_footer
+    from .layout import render_page_hero
 except (ImportError, ValueError):
     try:
         from components.header import get_header
         from components.footer import get_footer
+        from components.layout import render_page_hero
     except ImportError:
         from src.components.header import get_header
         from src.components.footer import get_footer
+        from src.components.layout import render_page_hero
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 SOFTWARE_FILE = BASE_DIR / "data" / "software.yaml"
@@ -129,7 +132,7 @@ def generate_code_html(
         # Features
         features_list_html = ""
         if isinstance(features, list) and features:
-            items_str = "\n".join(f'            <li>{f}</li>' for f in features if str(f).strip())
+            items_str = "\n".join(f'            <li><span>{f}</span></li>' for f in features if str(f).strip())
             features_list_html = f"""          <ul class="code-features-list">
 {items_str}
           </ul>"""
@@ -182,16 +185,11 @@ def generate_code_html(
 
     cards_html = "\n\n".join(cards)
 
-    subtitle_html = ""
-    if subtitle:
-        subtitle_html = f"""      <div class="section-header" style="text-align: left; margin-bottom: 2.5rem;">
-        <p class="section-subtitle">
-          {subtitle}
-        </p>
-      </div>"""
-    else:
-        subtitle_html = """      <div class="section-header" style="text-align: left; margin-bottom: 2.5rem;">
-      </div>"""
+    page_meta = software_data if isinstance(software_data, dict) else {}
+    hero_html = render_page_hero(
+        str(page_meta.get("title") or "Software &amp; Tools"),
+        subtitle,
+    )
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -209,14 +207,16 @@ def generate_code_html(
 <body>
 {header_html}
 
-  <main id="main-content" style="padding-top: 3rem;">
-    <div class="container">
-{subtitle_html}
+  <main id="main-content">
+{hero_html}
 
-      <div class="code-grid" style="grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));">
+    <section class="home-section">
+      <div class="container">
+        <div class="code-grid">
 {cards_html}
+        </div>
       </div>
-    </div>
+    </section>
   </main>
 
 {footer_html}

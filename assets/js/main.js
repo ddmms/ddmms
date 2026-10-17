@@ -191,11 +191,17 @@
 
       <nav class="nav-desktop" aria-label="Primary Navigation">
         <ul class="nav-links">
-          <li class="nav-item"><a href="index.html">About</a></li>
+          <li class="nav-item"><a href="index.html">Home</a></li>
           <li class="nav-item"><a href="people.html">People</a></li>
-          <li class="nav-item"><a href="research.html">Research</a></li>
           <li class="nav-item"><a href="publications.html">Publications</a></li>
+          <li class="nav-item"><a href="talks.html">Talks</a></li>
+          <li class="nav-item"><a href="research.html">Research</a></li>
           <li class="nav-item"><a href="code.html">Software</a></li>
+          <li class="nav-item"><a href="teaching.html">Teaching</a></li>
+          <li class="nav-item"><a href="awards.html">Awards</a></li>
+          <li class="nav-item"><a href="news.html">News</a></li>
+          <li class="nav-item"><a href="opportunities.html">Opportunities</a></li>
+          <li class="nav-item"><a href="collaborate.html">Collaborate</a></li>
         </ul>
       </nav>
 
@@ -217,11 +223,17 @@
     <!-- Mobile Navigation Drawer -->
     <div class="mobile-drawer" id="mobile-drawer">
       <ul class="mobile-nav-links">
-        <li class="mobile-nav-item"><a href="index.html"><span>About</span><span>&rarr;</span></a></li>
+        <li class="mobile-nav-item"><a href="index.html"><span>Home</span><span>&rarr;</span></a></li>
         <li class="mobile-nav-item"><a href="people.html"><span>People</span><span>&rarr;</span></a></li>
-        <li class="mobile-nav-item"><a href="research.html"><span>Research</span><span>&rarr;</span></a></li>
         <li class="mobile-nav-item"><a href="publications.html"><span>Publications</span><span>&rarr;</span></a></li>
+        <li class="mobile-nav-item"><a href="talks.html"><span>Talks</span><span>&rarr;</span></a></li>
+        <li class="mobile-nav-item"><a href="research.html"><span>Research</span><span>&rarr;</span></a></li>
         <li class="mobile-nav-item"><a href="code.html"><span>Software</span><span>&rarr;</span></a></li>
+        <li class="mobile-nav-item"><a href="teaching.html"><span>Teaching</span><span>&rarr;</span></a></li>
+        <li class="mobile-nav-item"><a href="awards.html"><span>Awards</span><span>&rarr;</span></a></li>
+        <li class="mobile-nav-item"><a href="news.html"><span>News</span><span>&rarr;</span></a></li>
+        <li class="mobile-nav-item"><a href="opportunities.html"><span>Opportunities</span><span>&rarr;</span></a></li>
+        <li class="mobile-nav-item"><a href="collaborate.html"><span>Collaborate</span><span>&rarr;</span></a></li>
       </ul>
       <div class="mobile-actions">
         <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Theme Appearance</span>
@@ -425,10 +437,60 @@
     }
   }
 
+  // --- Homepage Carousel ---
+  // Swiping is native (CSS scroll-snap); this wires up the arrows, dots and keyboard.
+  function initCarousels() {
+    document.querySelectorAll('[data-carousel]').forEach(carousel => {
+      const track = carousel.querySelector('.carousel-track');
+      if (!track || carousel._carouselBound) return;
+      carousel._carouselBound = true;
+
+      const slides = Array.from(track.querySelectorAll('.carousel-slide'));
+      const dots = Array.from(carousel.querySelectorAll('.carousel-dot'));
+      const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      const currentIndex = () => Math.round(track.scrollLeft / Math.max(track.clientWidth, 1));
+
+      function goTo(index) {
+        const target = (index + slides.length) % slides.length;
+        track.scrollTo({ left: target * track.clientWidth, behavior: reduceMotion ? 'auto' : 'smooth' });
+      }
+
+      function updateDots() {
+        const active = currentIndex();
+        dots.forEach((dot, i) => dot.setAttribute('aria-current', i === active ? 'true' : 'false'));
+      }
+
+      const prevBtn = carousel.querySelector('.carousel-prev');
+      const nextBtn = carousel.querySelector('.carousel-next');
+      if (prevBtn) prevBtn.addEventListener('click', () => goTo(currentIndex() - 1));
+      if (nextBtn) nextBtn.addEventListener('click', () => goTo(currentIndex() + 1));
+      dots.forEach((dot, i) => dot.addEventListener('click', () => goTo(i)));
+
+      track.addEventListener('keydown', e => {
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+          e.preventDefault();
+          goTo(currentIndex() + (e.key === 'ArrowRight' ? 1 : -1));
+        }
+      });
+
+      let frame = null;
+      track.addEventListener('scroll', () => {
+        if (frame) cancelAnimationFrame(frame);
+        frame = requestAnimationFrame(updateDots);
+      }, { passive: true });
+
+      // the browser may restore or jump the scroll position after init (e.g. #slide links)
+      window.addEventListener('load', updateDots);
+      updateDots();
+    });
+  }
+
   function initDynamicIncludes() {
     loadReusableHeader();
     loadReusableFooter();
     initNewsToggle();
+    initCarousels();
     window.renderAllMath();
   }
 
