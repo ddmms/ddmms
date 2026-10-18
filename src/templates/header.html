@@ -44,35 +44,177 @@
           <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12.3 2a10 10 0 00-1.9 19.8 10 10 0 0011.6-11.6A10 10 0 0012.3 2zm-.3 18a8 8 0 110-16 8.3 8.3 0 011.7.2 8 8 0 00-1.9 7.8 8 8 0 007.8 8c-.5 0-1.1 0-1.6-.0z"/></svg>
         </button>
 
-        <button type="button" class="mobile-toggle-btn" aria-label="Open Navigation Menu" aria-expanded="false" aria-controls="mobile-drawer">
-          <span class="hamburger-icon">
-            <span class="hamburger-line"></span>
-            <span class="hamburger-line"></span>
-            <span class="hamburger-line"></span>
+        <button type="button" id="corner-menu-toggle" class="corner-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="corner-menu-panel">
+          <img id="corner-btn-logo" src="assets/logos/ddmms_for_light_modes.svg" alt="DDMMS" class="brand-avatar">
+          <span id="corner-current-section">Menu</span>
+          <span class="menu-icon-bars" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
           </span>
         </button>
       </div>
     </div>
 
-    <!-- Mobile Navigation Drawer -->
-    <div class="mobile-drawer" id="mobile-drawer">
-      <ul class="mobile-nav-links">
-        <li class="mobile-nav-item"><a href="index.html"><span>Home</span><span>&rarr;</span></a></li>
-        <li class="mobile-nav-item mobile-sub-item"><a href="news.html"><span>&ndash; News &amp; Milestones</span><span>&rarr;</span></a></li>
-        <li class="mobile-nav-item mobile-sub-item"><a href="opportunities.html"><span>&ndash; Opportunities</span><span>&rarr;</span></a></li>
-        <li class="mobile-nav-item mobile-sub-item"><a href="collaborate.html"><span>&ndash; Collaborate</span><span>&rarr;</span></a></li>
-        <li class="mobile-nav-item"><a href="people.html"><span>People</span><span>&rarr;</span></a></li>
-        <li class="mobile-nav-item"><a href="research.html"><span>Research</span><span>&rarr;</span></a></li>
-        <li class="mobile-nav-item mobile-sub-item"><a href="talks.html"><span>&ndash; Talks</span><span>&rarr;</span></a></li>
-        <li class="mobile-nav-item mobile-sub-item"><a href="teaching.html"><span>&ndash; Teaching</span><span>&rarr;</span></a></li>
-        <li class="mobile-nav-item"><a href="publications.html"><span>Publications</span><span>&rarr;</span></a></li>
-        <li class="mobile-nav-item"><a href="code.html"><span>Software</span><span>&rarr;</span></a></li>
-      </ul>
-      <div class="mobile-actions">
-        <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Theme Appearance</span>
-        <button type="button" class="theme-toggle-btn" aria-label="Toggle theme">
-          <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12.3 2a10 10 0 00-1.9 19.8 10 10 0 0011.6-11.6A10 10 0 0012.3 2zm-.3 18a8 8 0 110-16 8.3 8.3 0 011.7.2 8 8 0 00-1.9 7.8 8 8 0 007.8 8c-.5 0-1.1 0-1.6-.0z"/></svg>
-        </button>
+    <!-- Quick Navigation Pills Scroller Bar matching mlego.elena.re subpage-nav-bar -->
+    <nav class="subpage-nav-bar" aria-label="Quick navigation">
+      <div class="container">
+        <div class="subpage-nav-scroller">
+          <a href="index.html" class="subnav-pill" style="--pill-color: #57cbcc;">
+            <span class="subnav-pill-title">Home</span>
+          </a>
+          <a href="people.html" class="subnav-pill" style="--pill-color: #2dd4bf;">
+            <span class="subnav-pill-title">People</span>
+            <span class="subnav-pill-badge">Team</span>
+          </a>
+          <a href="research.html" class="subnav-pill" style="--pill-color: #6cb670;">
+            <span class="subnav-pill-title">Research</span>
+            <span class="subnav-pill-badge">Themes</span>
+          </a>
+          <a href="publications.html" class="subnav-pill" style="--pill-color: #38bdf8;">
+            <span class="subnav-pill-title">Publications</span>
+            <span class="subnav-pill-badge">Papers</span>
+          </a>
+          <a href="code.html" class="subnav-pill" style="--pill-color: #fbbf24;">
+            <span class="subnav-pill-title">Software</span>
+            <span class="subnav-pill-badge">Code</span>
+          </a>
+          <a href="news.html" class="subnav-pill" style="--pill-color: #2dd4bf;">
+            <span class="subnav-pill-title">News</span>
+            <span class="subnav-pill-badge">Feed</span>
+          </a>
+          <a href="talks.html" class="subnav-pill" style="--pill-color: #f472b6;">
+            <span class="subnav-pill-title">Talks</span>
+            <span class="subnav-pill-badge">Seminars</span>
+          </a>
+          <a href="teaching.html" class="subnav-pill" style="--pill-color: #a78bfa;">
+            <span class="subnav-pill-title">Teaching</span>
+            <span class="subnav-pill-badge">Courses</span>
+          </a>
+          <a href="opportunities.html" class="subnav-pill" style="--pill-color: #fb923c;">
+            <span class="subnav-pill-title">Opportunities</span>
+            <span class="subnav-pill-badge">Join</span>
+          </a>
+          <a href="collaborate.html" class="subnav-pill" style="--pill-color: #4ade80;">
+            <span class="subnav-pill-title">Collaborate</span>
+            <span class="subnav-pill-badge">Partner</span>
+          </a>
+        </div>
       </div>
+    </nav>
+
+    <!-- Floating Corner Menu Panel matching mlego.elena.re (also serving as mobile drawer) -->
+    <div id="corner-menu-panel" class="corner-menu-panel mobile-drawer" role="menu">
+      <div class="corner-panel-header">
+        <span class="corner-panel-title">DDMMS Navigation</span>
+        <span class="corner-panel-badge">ddmms.stfc.ac.uk</span>
+      </div>
+      <ul id="corner-nav-list" class="corner-nav-list mobile-nav-links">
+        <li class="mobile-nav-item">
+          <a href="index.html" class="corner-nav-link" style="--nav-item-color: #57cbcc;">
+            <span class="corner-nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></span>
+            <span>Home</span>
+          </a>
+        </li>
+        <li class="mobile-nav-item">
+          <a href="people.html" class="corner-nav-link" style="--nav-item-color: #2dd4bf;">
+            <span class="corner-nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></span>
+            <span>People</span>
+          </a>
+        </li>
+
+        <!-- Research Group with Expandable Subnav Chips Grid -->
+        <li class="corner-nav-group mobile-nav-item">
+          <div class="corner-nav-group-header" style="--nav-item-color: #6cb670;">
+            <a href="research.html" class="corner-nav-link corner-nav-group-title">
+              <span class="corner-nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg></span>
+              <span>Research</span>
+            </a>
+            <button type="button" class="corner-nav-group-toggle-btn" aria-expanded="false" aria-label="Toggle Research Submenu">
+              <span class="group-chevron">&#9662;</span>
+            </button>
+          </div>
+          <div class="corner-subnav-panel">
+            <div class="corner-subnav-grid">
+              <a href="research.html" class="corner-subnav-chip" style="--chip-accent: #6cb670;">
+                <span class="chip-name">Themes</span>
+                <span class="chip-badge">Areas</span>
+              </a>
+              <a href="talks.html" class="corner-subnav-chip" style="--chip-accent: #f472b6;">
+                <span class="chip-name">Talks</span>
+                <span class="chip-badge">Seminars</span>
+              </a>
+              <a href="teaching.html" class="corner-subnav-chip" style="--chip-accent: #a78bfa;">
+                <span class="chip-name">Teaching</span>
+                <span class="chip-badge">Courses</span>
+              </a>
+            </div>
+          </div>
+        </li>
+
+        <li class="mobile-nav-item">
+          <a href="publications.html" class="corner-nav-link" style="--nav-item-color: #38bdf8;">
+            <span class="corner-nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg></span>
+            <span>Publications</span>
+          </a>
+        </li>
+
+        <li class="mobile-nav-item">
+          <a href="code.html" class="corner-nav-link" style="--nav-item-color: #fbbf24;">
+            <span class="corner-nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg></span>
+            <span>Software</span>
+          </a>
+        </li>
+
+        <!-- Community & News Category with Expandable Subnav Chips Grid -->
+        <li class="corner-nav-group mobile-nav-item">
+          <div class="corner-nav-group-header" style="--nav-item-color: #fb923c;">
+            <a href="news.html" class="corner-nav-link corner-nav-group-title">
+              <span class="corner-nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 20H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v1m2 13a2 2 0 0 1-2-2V7m2 13a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path></svg></span>
+              <span>News &amp; Updates</span>
+            </a>
+            <button type="button" class="corner-nav-group-toggle-btn" aria-expanded="false" aria-label="Toggle News Submenu">
+              <span class="group-chevron">&#9662;</span>
+            </button>
+          </div>
+          <div class="corner-subnav-panel">
+            <div class="corner-subnav-grid">
+              <a href="news.html" class="corner-subnav-chip" style="--chip-accent: #2dd4bf;">
+                <span class="chip-name">News</span>
+                <span class="chip-badge">Feed</span>
+              </a>
+              <a href="opportunities.html" class="corner-subnav-chip" style="--chip-accent: #fb923c;">
+                <span class="chip-name">Opportunities</span>
+                <span class="chip-badge">Join Us</span>
+              </a>
+              <a href="collaborate.html" class="corner-subnav-chip" style="--chip-accent: #4ade80;">
+                <span class="chip-name">Collaborate</span>
+                <span class="chip-badge">Partners</span>
+              </a>
+            </div>
+          </div>
+        </li>
+
+        <!-- Theme Appearance Row in Menu -->
+        <li class="corner-menu-theme-row">
+          <div class="theme-row-label">Theme Appearance</div>
+          <div class="theme-menu-swatches">
+            <button type="button" class="theme-swatch-pill active" data-theme-name="dark" title="Dark Theme" style="--pill-accent: #57cbcc;">
+              <span class="dot"></span> Dark
+            </button>
+            <button type="button" class="theme-swatch-pill" data-theme-name="light" title="Light Theme" style="--pill-accent: #0891b2;">
+              <span class="dot"></span> Light
+            </button>
+          </div>
+        </li>
+
+        <!-- Affiliation Link -->
+        <li class="corner-menu-ext-row">
+          <a href="https://alin.elena.re" target="_blank" rel="noopener noreferrer" class="corner-nav-link" style="--nav-item-color: #57cbcc;">
+            <img src="https://alin.elena.re/pics/alin.webp" alt="Alin M. Elena" class="rounded-circle" style="width: 1.15rem; height: 1.15rem; object-fit: cover; border-radius: 50%;" onerror="this.style.display='none'">
+            <span>Alin's Main Site</span>
+          </a>
+        </li>
+      </ul>
     </div>
   </header>

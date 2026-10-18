@@ -263,6 +263,8 @@ class TestDDMMSSite(unittest.TestCase):
         self.assertIn("footer-grid", footer_content)
         self.assertIn("footer-links", footer_content)
         self.assertIn("Affiliations", footer_content)
+        self.assertIn("footer-pills-list", footer_content)
+        self.assertIn("subnav-pill", footer_content)
 
     def test_build_site_get_footer_container(self):
         import build_site
@@ -319,6 +321,10 @@ class TestDDMMSSite(unittest.TestCase):
         self.assertIn("brand-link", header_content)
         self.assertIn("nav-desktop", header_content)
         self.assertIn("mobile-drawer", header_content)
+        self.assertIn("subpage-nav-bar", header_content)
+        self.assertIn("subnav-pill", header_content)
+        self.assertIn("corner-menu-btn", header_content)
+        self.assertIn("corner-menu-panel", header_content)
 
     def test_build_site_get_header_container(self):
         import build_site

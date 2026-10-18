@@ -60,9 +60,9 @@
   function initHeader(headerScope) {
     if (!headerScope) return;
 
-    // Apply active link
+    // Apply active link on all nav links, pills, and chips
     const currentFilename = window.location.pathname.split('/').pop() || 'index.html';
-    headerScope.querySelectorAll('.nav-desktop .nav-item a, .mobile-nav-item a').forEach(link => {
+    headerScope.querySelectorAll('.nav-desktop .nav-item a, .subnav-pill, .corner-nav-link, .corner-subnav-chip, .mobile-nav-item a').forEach(link => {
       const href = link.getAttribute('href');
       if (href === currentFilename || (currentFilename === '' && href === 'index.html')) {
         link.classList.add('active');
@@ -70,6 +70,14 @@
         if (parentDropdown) {
           const mainLink = parentDropdown.querySelector('.nav-link-main');
           if (mainLink) mainLink.classList.add('active');
+        }
+        // If it's a chip inside a corner nav group, expand that group
+        const parentGroup = link.closest('.corner-nav-group');
+        if (parentGroup) {
+          const subpanel = parentGroup.querySelector('.corner-subnav-panel');
+          const toggleBtn = parentGroup.querySelector('.corner-nav-group-toggle-btn');
+          if (subpanel) subpanel.classList.add('show');
+          if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'true');
         }
       }
     });
@@ -82,38 +90,69 @@
       });
     });
 
-    // Mobile Drawer Navigation
-    const mobileToggleBtn = headerScope.querySelector('.mobile-toggle-btn');
-    const mobileDrawer = headerScope.querySelector('.mobile-drawer');
+    // Theme Swatch Pills in Menu
+    headerScope.querySelectorAll('.theme-swatch-pill').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const themeName = btn.getAttribute('data-theme-name');
+        if (themeName) {
+          applyTheme(themeName);
+        }
+      });
+    });
 
-    if (mobileToggleBtn && mobileDrawer) {
-      function toggleDrawer(open) {
-        const isOpen = open !== undefined ? open : !mobileDrawer.classList.contains('open');
-        mobileDrawer.classList.toggle('open', isOpen);
-        mobileToggleBtn.setAttribute('aria-expanded', String(isOpen));
-        document.body.style.overflow = isOpen ? 'hidden' : '';
+    // Floating Corner Menu & Mobile Drawer Navigation
+    const cornerMenuToggle = headerScope.querySelector('#corner-menu-toggle, .corner-menu-btn, .mobile-toggle-btn');
+    const cornerMenuPanel = headerScope.querySelector('#corner-menu-panel, .corner-menu-panel, .mobile-drawer');
+
+    if (cornerMenuToggle && cornerMenuPanel) {
+      function toggleMenu(open) {
+        const isOpen = open !== undefined ? open : !cornerMenuPanel.classList.contains('show');
+        cornerMenuPanel.classList.toggle('show', isOpen);
+        cornerMenuPanel.classList.toggle('open', isOpen);
+        cornerMenuToggle.setAttribute('aria-expanded', String(isOpen));
       }
 
-      mobileToggleBtn.addEventListener('click', () => toggleDrawer());
+      cornerMenuToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleMenu();
+      });
 
-      mobileDrawer.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => toggleDrawer(false));
+      cornerMenuPanel.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => toggleMenu(false));
       });
 
       document.addEventListener('click', e => {
         if (
-          mobileDrawer.classList.contains('open') &&
-          !mobileDrawer.contains(e.target) &&
-          !mobileToggleBtn.contains(e.target)
+          (cornerMenuPanel.classList.contains('show') || cornerMenuPanel.classList.contains('open')) &&
+          !cornerMenuPanel.contains(e.target) &&
+          !cornerMenuToggle.contains(e.target)
         ) {
-          toggleDrawer(false);
+          toggleMenu(false);
         }
       });
 
       document.addEventListener('keydown', e => {
-        if (e.key === 'Escape' && mobileDrawer.classList.contains('open')) {
-          toggleDrawer(false);
+        if (e.key === 'Escape' && (cornerMenuPanel.classList.contains('show') || cornerMenuPanel.classList.contains('open'))) {
+          toggleMenu(false);
         }
+      });
+
+      // Submenu group toggles inside corner menu
+      cornerMenuPanel.querySelectorAll('.corner-nav-group-toggle-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const expanded = btn.getAttribute('aria-expanded') === 'true';
+          btn.setAttribute('aria-expanded', String(!expanded));
+          const group = btn.closest('.corner-nav-group');
+          if (group) {
+            const subpanel = group.querySelector('.corner-subnav-panel');
+            if (subpanel) {
+              subpanel.classList.toggle('show', !expanded);
+            }
+          }
+        });
       });
     }
 
