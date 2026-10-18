@@ -47,10 +47,22 @@ class TestDDMMSSite(unittest.TestCase):
             self.assertGreater(p.stat().st_size, 1000, f"{fname} is suspiciously small")
 
     def test_required_nav_menu_items(self):
-        required_items = ["home", "people", "publications", "talks", "research", "software", "teaching", "awards", "news", "opportunities", "collaborate"]
-        content = (BASE_DIR / "header.html").read_text(encoding="utf-8").lower()
-        for item in required_items:
-            self.assertIn(item, content, f"Menu item '{item}' missing from header.html")
+        content = (BASE_DIR / "header.html").read_text(encoding="utf-8")
+        content_lower = content.lower()
+        # Awards has been removed from the navigation menu
+        self.assertNotIn("awards.html", content_lower, "awards.html should not be in header.html navigation menu")
+        # 5 main entries in desktop nav + sub-items
+        main_entries = ["home", "people", "research", "publications", "software"]
+        sub_items = ["talks", "teaching", "news", "opportunities", "collaborate"]
+        for item in main_entries + sub_items:
+            self.assertIn(item, content_lower, f"Menu item '{item}' missing from header.html")
+        # Assert desktop nav has exactly 5 main top-level .nav-item elements
+        nav_desktop_match = re.search(r'<nav class="nav-desktop"[^>]*>([\s\S]*?)</nav>', content)
+        self.assertIsNotNone(nav_desktop_match, "nav-desktop element missing in header.html")
+        nav_desktop_content = nav_desktop_match.group(1)
+        # Find top-level nav-items (not nested within nav-dropdown-menu)
+        top_nav_items = re.findall(r'<li class="nav-item(?:\s+[^"]*)?">(?:(?!<li class="nav-item)[\s\S])*?</li>', nav_desktop_content)
+        self.assertEqual(len(top_nav_items), 5, f"Desktop nav should have exactly 5 main entries, found {len(top_nav_items)}")
 
     def test_mobile_friendly_viewport(self):
         viewport_regex = re.compile(r'<meta\s+name=["\']viewport["\']\s+content=["\'][^"\']*width=device-width[^"\']*["\']', re.IGNORECASE)
@@ -182,7 +194,10 @@ class TestDDMMSSite(unittest.TestCase):
             self.assertIn('href="news.html"', content, f"Separate link news.html missing in {fname}")
             self.assertIn('href="teaching.html"', content, f"Separate link teaching.html missing in {fname}")
             self.assertIn('href="talks.html"', content, f"Separate link talks.html missing in {fname}")
-            self.assertIn('href="awards.html"', content, f"Separate link awards.html missing in {fname}")
+            if fname == "footer.html":
+                self.assertIn('href="awards.html"', content, f"Separate link awards.html missing in {fname}")
+            else:
+                self.assertNotIn('href="awards.html"', content, f"awards.html should not be in navigation {fname}")
             self.assertIn('href="opportunities.html"', content, f"Separate link opportunities.html missing in {fname}")
 
     def test_no_software_and_feeds_in_footer(self):

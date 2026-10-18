@@ -66,6 +66,11 @@
       const href = link.getAttribute('href');
       if (href === currentFilename || (currentFilename === '' && href === 'index.html')) {
         link.classList.add('active');
+        const parentDropdown = link.closest('.nav-item-has-dropdown');
+        if (parentDropdown) {
+          const mainLink = parentDropdown.querySelector('.nav-link-main');
+          if (mainLink) mainLink.classList.add('active');
+        }
       }
     });
 
