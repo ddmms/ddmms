@@ -293,10 +293,24 @@
   }
 
   // --- Reusable Footer Dynamic Loader ---
+  function initFooter(footerScope) {
+    if (!footerScope) return;
+    const currentFilename = window.location.pathname.split('/').pop() || 'index.html';
+    footerScope.querySelectorAll('.subnav-pill').forEach(pill => {
+      const href = pill.getAttribute('href');
+      if (href === currentFilename || (currentFilename === '' && href === 'index.html')) {
+        pill.classList.add('active');
+      }
+    });
+  }
+
   function loadReusableFooter() {
     const footerPlaceholders = document.querySelectorAll('#site-footer, [data-include-footer], #reusable-footer');
     footerPlaceholders.forEach(el => {
-      if (el.children.length > 0) return;
+      if (el.children.length > 0) {
+        initFooter(el);
+        return;
+      }
 
       fetch('footer.html')
         .then(res => {
@@ -305,28 +319,32 @@
         })
         .then(html => {
           el.innerHTML = html;
+          initFooter(el);
         })
         .catch(err => {
           console.debug('Dynamic fetch of footer.html failed, using fallback:', err);
           el.innerHTML = `  <footer class="site-footer">
     <div class="container">
+      <nav class="subpage-nav-bar footer-nav-pills" aria-label="Footer quick navigation">
+        <div class="subpage-nav-scroller footer-pills-list">
+          <a href="index.html" class="subnav-pill" style="--pill-color: #57cbcc;"><span class="subnav-pill-title">Home</span></a>
+          <a href="people.html" class="subnav-pill" style="--pill-color: #2dd4bf;"><span class="subnav-pill-title">People</span><span class="subnav-pill-badge">Team</span></a>
+          <a href="research.html" class="subnav-pill" style="--pill-color: #6cb670;"><span class="subnav-pill-title">Research</span><span class="subnav-pill-badge">Themes</span></a>
+          <a href="publications.html" class="subnav-pill" style="--pill-color: #38bdf8;"><span class="subnav-pill-title">Publications</span><span class="subnav-pill-badge">Papers</span></a>
+          <a href="code.html" class="subnav-pill" style="--pill-color: #fbbf24;"><span class="subnav-pill-title">Software</span><span class="subnav-pill-badge">Code</span></a>
+          <a href="news.html" class="subnav-pill" style="--pill-color: #2dd4bf;"><span class="subnav-pill-title">News</span><span class="subnav-pill-badge">Feed</span></a>
+          <a href="talks.html" class="subnav-pill" style="--pill-color: #f472b6;"><span class="subnav-pill-title">Talks</span><span class="subnav-pill-badge">Seminars</span></a>
+          <a href="teaching.html" class="subnav-pill" style="--pill-color: #a78bfa;"><span class="subnav-pill-title">Teaching</span><span class="subnav-pill-badge">Courses</span></a>
+          <a href="opportunities.html" class="subnav-pill" style="--pill-color: #fb923c;"><span class="subnav-pill-title">Opportunities</span><span class="subnav-pill-badge">Join</span></a>
+          <a href="collaborate.html" class="subnav-pill" style="--pill-color: #4ade80;"><span class="subnav-pill-title">Collaborate</span><span class="subnav-pill-badge">Partner</span></a>
+          <a href="awards.html" class="subnav-pill" style="--pill-color: #eab308;"><span class="subnav-pill-title">Awards</span><span class="subnav-pill-badge">Honors</span></a>
+        </div>
+      </nav>
       <div class="footer-grid">
         <div class="footer-brand">
           <h4>Data Driven Materials and Molecular Science</h4>
           <p>Accelerating atomistic discovery through physics-informed machine learning, multiscale molecular simulation, and open-source scientific workflows.</p>
         </div>
-
-        <div class="footer-col">
-          <h5>Navigation</h5>
-          <ul class="footer-links">
-            <li><a href="index.html">About Us</a></li>
-            <li><a href="people.html">People</a></li>
-            <li><a href="research.html">Research Themes</a></li>
-            <li><a href="publications.html">Publications</a></li>
-            <li><a href="code.html">Code &amp; Software</a></li>
-          </ul>
-        </div>
-
         <div class="footer-col">
           <h5>Affiliations</h5>
           <ul class="footer-links">
@@ -344,6 +362,7 @@
     </div>
   </footer>
   <div class="toast" id="toast" role="alert" aria-live="polite"></div>`;
+          initFooter(el);
         });
     });
   }

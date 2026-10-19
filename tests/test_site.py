@@ -51,18 +51,15 @@ class TestDDMMSSite(unittest.TestCase):
         content_lower = content.lower()
         # Awards has been removed from the navigation menu
         self.assertNotIn("awards.html", content_lower, "awards.html should not be in header.html navigation menu")
-        # 5 main entries in desktop nav + sub-items
+        # 5 main entries + sub-items exist in collapsible menu
         main_entries = ["home", "people", "research", "publications", "software"]
         sub_items = ["talks", "teaching", "news", "opportunities", "collaborate"]
         for item in main_entries + sub_items:
             self.assertIn(item, content_lower, f"Menu item '{item}' missing from header.html")
-        # Assert desktop nav has exactly 5 main top-level .nav-item elements
-        nav_desktop_match = re.search(r'<nav class="nav-desktop"[^>]*>([\s\S]*?)</nav>', content)
-        self.assertIsNotNone(nav_desktop_match, "nav-desktop element missing in header.html")
-        nav_desktop_content = nav_desktop_match.group(1)
-        # Find top-level nav-items (not nested within nav-dropdown-menu)
-        top_nav_items = re.findall(r'<li class="nav-item(?:\s+[^"]*)?">(?:(?!<li class="nav-item)[\s\S])*?</li>', nav_desktop_content)
-        self.assertEqual(len(top_nav_items), 5, f"Desktop nav should have exactly 5 main entries, found {len(top_nav_items)}")
+        # Top menu (nav-desktop) is removed; only the collapsible corner menu is retained
+        self.assertNotIn("nav-desktop", content, "nav-desktop should be removed in favor of corner menu")
+        self.assertIn("corner-menu-btn", content, "corner-menu-btn toggle missing in header.html")
+        self.assertIn("corner-menu-panel", content, "corner-menu-panel missing in header.html")
 
     def test_mobile_friendly_viewport(self):
         viewport_regex = re.compile(r'<meta\s+name=["\']viewport["\']\s+content=["\'][^"\']*width=device-width[^"\']*["\']', re.IGNORECASE)
@@ -265,6 +262,11 @@ class TestDDMMSSite(unittest.TestCase):
         self.assertIn("Affiliations", footer_content)
         self.assertIn("footer-pills-list", footer_content)
         self.assertIn("subnav-pill", footer_content)
+        self.assertIn("footer-nav-pills", footer_content)
+        # Verify navigation pills appear before the footer-grid (at top of footer)
+        pills_idx = footer_content.find("footer-nav-pills")
+        grid_idx = footer_content.find("footer-grid")
+        self.assertGreater(grid_idx, pills_idx, "footer-nav-pills must appear before footer-grid")
 
     def test_build_site_get_footer_container(self):
         import build_site
@@ -319,10 +321,9 @@ class TestDDMMSSite(unittest.TestCase):
         header_content = header_path.read_text(encoding="utf-8")
         self.assertIn('<header class="site-header"', header_content)
         self.assertIn("brand-link", header_content)
-        self.assertIn("nav-desktop", header_content)
+        self.assertNotIn("nav-desktop", header_content)
         self.assertIn("mobile-drawer", header_content)
-        self.assertIn("subpage-nav-bar", header_content)
-        self.assertIn("subnav-pill", header_content)
+        self.assertNotIn("subpage-nav-bar", header_content)
         self.assertIn("corner-menu-btn", header_content)
         self.assertIn("corner-menu-panel", header_content)
 
@@ -339,7 +340,9 @@ class TestDDMMSSite(unittest.TestCase):
         header = build_site.generate_header_html()
         self.assertIn('<header class="site-header"', header)
         self.assertIn("brand-link", header)
-        self.assertIn("nav-desktop", header)
+        self.assertNotIn("nav-desktop", header)
+        self.assertIn("corner-menu-btn", header)
+        self.assertIn("corner-menu-panel", header)
 
     def test_header_template_file_reading(self):
         import build_site

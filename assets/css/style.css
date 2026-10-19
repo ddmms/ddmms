@@ -854,9 +854,25 @@ a:hover {
   color: #0b0f14;
   font-weight: 700;
 }
+
+/* Footer Quick Navigation Pills at top of footer */
+.footer-nav-pills {
+  background: transparent;
+  border-top: none;
+  border-bottom: 1px solid var(--border);
+  padding: 0 0 1.5rem 0;
+  margin-bottom: 2.5rem;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.footer-nav-pills .subpage-nav-scroller {
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
   align-items: center;
+  gap: 0.5rem;
+  padding: 0;
+  overflow-x: visible;
 }
 
 /* ==========================================================================
@@ -2257,7 +2273,7 @@ a:hover {
 
 .footer-grid {
   display: grid;
-  grid-template-columns: 2fr repeat(2, 1fr);
+  grid-template-columns: 2fr 1fr;
   gap: 2.5rem;
   margin-bottom: 3rem;
 }
