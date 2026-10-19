@@ -215,7 +215,14 @@ def main():
     pages = {
         "header.html": header_content,
         "footer.html": footer_content,
-        "index.html": generate_index_html(pubs, authors, news, mission=mission_data),
+        "index.html": generate_index_html(
+            pubs,
+            authors,
+            news,
+            mission=mission_data,
+            opportunities=opportunities_data,
+            collaborate=collaborate_data,
+        ),
         "publications.html": generate_publications_html(pubs, authors),
         "people.html": generate_people_html(people_data),
         "research.html": generate_research_html(research_data),

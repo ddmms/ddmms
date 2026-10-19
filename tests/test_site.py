@@ -187,15 +187,18 @@ class TestDDMMSSite(unittest.TestCase):
             self.assertIn('href="research.html"', content, f"Separate link research.html missing in {fname}")
             self.assertIn('href="publications.html"', content, f"Separate link publications.html missing in {fname}")
             self.assertIn('href="code.html"', content, f"Separate link code.html missing in {fname}")
-            self.assertIn('href="collaborate.html"', content, f"Separate link collaborate.html missing in {fname}")
-            self.assertIn('href="news.html"', content, f"Separate link news.html missing in {fname}")
             self.assertIn('href="teaching.html"', content, f"Separate link teaching.html missing in {fname}")
             self.assertIn('href="talks.html"', content, f"Separate link talks.html missing in {fname}")
             if fname == "footer.html":
                 self.assertIn('href="awards.html"', content, f"Separate link awards.html missing in {fname}")
+                self.assertIn('href="news.html"', content, f"Separate link news.html missing in {fname}")
+                self.assertIn('href="opportunities.html"', content, f"Separate link opportunities.html missing in {fname}")
+                self.assertIn('href="collaborate.html"', content, f"Separate link collaborate.html missing in {fname}")
             else:
                 self.assertNotIn('href="awards.html"', content, f"awards.html should not be in navigation {fname}")
-            self.assertIn('href="opportunities.html"', content, f"Separate link opportunities.html missing in {fname}")
+                self.assertIn('href="index.html#news"', content, f"News section link missing in {fname}")
+                self.assertIn('href="index.html#opportunities"', content, f"Opportunities section link missing in {fname}")
+                self.assertIn('href="index.html#collaborate"', content, f"Collaborate section link missing in {fname}")
 
     def test_no_software_and_feeds_in_footer(self):
         content = (BASE_DIR / "footer.html").read_text(encoding="utf-8")
@@ -416,9 +419,12 @@ class TestDDMMSSite(unittest.TestCase):
     def test_about_page_highlights_and_landing_page(self):
         index_html = (BASE_DIR / "index.html").read_text(encoding="utf-8")
         self.assertIn("Recent Highlights &amp; News", index_html)
-        # Homepage is a single column: no sidebar, and collaboration lives on its own page
+        # Homepage is a single column: no sidebar
         self.assertNotIn('class="about-grid"', index_html)
-        self.assertNotIn("Collaborate With Us", index_html)
+        # All sub-menu entries (News, Opportunities, Collaborate) are sections on the homepage
+        self.assertIn('id="news"', index_html)
+        self.assertIn('id="opportunities"', index_html)
+        self.assertIn('id="collaborate"', index_html)
         self.assertLess(index_html.index('id="mission"'), index_html.index('id="news-section"'))
 
         # Brand links point to index.html as landing page

@@ -782,30 +782,30 @@ a:hover {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  padding: 0.38rem 0.85rem;
+  padding: 0.4rem 0.95rem;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--pill-color, #57cbcc) 10%, rgba(255, 255, 255, 0.04));
-  border: 1px solid color-mix(in srgb, var(--pill-color, #57cbcc) 35%, transparent);
+  background: color-mix(in srgb, var(--pill-color, #57cbcc) 12%, rgba(255, 255, 255, 0.03));
+  border: 1px solid color-mix(in srgb, var(--pill-color, #57cbcc) 38%, transparent);
   color: var(--pill-color, var(--text-muted));
-  font-size: 0.86rem;
-  font-weight: 500;
+  font-size: 0.88rem;
+  font-weight: 600;
   text-decoration: none;
-  transition: all 0.2s ease;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   flex-shrink: 0;
 }
 
 .subnav-pill .subnav-pill-title {
-  color: var(--text);
+  color: var(--pill-color, var(--text));
   font-family: var(--font-heading);
-  letter-spacing: 0.01em;
+  letter-spacing: 0.02em;
+  transition: color 0.2s ease;
 }
 
 .subnav-pill:hover {
-  background: color-mix(in srgb, var(--pill-color, #57cbcc) 22%, transparent);
+  background: color-mix(in srgb, var(--pill-color, #57cbcc) 24%, transparent);
   border-color: var(--pill-color, #57cbcc);
-  color: #fff;
-  transform: translateY(-1px);
-  box-shadow: 0 0 12px color-mix(in srgb, var(--pill-color, #57cbcc) 30%, transparent);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--pill-color, #57cbcc) 40%, transparent);
 }
 
 .subnav-pill:hover .subnav-pill-title {
@@ -813,16 +813,32 @@ a:hover {
 }
 
 .subnav-pill.active {
-  background: color-mix(in srgb, var(--pill-color, #57cbcc) 28%, transparent);
+  background: color-mix(in srgb, var(--pill-color, #57cbcc) 30%, transparent);
   border-color: var(--pill-color, #57cbcc);
-  color: #fff;
-  font-weight: 600;
-  box-shadow: 0 0 14px color-mix(in srgb, var(--pill-color, #57cbcc) 40%, transparent);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--pill-color, #57cbcc) 50%, transparent);
 }
 
 .subnav-pill.active .subnav-pill-title {
   color: #fff;
-  font-weight: 600;
+  font-weight: 700;
+}
+
+[data-theme="light"] .subnav-pill {
+  background: color-mix(in srgb, var(--pill-color, #0891b2) 12%, #f8fafc);
+  border-color: color-mix(in srgb, var(--pill-color, #0891b2) 45%, transparent);
+}
+
+[data-theme="light"] .subnav-pill .subnav-pill-title {
+  color: color-mix(in srgb, var(--pill-color, #0891b2) 80%, #000);
+}
+
+[data-theme="light"] .subnav-pill:hover .subnav-pill-title,
+[data-theme="light"] .subnav-pill.active .subnav-pill-title {
+  color: #0b0f14;
+}
+
+[data-theme="light"] .subnav-pill.active {
+  background: color-mix(in srgb, var(--pill-color, #0891b2) 32%, #f1f5f9);
 }
 
 .subnav-pill-parent {
@@ -3585,5 +3601,167 @@ a.org-chain-link:hover {
 .math-rendered sup {
   font-size: 0.75em;
   font-family: "KaTeX_Math", "Cambria Math", "Times New Roman", Times, serif;
+}
+
+/* ==========================================================================
+   Home Page Sections: Opportunities & Collaborate
+   ========================================================================== */
+.home-section,
+section[id] {
+  scroll-margin-top: calc(var(--nav-height) + 1.5rem);
+}
+
+.section-heading-wrap {
+  margin-bottom: 2rem;
+}
+
+.opp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.opp-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.opp-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent-cyan);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.opp-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.opp-card-title {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0;
+}
+
+.opp-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(251, 146, 60, 0.15);
+  border: 1px solid rgba(251, 146, 60, 0.4);
+  color: #fb923c;
+  white-space: nowrap;
+}
+
+.opp-card-desc {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+  flex-grow: 1;
+  margin-bottom: 1.25rem;
+}
+
+.opp-card-footer {
+  margin-top: auto;
+}
+
+.opp-card-link {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--accent-cyan);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: color 0.2s ease;
+}
+
+.opp-card-link:hover {
+  color: var(--primary);
+  text-decoration: underline;
+}
+
+.collab-home-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+  .collab-home-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.collab-home-networks,
+.collab-home-contact {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.collab-subtitle {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 1rem;
+}
+
+.collab-networks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.collab-network-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 0.85rem;
+  border-radius: var(--radius-sm);
+  background: rgba(87, 203, 204, 0.08);
+  border: 1px solid rgba(87, 203, 204, 0.25);
+  color: var(--text);
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.collab-network-pill:hover {
+  background: rgba(87, 203, 204, 0.18);
+  border-color: var(--accent-cyan);
+  color: var(--accent-cyan);
+  transform: translateX(4px);
+}
+
+.collab-contact-desc {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  flex-grow: 1;
+}
+
+.home-section-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
 }
 

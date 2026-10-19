@@ -328,16 +328,16 @@
       <nav class="subpage-nav-bar footer-nav-pills" aria-label="Footer quick navigation">
         <div class="subpage-nav-scroller footer-pills-list">
           <a href="index.html" class="subnav-pill" style="--pill-color: #57cbcc;"><span class="subnav-pill-title">Home</span></a>
-          <a href="people.html" class="subnav-pill" style="--pill-color: #2dd4bf;"><span class="subnav-pill-title">People</span><span class="subnav-pill-badge">Team</span></a>
-          <a href="research.html" class="subnav-pill" style="--pill-color: #6cb670;"><span class="subnav-pill-title">Research</span><span class="subnav-pill-badge">Themes</span></a>
-          <a href="publications.html" class="subnav-pill" style="--pill-color: #38bdf8;"><span class="subnav-pill-title">Publications</span><span class="subnav-pill-badge">Papers</span></a>
-          <a href="code.html" class="subnav-pill" style="--pill-color: #fbbf24;"><span class="subnav-pill-title">Software</span><span class="subnav-pill-badge">Code</span></a>
-          <a href="news.html" class="subnav-pill" style="--pill-color: #2dd4bf;"><span class="subnav-pill-title">News</span><span class="subnav-pill-badge">Feed</span></a>
-          <a href="talks.html" class="subnav-pill" style="--pill-color: #f472b6;"><span class="subnav-pill-title">Talks</span><span class="subnav-pill-badge">Seminars</span></a>
-          <a href="teaching.html" class="subnav-pill" style="--pill-color: #a78bfa;"><span class="subnav-pill-title">Teaching</span><span class="subnav-pill-badge">Courses</span></a>
-          <a href="opportunities.html" class="subnav-pill" style="--pill-color: #fb923c;"><span class="subnav-pill-title">Opportunities</span><span class="subnav-pill-badge">Join</span></a>
-          <a href="collaborate.html" class="subnav-pill" style="--pill-color: #4ade80;"><span class="subnav-pill-title">Collaborate</span><span class="subnav-pill-badge">Partner</span></a>
-          <a href="awards.html" class="subnav-pill" style="--pill-color: #eab308;"><span class="subnav-pill-title">Awards</span><span class="subnav-pill-badge">Honors</span></a>
+          <a href="people.html" class="subnav-pill" style="--pill-color: #2dd4bf;"><span class="subnav-pill-title">People</span></a>
+          <a href="research.html" class="subnav-pill" style="--pill-color: #4ade80;"><span class="subnav-pill-title">Research</span></a>
+          <a href="publications.html" class="subnav-pill" style="--pill-color: #38bdf8;"><span class="subnav-pill-title">Publications</span></a>
+          <a href="code.html" class="subnav-pill" style="--pill-color: #fbbf24;"><span class="subnav-pill-title">Software</span></a>
+          <a href="news.html" class="subnav-pill" style="--pill-color: #f472b6;"><span class="subnav-pill-title">News</span></a>
+          <a href="talks.html" class="subnav-pill" style="--pill-color: #a78bfa;"><span class="subnav-pill-title">Talks</span></a>
+          <a href="teaching.html" class="subnav-pill" style="--pill-color: #818cf8;"><span class="subnav-pill-title">Teaching</span></a>
+          <a href="opportunities.html" class="subnav-pill" style="--pill-color: #fb923c;"><span class="subnav-pill-title">Opportunities</span></a>
+          <a href="collaborate.html" class="subnav-pill" style="--pill-color: #34d399;"><span class="subnav-pill-title">Collaborate</span></a>
+          <a href="awards.html" class="subnav-pill" style="--pill-color: #eab308;"><span class="subnav-pill-title">Awards</span></a>
         </div>
       </nav>
       <div class="footer-grid">

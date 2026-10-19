@@ -9,15 +9,21 @@ try:
     from .header import get_header
     from .footer import get_footer
     from .news import load_news
+    from .opportunities import load_opportunities
+    from .collaborate import load_collaborate
 except (ImportError, ValueError):
     try:
         from components.header import get_header
         from components.footer import get_footer
         from components.news import load_news
+        from components.opportunities import load_opportunities
+        from components.collaborate import load_collaborate
     except ImportError:
         from src.components.header import get_header
         from src.components.footer import get_footer
         from src.components.news import load_news
+        from src.components.opportunities import load_opportunities
+        from src.components.collaborate import load_collaborate
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 MISSION_FILE = BASE_DIR / "data" / "mission.yaml"
@@ -213,6 +219,8 @@ def generate_index_html(
     authors=None,
     news=None,
     mission: Optional[Union[Dict[str, Any], List[str], str]] = None,
+    opportunities: Optional[Dict[str, Any]] = None,
+    collaborate: Optional[Dict[str, Any]] = None,
 ):
     """Generate the index / about homepage HTML dynamically."""
     header_html = get_header("index")
@@ -319,6 +327,76 @@ def generate_index_html(
             </ul>
         </div>"""
 
+    # Extract opportunities data for home page section
+    if opportunities is None:
+        try:
+            opportunities = load_opportunities()
+        except Exception:
+            opportunities = {}
+
+    opp_title = str(opportunities.get("title") or "Opportunities").strip()
+    opp_intro = str(opportunities.get("intro") or "Upcoming events and ways to study, train and work with DDMMS at STFC.").strip()
+    opp_categories = opportunities.get("categories") or []
+
+    opp_cards_html = []
+    for cat in opp_categories:
+        cat_id = cat.get("id", "")
+        cat_title = cat.get("title", "")
+        cat_desc = cat.get("description", "")
+        cat_cards = cat.get("cards", [])
+        if cat_cards:
+            for card in cat_cards:
+                c_title = card.get("title", "")
+                c_status = card.get("status", "")
+                c_desc = card.get("description", "")
+                c_url = card.get("url", "")
+                status_badge = f'<span class="opp-badge">{c_status}</span>' if c_status else ""
+                opp_cards_html.append(f"""            <div class="opp-card">
+              <div class="opp-card-header">
+                <h3 class="opp-card-title">{c_title}</h3>{status_badge}
+              </div>
+              <p class="opp-card-desc">{c_desc}</p>
+              <div class="opp-card-footer">
+                <a href="{c_url or 'opportunities.html'}" class="opp-card-link" target="_blank" rel="noopener noreferrer">Event details &amp; apply &rarr;</a>
+              </div>
+            </div>""")
+        elif cat_desc:
+            opp_cards_html.append(f"""            <div class="opp-card">
+              <div class="opp-card-header">
+                <h3 class="opp-card-title">{cat_title}</h3>
+              </div>
+              <p class="opp-card-desc">{cat_desc}</p>
+              <div class="opp-card-footer">
+                <a href="opportunities.html#{cat_id}" class="opp-card-link">Explore {cat_title} &rarr;</a>
+              </div>
+            </div>""")
+
+    rendered_opp_cards = "\n".join(opp_cards_html)
+
+    # Extract collaborate data for home page section
+    if collaborate is None:
+        try:
+            collaborate = load_collaborate()
+        except Exception:
+            collaborate = {}
+
+    collab_title = str(collaborate.get("title") or "Collaborate With Us").strip()
+    collab_intro = str(collaborate.get("intro") or "").strip()
+    collaborators_data = collaborate.get("collaborators") or {}
+    networks = collaborators_data.get("networks") or []
+    contact_data = collaborate.get("contact") or {}
+    contact_title = str(contact_data.get("title") or "Get in touch").strip()
+    contact_desc = str(contact_data.get("description") or "").strip()
+    contact_email = str(contact_data.get("email") or "alin-marin.elena@stfc.ac.uk").strip()
+    contact_btn = str(contact_data.get("button_text") or "Email the group").strip()
+
+    networks_html = "\n".join(
+        f"""              <a href="{net.get('url', '#')}" class="collab-network-pill" target="_blank" rel="noopener noreferrer">
+                <span>{net.get('text', '')}</span>
+              </a>"""
+        for net in networks
+    )
+
     affiliations_html = render_affiliations_carousel_html(affiliations_data)
 
     return f"""<!DOCTYPE html>
@@ -352,6 +430,55 @@ def generate_index_html(
     <section class="home-section home-section-alt" id="news">
       <div class="container home-narrow">
 {news_section_html}
+      </div>
+    </section>
+
+    <section class="home-section" id="opportunities">
+      <div class="container home-narrow">
+        <div class="section-heading-wrap">
+          <h2 class="home-heading">{opp_title}</h2>
+          <p class="home-subtitle">{opp_intro}</p>
+        </div>
+        <div class="opp-grid">
+{rendered_opp_cards}
+        </div>
+        <div class="home-section-footer">
+          <a href="opportunities.html" class="news-expand-btn">
+            <span>View all opportunities &amp; schemes</span>
+            <span class="news-expand-btn-icon">&rarr;</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="home-section home-section-alt" id="collaborate">
+      <div class="container home-narrow">
+        <div class="section-heading-wrap">
+          <h2 class="home-heading">{collab_title}</h2>
+          <p class="home-subtitle">{collab_intro}</p>
+        </div>
+        <div class="collab-home-grid">
+          <div class="collab-home-networks">
+            <h3 class="collab-subtitle">Research Networks &amp; Standards</h3>
+            <div class="collab-networks-list">
+{networks_html}
+            </div>
+          </div>
+          <div class="collab-home-contact">
+            <h3 class="collab-subtitle">{contact_title}</h3>
+            <p class="collab-contact-desc">{contact_desc}</p>
+            <a href="mailto:{contact_email}" class="btn-primary" style="display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none; padding: 0.6rem 1.25rem; border-radius: 999px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+              <span>{contact_btn}</span>
+            </a>
+          </div>
+        </div>
+        <div class="home-section-footer">
+          <a href="collaborate.html" class="news-expand-btn">
+            <span>Full collaboration and partner details</span>
+            <span class="news-expand-btn-icon">&rarr;</span>
+          </a>
+        </div>
       </div>
     </section>
   </main>
