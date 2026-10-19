@@ -49,11 +49,12 @@ class TestDDMMSSite(unittest.TestCase):
     def test_required_nav_menu_items(self):
         content = (BASE_DIR / "header.html").read_text(encoding="utf-8")
         content_lower = content.lower()
-        # Awards has been removed from the navigation menu
+        # Awards and News have been removed from the navigation menu
         self.assertNotIn("awards.html", content_lower, "awards.html should not be in header.html navigation menu")
+        self.assertNotIn("news", content_lower, "news should not be in header.html navigation menu")
         # 5 main entries + sub-items exist in collapsible menu
         main_entries = ["home", "people", "research", "publications", "software"]
-        sub_items = ["talks", "teaching", "news", "opportunities", "collaborate"]
+        sub_items = ["talks", "teaching"]
         for item in main_entries + sub_items:
             self.assertIn(item, content_lower, f"Menu item '{item}' missing from header.html")
         # Top menu (nav-desktop) is removed; only the collapsible corner menu is retained
@@ -189,16 +190,12 @@ class TestDDMMSSite(unittest.TestCase):
             self.assertIn('href="code.html"', content, f"Separate link code.html missing in {fname}")
             self.assertIn('href="teaching.html"', content, f"Separate link teaching.html missing in {fname}")
             self.assertIn('href="talks.html"', content, f"Separate link talks.html missing in {fname}")
-            if fname == "footer.html":
-                self.assertIn('href="awards.html"', content, f"Separate link awards.html missing in {fname}")
-                self.assertIn('href="news.html"', content, f"Separate link news.html missing in {fname}")
-                self.assertIn('href="opportunities.html"', content, f"Separate link opportunities.html missing in {fname}")
-                self.assertIn('href="collaborate.html"', content, f"Separate link collaborate.html missing in {fname}")
-            else:
-                self.assertNotIn('href="awards.html"', content, f"awards.html should not be in navigation {fname}")
-                self.assertIn('href="index.html#news"', content, f"News section link missing in {fname}")
-                self.assertIn('href="index.html#opportunities"', content, f"Opportunities section link missing in {fname}")
-                self.assertIn('href="index.html#collaborate"', content, f"Collaborate section link missing in {fname}")
+            # Neither header nor footer navigation should contain entries outside the menu and submenus
+            self.assertNotIn('href="awards.html"', content, f"awards.html should not be in navigation {fname}")
+            self.assertNotIn('href="news.html"', content, f"news.html should not be in navigation {fname}")
+            self.assertNotIn('href="opportunities.html"', content, f"opportunities.html should not be in navigation {fname}")
+            self.assertNotIn('href="collaborate.html"', content, f"collaborate.html should not be in navigation {fname}")
+            self.assertNotIn('href="index.html#news"', content, f"News section link should not be in navigation {fname}")
 
     def test_no_software_and_feeds_in_footer(self):
         content = (BASE_DIR / "footer.html").read_text(encoding="utf-8")

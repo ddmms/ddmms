@@ -9,39 +9,79 @@
   // --- Theme Management ---
   const THEME_KEY = 'ddmms-theme';
 
+  const THEME_NAMES = {
+    default: 'Cyber Cyan',
+    dark: 'Cyber Cyan',
+    nord: 'Nord Frost',
+    dracula: 'Dracula',
+    monokai: 'Monokai Pro',
+    gruvbox: 'Gruvbox Retro',
+    catppuccin: 'Catppuccin',
+    solarized: 'Solarized',
+    light: 'Daylight',
+  };
+
   function getSystemTheme() {
     return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-      ? 'dark'
+      ? 'default'
       : 'light';
   }
 
-  function applyTheme(theme) {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem(THEME_KEY, theme);
+  function applyTheme(themeId) {
+    if (!THEME_NAMES[themeId]) {
+      themeId = 'default';
+    }
+
+    document.documentElement.setAttribute('data-theme', themeId);
+    try {
+      localStorage.setItem(THEME_KEY, themeId);
+    } catch (e) {}
 
     // Update logos to match light/dark contrast
-    const brandLogoSrc = theme === 'dark'
-      ? 'assets/logos/ddmms_for_dark_modes.svg'
-      : 'assets/logos/ddmms_for_light_modes.svg';
+    const isLight = themeId === 'light';
+    const brandLogoSrc = isLight
+      ? 'assets/logos/ddmms_for_light_modes.svg'
+      : 'assets/logos/ddmms_for_dark_modes.svg';
 
-    const heroLogoSrc = theme === 'dark'
-      ? 'assets/logos/ddmms_for_dark_modes-with-text.svg'
-      : 'assets/logos/ddmms_for_light_modes-with-text.svg';
+    const heroLogoSrc = isLight
+      ? 'assets/logos/ddmms_for_light_modes-with-text.svg'
+      : 'assets/logos/ddmms_for_dark_modes-with-text.svg';
 
-    document.querySelectorAll('.brand-logo-img').forEach(img => {
+    document.querySelectorAll('.brand-logo-img, #site-logo').forEach(img => {
       img.src = brandLogoSrc;
     });
+
+    const cornerBtnLogo = document.getElementById('corner-btn-logo');
+    if (cornerBtnLogo) {
+      cornerBtnLogo.src = brandLogoSrc;
+    }
 
     document.querySelectorAll('.hero-card-logo').forEach(img => {
       img.src = heroLogoSrc;
     });
 
-    // Update button icons
+    // Update active theme badge
+    const badge = document.getElementById('theme-active-name');
+    if (badge) {
+      badge.textContent = THEME_NAMES[themeId] || 'Cyber Cyan';
+    }
+
+    // Update active states on buttons and pills in theme popup and menu
+    document.querySelectorAll('.theme-option-btn').forEach(btn => {
+      const id = btn.getAttribute('data-theme-id');
+      const isActive = id === themeId || (id === 'default' && (themeId === 'default' || themeId === 'dark'));
+      btn.classList.toggle('active', isActive);
+    });
+
+    document.querySelectorAll('.theme-swatch-pill').forEach(pill => {
+      const id = pill.getAttribute('data-theme-id') || pill.getAttribute('data-theme-name');
+      const isActive = id === themeId || (id === 'default' && (themeId === 'default' || themeId === 'dark'));
+      pill.classList.toggle('active', isActive);
+    });
+
+    // Update theme-toggle-btn aria labels
     document.querySelectorAll('.theme-toggle-btn').forEach(btn => {
-      btn.setAttribute('aria-label', `Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`);
-      btn.innerHTML = theme === 'dark'
-        ? `<svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58a.996.996 0 00-1.41 0 .996.996 0 000 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37a.996.996 0 00-1.41 0 .996.996 0 000 1.41l1.06 1.06c.39.39 1.03.39 1.41 0a.996.996 0 000-1.41l-1.06-1.06zm1.06-10.96a.996.996 0 000-1.41.996.996 0 00-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36a.996.996 0 000-1.41.996.996 0 00-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"/></svg>`
-        : `<svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12.3 2a10 10 0 00-1.9 19.8 10 10 0 0011.6-11.6A10 10 0 0012.3 2zm-.3 18a8 8 0 110-16 8.3 8.3 0 011.7.2 8 8 0 00-1.9 7.8 8 8 0 007.8 8c-.5 0-1.1 0-1.6-.0z"/></svg>`;
+      btn.setAttribute('aria-label', `Current theme: ${THEME_NAMES[themeId] || themeId}. Click to choose theme.`);
     });
   }
 
@@ -51,7 +91,7 @@
   if (window.matchMedia) {
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
       if (!localStorage.getItem(THEME_KEY)) {
-        applyTheme(e.matches ? 'dark' : 'light');
+        applyTheme(e.matches ? 'default' : 'light');
       }
     });
   }
@@ -82,60 +122,50 @@
       }
     });
 
-    // Theme toggle buttons in header
-    headerScope.querySelectorAll('.theme-toggle-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const current = document.documentElement.getAttribute('data-theme') || 'light';
-        applyTheme(current === 'dark' ? 'light' : 'dark');
-      });
-    });
-
-    // Theme Swatch Pills in Menu
-    headerScope.querySelectorAll('.theme-swatch-pill').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        const themeName = btn.getAttribute('data-theme-name');
-        if (themeName) {
-          applyTheme(themeName);
-        }
-      });
-    });
-
-    // Floating Corner Menu & Mobile Drawer Navigation
+    // Corner Theme Controls & Panel
+    const cornerThemeToggle = headerScope.querySelector('#corner-theme-toggle, .corner-theme-btn');
+    const cornerThemePanel = headerScope.querySelector('#corner-theme-panel, .corner-theme-panel');
     const cornerMenuToggle = headerScope.querySelector('#corner-menu-toggle, .corner-menu-btn, .mobile-toggle-btn');
     const cornerMenuPanel = headerScope.querySelector('#corner-menu-panel, .corner-menu-panel, .mobile-drawer');
 
-    if (cornerMenuToggle && cornerMenuPanel) {
-      function toggleMenu(open) {
-        const isOpen = open !== undefined ? open : !cornerMenuPanel.classList.contains('show');
-        cornerMenuPanel.classList.toggle('show', isOpen);
-        cornerMenuPanel.classList.toggle('open', isOpen);
-        cornerMenuToggle.setAttribute('aria-expanded', String(isOpen));
+    function toggleThemePanel(open) {
+      if (!cornerThemePanel || !cornerThemeToggle) return;
+      const isOpen = open !== undefined ? open : !cornerThemePanel.classList.contains('show');
+      cornerThemePanel.classList.toggle('show', isOpen);
+      cornerThemeToggle.setAttribute('aria-expanded', String(isOpen));
+      if (isOpen && cornerMenuPanel && cornerMenuToggle) {
+        cornerMenuPanel.classList.remove('show', 'open');
+        cornerMenuToggle.setAttribute('aria-expanded', 'false');
       }
+    }
 
+    function toggleMenuPanel(open) {
+      if (!cornerMenuPanel || !cornerMenuToggle) return;
+      const isOpen = open !== undefined ? open : !cornerMenuPanel.classList.contains('show');
+      cornerMenuPanel.classList.toggle('show', isOpen);
+      cornerMenuPanel.classList.toggle('open', isOpen);
+      cornerMenuToggle.setAttribute('aria-expanded', String(isOpen));
+      if (isOpen && cornerThemePanel && cornerThemeToggle) {
+        cornerThemePanel.classList.remove('show');
+        cornerThemeToggle.setAttribute('aria-expanded', 'false');
+      }
+    }
+
+    if (cornerThemeToggle && cornerThemePanel) {
+      cornerThemeToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleThemePanel();
+      });
+    }
+
+    if (cornerMenuToggle && cornerMenuPanel) {
       cornerMenuToggle.addEventListener('click', (e) => {
         e.stopPropagation();
-        toggleMenu();
+        toggleMenuPanel();
       });
 
       cornerMenuPanel.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => toggleMenu(false));
-      });
-
-      document.addEventListener('click', e => {
-        if (
-          (cornerMenuPanel.classList.contains('show') || cornerMenuPanel.classList.contains('open')) &&
-          !cornerMenuPanel.contains(e.target) &&
-          !cornerMenuToggle.contains(e.target)
-        ) {
-          toggleMenu(false);
-        }
-      });
-
-      document.addEventListener('keydown', e => {
-        if (e.key === 'Escape' && (cornerMenuPanel.classList.contains('show') || cornerMenuPanel.classList.contains('open'))) {
-          toggleMenu(false);
-        }
+        link.addEventListener('click', () => toggleMenuPanel(false));
       });
 
       // Submenu group toggles inside corner menu
@@ -156,8 +186,59 @@
       });
     }
 
+    // Global click listener to close popups on outside click
+    document.addEventListener('click', e => {
+      if (
+        cornerThemePanel && cornerThemePanel.classList.contains('show') &&
+        !cornerThemePanel.contains(e.target) &&
+        !(cornerThemeToggle && cornerThemeToggle.contains(e.target))
+      ) {
+        toggleThemePanel(false);
+      }
+      if (
+        cornerMenuPanel && (cornerMenuPanel.classList.contains('show') || cornerMenuPanel.classList.contains('open')) &&
+        !cornerMenuPanel.contains(e.target) &&
+        !(cornerMenuToggle && cornerMenuToggle.contains(e.target))
+      ) {
+        toggleMenuPanel(false);
+      }
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        if (cornerThemePanel && cornerThemePanel.classList.contains('show')) {
+          toggleThemePanel(false);
+        }
+        if (cornerMenuPanel && (cornerMenuPanel.classList.contains('show') || cornerMenuPanel.classList.contains('open'))) {
+          toggleMenuPanel(false);
+        }
+      }
+    });
+
+    // Theme option buttons in theme dropdown panel
+    headerScope.querySelectorAll('.theme-option-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const themeId = btn.getAttribute('data-theme-id');
+        if (themeId) {
+          applyTheme(themeId);
+        }
+      });
+    });
+
+    // Theme swatch pills in menu
+    headerScope.querySelectorAll('.theme-swatch-pill').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const themeId = btn.getAttribute('data-theme-id') || btn.getAttribute('data-theme-name');
+        if (themeId) {
+          applyTheme(themeId);
+        }
+      });
+    });
+
     // Refresh logos and toggle states for current theme
-    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+    const currentTheme = document.documentElement.getAttribute('data-theme') || initialTheme;
     applyTheme(currentTheme);
   }
 
@@ -167,11 +248,14 @@
     initHeader(existingHeader.parentElement || existingHeader);
   }
 
-  // Bind any existing theme toggle buttons outside dynamic header
-  document.querySelectorAll('.theme-toggle-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const current = document.documentElement.getAttribute('data-theme') || 'light';
-      applyTheme(current === 'dark' ? 'light' : 'dark');
+  // Bind any existing theme toggle buttons or option buttons outside dynamic header
+  document.querySelectorAll('.theme-option-btn, .theme-swatch-pill').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const themeId = btn.getAttribute('data-theme-id') || btn.getAttribute('data-theme-name');
+      if (themeId) {
+        applyTheme(themeId);
+      }
     });
   });
 
@@ -233,58 +317,65 @@
         </div>
       </a>
 
-      <nav class="nav-desktop" aria-label="Primary Navigation">
-        <ul class="nav-links">
-          <li class="nav-item"><a href="index.html">Home</a></li>
-          <li class="nav-item"><a href="people.html">People</a></li>
-          <li class="nav-item"><a href="publications.html">Publications</a></li>
-          <li class="nav-item"><a href="talks.html">Talks</a></li>
-          <li class="nav-item"><a href="research.html">Research</a></li>
-          <li class="nav-item"><a href="code.html">Software</a></li>
-          <li class="nav-item"><a href="teaching.html">Teaching</a></li>
-          <li class="nav-item"><a href="awards.html">Awards</a></li>
-          <li class="nav-item"><a href="news.html">News</a></li>
-          <li class="nav-item"><a href="opportunities.html">Opportunities</a></li>
-          <li class="nav-item"><a href="collaborate.html">Collaborate</a></li>
-        </ul>
-      </nav>
-
       <div class="header-actions">
-        <button type="button" class="theme-toggle-btn" aria-label="Toggle Dark/Light Mode" title="Toggle theme">
-          <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12.3 2a10 10 0 00-1.9 19.8 10 10 0 0011.6-11.6A10 10 0 0012.3 2zm-.3 18a8 8 0 110-16 8.3 8.3 0 011.7.2 8 8 0 00-1.9 7.8 8 8 0 007.8 8c-.5 0-1.1 0-1.6-.0z"/></svg>
+        <button
+          type="button"
+          id="corner-theme-toggle"
+          class="corner-theme-btn theme-toggle-btn"
+          aria-expanded="false"
+          aria-controls="corner-theme-panel"
+          aria-label="Choose color theme"
+          title="Choose color theme"
+        >
+          <svg class="palette-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.49 2 2 6.49 2 12s4.49 10 10 10a2.5 2.5 0 0 0 2.5-2.5c0-.61-.23-1.21-.64-1.67-.4-.46-.61-.99-.61-1.58 0-1.38 1.12-2.5 2.5-2.5h1.75c3.04 0 5.5-2.46 5.5-5.5C22 5.61 17.39 2 12 2zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 8 6.5 8s1.5.67 1.5 1.5S7.33 11 6.5 11zm3-4c-.83 0-1.5-.67-1.5-1.5S8.67 4 9.5 4s1.5.67 1.5 1.5S10.33 7 9.5 7zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 4 14.5 4s1.5.67 1.5 1.5S15.33 7 14.5 7zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 8 17.5 8s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
         </button>
 
-        <button type="button" class="mobile-toggle-btn" aria-label="Open Navigation Menu" aria-expanded="false" aria-controls="mobile-drawer">
-          <span class="hamburger-icon">
-            <span class="hamburger-line"></span>
-            <span class="hamburger-line"></span>
-            <span class="hamburger-line"></span>
+        <button type="button" id="corner-menu-toggle" class="corner-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="corner-menu-panel">
+          <img id="corner-btn-logo" src="assets/logos/ddmms_for_light_modes.svg" alt="DDMMS" class="brand-avatar">
+          <span id="corner-current-section">Menu</span>
+          <span class="menu-icon-bars" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
           </span>
         </button>
       </div>
     </div>
 
-    <!-- Mobile Navigation Drawer -->
-    <div class="mobile-drawer" id="mobile-drawer">
-      <ul class="mobile-nav-links">
-        <li class="mobile-nav-item"><a href="index.html"><span>Home</span><span>&rarr;</span></a></li>
-        <li class="mobile-nav-item"><a href="people.html"><span>People</span><span>&rarr;</span></a></li>
-        <li class="mobile-nav-item"><a href="publications.html"><span>Publications</span><span>&rarr;</span></a></li>
-        <li class="mobile-nav-item"><a href="talks.html"><span>Talks</span><span>&rarr;</span></a></li>
-        <li class="mobile-nav-item"><a href="research.html"><span>Research</span><span>&rarr;</span></a></li>
-        <li class="mobile-nav-item"><a href="code.html"><span>Software</span><span>&rarr;</span></a></li>
-        <li class="mobile-nav-item"><a href="teaching.html"><span>Teaching</span><span>&rarr;</span></a></li>
-        <li class="mobile-nav-item"><a href="awards.html"><span>Awards</span><span>&rarr;</span></a></li>
-        <li class="mobile-nav-item"><a href="news.html"><span>News</span><span>&rarr;</span></a></li>
-        <li class="mobile-nav-item"><a href="opportunities.html"><span>Opportunities</span><span>&rarr;</span></a></li>
-        <li class="mobile-nav-item"><a href="collaborate.html"><span>Collaborate</span><span>&rarr;</span></a></li>
-      </ul>
-      <div class="mobile-actions">
-        <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Theme Appearance</span>
-        <button type="button" class="theme-toggle-btn" aria-label="Toggle theme">
-          <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12.3 2a10 10 0 00-1.9 19.8 10 10 0 0011.6-11.6A10 10 0 0012.3 2zm-.3 18a8 8 0 110-16 8.3 8.3 0 011.7.2 8 8 0 00-1.9 7.8 8 8 0 007.8 8c-.5 0-1.1 0-1.6-.0z"/></svg>
-        </button>
+    <!-- Theme Selection Panel matching mlego.elena.re -->
+    <div id="corner-theme-panel" class="corner-theme-panel" role="dialog" aria-label="Color theme selector">
+      <div class="corner-theme-panel-header">
+        <span class="corner-theme-panel-title">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" class="theme-header-icon"><path d="M12 2C6.49 2 2 6.49 2 12s4.49 10 10 10a2.5 2.5 0 0 0 2.5-2.5c0-.61-.23-1.21-.64-1.67-.4-.46-.61-.99-.61-1.58 0-1.38 1.12-2.5 2.5-2.5h1.75c3.04 0 5.5-2.46 5.5-5.5C22 5.61 17.39 2 12 2zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 8 6.5 8s1.5.67 1.5 1.5S7.33 11 6.5 11zm3-4c-.83 0-1.5-.67-1.5-1.5S8.67 4 9.5 4s1.5.67 1.5 1.5S10.33 7 9.5 7zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 4 14.5 4s1.5.67 1.5 1.5S15.33 7 14.5 7zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 8 17.5 8s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+          Color Theme
+        </span>
+        <span class="theme-active-badge" id="theme-active-name">Cyber Cyan</span>
       </div>
+      <div class="theme-options-grid">
+        <button type="button" class="theme-option-btn active" data-theme-id="default" title="Cyber Cyan"><span class="theme-swatch" style="--swatch-1: #57cbcc; --swatch-2: #6cb670; --swatch-bg: #0f1318;"></span><span class="theme-name">Cyber Cyan</span><svg class="theme-check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg></button>
+        <button type="button" class="theme-option-btn" data-theme-id="nord" title="Nord Frost"><span class="theme-swatch" style="--swatch-1: #88c0d0; --swatch-2: #a3be8c; --swatch-bg: #242933;"></span><span class="theme-name">Nord Frost</span><svg class="theme-check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg></button>
+        <button type="button" class="theme-option-btn" data-theme-id="dracula" title="Dracula"><span class="theme-swatch" style="--swatch-1: #bd93f9; --swatch-2: #ff79c6; --swatch-bg: #21222c;"></span><span class="theme-name">Dracula</span><svg class="theme-check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg></button>
+        <button type="button" class="theme-option-btn" data-theme-id="monokai" title="Monokai Pro"><span class="theme-swatch" style="--swatch-1: #ffd866; --swatch-2: #ff6188; --swatch-bg: #19181a;"></span><span class="theme-name">Monokai Pro</span><svg class="theme-check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg></button>
+        <button type="button" class="theme-option-btn" data-theme-id="gruvbox" title="Gruvbox Retro"><span class="theme-swatch" style="--swatch-1: #fabd2f; --swatch-2: #8ec07c; --swatch-bg: #1d2021;"></span><span class="theme-name">Gruvbox Retro</span><svg class="theme-check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg></button>
+        <button type="button" class="theme-option-btn" data-theme-id="catppuccin" title="Catppuccin Mocha"><span class="theme-swatch" style="--swatch-1: #cba6f7; --swatch-2: #f5c2e7; --swatch-bg: #11111b;"></span><span class="theme-name">Catppuccin</span><svg class="theme-check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg></button>
+        <button type="button" class="theme-option-btn" data-theme-id="solarized" title="Solarized Dark"><span class="theme-swatch" style="--swatch-1: #2aa198; --swatch-2: #cb4b16; --swatch-bg: #00212b;"></span><span class="theme-name">Solarized</span><svg class="theme-check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg></button>
+        <button type="button" class="theme-option-btn" data-theme-id="light" title="Daylight"><span class="theme-swatch" style="--swatch-1: #0891b2; --swatch-2: #16a34a; --swatch-bg: #f8fafc;"></span><span class="theme-name">Daylight</span><svg class="theme-check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg></button>
+      </div>
+    </div>
+
+    <!-- Floating Corner Menu Panel -->
+    <div id="corner-menu-panel" class="corner-menu-panel mobile-drawer" role="menu">
+      <div class="corner-panel-header">
+        <span class="corner-panel-title">DDMMS Navigation</span>
+        <span class="corner-panel-badge">ddmms.stfc.ac.uk</span>
+      </div>
+      <ul id="corner-nav-list" class="corner-nav-list mobile-nav-links">
+        <li class="mobile-nav-item"><a href="index.html" class="corner-nav-link" style="--nav-item-color: #57cbcc;">Home</a></li>
+        <li class="mobile-nav-item"><a href="people.html" class="corner-nav-link" style="--nav-item-color: #2dd4bf;">People</a></li>
+        <li class="mobile-nav-item"><a href="research.html" class="corner-nav-link" style="--nav-item-color: #6cb670;">Research</a></li>
+        <li class="mobile-nav-item"><a href="publications.html" class="corner-nav-link" style="--nav-item-color: #38bdf8;">Publications</a></li>
+        <li class="mobile-nav-item"><a href="code.html" class="corner-nav-link" style="--nav-item-color: #fbbf24;">Software</a></li>
+      </ul>
     </div>
   </header>`;
           initHeader(el);
