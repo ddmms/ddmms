@@ -123,8 +123,8 @@ def load_people(people_file: Optional[Union[str, Path]] = None) -> Dict[str, Any
                     merged.setdefault("page", person_data.get("page"))
                     resolved_members.append(merged)
                 else:
-                    # Core team member without explicit yaml key: check data/people/<slug>.yaml
-                    if sec_id == "core-team" and member.get("name"):
+                    # Team member without explicit yaml key: check data/people/<slug>.yaml
+                    if sec_id in ("core-team", "members") and member.get("name"):
                         name = member.get("name")
                         clean = re.sub(r"^(dr\.|prof\.|mr\.|ms\.|mrs\.)\s+", "", name, flags=re.I).strip().lower()
                         clean = re.sub(r"[^\w\s-]", "", clean)
@@ -160,8 +160,11 @@ def generate_people_html(people_data: Optional[Dict[str, Any]] = None) -> str:
         subtitle,
     )
 
-    # Sections without members are hidden until someone is added
-    raw_sections = [sec for sec in raw_sections if sec.get("members")]
+    # Sections without members are hidden unless empty_text or show_empty is set
+    raw_sections = [
+        sec for sec in raw_sections
+        if sec.get("members") or sec.get("empty_text") or sec.get("show_empty")
+    ]
 
     # Format subnav pills (only worth showing when there is more than one section)
     subnav_links = []
@@ -312,12 +315,21 @@ def generate_people_html(people_data: Optional[Dict[str, Any]] = None) -> str:
             cards_rendered.append("\n".join(parts))
 
         cards_html = "\n\n".join(cards_rendered)
-        grid_html = f"""
+        if cards_rendered:
+            grid_html = f"""
         <div class="people-grid">
 {cards_html}
-        </div>""" if cards_rendered else ""
+        </div>"""
+        elif sec.get("empty_text"):
+            empty_msg = html.escape(str(sec.get("empty_text")).strip())
+            grid_html = f"""
+        <p class="list-empty">{empty_msg}</p>"""
+        else:
+            grid_html = ""
 
-        sections_rendered.append(f"""      <!-- {sec_title} Section -->
+        anchor_alias = f'      <span id="core-team" aria-hidden="true"></span>\n' if sec_id == "members" else ""
+
+        sections_rendered.append(f"""{anchor_alias}      <!-- {sec_title} Section -->
       <section id="{sec_id}" class="people-section">
         <div class="section-header">
           <h2 class="section-title">{sec_title}</h2>
@@ -337,7 +349,7 @@ def generate_people_html(people_data: Optional[Dict[str, Any]] = None) -> str:
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>People | Data Driven Materials and Molecular Science</title>
-  <meta name="description" content="Meet the researchers, developers, former members and visitors in the Data Driven Materials and Molecular Science group.">
+  <meta name="description" content="Meet the researchers, developers, former members, collaborators, and visitors in the Data Driven Materials and Molecular Science group.">
   <link rel="icon" type="image/svg+xml" href="assets/logos/ddmms.svg">
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">

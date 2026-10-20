@@ -209,7 +209,10 @@ class TestDDMMSSite(unittest.TestCase):
 
     def test_people_page_sections(self):
         people_html = (BASE_DIR / "people.html").read_text(encoding="utf-8").lower()
-        self.assertIn("core members", people_html)
+        self.assertIn("members", people_html)
+        self.assertNotIn("core members", people_html)
+        self.assertIn("former members", people_html)
+        self.assertIn("collaborators", people_html)
         # Collaborators, research networks and the contact block live on the Collaborate page
         self.assertNotIn("collaborative research networks", people_html)
         self.assertNotIn("get in touch via email", people_html)
@@ -226,15 +229,20 @@ class TestDDMMSSite(unittest.TestCase):
 
     def test_people_subnav_anchors(self):
         people_html = (BASE_DIR / "people.html").read_text(encoding="utf-8")
-        self.assertIn('id="core-team"', people_html)
-        for moved_id in ("collaborators", "contact"):
+        self.assertIn('id="members"', people_html)
+        self.assertIn('id="former-members"', people_html)
+        self.assertIn('id="collaborators"', people_html)
+        for moved_id in ("contact",):
             self.assertNotIn(f'id="{moved_id}"', people_html)
         # Empty sections (and their jump links) are hidden until members are added
-        for empty_id in ("former-members", "visitors"):
+        for empty_id in ("visitors",):
             self.assertNotIn(f'id="{empty_id}"', people_html)
             self.assertNotIn(f'href="#{empty_id}"', people_html)
-        # With only the core team left, the jump links are not worth showing
-        self.assertNotIn('class="subnav-pills"', people_html)
+        # Subnav pills are shown for quick section navigation
+        self.assertIn('class="subnav-pills"', people_html)
+        self.assertIn('href="#members"', people_html)
+        self.assertIn('href="#former-members"', people_html)
+        self.assertIn('href="#collaborators"', people_html)
 
     def test_people_sections_hidden_until_filled(self):
         from components.people import generate_people_html
@@ -540,12 +548,13 @@ themes:
         self.assertIsInstance(people_data, dict)
         self.assertIn("sections", people_data)
         section_ids = [s["id"] for s in people_data["sections"]]
-        self.assertIn("core-team", section_ids)
+        self.assertTrue("members" in section_ids or "core-team" in section_ids)
         self.assertIn("former-members", section_ids)
+        self.assertIn("collaborators", section_ids)
         self.assertIn("visitors", section_ids)
 
-        # Verify core members include key researchers
-        core_section = next(s for s in people_data["sections"] if s["id"] == "core-team")
+        # Verify members include key researchers
+        core_section = next(s for s in people_data["sections"] if s["id"] in ("core-team", "members"))
         names = [m["name"] for m in core_section["members"]]
         self.assertIn("Dr. Alin Marin Elena", names)
         self.assertIn("Elliott Kasoar", names)
@@ -1217,7 +1226,7 @@ awards:
 
         # Test load_people properly resolves core-team members from individual YAMLs
         people_data = load_people()
-        core_sec = next(s for s in people_data["sections"] if s["id"] == "core-team")
+        core_sec = next(s for s in people_data["sections"] if s["id"] in ("core-team", "members"))
         self.assertEqual(len(core_sec["members"]), 3)
         for m in core_sec["members"]:
             self.assertIn(m["slug"], ["alin-marin-elena", "elliott-kasoar", "junwen-yin"])

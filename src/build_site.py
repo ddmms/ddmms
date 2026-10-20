@@ -237,7 +237,7 @@ def main():
 
     # Generate individual profile pages for core team members
     for sec in people_data.get("sections", []):
-        if sec.get("id") == "core-team":
+        if sec.get("id") in ("core-team", "members"):
             for member in sec.get("members", []):
                 page_filename = member.get("page")
                 slug = member.get("slug")

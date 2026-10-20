@@ -1,9 +1,9 @@
 subtitle: "Our team comprises specialists in theoretical condensed matter physics, computational chemistry, software architecture, and AI for science."
 
 sections:
-  - id: "core-team"
-    nav_title: "Core Team"
-    title: "Core Members"
+  - id: "members"
+    nav_title: "Members"
+    title: "Members"
     subtitle: "Researchers and computational scientists."
     members:
       - name: "Dr. Alin Marin Elena"
@@ -19,8 +19,9 @@ sections:
     nav_title: "Former Members"
     title: "Former Members"
     subtitle: "Researchers, engineers, and graduate scholars who contributed to DDMMS scientific software and research initiatives."
+    empty_text: "Former members will be listed here soon."
     members: []
-    # Sections with no members are hidden on the People page. To add someone:
+    # To add someone:
     # members:
     #   - name: "Full Name"
     #     avatar: "assets/images/photo.jpg"   # or initials, e.g. "FN"
@@ -32,6 +33,14 @@ sections:
     #     links:
     #       - text: "ORCID"
     #         url: "https://orcid.org/..."
+
+  - id: "collaborators"
+    nav_title: "Collaborators"
+    title: "Collaborators"
+    subtitle: "Academic collaborators, national laboratory partners, and international consortia advancing atomistic simulation and scientific machine learning."
+    empty_text: "Collaborators will be listed here soon."
+    members: []
+    # Same entry format as former-members above.
 
   - id: "visitors"
     nav_title: "Visitors"
