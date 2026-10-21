@@ -18,14 +18,16 @@ sections:
   - id: "former-members"
     nav_title: "Former Members"
     title: "Former Members"
-    subtitle: "Researchers, engineers, and graduate scholars who contributed to DDMMS scientific software and research initiatives."
-    empty_text: "Former members will be listed here soon."
-    members: []
-    # To add someone:
-    # members:
-    #   - name: "Full Name"
+    subtitle: ""
+    empty_text: ""
+    members:
+      - name: "Jessie Gould"
+        role: "Graduate"
+      - name: "Muhammad Mohsin"
+        role: "Graduate"
+      - name: "Elena Patyukova"
     #     avatar: "assets/images/photo.jpg"   # or initials, e.g. "FN"
-    #     role: "Role / Position"
+        role: "Computational Scientist"
     #     affiliation: "DDMMS &bull; STFC SCD (2022&ndash;2024)"
     #     destination: "Current position"   # former members only
     #     bio: "One or two sentences."
@@ -33,6 +35,9 @@ sections:
     #     links:
     #       - text: "ORCID"
     #         url: "https://orcid.org/..."
+      - name: "Federica Zanca"
+        role: "Computational Scientist"
+
 
   - id: "collaborators"
     nav_title: "Collaborators"
