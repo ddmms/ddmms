@@ -710,8 +710,8 @@ paragraphs:
         self.assertIn('class="hero-carousel"', index_html)
         self.assertIn("data-carousel", index_html)
         self.assertLess(index_html.index('class="hero-carousel"'), index_html.index('id="mission"'))
-        # The old tagline was removed from the homepage
-        self.assertNotIn("Using statistical physics, quantum mechanics", index_html)
+        # The mission keeps its original tagline under the heading
+        self.assertIn('<p class="home-subtitle">Using statistical physics, quantum mechanics', index_html)
 
         for title in ("Data Driven Materials and Molecular Science Group", "Daresbury Laboratory", "Rutherford Appleton Laboratory"):
             self.assertIn(f'<h2 class="slide-title">{title}</h2>', index_html)
