@@ -32,15 +32,6 @@ categories:
           - text: "Event website and applications"
             url: "https://spring2027.camml.ac.uk"
 
-  - id: "phd"
-    title: "PhD Projects"
-    description: "DDMMS members co-supervise PhD projects with partner universities, including through the STFC Ada Lovelace Centre (ALC) PhD programme."
-    links:
-      - text: "Interested in a PhD? Contact the group"
-        url: "collaborate.html#contact"
-      - text: "ALC PhD projects"
-        url: "https://www.adalovelacecentre.ac.uk/phd-projects/"
-
   - id: "graduate-scheme"
     title: "STFC Graduate Scheme"
     description: "STFC's graduate programme is a permanent role in a department, with a two-year core training programme alongside technical training, mentoring towards professional registration, and a three-month placement in another STFC department. Computing is one of its five pathways. Applicants need, or are on course for, at least a 2:1 in a relevant subject."

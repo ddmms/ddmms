@@ -1012,15 +1012,17 @@ categories:
         self.assertIn('<h1 class="page-hero-title">Opportunities</h1>', html_text)
         for cat_id, cat_title in (
             ("events", "Events"),
-            ("phd", "PhD Projects"),
             ("graduate-scheme", "STFC Graduate Scheme"),
             ("placements", "STFC Industrial and Summer Placements"),
         ):
             self.assertIn(f'<section class="category-section" id="{cat_id}">', html_text)
             self.assertIn(f'<a href="#{cat_id}" class="subnav-pill">{cat_title}</a>', html_text)
+        # ALC has no PhD projects from 2027, so there is no PhD section
+        self.assertNotIn('id="phd"', html_text)
+        self.assertNotIn("PhD Projects", html_text)
 
         # CaMML 2027 as an event card with its key details
-        events = html_text[html_text.index('id="events"'):html_text.index('id="phd"')]
+        events = html_text[html_text.index('id="events"'):html_text.index('id="graduate-scheme"')]
         self.assertIn("CaMML Spring School 2027", events)
         self.assertIn('<span class="card-status">Apply by 26 November 2026</span>', events)
         self.assertIn("<dd>5–9 April 2027</dd>", events)
@@ -1028,8 +1030,6 @@ categories:
         self.assertIn('href="https://spring2027.camml.ac.uk"', events)
 
         # The buttons moved here from the Teaching page
-        self.assertIn("Interested in a PhD? Contact the group", html_text)
-        self.assertIn('href="collaborate.html#contact"', html_text)
         self.assertIn('href="https://stfccareers.co.uk/graduates/"', html_text)
         self.assertIn('href="https://stfccareers.co.uk/students/"', html_text)
 
