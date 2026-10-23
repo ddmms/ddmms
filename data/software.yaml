@@ -104,7 +104,7 @@ packages:
 
   - id: goldilocks
     name: "goldilocks"
-    icon: "🐻"
+    logo: "assets/logos/goldilocks.png"
     badge:
       text: "goldilocks.ac.uk"
       style: "background:#ecfdf5; color:#065f46;"
