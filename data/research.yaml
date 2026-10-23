@@ -49,7 +49,7 @@ themes:
         url: "https://goldilocks.ac.uk"
         class: "btn btn-primary"
       - text: "GitHub &rarr;"
-        url: "https://github.com/stfc/goldilocks"
+        url: "https://github.com/ddmms/goldilocks-workbench"
         class: "btn btn-outline"
       - text: "Explore in Software &rarr;"
         url: "code.html"
