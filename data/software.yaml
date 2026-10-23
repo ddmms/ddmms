@@ -120,7 +120,7 @@ packages:
       - text: "goldilocks.ac.uk &rarr;"
         url: "https://goldilocks.ac.uk"
       - text: "GitHub Repo &rarr;"
-        url: "https://github.com/stfc/goldilocks"
+        url: "https://github.com/ddmms/goldilocks-workbench"
       - text: "Paper (Digital Discovery)"
         url: "https://doi.org/10.1039/d5dd00565e"
 
