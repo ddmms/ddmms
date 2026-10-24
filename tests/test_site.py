@@ -1262,6 +1262,45 @@ talks:
             junwen_html,
         )
 
+    def test_publication_authors_highlighting_only_authors_file(self):
+        pubs_js = (BASE_DIR / "assets" / "js" / "publications.js").read_text(encoding="utf-8")
+        self.assertIn("matchAuthorFromFile", pubs_js)
+        # Ensure publications.json has full author list for multi-author papers
+        with open(BASE_DIR / "publications.json", "r", encoding="utf-8") as f:
+            pubs = json.load(f)
+        multi_author_pubs = [p for p in pubs if len(p.get("authors", [])) > 2]
+        self.assertGreater(len(multi_author_pubs), 30, "Most publications should have their full list of authors (>2 authors)")
+        
+        # Verify that co-authors like Elena Patyukova or Jian Yin are listed in publications.json authors
+        all_authors = set()
+        for p in pubs:
+            for a in p.get("authors", []):
+                all_authors.add(a)
+        self.assertIn("Elena Patyukova", all_authors)
+        self.assertIn("Jian Yin", all_authors)
+        self.assertIn("Gábor Csányi", all_authors)
+
+    def test_publications_default_2024_onwards(self):
+        """Verify that the group publications list defaults to 2024 onwards."""
+        pubs_html = (BASE_DIR / "publications.html").read_text(encoding="utf-8")
+        self.assertIn('<option value="2024-onwards" selected>2024 onwards</option>', pubs_html)
+
+        pubs_js = (BASE_DIR / "assets" / "js" / "publications.js").read_text(encoding="utf-8")
+        self.assertIn("2024-onwards", pubs_js)
+        self.assertIn("2024", pubs_js)
+        self.assertIn("yearFilter.value = '2024-onwards'", pubs_js)
+
+        from src.components.publications import generate_publications_html, build_html_page
+        with open(BASE_DIR / "publications.json", "r", encoding="utf-8") as f:
+            pubs = json.load(f)
+        authors_dict = {"0000-0002-7013-6670": "Alin Marin Elena"}
+        gen_html = generate_publications_html(pubs, authors_dict)
+        self.assertIn('<option value="2024-onwards" selected>2024 onwards</option>', gen_html)
+
+        page_html = build_html_page(pubs, authors_dict)
+        self.assertIn('<option value="2024-onwards" selected>2024 onwards</option>', page_html)
+        self.assertIn("2024-onwards", page_html)
+
 
 if __name__ == "__main__":
     unittest.main()

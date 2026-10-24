@@ -84,6 +84,7 @@ def generate_publications_html(pubs, authors):
           <div class="form-group">
             <label for="pub-filter-year"><span>📅</span> Filter by Year</label>
             <select id="pub-filter-year" class="form-control pub-filter-year">
+              <option value="2024-onwards" selected>2024 onwards</option>
               <option value="all">All Years</option>
             </select>
           </div>
@@ -715,6 +716,7 @@ def build_html_page(
         <div class="form-group">
           <label for="year-filter">📅 Filter by Year</label>
           <select id="year-filter" class="form-control">
+            <option value="2024-onwards" selected>2024 onwards</option>
             <option value="all">All Years</option>
           </select>
         </div>
@@ -842,19 +844,39 @@ __AUTHORS_JSON__
         totalCountEl.textContent = publications.length;
       }
 
-      function matchGroupAuthor(authorName, groupAuthors) {
-        if (!authorName || !groupAuthors) return null;
-        const a = authorName.toLowerCase().replace(/-/g, ' ').trim();
-        for (const g of groupAuthors) {
-          const gl = g.toLowerCase().trim();
-          if (gl === a || gl.includes(a) || a.includes(gl)) return g;
-          const tokens = gl.split(/\s+/).filter(t => t.length > 1);
-          if (tokens.length >= 2) {
-            const lastName = tokens[tokens.length - 1];
-            const firstInit = tokens[0][0];
-            if (a.includes(lastName) && (a.includes(tokens[0]) || a.includes(firstInit))) {
-              return g;
-            }
+      function matchAuthorFromFile(authorName, allowedGroupMembers) {
+        if (!authorName || !allowedGroupMembers) return null;
+        const raw = String(authorName).trim();
+        const norm = raw.replace(/\./g, ' ').replace(/-/g, ' ');
+        const tokens = norm.split(/\s+/).map(t => t.toLowerCase()).filter(Boolean);
+        if (tokens.length === 0) return null;
+
+        const groupList = Array.isArray(allowedGroupMembers) ? allowedGroupMembers : Object.values(allowedGroupMembers);
+
+        for (const g of groupList) {
+          if (!g) continue;
+          const gClean = String(g).trim().replace(/-/g, ' ');
+          const gTokens = gClean.split(/\s+/).map(t => t.toLowerCase()).filter(Boolean);
+          if (gTokens.length === 0) continue;
+          const gFamily = gTokens[gTokens.length - 1];
+          const gFirst = gTokens[0];
+
+          // Author must have the exact family name from authors file
+          if (!tokens.includes(gFamily)) continue;
+
+          const otherTokens = tokens.filter(t => t !== gFamily);
+          if (otherTokens.length === 0) return g;
+
+          const combinedOther = otherTokens.join('');
+          // Full first name match (e.g. Alin, Elliott, Junwen)
+          if (combinedOther.includes(gFirst) || otherTokens.some(t => t === gFirst || (t.length >= 4 && gFirst.startsWith(t)))) {
+            return g;
+          }
+
+          // Single-letter initial match only (e.g. "A." for Alin, "E." for Elliott, "J." for Junwen)
+          const firstTok = otherTokens[0];
+          if (firstTok.length === 1 && firstTok === gFirst[0]) {
+            return g;
           }
         }
         return null;
@@ -875,7 +897,7 @@ __AUTHORS_JSON__
           }
           if (pub.authors) {
             for (const a of pub.authors) {
-              const m = matchGroupAuthor(a, Object.values(authorsDict));
+              const m = matchAuthorFromFile(a, Object.values(authorsDict));
               if (m && authorCounts[m] !== undefined) matchedNames.add(m);
             }
           }
@@ -900,7 +922,7 @@ __AUTHORS_JSON__
         const relevantPubs = (selectedAuthor && selectedAuthor !== 'all')
           ? publications.filter(p => {
               if (p.group_authors && p.group_authors.includes(selectedAuthor)) return true;
-              return p.authors && p.authors.some(a => matchGroupAuthor(a, [selectedAuthor]));
+              return p.authors && p.authors.some(a => matchAuthorFromFile(a, [selectedAuthor]));
             })
           : publications;
 
@@ -919,9 +941,22 @@ __AUTHORS_JSON__
         const previousYear = yearFilter.value;
         yearFilter.innerHTML = '';
 
+        let count2024Onwards = 0;
+        for (const pub of relevantPubs) {
+          const yNum = parseInt(pub.year, 10);
+          if (!isNaN(yNum) && yNum >= 2024) {
+            count2024Onwards++;
+          }
+        }
+
+        const onwardsOpt = document.createElement('option');
+        onwardsOpt.value = '2024-onwards';
+        onwardsOpt.textContent = `2024 onwards (${count2024Onwards})`;
+        yearFilter.appendChild(onwardsOpt);
+
         const allOpt = document.createElement('option');
         allOpt.value = 'all';
-        allOpt.textContent = selectedAuthor !== 'all' ? `All Years (${relevantPubs.length})` : 'All Years';
+        allOpt.textContent = selectedAuthor !== 'all' ? `All Years (${relevantPubs.length})` : `All Years (${publications.length})`;
         yearFilter.appendChild(allOpt);
 
         for (const yr of sortedYears) {
@@ -931,10 +966,10 @@ __AUTHORS_JSON__
           yearFilter.appendChild(opt);
         }
 
-        if (previousYear && previousYear !== 'all' && yearCounts[previousYear] !== undefined) {
+        if (previousYear && (previousYear === '2024-onwards' || previousYear === 'all' || yearCounts[previousYear] !== undefined)) {
           yearFilter.value = previousYear;
         } else {
-          yearFilter.value = 'all';
+          yearFilter.value = '2024-onwards';
         }
       }
 
@@ -952,7 +987,7 @@ __AUTHORS_JSON__
       function syncUrlParams() {
         const params = new URLSearchParams();
         if (authorFilter.value !== 'all') params.set('author', authorFilter.value);
-        if (yearFilter.value !== 'all') params.set('year', yearFilter.value);
+        if (yearFilter.value !== '2024-onwards') params.set('year', yearFilter.value);
         if (searchInput.value.trim() !== '') params.set('search', searchInput.value.trim());
         if (sortSelect.value !== 'year-desc') params.set('sort', sortSelect.value);
         if (!groupYearToggle.checked) params.set('group', 'false');
@@ -1058,15 +1093,17 @@ __AUTHORS_JSON__
         }
         card.appendChild(titleEl);
 
-        // Authors line (all authors listed, with group members styled as filterable chips)
+        // Authors line (publish the full list of authors, highlighting with the pill only the authors from the authors file)
         const authorsList = (pub.authors && pub.authors.length > 0) ? pub.authors : (pub.group_authors || []);
         if (authorsList.length > 0) {
           const authorsWrapper = document.createElement('div');
           authorsWrapper.className = 'pub-authors';
-          const groupAuthorCandidates = pub.group_authors || Object.values(authorsDict);
+          const groupAuthorCandidates = (pub.group_authors && pub.group_authors.length > 0)
+            ? pub.group_authors
+            : Object.values(authorsDict);
 
           authorsList.forEach((author, idx) => {
-            const matchedGroup = matchGroupAuthor(author, groupAuthorCandidates);
+            const matchedGroup = matchAuthorFromFile(author, groupAuthorCandidates);
             const isLast = idx === authorsList.length - 1;
             const itemSpan = document.createElement('span');
             itemSpan.className = 'pub-author-item';
@@ -1203,14 +1240,19 @@ __AUTHORS_JSON__
           // Author filter
           if (selectedAuthor !== 'all') {
             const inGroup = pub.group_authors && pub.group_authors.includes(selectedAuthor);
-            const inAuthors = pub.authors && pub.authors.some(a => matchGroupAuthor(a, [selectedAuthor]));
+            const inAuthors = pub.authors && pub.authors.some(a => matchAuthorFromFile(a, [selectedAuthor]));
             if (!inGroup && !inAuthors) {
               return false;
             }
           }
 
           // Year filter
-          if (selectedYear !== 'all') {
+          if (selectedYear === '2024-onwards') {
+            const y = parseInt(pub.year, 10);
+            if (isNaN(y) || y < 2024) {
+              return false;
+            }
+          } else if (selectedYear !== 'all') {
             if (String(pub.year) !== String(selectedYear)) {
               return false;
             }
@@ -1263,10 +1305,11 @@ __AUTHORS_JSON__
             clear: () => { authorFilter.value = 'all'; updateYearDropdown('all'); render(); }
           });
         }
-        if (yearFilter.value !== 'all') {
+        if (yearFilter.value !== '2024-onwards') {
+          const yearLabel = yearFilter.value === 'all' ? 'Year: All Years' : `Year: ${yearFilter.value}`;
           pills.push({
-            label: `Year: ${yearFilter.value}`,
-            clear: () => { yearFilter.value = 'all'; render(); }
+            label: yearLabel,
+            clear: () => { yearFilter.value = '2024-onwards'; render(); }
           });
         }
         if (searchInput.value.trim() !== '') {
@@ -1397,7 +1440,7 @@ __AUTHORS_JSON__
       resetBtn.addEventListener('click', () => {
         authorFilter.value = 'all';
         updateYearDropdown('all');
-        yearFilter.value = 'all';
+        yearFilter.value = '2024-onwards';
         searchInput.value = '';
         sortSelect.value = 'year-desc';
         groupYearToggle.checked = true;
@@ -1416,6 +1459,8 @@ __AUTHORS_JSON__
             break;
           }
         }
+      } else {
+        yearFilter.value = '2024-onwards';
       }
       initTheme();
       render();
