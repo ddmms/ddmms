@@ -170,6 +170,47 @@ HEADERS = {
 }
 
 
+def extract_arxiv_id(
+    external_ids: Dict[str, Any] | None,
+    group: Dict[str, Any] | None = None,
+    url: str | None = None,
+    title: str | None = None,
+    journal: str | None = None,
+) -> str | None:
+    """Extract arXiv ID from external-ids, URL, journal, or title."""
+    containers = [external_ids]
+    if group and isinstance(group, dict):
+        containers.append(group.get("external-ids"))
+    for container in containers:
+        if not container or not isinstance(container, dict):
+            continue
+        for ext_id in container.get("external-id") or []:
+            if not ext_id or not isinstance(ext_id, dict):
+                continue
+            id_type = str(ext_id.get("external-id-type") or "").lower()
+            val = str(ext_id.get("external-id-value") or "").strip()
+            if id_type == "arxiv" and val:
+                m = re.search(r"(\d{4}\.\d{4,5})", val)
+                if m:
+                    return m.group(1)
+            if "arxiv" in val.lower():
+                m = re.search(r"(\d{4}\.\d{4,5})", val)
+                if m:
+                    return m.group(1)
+            ext_url = ext_id.get("external-id-url")
+            if isinstance(ext_url, dict):
+                u_val = str(ext_url.get("value") or "")
+                m = re.search(r"arxiv(?:\.org/(?:abs|pdf)/|[:\s/.]+)(\d{4}\.\d{4,5})", u_val, re.IGNORECASE)
+                if m:
+                    return m.group(1)
+    for text in (url, journal, title):
+        if text:
+            m = re.search(r"arxiv(?:\.org/(?:abs|pdf)/|[:\s/.]+)(\d{4}\.\d{4,5})", str(text), re.IGNORECASE)
+            if m:
+                return m.group(1)
+    return None
+
+
 def extract_doi(external_ids: Dict[str, Any] | None) -> str | None:
     """Find and normalize DOI from external-ids field."""
     if not external_ids or not isinstance(external_ids, dict):
@@ -348,6 +389,14 @@ def fetch_member_works(orcid_id: str, cache_dir: str = "data/cache") -> List[Dic
         # URL: assemble using DOI if available, or fall back to alternative URL
         work_url = assemble_doi_url(doi) or extract_fallback_url(summary, group)
 
+        # Extract arXiv ID and preprint DOI if available
+        arxiv_id = extract_arxiv_id(summary.get("external-ids"), group, work_url, title, venue)
+        preprint_doi = f"10.48550/arXiv.{arxiv_id}" if arxiv_id else None
+        if not doi and preprint_doi:
+            doi = preprint_doi
+        elif doi and "arxiv" in str(doi).lower() and preprint_doi:
+            doi = preprint_doi
+
         records.append({
             "title": title,
             "year": year,
@@ -355,9 +404,23 @@ def fetch_member_works(orcid_id: str, cache_dir: str = "data/cache") -> List[Dic
             "doi": doi,
             "url": work_url,
             "type": summary.get("type") or "other",
+            "arxiv_id": arxiv_id,
+            "preprint_doi": preprint_doi,
         })
 
     return records
+
+
+def load_publications_metadata(path: Optional[Union[str, Path]] = None) -> Dict[str, Any]:
+    """Load persistent enriched metadata (authors, preprint DOIs) from JSON file."""
+    p = Path(path) if path else (BASE_DIR / "data" / "publications_metadata.json")
+    if p.is_file():
+        try:
+            with open(p, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception as e:
+            print(f"Warning: could not read {p}: {e}")
+    return {"titles": {}, "dois": {}}
 
 
 def normalize_title(title: str) -> str:
@@ -377,6 +440,10 @@ def aggregate_publications(
     else:
         mapping = {o: ORCID_IDS.get(o, o) for o in orcids}
 
+    metadata = load_publications_metadata()
+    titles_meta = metadata.get("titles", {})
+    dois_meta = metadata.get("dois", {})
+
     deduped: List[Dict[str, Any]] = []
     doi_map: Dict[str, Dict[str, Any]] = {}
     title_map: Dict[str, Dict[str, Any]] = {}
@@ -394,11 +461,23 @@ def aggregate_publications(
                 existing = title_map[norm_title]
 
             if existing:
-                # Merge author tracking across group members
+                # Merge group author tracking across group members
+                if author_name and author_name not in existing.setdefault("group_authors", []):
+                    existing["group_authors"].append(author_name)
                 if author_name and author_name not in existing.setdefault("authors", []):
                     existing["authors"].append(author_name)
                 if orcid and orcid not in existing.setdefault("orcids", []):
                     existing["orcids"].append(orcid)
+
+                clean_d = (doi or "").lower().strip()
+                meta_match = dois_meta.get(clean_d) or titles_meta.get(norm_title)
+                if meta_match:
+                    if meta_match.get("journal"):
+                        existing["journal"] = meta_match["journal"]
+                    if meta_match.get("authors") and len(meta_match["authors"]) > len(existing.get("authors", [])):
+                        existing["authors"] = list(meta_match["authors"])
+                    if meta_match.get("preprint_doi") and not existing.get("preprint_doi"):
+                        existing["preprint_doi"] = meta_match["preprint_doi"]
 
                 # Merge richer metadata if available
                 if not existing.get("doi") and doi:
@@ -412,12 +491,42 @@ def aggregate_publications(
                     existing["journal"] = work["journal"]
                 if existing.get("year") == "Unknown" and work.get("year") != "Unknown":
                     existing["year"] = work["year"]
+                if not existing.get("preprint_doi") and work.get("preprint_doi"):
+                    existing["preprint_doi"] = work["preprint_doi"]
+                if not existing.get("arxiv_id") and work.get("arxiv_id"):
+                    existing["arxiv_id"] = work["arxiv_id"]
             else:
                 work_copy = dict(work)
                 if work_copy.get("doi"):
                     work_copy["url"] = assemble_doi_url(work_copy["doi"])
+                work_copy["group_authors"] = [author_name] if author_name else []
                 work_copy["authors"] = [author_name] if author_name else []
                 work_copy["orcids"] = [orcid] if orcid else []
+
+                # Lookup enriched metadata from cache
+                clean_d = (doi or "").lower().strip()
+                meta_match = dois_meta.get(clean_d) or titles_meta.get(norm_title)
+                if meta_match:
+                    if meta_match.get("journal"):
+                        work_copy["journal"] = meta_match["journal"]
+                    if meta_match.get("authors"):
+                        work_copy["authors"] = list(meta_match["authors"])
+                    if meta_match.get("preprint_doi") and not work_copy.get("preprint_doi"):
+                        work_copy["preprint_doi"] = meta_match["preprint_doi"]
+                    if meta_match.get("arxiv_id") and not work_copy.get("arxiv_id"):
+                        work_copy["arxiv_id"] = meta_match["arxiv_id"]
+                    if meta_match.get("doi") and (not work_copy.get("doi") or "arxiv" in str(work_copy.get("doi")).lower()):
+                        work_copy["doi"] = meta_match["doi"]
+
+                # Ensure preprint_doi on any arxiv paper
+                if not work_copy.get("preprint_doi"):
+                    aid = extract_arxiv_id(None, None, work_copy.get("url"), work_copy.get("title"), work_copy.get("journal"))
+                    if aid:
+                        work_copy["arxiv_id"] = aid
+                        work_copy["preprint_doi"] = f"10.48550/arXiv.{aid}"
+                        if not work_copy.get("doi") or "arxiv" in work_copy.get("doi", "").lower():
+                            work_copy["doi"] = work_copy["preprint_doi"]
+
                 deduped.append(work_copy)
                 if doi:
                     doi_map[doi] = work_copy
