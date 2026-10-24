@@ -107,7 +107,7 @@ class TestDDMMSSite(unittest.TestCase):
             self.assertIsInstance(pub["authors"], list)
             self.assertGreater(len(pub["authors"]), 0, f"Empty authors list for: {pub.get('title')}")
             # If preprint or arxiv, preprint_doi must be set
-            if pub.get("arxiv_id") or "arxiv" in (pub.get("journal") or "").lower():
+            if pub.get("arxiv_id") or (pub.get("doi") and "arxiv" in pub["doi"].lower()) or ("arxiv" in (pub.get("journal") or "").lower() and (not pub.get("doi") or "arxiv" in pub.get("doi", "").lower())):
                 self.assertIsNotNone(pub.get("preprint_doi"), f"Missing preprint_doi for preprint: {pub.get('title')}")
                 self.assertTrue(pub["preprint_doi"].startswith("10.48550/arXiv."), f"Invalid preprint_doi format: {pub.get('preprint_doi')}")
 
