@@ -450,24 +450,51 @@ def resolve_highlighted_items(
         identifier = ""
         item_type = None
         comment = ""
+        image = ""
         custom_data = {}
 
         if isinstance(item, str):
             identifier = item.strip()
         elif isinstance(item, dict):
-            if "software" in item:
-                identifier = str(item["software"]).strip()
-                item_type = "software"
-            elif "paper" in item or "publication" in item:
-                identifier = str(item.get("paper") or item.get("publication")).strip()
-                item_type = "paper"
+            # Check single-key mapping like { "batatia20257006": { "image": "...", "comment": "..." } }
+            if len(item) == 1 and not any(
+                k in item
+                for k in (
+                    "id", "key", "bibtex", "identifier", "software",
+                    "paper", "publication", "type", "image", "picture",
+                    "img", "photo", "figure", "comment", "note", "description",
+                )
+            ):
+                key, val = next(iter(item.items()))
+                identifier = str(key).strip()
+                if isinstance(val, dict):
+                    comment = str(val.get("comment") or val.get("note") or val.get("description") or "").strip()
+                    image = str(val.get("image") or val.get("picture") or val.get("img") or val.get("photo") or val.get("figure") or "").strip()
+                    custom_data = dict(val)
+                elif isinstance(val, str):
+                    comment = val.strip()
             else:
-                identifier = str(
-                    item.get("id") or item.get("key") or item.get("bibtex") or item.get("identifier") or ""
+                if "software" in item:
+                    identifier = str(item["software"]).strip()
+                    item_type = "software"
+                elif "paper" in item or "publication" in item:
+                    identifier = str(item.get("paper") or item.get("publication")).strip()
+                    item_type = "paper"
+                else:
+                    identifier = str(
+                        item.get("id") or item.get("key") or item.get("bibtex") or item.get("identifier") or ""
+                    ).strip()
+                    item_type = item.get("type")
+                comment = str(item.get("comment") or item.get("note") or item.get("description") or "").strip()
+                image = str(
+                    item.get("image")
+                    or item.get("picture")
+                    or item.get("img")
+                    or item.get("photo")
+                    or item.get("figure")
+                    or ""
                 ).strip()
-                item_type = item.get("type")
-            comment = str(item.get("comment") or item.get("note") or item.get("description") or "").strip()
-            custom_data = item
+                custom_data = dict(item)
 
         if not identifier and not custom_data:
             continue
@@ -486,10 +513,24 @@ def resolve_highlighted_items(
             if found_software:
                 if comment:
                     found_software["comment"] = comment
-                resolved.append({"type": "software", "data": found_software})
+                if image:
+                    found_software["image"] = image
+                resolved.append({
+                    "type": "software",
+                    "data": found_software,
+                    "comment": comment,
+                    "image": image or found_software.get("image", ""),
+                })
                 continue
             elif item_type == "software" and custom_data:
-                resolved.append({"type": "software", "data": custom_data})
+                if image:
+                    custom_data["image"] = image
+                resolved.append({
+                    "type": "software",
+                    "data": custom_data,
+                    "comment": comment,
+                    "image": image,
+                })
                 continue
 
         # Check publications by bibtex key, DOI, or arXiv ID
@@ -537,14 +578,36 @@ def resolve_highlighted_items(
                 break
 
         if matched_pub:
-            resolved.append({"type": "paper", "data": matched_pub, "key": matched_key, "comment": comment})
+            pub_data = dict(matched_pub)
+            if image:
+                pub_data["image"] = image
+            resolved.append({
+                "type": "paper",
+                "data": pub_data,
+                "key": matched_key,
+                "comment": comment,
+                "image": image or pub_data.get("image", ""),
+            })
         elif custom_data and custom_data.get("title"):
-            resolved.append({"type": custom_data.get("type", "paper"), "data": custom_data, "key": identifier, "comment": comment})
+            pub_data = dict(custom_data)
+            if image:
+                pub_data["image"] = image
+            resolved.append({
+                "type": custom_data.get("type", "paper"),
+                "data": pub_data,
+                "key": identifier,
+                "comment": comment,
+                "image": image or pub_data.get("image", ""),
+            })
 
     return resolved
 
 
-def render_highlighted_software_card(pkg: Dict[str, Any], rel_prefix: str = "") -> str:
+def render_highlighted_software_card(
+    pkg: Dict[str, Any],
+    rel_prefix: str = "",
+    image: str = "",
+) -> str:
     """Render a card for a highlighted software tool."""
     name = pkg.get("name") or pkg.get("id") or "Software"
     logo = pkg.get("logo") or ""
@@ -554,6 +617,15 @@ def render_highlighted_software_card(pkg: Dict[str, Any], rel_prefix: str = "") 
     install = pkg.get("install") or ""
     links = pkg.get("links") or []
     comment = pkg.get("comment") or ""
+    img = image or pkg.get("image") or pkg.get("picture") or pkg.get("img") or pkg.get("figure") or ""
+
+    image_html = ""
+    if img:
+        img_str = str(img).strip()
+        img_src = f"{rel_prefix}{img_str}" if (rel_prefix and img_str.startswith("assets/")) else img_str
+        image_html = f"""\n          <div class="highlighted-card-media">
+            <img src="{img_src}" alt="{html.escape(name, quote=True)}" class="highlighted-card-image" loading="lazy">
+          </div>"""
 
     if logo:
         logo_src = f"{rel_prefix}{logo}" if (rel_prefix and str(logo).startswith("assets/")) else logo
@@ -588,7 +660,7 @@ def render_highlighted_software_card(pkg: Dict[str, Any], rel_prefix: str = "") 
           <div class="highlighted-card-top">
             <span class="badge badge-software"><span>💻</span> Software</span>
             {badge_html}
-          </div>
+          </div>{image_html}
           <div class="highlighted-card-header">
             {logo_html}
             <h3 class="highlighted-card-title"><a href="{primary_url}" target="_blank" rel="noopener noreferrer">{name}</a></h3>
@@ -600,11 +672,31 @@ def render_highlighted_software_card(pkg: Dict[str, Any], rel_prefix: str = "") 
         </div>"""
 
 
-def render_highlighted_paper_card(pub: Dict[str, Any], bibtex_key: str = "", comment: str = "") -> str:
+def render_highlighted_paper_card(
+    pub: Dict[str, Any],
+    bibtex_key: str = "",
+    comment: str = "",
+    rel_prefix: str = "",
+    image: str = "",
+) -> str:
     """Render a card for a highlighted publication."""
     title = pub.get("title") or "Publication"
     authors = pub.get("authors") or pub.get("group_authors") or []
-    authors_str = ", ".join(authors) if authors else "DDMMS"
+    if isinstance(authors, str):
+        authors = [a.strip() for a in authors.split(",") if a.strip()]
+
+    if authors:
+        first_author = re.sub(r"[,;]+$", "", str(authors[0])).strip()
+        if len(authors) > 1:
+            if not re.search(r"\bet al\.?$", first_author, flags=re.I):
+                authors_str = f"{first_author} et al."
+            else:
+                authors_str = first_author
+        else:
+            authors_str = first_author
+    else:
+        authors_str = "DDMMS"
+
     journal = pub.get("journal") or ""
     year = str(pub.get("year") or "")
     doi = pub.get("preprint_doi") or pub.get("doi") or ""
@@ -622,11 +714,20 @@ def render_highlighted_paper_card(pub: Dict[str, Any], bibtex_key: str = "", com
     key_badge = f'<span class="badge badge-bibtex" title="BibTeX Key">@{bibtex_key}</span>' if bibtex_key else ""
     comment_html = f'<div class="highlighted-card-comment">{comment}</div>' if comment else ""
 
+    img = image or pub.get("image") or pub.get("picture") or pub.get("img") or pub.get("figure") or ""
+    image_html = ""
+    if img:
+        img_str = str(img).strip()
+        img_src = f"{rel_prefix}{img_str}" if (rel_prefix and img_str.startswith("assets/")) else img_str
+        image_html = f"""\n          <div class="highlighted-card-media">
+            <img src="{img_src}" alt="{html.escape(title, quote=True)}" class="highlighted-card-image" loading="lazy">
+          </div>"""
+
     return f"""        <div class="highlighted-card highlighted-paper-card">
           <div class="highlighted-card-top">
             <span class="badge badge-paper"><span>📄</span> Publication</span>
             {key_badge}
-          </div>
+          </div>{image_html}
           <h3 class="highlighted-card-title"><a href="{pub_url}" target="_blank" rel="noopener noreferrer">{title}</a></h3>
           <div class="highlighted-card-authors">{authors_str}</div>
           <div class="highlighted-card-meta">{meta_str} {doi_badge}</div>
@@ -859,12 +960,21 @@ def generate_person_html(
         for h in resolved_highlights:
             h_type = h.get("type")
             h_data = h.get("data") or {}
+            h_img = h.get("image") or h_data.get("image") or ""
             if h_type == "software":
-                cards_rendered.append(render_highlighted_software_card(h_data, rel_prefix=rel_prefix))
+                cards_rendered.append(
+                    render_highlighted_software_card(
+                        h_data, rel_prefix=rel_prefix, image=h_img
+                    )
+                )
             else:
                 cards_rendered.append(
                     render_highlighted_paper_card(
-                        h_data, bibtex_key=h.get("key", ""), comment=h.get("comment", "")
+                        h_data,
+                        bibtex_key=h.get("key", ""),
+                        comment=h.get("comment", ""),
+                        rel_prefix=rel_prefix,
+                        image=h_img,
                     )
                 )
 

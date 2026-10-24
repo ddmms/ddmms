@@ -2325,6 +2325,31 @@ a:hover {
   border-radius: 4px;
 }
 
+.highlighted-card-media {
+  margin-bottom: 0.85rem;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--bg-alt, var(--bg));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-height: 200px;
+}
+
+.highlighted-card-image {
+  width: 100%;
+  height: 100%;
+  max-height: 200px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.25s ease;
+}
+
+.highlighted-card:hover .highlighted-card-image {
+  transform: scale(1.02);
+}
+
 .highlighted-card-header {
   display: flex;
   align-items: center;

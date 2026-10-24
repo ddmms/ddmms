@@ -1324,6 +1324,10 @@ talks:
         self.assertIn("janus-core", alin_html)
         self.assertIn("pack-mm", alin_html)
         self.assertIn("@batatia20257006", alin_html)
+        self.assertIn("Ilyes Batatia et al.", alin_html)
+        # Highlighted section should truncate authors, not list all 88 authors
+        highlighted_block = alin_html.split('id="highlighted-work"')[1].split('</section>')[0]
+        self.assertNotIn("Gábor Csányi", highlighted_block)
 
         elliott_html = (BASE_DIR / "elliott-kasoar.html").read_text(encoding="utf-8")
         self.assertIn('id="highlighted-work"', elliott_html)
@@ -1336,10 +1340,114 @@ talks:
         self.assertIn("@patyukova2026565e", junwen_html)
 
         # Verify that without highlighted_work, the section is cleanly omitted
-        from src.components.people import generate_person_html
+        from src.components.people import (
+            generate_person_html,
+            render_highlighted_paper_card,
+            render_highlighted_software_card,
+            resolve_highlighted_items,
+        )
         minimal_member = {"name": "Test Member", "slug": "test-member", "bio": "Test bio"}
         html_without_highlights = generate_person_html(minimal_member, [])
         self.assertNotIn("highlighted-work", html_without_highlights)
+
+    def test_highlighted_work_pictures_and_author_formatting(self):
+        """Verify picture rendering and 'First Author et al.' formatting for highlighted work."""
+        from src.components.people import (
+            generate_person_html,
+            render_highlighted_paper_card,
+            render_highlighted_software_card,
+            resolve_highlighted_items,
+        )
+
+        # Test single author: no 'et al.'
+        single_author_pub = {
+            "title": "Single Author Study",
+            "authors": ["Alice Smith"],
+            "year": "2024",
+            "doi": "10.1000/182",
+        }
+        card_single = render_highlighted_paper_card(single_author_pub)
+        self.assertIn("Alice Smith", card_single)
+        self.assertNotIn("et al.", card_single)
+
+        # Test multiple authors: 'First Author et al.'
+        multi_author_pub = {
+            "title": "Multi Author Study",
+            "authors": ["Alice Smith", "Bob Jones", "Charlie Brown"],
+            "year": "2025",
+            "doi": "10.1000/183",
+        }
+        card_multi = render_highlighted_paper_card(multi_author_pub)
+        self.assertIn("Alice Smith et al.", card_multi)
+        self.assertNotIn("Bob Jones", card_multi)
+        self.assertNotIn("Charlie Brown", card_multi)
+
+        # Test picture rendering on paper card
+        card_with_pic = render_highlighted_paper_card(
+            multi_author_pub,
+            image="assets/images/highlights/sample_paper.png",
+            rel_prefix="../",
+        )
+        self.assertIn('class="highlighted-card-media"', card_with_pic)
+        self.assertIn('src="../assets/images/highlights/sample_paper.png"', card_with_pic)
+        self.assertIn('class="highlighted-card-image"', card_with_pic)
+
+        # Test picture rendering on software card
+        sample_sw = {
+            "id": "my-tool",
+            "name": "My Tool",
+            "description": "A great modeling package",
+        }
+        sw_card_with_pic = render_highlighted_software_card(
+            sample_sw,
+            rel_prefix="../",
+            image="assets/images/highlights/my_tool.png",
+        )
+        self.assertIn('class="highlighted-card-media"', sw_card_with_pic)
+        self.assertIn('src="../assets/images/highlights/my_tool.png"', sw_card_with_pic)
+        self.assertIn('class="highlighted-card-image"', sw_card_with_pic)
+
+        # Test resolve_highlighted_items with image/picture dictionaries
+        sample_pubs = [
+            {
+                "title": "Paper One",
+                "bibtex_key": "smith2024",
+                "authors": ["Smith, A.", "Doe, J."],
+                "year": "2024",
+            }
+        ]
+        sample_software = [
+            {"id": "tool-x", "name": "Tool X", "description": "Package X"}
+        ]
+
+        resolved = resolve_highlighted_items(
+            [
+                {"paper": "smith2024", "picture": "assets/images/paper_pic.jpg"},
+                {"software": "tool-x", "image": "assets/images/tool_pic.png"},
+                {"smith2024": {"picture": "assets/images/paper_pic2.jpg"}},
+            ],
+            publications=sample_pubs,
+            software_packages=sample_software,
+        )
+        self.assertEqual(len(resolved), 3)
+        self.assertEqual(resolved[0]["image"], "assets/images/paper_pic.jpg")
+        self.assertEqual(resolved[1]["image"], "assets/images/tool_pic.png")
+        self.assertEqual(resolved[2]["image"], "assets/images/paper_pic2.jpg")
+
+        # Test full page generation with highlighted pictures
+        member = {
+            "name": "Sample Member",
+            "slug": "sample-member",
+            "highlighted_work": [
+                {"id": "smith2024", "picture": "assets/images/paper_pic.jpg"},
+                {"software": "tool-x", "image": "assets/images/tool_pic.png"},
+            ],
+        }
+        member_html = generate_person_html(member, sample_pubs, software=sample_software)
+        self.assertIn("highlighted-card-image", member_html)
+        self.assertIn('src="assets/images/paper_pic.jpg"', member_html)
+        self.assertIn('src="assets/images/tool_pic.png"', member_html)
+        self.assertIn("Smith, A. et al.", member_html)
 
     def test_member_dates_and_publication_filtering(self):
         """Verify join_date and left_date are present in YAML and can filter publications."""
