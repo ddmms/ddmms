@@ -1486,6 +1486,52 @@ talks:
         self.assertIn("2024&ndash;2026", people_html)
         self.assertIn("2023&ndash;2024", people_html)
 
+    def test_header_hero_pictures_and_blending(self):
+        """Verify generic header pictures are present for each page and blended in CSS."""
+        hero_dir = BASE_DIR / "assets" / "images" / "heroes"
+        self.assertTrue(hero_dir.is_dir(), "assets/images/heroes directory missing")
+
+        expected_banners = [
+            "code_banner.jpg",
+            "collaborate_banner.jpg",
+            "news_banner.jpg",
+            "people_banner.jpg",
+            "publications_banner.jpg",
+            "research_banner.jpg",
+            "teaching_talks_banner.jpg",
+        ]
+        for b in expected_banners:
+            self.assertTrue((hero_dir / b).is_file(), f"Missing hero banner {b}")
+
+        # Verify pages render the blended hero background
+        pages_to_check = [
+            ("people.html", "people_banner.jpg"),
+            ("research.html", "research_banner.jpg"),
+            ("code.html", "code_banner.jpg"),
+            ("publications.html", "publications_banner.jpg"),
+            ("news.html", "news_banner.jpg"),
+            ("talks.html", "teaching_talks_banner.jpg"),
+            ("teaching.html", "teaching_talks_banner.jpg"),
+            ("collaborate.html", "collaborate_banner.jpg"),
+            ("opportunities.html", "collaborate_banner.jpg"),
+            ("alin-marin-elena.html", "people_banner.jpg"),
+        ]
+        for fname, expected_img in pages_to_check:
+            html_content = (BASE_DIR / fname).read_text(encoding="utf-8")
+            self.assertIn('class="page-hero-bg"', html_content, f"{fname} missing page-hero-bg")
+            self.assertIn('class="page-hero-bg-img"', html_content, f"{fname} missing page-hero-bg-img")
+            self.assertIn(expected_img, html_content, f"{fname} does not contain {expected_img}")
+
+        # Check people/ subpage handles relative prefix
+        sub_html = (BASE_DIR / "people" / "alin-marin-elena.html").read_text(encoding="utf-8")
+        self.assertIn('src="../assets/images/heroes/people_banner.jpg"', sub_html)
+
+        # Check CSS contains horizontal gradient blend
+        style_css = (BASE_DIR / "assets" / "css" / "style.css").read_text(encoding="utf-8")
+        self.assertIn(".page-hero-bg", style_css)
+        self.assertIn(".page-hero-bg::after", style_css)
+        self.assertIn("90deg", style_css)
+
 
 if __name__ == "__main__":
     unittest.main()

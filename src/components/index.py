@@ -155,8 +155,11 @@ def render_affiliations_carousel_html(affiliations: Optional[Dict[str, Any]]) ->
                   </li>""")
             steps_html = "\n".join(steps)
             chain_label = html.escape(" > ".join(str(h.get("short", "")) for h in hierarchy), quote=True)
-            slide_cls = "carousel-slide carousel-slide-org"
-            body_html = f"""            <div class="container slide-inner">
+            slide_cls = "carousel-slide carousel-slide-org carousel-slide-photo"
+            body_html = f"""            <div class="slide-visual slide-visual-photo">
+              <img src="assets/images/heroes/research_banner.jpg" alt="Data Driven Materials and Molecular Science" style="object-position: 70% center;">
+            </div>
+            <div class="container slide-inner">
 {content_html}
               <div class="slide-visual slide-visual-org">
                 <ol class="org-chain" aria-label="Organisational hierarchy: {chain_label}">

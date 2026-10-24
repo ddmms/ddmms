@@ -164,6 +164,7 @@ def generate_people_html(people_data: Optional[Dict[str, Any]] = None) -> str:
     hero_html = render_page_hero(
         str(people_data.get("title") or "Meet the Team"),
         subtitle,
+        bg_image="assets/images/heroes/people_banner.jpg",
     )
 
     # Sections without members are hidden unless empty_text or show_empty is set
@@ -815,6 +816,9 @@ def generate_person_html(
     base_tag = f'  <base href="{base_href}">\n' if base_href else ""
     rel_prefix = base_href if base_href else ""
 
+    hero_bg = str(person_data.get("hero_bg") or "assets/images/heroes/people_banner.jpg").strip()
+    hero_bg_src = f"{rel_prefix}{hero_bg}" if (rel_prefix and hero_bg.startswith("assets/")) else hero_bg
+
     # Avatar element
     if (avatar.startswith("assets/") or avatar.startswith("http") or avatar.startswith("/") or
         any(avatar.lower().endswith(ext) for ext in (".jpg", ".jpeg", ".png", ".svg", ".webp"))):
@@ -1076,7 +1080,10 @@ def generate_person_html(
 
   <main id="main-content">
     <section class="page-hero">
-      <div class="container">
+      <div class="page-hero-bg" aria-hidden="true">
+        <img src="{hero_bg_src}" alt="" class="page-hero-bg-img" loading="eager">
+      </div>
+      <div class="container page-hero-container">
         <div class="profile-header-card">
           <div class="profile-header-details">
             <a href="people.html" class="person-back-link">&larr; Back to People</a>
