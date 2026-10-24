@@ -1,14 +1,17 @@
 # Group members ORCID mapping
-# Format: list of authors with ORCID and full name
+# Format: list of authors with ORCID, full name, and optional join_date / left_date
 
 - orcid: "0000-0002-7013-6670"
   name: "Alin Marin Elena"
+  join_date: "2024-01-01"
 
 - orcid: "0009-0005-2015-9478"
   name: "Elliott Kasoar"
+  join_date: "2024-01-01"
 
 - orcid: "0000-0001-7374-9352"
   name: "Junwen Yin"
+  join_date: "2024-01-01"
 
 # - orcid: "0000-0001-6068-6786"
 #   name: "Gilberto Teobaldi"

@@ -205,6 +205,18 @@ def generate_people_html(people_data: Optional[Dict[str, Any]] = None) -> str:
             affiliation = str(member.get("affiliation") or "").strip()
             bio = str(member.get("bio") or "").strip()
             tenure = str(member.get("tenure") or "").strip()
+            if not tenure:
+                j_d = member.get("join_date") or member.get("joined")
+                l_d = member.get("left_date") or member.get("left")
+                if j_d and l_d:
+                    m_j = re.search(r"\b(19\d\d|20\d\d)\b", str(j_d))
+                    m_l = re.search(r"\b(19\d\d|20\d\d)\b", str(l_d))
+                    if m_j and m_l:
+                        tenure = f"{m_j.group(1)}&ndash;{m_l.group(1)}"
+                elif j_d and sec_id in ("former-members", "alumni"):
+                    m_j = re.search(r"\b(19\d\d|20\d\d)\b", str(j_d))
+                    if m_j:
+                        tenure = m_j.group(1)
             destination = str(member.get("destination") or member.get("now") or "").strip()
             tags = member.get("tags") or []
             links = member.get("links") or []
@@ -624,6 +636,43 @@ def render_highlighted_paper_card(pub: Dict[str, Any], bibtex_key: str = "", com
             <a href="publications.html?search={clean_doi or quote(title[:30])}" class="btn-action"><span>📚</span> Group Catalogue</a>
           </div>
         </div>"""
+
+
+def filter_publications_by_dates(
+    publications: List[Dict[str, Any]],
+    join_date: Optional[Union[str, int]] = None,
+    left_date: Optional[Union[str, int]] = None,
+) -> List[Dict[str, Any]]:
+    """Filter publications to those published during tenure (join_date <= pub_year <= left_date)."""
+    join_year = None
+    left_year = None
+    if join_date:
+        m = re.search(r"\b(19\d\d|20\d\d)\b", str(join_date))
+        if m:
+            join_year = int(m.group(1))
+    if left_date:
+        m = re.search(r"\b(19\d\d|20\d\d)\b", str(left_date))
+        if m:
+            left_year = int(m.group(1))
+
+    if join_year is None and left_year is None:
+        return publications
+
+    filtered = []
+    for p in publications:
+        try:
+            yr = int(p.get("year", 0))
+        except (ValueError, TypeError):
+            yr = 0
+        if yr == 0:
+            filtered.append(p)
+            continue
+        if join_year is not None and yr < join_year:
+            continue
+        if left_year is not None and yr > left_year:
+            continue
+        filtered.append(p)
+    return filtered
 
 
 def generate_person_html(

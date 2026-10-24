@@ -4,6 +4,7 @@ import json
 import re
 import sys
 from pathlib import Path
+import yaml
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SRC_DIR = BASE_DIR / "src"
@@ -1322,7 +1323,7 @@ talks:
         self.assertIn("highlighted-paper-card", alin_html)
         self.assertIn("janus-core", alin_html)
         self.assertIn("pack-mm", alin_html)
-        self.assertIn("@bi20265877", alin_html)
+        self.assertIn("@batatia20257006", alin_html)
 
         elliott_html = (BASE_DIR / "elliott-kasoar.html").read_text(encoding="utf-8")
         self.assertIn('id="highlighted-work"', elliott_html)
@@ -1339,6 +1340,42 @@ talks:
         minimal_member = {"name": "Test Member", "slug": "test-member", "bio": "Test bio"}
         html_without_highlights = generate_person_html(minimal_member, [])
         self.assertNotIn("highlighted-work", html_without_highlights)
+
+    def test_member_dates_and_publication_filtering(self):
+        """Verify join_date and left_date are present in YAML and can filter publications."""
+        with open(BASE_DIR / "data" / "people.yaml", "r", encoding="utf-8") as f:
+            people_data = yaml.safe_load(f)
+
+        # Check members have join_date
+        members_sec = next(s for s in people_data["sections"] if s["id"] == "members")
+        for m in members_sec["members"]:
+            self.assertIn("join_date", m, f"Member {m['name']} missing join_date in people.yaml")
+
+        # Check former members have join_date and left_date
+        former_sec = next(s for s in people_data["sections"] if s["id"] == "former-members")
+        for fm in former_sec["members"]:
+            self.assertIn("join_date", fm, f"Former member {fm['name']} missing join_date")
+            self.assertIn("left_date", fm, f"Former member {fm['name']} missing left_date")
+
+        # Verify filter_publications_by_dates logic
+        from src.components.people import filter_publications_by_dates
+        test_pubs = [
+            {"title": "Paper 2021", "year": "2021"},
+            {"title": "Paper 2023", "year": "2023"},
+            {"title": "Paper 2024", "year": "2024"},
+            {"title": "Paper 2026", "year": "2026"},
+        ]
+        # Filter for former member (2022 to 2024)
+        filtered = filter_publications_by_dates(test_pubs, join_date="2022-09-01", left_date="2024-08-31")
+        self.assertEqual([p["year"] for p in filtered], ["2023", "2024"])
+
+        # Filter for current member (from 2024 onwards)
+        filtered_current = filter_publications_by_dates(test_pubs, join_date="2024-01-01")
+        self.assertEqual([p["year"] for p in filtered_current], ["2024", "2026"])
+
+        # Verify tenure is shown on people.html for former members
+        people_html = (BASE_DIR / "people.html").read_text(encoding="utf-8")
+        self.assertIn("2022&ndash;2024", people_html)
 
 
 if __name__ == "__main__":

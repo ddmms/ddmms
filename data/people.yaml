@@ -8,12 +8,15 @@ sections:
     members:
       - name: "Dr. Alin Marin Elena"
         yaml: "data/people/alin-marin-elena.yaml"
+        join_date: "2024-01-01"
 
       - name: "Elliott Kasoar"
         yaml: "data/people/elliott-kasoar.yaml"
+        join_date: "2024-01-01"
 
       - name: "Dr. Junwen Yin"
         yaml: "data/people/junwen-yin.yaml"
+        join_date: "2024-01-01"
 
   - id: "former-members"
     nav_title: "Former Members"
@@ -23,12 +26,18 @@ sections:
     members:
       - name: "Jessie Gould"
         role: "Graduate"
+        join_date: "2023-09-01"
+        left_date: "2024-08-31"
       - name: "Muhammad Mohsin"
         role: "Graduate"
+        join_date: "2023-09-01"
+        left_date: "2024-08-31"
       - name: "Elena Patyukova"
     #     avatar: "assets/images/photo.jpg"   # or initials, e.g. "FN"
         role: "Computational Scientist"
     #     affiliation: "DDMMS &bull; STFC SCD (2022&ndash;2024)"
+        join_date: "2022-09-01"
+        left_date: "2024-08-31"
     #     destination: "Current position"   # former members only
     #     bio: "One or two sentences."
     #     tags: ["Topic A", "Topic B"]
@@ -37,6 +46,8 @@ sections:
     #         url: "https://orcid.org/..."
       - name: "Federica Zanca"
         role: "Computational Scientist"
+        join_date: "2023-01-01"
+        left_date: "2024-12-31"
 
 
   - id: "collaborators"

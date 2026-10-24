@@ -542,6 +542,43 @@ def aggregate_publications(
     return sorted(deduped, key=sort_key)
 
 
+def filter_publications_by_dates(
+    publications: List[Dict[str, Any]],
+    join_date: Optional[Union[str, int]] = None,
+    left_date: Optional[Union[str, int]] = None,
+) -> List[Dict[str, Any]]:
+    """Filter publications to those published during tenure (join_date <= pub_year <= left_date)."""
+    join_year = None
+    left_year = None
+    if join_date:
+        m = re.search(r"\b(19\d\d|20\d\d)\b", str(join_date))
+        if m:
+            join_year = int(m.group(1))
+    if left_date:
+        m = re.search(r"\b(19\d\d|20\d\d)\b", str(left_date))
+        if m:
+            left_year = int(m.group(1))
+
+    if join_year is None and left_year is None:
+        return publications
+
+    filtered = []
+    for p in publications:
+        try:
+            yr = int(p.get("year", 0))
+        except (ValueError, TypeError):
+            yr = 0
+        if yr == 0:
+            filtered.append(p)
+            continue
+        if join_year is not None and yr < join_year:
+            continue
+        if left_year is not None and yr > left_year:
+            continue
+        filtered.append(p)
+    return filtered
+
+
 def generate_markdown(
     publications: List[Dict[str, Any]],
     output_path: str = "PUBLICATIONS.md",
