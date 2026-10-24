@@ -1375,7 +1375,8 @@ talks:
 
         # Verify tenure is shown on people.html for former members
         people_html = (BASE_DIR / "people.html").read_text(encoding="utf-8")
-        self.assertIn("2022&ndash;2024", people_html)
+        self.assertIn("2024&ndash;2026", people_html)
+        self.assertIn("2023&ndash;2024", people_html)
 
 
 if __name__ == "__main__":
