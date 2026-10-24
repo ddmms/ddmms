@@ -102,9 +102,10 @@
 
     // Apply active link on all nav links, pills, and chips
     const currentFilename = window.location.pathname.split('/').pop() || 'index.html';
-    headerScope.querySelectorAll('.nav-desktop .nav-item a, .subnav-pill, .corner-nav-link, .corner-subnav-chip, .mobile-nav-item a').forEach(link => {
+    const isPeopleSubpage = currentFilename.endsWith('-elena.html') || currentFilename.endsWith('-kasoar.html') || currentFilename.endsWith('-yin.html') || window.location.pathname.includes('/people/');
+    headerScope.querySelectorAll('.nav-desktop .nav-item a, .nav-pill, .subnav-pill, .corner-nav-link, .corner-subnav-chip, .mobile-nav-item a').forEach(link => {
       const href = link.getAttribute('href');
-      if (href === currentFilename || (currentFilename === '' && href === 'index.html')) {
+      if (href === currentFilename || (currentFilename === '' && href === 'index.html') || (isPeopleSubpage && href === 'people.html')) {
         link.classList.add('active');
         const parentDropdown = link.closest('.nav-item-has-dropdown');
         if (parentDropdown) {
@@ -316,6 +317,38 @@
           <span class="brand-title-sub">Data Driven Materials &amp; Molecular Science</span>
         </div>
       </a>
+
+      <!-- Navigation Menu Pills of different colours -->
+      <nav class="header-nav-pills" aria-label="Primary Navigation">
+        <a href="index.html" class="nav-pill nav-pill-home" style="--pill-color: #06b6d4; --pill-rgb: 6, 182, 212;">
+          <span class="nav-pill-dot"></span>
+          <span>Home</span>
+        </a>
+        <a href="people.html" class="nav-pill nav-pill-people" style="--pill-color: #10b981; --pill-rgb: 16, 185, 129;">
+          <span class="nav-pill-dot"></span>
+          <span>People</span>
+        </a>
+        <a href="research.html" class="nav-pill nav-pill-research" style="--pill-color: #8b5cf6; --pill-rgb: 139, 92, 246;">
+          <span class="nav-pill-dot"></span>
+          <span>Research</span>
+        </a>
+        <a href="publications.html" class="nav-pill nav-pill-pubs" style="--pill-color: #0ea5e9; --pill-rgb: 14, 165, 233;">
+          <span class="nav-pill-dot"></span>
+          <span>Publications</span>
+        </a>
+        <a href="code.html" class="nav-pill nav-pill-code" style="--pill-color: #f59e0b; --pill-rgb: 245, 158, 11;">
+          <span class="nav-pill-dot"></span>
+          <span>Software</span>
+        </a>
+        <a href="talks.html" class="nav-pill nav-pill-talks" style="--pill-color: #6366f1; --pill-rgb: 99, 102, 241;">
+          <span class="nav-pill-dot"></span>
+          <span>Talks</span>
+        </a>
+        <a href="teaching.html" class="nav-pill nav-pill-teaching" style="--pill-color: #ec4899; --pill-rgb: 236, 72, 153;">
+          <span class="nav-pill-dot"></span>
+          <span>Teaching</span>
+        </a>
+      </nav>
 
       <div class="header-actions">
         <button

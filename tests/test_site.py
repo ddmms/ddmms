@@ -1532,6 +1532,30 @@ talks:
         self.assertIn(".page-hero-bg::after", style_css)
         self.assertIn("90deg", style_css)
 
+    def test_header_nav_pills_different_colours(self):
+        """Verify navigation pills are present at the top of the header with different colors."""
+        header_html = (BASE_DIR / "header.html").read_text(encoding="utf-8")
+        self.assertIn('class="header-nav-pills"', header_html)
+        self.assertIn('class="nav-pill', header_html)
+        self.assertIn('class="nav-pill-dot"', header_html)
+
+        # Check pills exist for core pages
+        for expected in ("Home", "People", "Research", "Publications", "Software", "Talks", "Teaching"):
+            self.assertIn(f"<span>{expected}</span>", header_html)
+
+        # Check pills have different colours via --pill-color style attributes
+        import re
+        colors = re.findall(r'--pill-color:\s*(#[0-9a-fA-F]{3,6})', header_html)
+        self.assertGreaterEqual(len(colors), 5, "Expected at least 5 colored pills")
+        # Ensure all pill colors are unique
+        self.assertEqual(len(colors), len(set(colors)), "Each menu pill should have a distinct color")
+
+        # Check CSS styles exist
+        style_css = (BASE_DIR / "assets" / "css" / "style.css").read_text(encoding="utf-8")
+        self.assertIn(".header-nav-pills", style_css)
+        self.assertIn(".nav-pill", style_css)
+        self.assertIn(".nav-pill.active", style_css)
+
 
 if __name__ == "__main__":
     unittest.main()
