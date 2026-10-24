@@ -5,6 +5,9 @@ avatar: "assets/images/junwen_yin.jpeg"
 role: "Computational Scientist(Senior)"
 affiliation: "STFC SCD, UKRI | ETSF Member"
 email: "junwen.yin@stfc.ac.uk"
+highlighted_work:
+  - "goldilocks"
+  - "patyukova2026565e"
 bio: "Junwen develops first-principles methods and the tools that automate them. Current work covers electron–phonon coupling and phonon anharmonicity from DFT and DFPT, including carrier mobility in halide perovskites and the phonon-limited resistivity of metals; nonadiabatic coupling and excited-state dynamics in CP2K; and ferroelectric hafnia. Junwen also develops Goldilocks, which uses high-throughput DFT data, machine learning and AI agents to choose converged, cost-efficient calculation parameters."
 short_bio: "Computational scientist working on electron–phonon coupling, DFT and DFPT, perovskites, nonadiabatic dynamics in CP2K, and Goldilocks: high-throughput DFT, machine learning and AI agents for converged calculation parameters."
 research_interests:

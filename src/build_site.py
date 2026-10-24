@@ -233,12 +233,12 @@ def main():
                 page_filename = member.get("page")
                 slug = member.get("slug")
                 if page_filename:
-                    pages[page_filename] = generate_person_html(member, pubs)
+                    pages[page_filename] = generate_person_html(member, pubs, software=software_data)
                     if "/" not in page_filename:
-                        pages[f"people/{page_filename}"] = generate_person_html(member, pubs, base_href="../")
+                        pages[f"people/{page_filename}"] = generate_person_html(member, pubs, base_href="../", software=software_data)
                 elif slug:
-                    pages[f"{slug}.html"] = generate_person_html(member, pubs)
-                    pages[f"people/{slug}.html"] = generate_person_html(member, pubs, base_href="../")
+                    pages[f"{slug}.html"] = generate_person_html(member, pubs, software=software_data)
+                    pages[f"people/{slug}.html"] = generate_person_html(member, pubs, base_href="../", software=software_data)
 
     for filename, content in pages.items():
         out_path = BASE_DIR / filename

@@ -1313,6 +1313,33 @@ talks:
         self.assertIn('<option value="2024-onwards" selected>2024 onwards</option>', page_html)
         self.assertIn("2024-onwards", page_html)
 
+    def test_highlighted_work_on_individual_pages(self):
+        """Verify that individual person pages support Highlighted Work with software and bibtex keys."""
+        alin_html = (BASE_DIR / "alin-marin-elena.html").read_text(encoding="utf-8")
+        self.assertIn('id="highlighted-work"', alin_html)
+        self.assertIn("Highlighted Work", alin_html)
+        self.assertIn("highlighted-software-card", alin_html)
+        self.assertIn("highlighted-paper-card", alin_html)
+        self.assertIn("janus-core", alin_html)
+        self.assertIn("pack-mm", alin_html)
+        self.assertIn("@bi20265877", alin_html)
+
+        elliott_html = (BASE_DIR / "elliott-kasoar.html").read_text(encoding="utf-8")
+        self.assertIn('id="highlighted-work"', elliott_html)
+        self.assertIn("janus-core", elliott_html)
+        self.assertIn("@batatia20269411", elliott_html)
+
+        junwen_html = (BASE_DIR / "junwen-yin.html").read_text(encoding="utf-8")
+        self.assertIn('id="highlighted-work"', junwen_html)
+        self.assertIn("goldilocks", junwen_html)
+        self.assertIn("@patyukova2026565e", junwen_html)
+
+        # Verify that without highlighted_work, the section is cleanly omitted
+        from src.components.people import generate_person_html
+        minimal_member = {"name": "Test Member", "slug": "test-member", "bio": "Test bio"}
+        html_without_highlights = generate_person_html(minimal_member, [])
+        self.assertNotIn("highlighted-work", html_without_highlights)
+
 
 if __name__ == "__main__":
     unittest.main()

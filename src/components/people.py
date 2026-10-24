@@ -11,15 +11,21 @@ try:
     from .header import get_header
     from .footer import get_footer
     from .layout import render_page_hero
+    from .code import load_software
 except (ImportError, ValueError):
     try:
         from components.header import get_header
         from components.footer import get_footer
         from components.layout import render_page_hero
+        from components.code import load_software
     except ImportError:
-        from src.components.header import get_header
-        from src.components.footer import get_footer
-        from src.components.layout import render_page_hero
+        try:
+            from src.components.header import get_header
+            from src.components.footer import get_footer
+            from src.components.layout import render_page_hero
+            from src.components.code import load_software
+        except ImportError:
+            load_software = None
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 PEOPLE_FILE = BASE_DIR / "data" / "people.yaml"
@@ -376,10 +382,255 @@ def generate_people_html(people_data: Optional[Dict[str, Any]] = None) -> str:
 """
 
 
+def compute_bibtex_key(pub: Dict[str, Any]) -> str:
+    """Generate or retrieve bibtex citation key for a publication."""
+    if pub.get("bibtex_key"):
+        return str(pub["bibtex_key"]).strip()
+    if pub.get("key"):
+        return str(pub["key"]).strip()
+    authors = pub.get("authors") or pub.get("group_authors") or []
+    if authors:
+        first = str(authors[0]).strip().split()[-1].lower()
+        first = re.sub(r"[^a-z0-9]", "", first)
+    else:
+        first = "pub"
+    year = str(pub.get("year") or "date")
+    doi = str(pub.get("preprint_doi") or pub.get("doi") or "")
+    doi_clean = re.sub(r"[^a-zA-Z0-9]", "", doi)
+    key_doi = doi_clean[-4:] if len(doi_clean) >= 4 else doi_clean
+    return f"{first}{year}{key_doi}"
+
+
+def get_software_packages(software_data=None) -> List[Dict[str, Any]]:
+    """Get list of software package dictionaries."""
+    if software_data is None:
+        if load_software is not None:
+            try:
+                software_data = load_software()
+            except Exception:
+                software_data = None
+        if software_data is None:
+            sw_path = BASE_DIR / "data" / "software.yaml"
+            if sw_path.is_file():
+                try:
+                    software_data = yaml.safe_load(sw_path.read_text(encoding="utf-8-sig"))
+                except Exception:
+                    software_data = None
+
+    if isinstance(software_data, dict):
+        return software_data.get("packages") or software_data.get("software") or []
+    elif isinstance(software_data, list):
+        return software_data
+    return []
+
+
+def resolve_highlighted_items(
+    highlighted_list: List[Any],
+    publications: Optional[List[Dict[str, Any]]] = None,
+    software_packages: Optional[List[Dict[str, Any]]] = None,
+) -> List[Dict[str, Any]]:
+    """Resolve highlighted items (by software identifier or bibtex key/DOI) to enriched objects."""
+    resolved: List[Dict[str, Any]] = []
+    pubs = publications or []
+    sw_packages = software_packages or []
+
+    for item in highlighted_list:
+        identifier = ""
+        item_type = None
+        comment = ""
+        custom_data = {}
+
+        if isinstance(item, str):
+            identifier = item.strip()
+        elif isinstance(item, dict):
+            if "software" in item:
+                identifier = str(item["software"]).strip()
+                item_type = "software"
+            elif "paper" in item or "publication" in item:
+                identifier = str(item.get("paper") or item.get("publication")).strip()
+                item_type = "paper"
+            else:
+                identifier = str(
+                    item.get("id") or item.get("key") or item.get("bibtex") or item.get("identifier") or ""
+                ).strip()
+                item_type = item.get("type")
+            comment = str(item.get("comment") or item.get("note") or item.get("description") or "").strip()
+            custom_data = item
+
+        if not identifier and not custom_data:
+            continue
+
+        clean_id = re.sub(r"[^a-zA-Z0-9_-]", "", identifier).lower()
+
+        # Check software first if not forced to paper
+        found_software = None
+        if item_type != "paper":
+            for pkg in sw_packages:
+                pkg_id = str(pkg.get("id") or "").lower().strip()
+                pkg_name = str(pkg.get("name") or "").lower().strip()
+                if clean_id in (pkg_id, pkg_name) or identifier.lower() in (pkg_id, pkg_name):
+                    found_software = dict(pkg)
+                    break
+            if found_software:
+                if comment:
+                    found_software["comment"] = comment
+                resolved.append({"type": "software", "data": found_software})
+                continue
+            elif item_type == "software" and custom_data:
+                resolved.append({"type": "software", "data": custom_data})
+                continue
+
+        # Check publications by bibtex key, DOI, or arXiv ID
+        matched_pub = None
+        matched_key = ""
+        for p in pubs:
+            b_key = compute_bibtex_key(p).lower()
+            p_bib = str(p.get("bibtex_key") or p.get("key") or "").strip().lower()
+            p_doi = str(p.get("doi") or "").strip()
+            p_pre_doi = str(p.get("preprint_doi") or "").strip()
+            p_arxiv = str(p.get("arxiv_id") or "").strip().lower()
+
+            clean_p_doi = re.sub(r"^https?://(dx\.)?doi\.org/", "", p_doi, flags=re.I).lower().replace("doi:", "").strip()
+            clean_pre_doi = re.sub(r"^https?://(dx\.)?doi\.org/", "", p_pre_doi, flags=re.I).lower().replace("doi:", "").strip()
+
+            id_lower = identifier.lower()
+
+            # Exact or clean bibtex key match
+            if b_key == clean_id or p_bib == clean_id or b_key == id_lower or p_bib == id_lower:
+                matched_pub = p
+                matched_key = b_key
+                break
+
+            # Prefix bibtex match (e.g. 'patyukova2026' -> 'patyukova2026565e')
+            if len(clean_id) >= 6 and (b_key.startswith(clean_id) or (p_bib and p_bib.startswith(clean_id))):
+                matched_pub = p
+                matched_key = b_key
+                break
+
+            # DOI match
+            if clean_p_doi and (id_lower == clean_p_doi or clean_id == re.sub(r"[^a-zA-Z0-9]", "", clean_p_doi)):
+                matched_pub = p
+                matched_key = b_key
+                break
+
+            if clean_pre_doi and (id_lower == clean_pre_doi or clean_id == re.sub(r"[^a-zA-Z0-9]", "", clean_pre_doi)):
+                matched_pub = p
+                matched_key = b_key
+                break
+
+            # arXiv ID match
+            if p_arxiv and (id_lower == p_arxiv or id_lower == f"arxiv.{p_arxiv}"):
+                matched_pub = p
+                matched_key = b_key
+                break
+
+        if matched_pub:
+            resolved.append({"type": "paper", "data": matched_pub, "key": matched_key, "comment": comment})
+        elif custom_data and custom_data.get("title"):
+            resolved.append({"type": custom_data.get("type", "paper"), "data": custom_data, "key": identifier, "comment": comment})
+
+    return resolved
+
+
+def render_highlighted_software_card(pkg: Dict[str, Any], rel_prefix: str = "") -> str:
+    """Render a card for a highlighted software tool."""
+    name = pkg.get("name") or pkg.get("id") or "Software"
+    logo = pkg.get("logo") or ""
+    icon = pkg.get("icon") or ""
+    desc = pkg.get("description") or ""
+    badge = pkg.get("badge") or {}
+    install = pkg.get("install") or ""
+    links = pkg.get("links") or []
+    comment = pkg.get("comment") or ""
+
+    if logo:
+        logo_src = f"{rel_prefix}{logo}" if (rel_prefix and str(logo).startswith("assets/")) else logo
+        logo_html = f'<img src="{logo_src}" alt="{name}" class="highlighted-work-logo">'
+    elif icon:
+        logo_html = f'<span class="highlighted-work-icon">{icon}</span>'
+    else:
+        logo_html = '<span class="highlighted-work-icon">💻</span>'
+
+    badge_text = badge.get("text") if isinstance(badge, dict) else str(badge or "")
+    badge_html = f'<span class="badge badge-meta">{badge_text}</span>' if badge_text else ''
+
+    # Primary link
+    primary_url = "#"
+    links_html = []
+    if links and isinstance(links, list):
+        for lnk in links:
+            t = lnk.get("text") or "Link"
+            u = lnk.get("url") or lnk.get("link") or "#"
+            if primary_url == "#" and u != "#":
+                primary_url = u
+            clean_t = t.replace("&rarr;", "").replace("→", "").strip()
+            links_html.append(
+                f'<a href="{u}" target="_blank" rel="noopener noreferrer" class="btn-action"><span>🔗</span> {clean_t}</a>'
+            )
+    links_bar = f'<div class="highlighted-card-actions">{" ".join(links_html)}</div>' if links_html else ""
+
+    install_html = f'<div class="highlighted-card-install"><code>{install}</code></div>' if install else ""
+    comment_html = f'<div class="highlighted-card-comment">{comment}</div>' if comment else ""
+
+    return f"""        <div class="highlighted-card highlighted-software-card">
+          <div class="highlighted-card-top">
+            <span class="badge badge-software"><span>💻</span> Software</span>
+            {badge_html}
+          </div>
+          <div class="highlighted-card-header">
+            {logo_html}
+            <h3 class="highlighted-card-title"><a href="{primary_url}" target="_blank" rel="noopener noreferrer">{name}</a></h3>
+          </div>
+          <p class="highlighted-card-desc">{desc}</p>
+          {comment_html}
+          {install_html}
+          {links_bar}
+        </div>"""
+
+
+def render_highlighted_paper_card(pub: Dict[str, Any], bibtex_key: str = "", comment: str = "") -> str:
+    """Render a card for a highlighted publication."""
+    title = pub.get("title") or "Publication"
+    authors = pub.get("authors") or pub.get("group_authors") or []
+    authors_str = ", ".join(authors) if authors else "DDMMS"
+    journal = pub.get("journal") or ""
+    year = str(pub.get("year") or "")
+    doi = pub.get("preprint_doi") or pub.get("doi") or ""
+    clean_doi = re.sub(r"^https?://(dx\.)?doi\.org/", "", doi, flags=re.I).replace("doi:", "").strip()
+    pub_url = f"https://doi.org/{clean_doi}" if clean_doi else (pub.get("url") or "#")
+
+    meta_parts = []
+    if journal:
+        meta_parts.append(f"<em>{journal}</em>")
+    if year:
+        meta_parts.append(f'<span class="badge badge-year">{year}</span>')
+    meta_str = " ".join(meta_parts)
+
+    doi_badge = f'<a href="https://doi.org/{clean_doi}" target="_blank" rel="noopener noreferrer" class="badge badge-doi">DOI: {clean_doi}</a>' if clean_doi else ""
+    key_badge = f'<span class="badge badge-bibtex" title="BibTeX Key">@{bibtex_key}</span>' if bibtex_key else ""
+    comment_html = f'<div class="highlighted-card-comment">{comment}</div>' if comment else ""
+
+    return f"""        <div class="highlighted-card highlighted-paper-card">
+          <div class="highlighted-card-top">
+            <span class="badge badge-paper"><span>📄</span> Publication</span>
+            {key_badge}
+          </div>
+          <h3 class="highlighted-card-title"><a href="{pub_url}" target="_blank" rel="noopener noreferrer">{title}</a></h3>
+          <div class="highlighted-card-authors">{authors_str}</div>
+          <div class="highlighted-card-meta">{meta_str} {doi_badge}</div>
+          {comment_html}
+          <div class="highlighted-card-actions">
+            <a href="{pub_url}" target="_blank" rel="noopener noreferrer" class="btn-action"><span>🔗</span> View Publication</a>
+            <a href="publications.html?search={clean_doi or quote(title[:30])}" class="btn-action"><span>📚</span> Group Catalogue</a>
+          </div>
+        </div>"""
+
+
 def generate_person_html(
     person_data: Dict[str, Any],
     publications: Optional[List[Dict[str, Any]]] = None,
     base_href: Optional[str] = None,
+    software: Optional[Union[Dict[str, Any], List[Dict[str, Any]]]] = None,
 ) -> str:
     """Generate a dedicated individual profile page for a team member."""
     header_html = get_header("people")
@@ -528,6 +779,55 @@ def generate_person_html(
         </ul>
       </section>"""
 
+    # Highlighted Work Section
+    highlighted_raw = (
+        person_data.get("highlighted_work")
+        or person_data.get("highlighted")
+        or person_data.get("highlights")
+        or []
+    )
+    if isinstance(highlighted_raw, str):
+        highlighted_raw = [highlighted_raw]
+    elif isinstance(highlighted_raw, dict):
+        flattened = []
+        for k, v in highlighted_raw.items():
+            if isinstance(v, list):
+                for sub in v:
+                    if isinstance(sub, str):
+                        flattened.append({k.rstrip("s"): sub})
+                    elif isinstance(sub, dict):
+                        flattened.append(sub)
+            elif isinstance(v, (str, dict)):
+                flattened.append({k.rstrip("s"): v} if isinstance(v, str) else v)
+        highlighted_raw = flattened
+
+    software_packages = get_software_packages(software)
+    resolved_highlights = resolve_highlighted_items(highlighted_raw, publications, software_packages)
+
+    highlighted_section = ""
+    if resolved_highlights:
+        cards_rendered = []
+        for h in resolved_highlights:
+            h_type = h.get("type")
+            h_data = h.get("data") or {}
+            if h_type == "software":
+                cards_rendered.append(render_highlighted_software_card(h_data, rel_prefix=rel_prefix))
+            else:
+                cards_rendered.append(
+                    render_highlighted_paper_card(
+                        h_data, bibtex_key=h.get("key", ""), comment=h.get("comment", "")
+                    )
+                )
+
+        cards_html = "\n".join(cards_rendered)
+        highlighted_section = f"""      <!-- Highlighted Work Section -->
+      <section class="profile-section" id="highlighted-work">
+        <h2 class="profile-section-title">Highlighted Work</h2>
+        <div class="highlighted-work-grid">
+{cards_html}
+        </div>
+      </section>"""
+
     # Publications matching
     matched_pubs: List[Dict[str, Any]] = []
     if publications:
@@ -642,6 +942,8 @@ def generate_person_html(
 {bio_paragraphs}
         </div>
       </section>
+
+{highlighted_section}
 
 {research_section}
 
