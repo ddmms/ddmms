@@ -233,7 +233,7 @@ def assemble_doi_url(doi: Optional[str]) -> Optional[str]:
 
 def get_publication_url(pub: Dict[str, Any]) -> Optional[str]:
     """Assemble publication URL using DOI if present, falling back to url field."""
-    doi = pub.get("doi")
+    doi = pub.get("preprint_doi") or pub.get("doi")
     if doi:
         assembled = assemble_doi_url(doi)
         if assembled:
@@ -458,10 +458,13 @@ def generate_markdown(
 
         target_url = get_publication_url(pub)
         title_str = f"**[{pub['title']}]({target_url})**" if target_url else f"**{pub['title']}**"
+        authors_list = pub.get("authors") or pub.get("group_authors") or []
+        authors_str = f" by {', '.join(authors_list)}." if authors_list else ""
         venue_str = f" *{pub['journal']}*." if pub.get("journal") else ""
-        doi_str = f" [DOI: {pub['doi']}](https://doi.org/{pub['doi']})" if pub.get("doi") else ""
+        effective_doi = pub.get("preprint_doi") or pub.get("doi")
+        doi_str = f" [DOI: {effective_doi}](https://doi.org/{effective_doi})" if effective_doi else ""
 
-        lines.append(f"- {title_str}{venue_str}{doi_str}")
+        lines.append(f"- {title_str}{authors_str}{venue_str}{doi_str}")
 
     lines.extend([
         "",

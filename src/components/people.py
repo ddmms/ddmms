@@ -525,17 +525,24 @@ def generate_person_html(
     # Publications matching
     matched_pubs: List[Dict[str, Any]] = []
     if publications:
-        clean_tokens = [tok for tok in clean_name.lower().split() if len(tok) > 1]
+        clean_name_lower = clean_name.lower().replace("-", " ")
+        clean_tokens = [tok for tok in clean_name_lower.split() if len(tok) > 1]
         for pub in publications:
-            pub_authors = [str(a).lower() for a in pub.get("authors", [])]
             matched = False
-            for a in pub_authors:
-                if clean_name.lower() in a:
+            for g in pub.get("group_authors", []):
+                gl = str(g).lower().replace("-", " ")
+                if clean_name_lower in gl or gl in clean_name_lower:
                     matched = True
                     break
-                if len(clean_tokens) >= 2 and clean_tokens[0] in a and clean_tokens[-1] in a:
-                    matched = True
-                    break
+            if not matched:
+                for a in pub.get("authors", []):
+                    al = str(a).lower().replace("-", " ")
+                    if clean_name_lower in al or al in clean_name_lower:
+                        matched = True
+                        break
+                    if len(clean_tokens) >= 2 and clean_tokens[-1] in al and (clean_tokens[0] in al or clean_tokens[0][0] in al):
+                        matched = True
+                        break
             if matched:
                 matched_pubs.append(pub)
 
@@ -552,10 +559,8 @@ def generate_person_html(
         p_title = p.get("title", "")
         p_year = p.get("year", "")
         p_journal = p.get("journal", "")
-        p_doi = p.get("doi", "")
-        p_authors = ", ".join(p.get("authors", [])[:4])
-        if len(p.get("authors", [])) > 4:
-            p_authors += " et al."
+        p_doi = p.get("preprint_doi") or p.get("doi", "")
+        p_authors = ", ".join(p.get("authors") or p.get("group_authors") or [])
 
         doi_badge = f'<a href="https://doi.org/{p_doi}" target="_blank" rel="noopener noreferrer" class="badge-doi">DOI: {p_doi}</a>' if p_doi else ""
         journal_text = f"<em>{p_journal}</em>" if p_journal else ""

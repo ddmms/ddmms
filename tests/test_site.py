@@ -35,7 +35,6 @@ class TestDDMMSSite(unittest.TestCase):
             "teaching.html",
             "collaborate.html",
             "talks.html",
-            "awards.html",
             "opportunities.html"
         ]
 
@@ -103,6 +102,26 @@ class TestDDMMSSite(unittest.TestCase):
             data = json.load(f)
         self.assertIsInstance(data, list)
         self.assertGreater(len(data), 0, "No publications in publications.json")
+        for pub in data:
+            self.assertIn("authors", pub, f"Missing authors in pub: {pub.get('title')}")
+            self.assertIsInstance(pub["authors"], list)
+            self.assertGreater(len(pub["authors"]), 0, f"Empty authors list for: {pub.get('title')}")
+            # If preprint or arxiv, preprint_doi must be set
+            if pub.get("arxiv_id") or "arxiv" in (pub.get("journal") or "").lower():
+                self.assertIsNotNone(pub.get("preprint_doi"), f"Missing preprint_doi for preprint: {pub.get('title')}")
+                self.assertTrue(pub["preprint_doi"].startswith("10.48550/arXiv."), f"Invalid preprint_doi format: {pub.get('preprint_doi')}")
+
+    def test_awards_completely_removed(self):
+        self.assertFalse((BASE_DIR / "data" / "awards.yaml").exists(), "data/awards.yaml should not exist")
+        self.assertFalse((BASE_DIR / "src" / "components" / "awards.py").exists(), "src/components/awards.py should not exist")
+        self.assertFalse((BASE_DIR / "awards.html").exists(), "awards.html should not exist")
+        build_site_py = (BASE_DIR / "src" / "build_site.py").read_text(encoding="utf-8")
+        self.assertNotIn("awards", build_site_py.lower(), "src/build_site.py should have no references to awards")
+
+    def test_publications_markdown_has_authors_and_preprint_dois(self):
+        pub_md = (BASE_DIR / "PUBLICATIONS.md").read_text(encoding="utf-8")
+        self.assertIn(" by ", pub_md, "PUBLICATIONS.md should list authors with 'by'")
+        self.assertIn("10.48550/arXiv.", pub_md, "PUBLICATIONS.md should include preprint DOIs")
 
     def test_embedded_publications_script_in_publications_page(self):
         content = (BASE_DIR / "publications.html").read_text(encoding="utf-8")
@@ -1083,52 +1102,10 @@ talks:
         with self.assertRaises(FileNotFoundError):
             load_talks(Path("/nonexistent/talks.yaml"))
 
-    def test_awards_page(self):
-        import tempfile
-        from components.awards import load_awards, generate_awards_html
-
-        awards_html = (BASE_DIR / "awards.html").read_text(encoding="utf-8")
-        self.assertIn("<title>Awards | Data Driven Materials and Molecular Science</title>", awards_html)
-
-        # No awards yet: an empty-state line instead of an empty list
-        rendered = generate_awards_html({"title": "Awards", "awards": []})
-        self.assertIn('<p class="list-empty">', rendered)
-        self.assertNotIn('class="awards-list"', rendered)
-
-        with tempfile.NamedTemporaryFile("w+", encoding="utf-8", delete=False, suffix=".yaml") as tf:
-            tf.write("""title: "Honours"
-awards:
-  - year: "2030"
-    title: "Linked Prize"
-    recipient: "Ada Lovelace"
-    awarded_by: "Royal Society of Chemistry"
-    description: "For outstanding work."
-    url: "https://example.com/prize"
-  - year: "2029"
-    title: "Unlinked Fellowship"
-    recipient: "Alan Turing"
-  - year: "2028"
-""")
-            tf_path = Path(tf.name)
-        try:
-            rendered = generate_awards_html(load_awards(tf_path))
-            self.assertIn('<h1 class="page-hero-title">Honours</h1>', rendered)
-            self.assertIn('href="https://example.com/prize"', rendered)
-            self.assertIn('<p class="award-meta">Ada Lovelace &middot; Royal Society of Chemistry</p>', rendered)
-            self.assertIn('<p class="award-meta">Alan Turing</p>', rendered)
-            self.assertIn("For outstanding work.", rendered)
-            self.assertIn('<h2 class="award-title">Unlinked Fellowship</h2>', rendered)
-            self.assertEqual(rendered.count('class="award-item"'), 2, "awards without a title are skipped")
-        finally:
-            tf_path.unlink()
-
-        with self.assertRaises(FileNotFoundError):
-            load_awards(Path("/nonexistent/awards.yaml"))
-
     def test_inner_pages_share_flat_page_hero(self):
         for fname in ("people.html", "publications.html", "research.html", "code.html",
                       "news.html", "teaching.html", "collaborate.html", "talks.html",
-                      "awards.html", "opportunities.html", "junwen-yin.html"):
+                      "opportunities.html", "junwen-yin.html"):
             content = (BASE_DIR / fname).read_text(encoding="utf-8")
             self.assertIn('<section class="page-hero">', content, f"{fname} is missing the shared page hero")
             self.assertEqual(content.count('<h1 '), 1, f"{fname} should have exactly one h1")

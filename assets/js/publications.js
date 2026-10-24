@@ -86,6 +86,24 @@
       if (totalCountEl) totalCountEl.textContent = publications.length;
     }
 
+    function matchGroupAuthor(authorName, groupAuthors) {
+      if (!authorName || !groupAuthors) return null;
+      const a = authorName.toLowerCase().replace(/-/g, ' ').trim();
+      for (const g of groupAuthors) {
+        const gl = g.toLowerCase().trim();
+        if (gl === a || gl.includes(a) || a.includes(gl)) return g;
+        const tokens = gl.split(/\s+/).filter(t => t.length > 1);
+        if (tokens.length >= 2) {
+          const lastName = tokens[tokens.length - 1];
+          const firstInit = tokens[0][0];
+          if (a.includes(lastName) && (a.includes(tokens[0]) || a.includes(firstInit))) {
+            return g;
+          }
+        }
+      }
+      return null;
+    }
+
     function populateAuthorDropdown() {
       if (!authorFilter) return;
       const authorCounts = {};
@@ -93,10 +111,20 @@
         authorCounts[name] = 0;
       }
       for (const pub of publications) {
-        for (const a of (pub.authors || [])) {
-          if (authorCounts[a] !== undefined) {
-            authorCounts[a]++;
+        const matchedNames = new Set();
+        if (pub.group_authors) {
+          for (const g of pub.group_authors) {
+            if (authorCounts[g] !== undefined) matchedNames.add(g);
           }
+        }
+        if (pub.authors) {
+          for (const a of pub.authors) {
+            const m = matchGroupAuthor(a, Object.values(authorsDict));
+            if (m && authorCounts[m] !== undefined) matchedNames.add(m);
+          }
+        }
+        for (const m of matchedNames) {
+          authorCounts[m]++;
         }
       }
 
@@ -115,7 +143,10 @@
       }
 
       const relevantPubs = (selectedAuthor && selectedAuthor !== 'all')
-        ? publications.filter(p => p.authors && p.authors.includes(selectedAuthor))
+        ? publications.filter(p => {
+            if (p.group_authors && p.group_authors.includes(selectedAuthor)) return true;
+            return p.authors && p.authors.some(a => matchGroupAuthor(a, [selectedAuthor]));
+          })
         : publications;
 
       const yearCounts = {};
@@ -217,7 +248,16 @@
       // Title
       const titleEl = document.createElement('h3');
       titleEl.className = 'pub-title';
-      const cleanDoi = pub.doi ? pub.doi.replace(/^https?:\/\/(dx\.)?doi\.org\//i, '').replace(/^doi:\s*/i, '').trim() : '';
+      
+      const isPreprint = Boolean(
+        pub.preprint_doi ||
+        (pub.journal && pub.journal.toLowerCase().includes('arxiv')) ||
+        (pub.doi && pub.doi.toLowerCase().includes('arxiv')) ||
+        pub.arxiv_id
+      );
+      const preprintDoi = pub.preprint_doi || (pub.doi && pub.doi.toLowerCase().includes('arxiv') ? pub.doi : (pub.arxiv_id ? `10.48550/arXiv.${pub.arxiv_id}` : null));
+      const displayDoi = (isPreprint && preprintDoi) ? preprintDoi : pub.doi;
+      const cleanDoi = displayDoi ? displayDoi.replace(/^https?:\/\/(dx\.)?doi\.org\//i, '').replace(/^doi:\s*/i, '').trim() : '';
       const pubUrl = cleanDoi ? `https://doi.org/${cleanDoi}` : (pub.url || null);
 
       if (pubUrl) {
@@ -232,36 +272,61 @@
       }
       card.appendChild(titleEl);
 
-      // Meta (Authors, Venue, Badges)
-      const metaEl = document.createElement('div');
-      metaEl.className = 'pub-meta';
-
-      if (pub.authors && pub.authors.length > 0) {
+      // Authors line (all authors listed, with group members styled as filterable chips)
+      const authorsList = (pub.authors && pub.authors.length > 0) ? pub.authors : (pub.group_authors || []);
+      if (authorsList.length > 0) {
         const authorsWrapper = document.createElement('div');
         authorsWrapper.className = 'pub-authors';
-        for (const author of pub.authors) {
-          const chip = document.createElement('span');
-          chip.className = 'author-chip';
-          chip.title = `Filter by ${author}`;
-          chip.innerHTML = `
-            <svg class="orcid-icon" viewBox="0 0 256 256">
-              <path d="M256 128c0 70.7-57.3 128-128 128S0 198.7 0 128 57.3 0 128 0s128 57.3 128 128z"/>
-              <path fill="#fff" d="M86.3 186.2H70.9V79.1h15.4v107.1zM78.6 62.2c-5.5 0-10-4.5-10-10s4.5-10 10-10 10 4.5 10 10-4.5 10-10 10zm108.8 77.8c0 27.8-19.8 46.2-49.9 46.2H108V79.1h31.6c28.2 0 47.8 19.5 47.8 46.5v14.4zm-16.1-.7c0-20.7-13.8-32.9-33.1-32.9h-14.7v72.8h14.7c20 0 33.1-13.1 33.1-34.1v-5.8z"/>
-            </svg>
-            <span>${escapeHtml(author)}</span>
-          `;
-          chip.addEventListener('click', (e) => {
-            e.preventDefault();
-            if (authorFilter) {
-              authorFilter.value = author;
-              updateYearDropdown(author);
-              render();
-            }
-          });
-          authorsWrapper.appendChild(chip);
-        }
-        metaEl.appendChild(authorsWrapper);
+        const groupAuthorCandidates = pub.group_authors || Object.values(authorsDict);
+
+        authorsList.forEach((author, idx) => {
+          const matchedGroup = matchGroupAuthor(author, groupAuthorCandidates);
+          const isLast = idx === authorsList.length - 1;
+          const itemSpan = document.createElement('span');
+          itemSpan.className = 'pub-author-item';
+
+          if (matchedGroup) {
+            const chip = document.createElement('span');
+            chip.className = 'author-chip';
+            chip.title = `Filter by ${matchedGroup}`;
+            chip.innerHTML = `
+              <svg class="orcid-icon" viewBox="0 0 256 256">
+                <path d="M256 128c0 70.7-57.3 128-128 128S0 198.7 0 128 57.3 0 128 0s128 57.3 128 128z"/>
+                <path fill="#fff" d="M86.3 186.2H70.9V79.1h15.4v107.1zM78.6 62.2c-5.5 0-10-4.5-10-10s4.5-10 10-10 10 4.5 10 10-4.5 10-10 10zm108.8 77.8c0 27.8-19.8 46.2-49.9 46.2H108V79.1h31.6c28.2 0 47.8 19.5 47.8 46.5v14.4zm-16.1-.7c0-20.7-13.8-32.9-33.1-32.9h-14.7v72.8h14.7c20 0 33.1-13.1 33.1-34.1v-5.8z"/>
+              </svg>
+              <span>${escapeHtml(author)}</span>
+            `;
+            chip.addEventListener('click', (e) => {
+              e.preventDefault();
+              if (authorFilter) {
+                authorFilter.value = matchedGroup;
+                updateYearDropdown(matchedGroup);
+                render();
+              }
+            });
+            itemSpan.appendChild(chip);
+          } else {
+            const nameSpan = document.createElement('span');
+            nameSpan.className = 'author-name';
+            nameSpan.textContent = author;
+            itemSpan.appendChild(nameSpan);
+          }
+
+          if (!isLast) {
+            const sep = document.createElement('span');
+            sep.className = 'author-sep';
+            sep.textContent = ',';
+            itemSpan.appendChild(sep);
+          }
+
+          authorsWrapper.appendChild(itemSpan);
+        });
+        card.appendChild(authorsWrapper);
       }
+
+      // Meta (Venue, Badges)
+      const metaEl = document.createElement('div');
+      metaEl.className = 'pub-meta';
 
       if (pub.journal) {
         const venueEl = document.createElement('span');
@@ -345,8 +410,10 @@
       const shouldGroup = groupYearToggle ? groupYearToggle.checked : true;
 
       let filtered = publications.filter(pub => {
-        if (selectedAuthor !== 'all' && (!pub.authors || !pub.authors.includes(selectedAuthor))) {
-          return false;
+        if (selectedAuthor !== 'all') {
+          const inGroup = pub.group_authors && pub.group_authors.includes(selectedAuthor);
+          const inAuthors = pub.authors && pub.authors.some(a => matchGroupAuthor(a, [selectedAuthor]));
+          if (!inGroup && !inAuthors) return false;
         }
         if (selectedYear !== 'all' && String(pub.year) !== String(selectedYear)) {
           return false;
@@ -355,8 +422,9 @@
           const title = (pub.title || '').toLowerCase();
           const journal = (pub.journal || '').toLowerCase();
           const doi = (pub.doi || '').toLowerCase();
+          const preprintDoi = (pub.preprint_doi || '').toLowerCase();
           const authors = (pub.authors || []).join(' ').toLowerCase();
-          if (!title.includes(query) && !journal.includes(query) && !doi.includes(query) && !authors.includes(query)) {
+          if (!title.includes(query) && !journal.includes(query) && !doi.includes(query) && !preprintDoi.includes(query) && !authors.includes(query)) {
             return false;
           }
         }
