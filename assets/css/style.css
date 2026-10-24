@@ -2082,6 +2082,7 @@ a:hover {
   display: flex;
   gap: 2.25rem;
   align-items: center;
+  justify-content: space-between;
 }
 
 @media (max-width: 640px) {
@@ -2094,10 +2095,11 @@ a:hover {
 
 .profile-header-avatar-wrap {
   flex-shrink: 0;
+  max-width: 480px;
 }
 
 .profile-header-avatar {
-  max-height: 300px;
+  max-height: 320px;
   height: auto;
   width: auto;
   max-width: 100%;
@@ -3596,6 +3598,9 @@ a.org-chain-link:hover {
 
 /* Profile pages: photo, name and links sit in the dark title band */
 .page-hero .profile-header-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   gap: 2.5rem;
   padding: 0;
   border: 0;
@@ -3604,10 +3609,27 @@ a.org-chain-link:hover {
   box-shadow: none;
 }
 
+.page-hero .profile-header-details {
+  flex: 1 1 55%;
+  min-width: 0;
+}
+
+.page-hero .profile-header-avatar-wrap {
+  flex: 0 1 auto;
+  max-width: 480px;
+  display: flex;
+  justify-content: flex-end;
+}
+
 .page-hero .profile-header-avatar {
-  max-height: 240px;
-  max-width: 200px;
+  max-height: 280px;
+  max-width: 480px;
+  width: auto;
+  height: auto;
+  border-radius: var(--radius-lg);
   border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.35);
+  object-fit: cover;
 }
 
 .page-hero .person-back-link {
@@ -3866,12 +3888,20 @@ a.org-chain-link:hover {
 
 @media (max-width: 640px) {
   .page-hero .profile-header-card {
+    flex-direction: column;
     gap: 1.25rem;
     text-align: left;
     align-items: flex-start;
   }
+  .page-hero .profile-header-avatar-wrap {
+    width: 100%;
+    max-width: 100%;
+    justify-content: flex-start;
+  }
   .page-hero .profile-header-avatar {
-    max-height: 160px;
+    max-height: 240px;
+    max-width: 100%;
+    width: auto;
   }
   .teaching-item,
   .teaching-item.has-image,

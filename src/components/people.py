@@ -388,7 +388,13 @@ def generate_person_html(
     name = str(person_data.get("name") or "").strip()
     role = str(person_data.get("role") or "").strip()
     affiliation = str(person_data.get("affiliation") or "").strip()
-    avatar = str(person_data.get("avatar") or "").strip()
+    avatar = str(
+        person_data.get("page_avatar")
+        or person_data.get("personal_avatar")
+        or person_data.get("hero_image")
+        or person_data.get("avatar")
+        or ""
+    ).strip()
     email = str(person_data.get("email") or "").strip()
     bio = str(person_data.get("bio") or "").strip()
     short_bio = str(person_data.get("short_bio") or "").strip()
@@ -613,15 +619,15 @@ def generate_person_html(
     <section class="page-hero">
       <div class="container">
         <div class="profile-header-card">
-          <div class="profile-header-avatar-wrap">
-            {avatar_html}
-          </div>
           <div class="profile-header-details">
             <a href="people.html" class="person-back-link">&larr; Back to People</a>
             <h1 class="page-hero-title profile-header-name">{name}</h1>
             <div class="profile-header-role">{role}</div>
             <div class="profile-header-affiliation">{affiliation}</div>
 {links_block}
+          </div>
+          <div class="profile-header-avatar-wrap">
+            {avatar_html}
           </div>
         </div>
       </div>

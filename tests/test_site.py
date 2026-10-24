@@ -187,6 +187,18 @@ class TestDDMMSSite(unittest.TestCase):
         self.assertGreater(img_path.stat().st_size, 1000, "alin_elena.jpg file is too small")
         self.assertIn("assets/images/alin_elena.jpg", (BASE_DIR / "people.html").read_text(encoding="utf-8"))
 
+        # Verify personal page uses the new picture while people page retains the current picture
+        personal_img = BASE_DIR / "assets" / "images" / "alin_elena_personal.jpg"
+        self.assertTrue(personal_img.exists(), "alin_elena_personal.jpg does not exist")
+        self.assertGreater(personal_img.stat().st_size, 1000, "alin_elena_personal.jpg is too small")
+        alin_page = (BASE_DIR / "alin-marin-elena.html").read_text(encoding="utf-8")
+        self.assertIn("assets/images/alin_elena_personal.jpg", alin_page)
+
+        # Verify that profile picture is positioned on the right (details element appears before avatar)
+        details_pos = alin_page.find("profile-header-details")
+        avatar_pos = alin_page.find("profile-header-avatar-wrap")
+        self.assertGreater(avatar_pos, details_pos, "Profile header avatar should be placed on the right of details")
+
     def test_elliott_kasoar_picture_used(self):
         img_path = BASE_DIR / "assets" / "images" / "elliott_kasoar.jpg"
         self.assertTrue(img_path.exists(), "elliott_kasoar.jpg image does not exist")
