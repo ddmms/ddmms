@@ -1,0 +1,2488 @@
+{
+  "titles": {
+    "abudgetdependentcrossoverbetweencoverageandresponsebasedtrainingsetselectionformachinelearnedinteratomicpotentials": {
+      "title": "A budget-dependent crossover between coverage-and response-based training-set selection for machine-learned interatomic potentials",
+      "authors": [
+        "Jia Bi",
+        "Alin-Marin Elena"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": "10.48550/arXiv.2609.05877",
+      "arxiv_id": "2609.05877",
+      "doi": "10.48550/arXiv.2609.05877",
+      "journal": "arXiv preprint arXiv:2609.05877"
+    },
+    "astrategicroadmapforanatomisticmachinelearningecosystem": {
+      "title": "A strategic roadmap for an atomistic machine-learning ecosystem",
+      "authors": [
+        "Jörg Behler",
+        "Michele Ceriotti",
+        "Cecilia Clementi",
+        "Gábor Csányi",
+        "Alin-Marin Elena",
+        "Aditi Krishnapriyan",
+        "Joseph W. Abbott",
+        "Fabio Affinito",
+        "Albert P. Bartók",
+        "Ilyes Batatia",
+        "Filippo Bigi",
+        "Florian N. Brünig",
+        "Yannick Calvino Alonso",
+        "Giuseppe Carleo",
+        "Aurélie Champagne",
+        "Stefan Chmiela",
+        "Marc L. Descoteaux",
+        "Ralf Drautz",
+        "Alexandra Farcas",
+        "Meng Gao",
+        "Rohit Goswami",
+        "Michael F. Herbst",
+        "Christian Holm",
+        "James R. Kermode",
+        "Alexander L. M. Knoll",
+        "Tobias Kreiman",
+        "Marcel F. Langer",
+        "Hoang-Thien Luu",
+        "Yury Lysogorskiy",
+        "Mihai-Cosmin Marinica",
+        "Rocco Meli",
+        "Klaus-Robert Müller",
+        "Frank Noé",
+        "Mohamadhosein Nosratjoo",
+        "Simon Olsson",
+        "Christoph Ortner",
+        "Aldo S. Pasos-Trejo",
+        "Anyang Peng",
+        "Eric Qu",
+        "Andrea Rizzi",
+        "Mariana Rossi",
+        "Bassem Sboui",
+        "Gregor N. C. Simm",
+        "Alexandre Tkatchenko",
+        "Jacopo Venturin",
+        "O. Anatole von Lilienfeld",
+        "William C. Witt",
+        "Brandon M. Wood",
+        "Tigany Zarrouk",
+        "Fabian Zills"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": "10.48550/arXiv.2609.39090",
+      "arxiv_id": "2609.39090",
+      "doi": "10.48550/arXiv.2609.39090",
+      "journal": "arXiv preprint arxiv: 2609.39090"
+    },
+    "anefficientontheflynonadiabaticcouplingframeworkintegratedintocp2k": {
+      "title": "An Efficient On-the-Fly Nonadiabatic Coupling Framework Integrated into CP2K",
+      "authors": [
+        "Xiaoke He",
+        "Hsiao-Yi Tsai",
+        "Ziwei Chai",
+        "Junwen Yin",
+        "Zhongfei Xu",
+        "Li-Min Liu"
+      ],
+      "group_authors": [
+        "Junwen Yin"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": null,
+      "journal": "The Journal of Physical Chemistry Letters"
+    },
+    "automaticgenerationofinputfileswithoptimisedkpointmeshesforquantumespressoselfconsistentfieldsinglepointtotalenergycalculations": {
+      "title": "Automatic generation of input files with optimised k-point meshes for Quantum ESPRESSO self-consistent field single-point total energy calculations",
+      "authors": [
+        "Elena Patyukova",
+        "Junwen Yin",
+        "Susmita Basak",
+        "Samuel Pinilla",
+        "Alin M. Elena",
+        "Gilberto Teobaldi"
+      ],
+      "group_authors": [
+        "Alin Marin Elena",
+        "Junwen Yin"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1039/d5dd00565e",
+      "journal": "Digital Discovery"
+    },
+    "bondorbitalandspinorderind4d6d7perovskiteoxidessuccessesandlimitationsoffoundationinteratomicpotentials": {
+      "title": "Bond, orbital and spin order in d4/d6/d7 perovskite oxides: successes and limitations of foundation interatomic potentials",
+      "authors": [
+        "Swagata Acharya",
+        "Dimitar Pashov",
+        "Mark van Schilfgaarde",
+        "Alin M. Elena"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": "10.48550/arXiv.2607.08351",
+      "arxiv_id": "2607.08351",
+      "doi": "10.48550/arXiv.2607.08351",
+      "journal": "arxiv.org/abs/2607.08351"
+    },
+    "datadrivendesignofmetalorganicframeworkswithtunablenegativethermalexpansion": {
+      "title": "Data-driven Design of Metal-Organic Frameworks with Tunable Negative Thermal Expansion",
+      "authors": [
+        "Prathami Divakar Kamath",
+        "Francesco Tavani",
+        "Alin Marin Elena",
+        "Théo Jaffrelot Inizan",
+        "Yen-hsu Lin",
+        "Jian Yin",
+        "Wenqian Xu",
+        "Omar M. Yaghi",
+        "Kristin A. Persson"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": "10.48550/arXiv.2607.18594",
+      "arxiv_id": "2607.18594",
+      "doi": "10.48550/arXiv.2607.18594",
+      "journal": "arXiv preprint arXiv:2607.18594"
+    },
+    "dl_poly5calculationofsystempropertiesontheflyforverylargesystemsviamassiveparallelism": {
+      "title": "DL_POLY 5: Calculation of system properties on the fly for very large systems via massive parallelism",
+      "authors": [
+        "H.L. Devereux",
+        "C. Cockrell",
+        "A.M. Elena",
+        "Ian Bush",
+        "Aidan B G Chalk",
+        "Jim Madge",
+        "Ivan Scivetti",
+        "J.S. Wilkins",
+        "I.T. Todorov",
+        "W. Smith",
+        "K. Trachenko"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": null,
+      "journal": "COMPUTER PHYSICS COMMUNICATIONS"
+    },
+    "electronicdensityversusgeometryformachinelearnedmolecularabsorptionspectra": {
+      "title": "Electronic Density versus Geometry for Machine-Learned Molecular Absorption Spectra",
+      "authors": [
+        "Siddharth Dhanpal",
+        "Peter Elliott",
+        "Paolo Emilio Trevisanutto",
+        "Alin M. Elena",
+        "Gilberto Teobaldi"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": "10.48550/arXiv.2610.03444",
+      "arxiv_id": "2610.03444",
+      "doi": "10.48550/arXiv.2610.03444",
+      "journal": null
+    },
+    "finetuningmlipfoundationmodelsstrategiesforaccuracyandtransferability": {
+      "title": "Fine-tuning MLIP foundation models: strategies for accuracy and transferability",
+      "authors": [
+        "Tamás Lajos Tompa",
+        "Eszter Varga-Umbrich",
+        "Ilyes Batatia",
+        "Alin M. Elena",
+        "Noam Bernstein",
+        "Gábor Csányi"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": "10.48550/arXiv.2606.12704",
+      "arxiv_id": "2606.12704",
+      "doi": "10.48550/arXiv.2606.12704",
+      "journal": "arXiv preprint arXiv:2606.12704"
+    },
+    "firstprinciplescalculationoffe1xsxliquidalloysatconditionsofearthsoutercore": {
+      "title": "First-Principles Calculation of FE1-X SX Liquid Alloys at Conditions of Earth’s Outer Core",
+      "authors": [
+        "Aldemar de Moya Camacho",
+        "Issac Castillo",
+        "Alin M. Elena",
+        "Marc Blanchard",
+        "Guillaume Morard",
+        "Carlos Pinilla"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.21203/rs.3.rs-11077916/v1",
+      "journal": null
+    },
+    "functionalizedmofsforsubnanometriccontrolofpdspeciationforselectivehydrogenationofbutadiene": {
+      "title": "Functionalized MOFs for Subnanometric Control of Pd Speciation for Selective Hydrogenation of Butadiene",
+      "authors": [
+        "Donato Decarolis",
+        "Sahra Ahmed",
+        "James King",
+        "Alin-Marin Elena",
+        "Linda Zhang",
+        "Jeff Armstrong",
+        "Ines Lezcano-Gonzalez",
+        "Mohsen Danaie",
+        "Michael Hirscher",
+        "Simone Meloni",
+        "Andrew M. Beale",
+        "Petra Á. Szilágyi"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1021/acsanm.6c00899",
+      "journal": "ACS Applied Nano Materials"
+    },
+    "highpressureinelasticneutronspectroscopyexperimentalvalidationofmachinelearnedinteratomicpotentialenergylandscapes": {
+      "title": "High-Pressure Inelastic Neutron Spectroscopy: Experimental Validation of Machine-Learned Interatomic Potential Energy Landscapes",
+      "authors": [
+        "Jeff Armstrong",
+        "Adam Jackson",
+        "Alin Elena"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1021/acs.jpclett.6c00720",
+      "journal": "The Journal of Physical Chemistry Letters"
+    },
+    "identifytheswitchingofvo3andvo4anditseffectonferroelectrichafnia": {
+      "title": "Identify the switching of VO 3 and VO 4 and its effect on ferroelectric hafnia",
+      "authors": [
+        "Sida Li",
+        "Zihe Wang",
+        "Tingxiao Xie",
+        "Chuang Xue",
+        "Yufeng Xue",
+        "Qian Yin",
+        "Tongcai Yue",
+        "Junwen Yin",
+        "Tengfei Cao",
+        "Gilberto Teobaldi",
+        "Qi Hu",
+        "Li-Min Liu"
+      ],
+      "group_authors": [
+        "Junwen Yin"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1103/2j8c-3z3h",
+      "journal": "Physical Review B"
+    },
+    "macepolar1apolarisableelectrostaticfoundationmodelformolecularchemistry": {
+      "title": "MACE-POLAR-1: A Polarisable Electrostatic Foundation Model for Molecular Chemistry",
+      "authors": [
+        "Ilyes Batatia",
+        "William J. Baldwin",
+        "Domantas Kuryla",
+        "Joseph Hart",
+        "Elliott Kasoar",
+        "Alin M. Elena",
+        "Harry Moore",
+        "Mikołaj J. Gawkowski",
+        "Benjamin X. Shi",
+        "Venkat Kapil",
+        "Panagiotis Kourtis",
+        "Ioan-Bogdan Magdău",
+        "Gábor Csányi"
+      ],
+      "group_authors": [
+        "Alin Marin Elena",
+        "Elliott Kasoar"
+      ],
+      "preprint_doi": "10.48550/arXiv.2602.19411",
+      "arxiv_id": "2602.19411",
+      "doi": "10.48550/arXiv.2602.19411",
+      "journal": null
+    },
+    "oppositeimpactofthermalexpansionandphononanharmonicityonthephononlimitedresistivityofelementalmetalsfromfirstprinciples": {
+      "title": "Opposite impact of thermal expansion and phonon anharmonicity on the phonon-limited resistivity of elemental metals from first principles",
+      "authors": [
+        "Ao Wang",
+        "Junwen Yin",
+        "Félix Antoine Goudreault",
+        "Michel Côté",
+        "Olle Hellman",
+        "Samuel Poncé"
+      ],
+      "group_authors": [
+        "Junwen Yin"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1103/yk57-bt6t",
+      "journal": "Physical Review B"
+    },
+    "scalarpathwayfidelityimprovesphysicalaccuracyinshortrangeequivariantinteratomicpotentials": {
+      "title": "Scalar-pathway fidelity improves physical accuracy in short-range equivariant interatomic potentials",
+      "authors": [
+        "Jia Bi",
+        "Alin Marin Elena",
+        "Samuel Pinilla"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": "10.48550/arXiv.2606.15892",
+      "arxiv_id": "2606.15892",
+      "doi": "10.48550/arXiv.2606.15892",
+      "journal": "arXiv preprint arXiv:2606.15892"
+    },
+    "scientificapplicationsofquantumcomputingchallengesandopportunities": {
+      "title": "Scientific applications of quantum computing: challenges and opportunities",
+      "authors": [
+        "Bruno Camino",
+        "C. Richard A. Catlow",
+        "John Buckeridge",
+        "Alin M. Elena",
+        "Vladimir V. Gusev",
+        "Sarah Harris",
+        "Thomas W. Keal",
+        "Glenn Jones",
+        "Vivien Kendon",
+        "Syma Khalid",
+        "Phalgun Lolur",
+        "Jamal A. Nasir",
+        "Matthew J. Rosseinsky",
+        "Chris-Kriton Skylaris",
+        "Paul A. Warburton",
+        "Scott M. Woodley"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": "10.48550/arXiv.2608.16568",
+      "arxiv_id": "2608.16568",
+      "doi": "10.48550/arXiv.2608.16568",
+      "journal": "arXiv preprint arXiv:2608.16568"
+    },
+    "umofauniversaldatabasebenchmarkandmachinelearninginteratomicpotentialsformetalorganicframeworks": {
+      "title": "uMOF: A Universal Database, Benchmark, and Machine Learning Interatomic Potentials for Metal-Organic Frameworks",
+      "authors": [
+        "Théo Jaffrelot Inizan",
+        "Prathami Divakar Kamath",
+        "Alin Marin Elena",
+        "Kristin A. Persson"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": "10.48550/arXiv.2608.28100",
+      "arxiv_id": "2608.28100",
+      "doi": "10.48550/arXiv.2608.28100",
+      "journal": "arXiv preprint arXiv:2608.28100"
+    },
+    "afoundationmodelforatomisticmaterialschemistry": {
+      "title": "A foundation model for atomistic materials chemistry",
+      "authors": [
+        "Ilyes Batatia",
+        "Philipp Benner",
+        "Yuan Chiang",
+        "Alin M. Elena",
+        "Dávid P. Kovács",
+        "Janosh Riebesell",
+        "Xavier R. Advincula",
+        "Mark Asta",
+        "Matthew Avaylon",
+        "William J. Baldwin",
+        "Fabian Berger",
+        "Noam Bernstein",
+        "Arghya Bhowmik",
+        "Filippo Bigi",
+        "Samuel M. Blau",
+        "Vlad Cărare",
+        "Michele Ceriotti",
+        "Sanggyu Chong",
+        "James P. Darby",
+        "Sandip De",
+        "Flaviano Della Pia",
+        "Volker L. Deringer",
+        "Rokas Elijošius",
+        "Zakariya El-Machachi",
+        "Edvin Fako",
+        "Fabio Falcioni",
+        "Andrea C. Ferrari",
+        "John L. A. Gardner",
+        "Mikołaj J. Gawkowski",
+        "Annalena Genreith-Schriever",
+        "Janine George",
+        "Rhys E. A. Goodall",
+        "Jonas Grandel",
+        "Clare P. Grey",
+        "Petr Grigorev",
+        "Shuang Han",
+        "Will Handley",
+        "Hendrik H. Heenen",
+        "Kersti Hermansson",
+        "Cheuk Hin Ho",
+        "Stephan Hofmann",
+        "Christian Holm",
+        "Jad Jaafar",
+        "Konstantin S. Jakob",
+        "Hyunwook Jung",
+        "Venkat Kapil",
+        "Aaron D. Kaplan",
+        "Nima Karimitari",
+        "James R. Kermode",
+        "Panagiotis Kourtis",
+        "Namu Kroupa",
+        "Jolla Kullgren",
+        "Matthew C. Kuner",
+        "Domantas Kuryla",
+        "Guoda Liepuoniute",
+        "Chen Lin",
+        "Johannes T. Margraf",
+        "Ioan-Bogdan Magdău",
+        "Angelos Michaelides",
+        "J. Harry Moore",
+        "Aakash A. Naik",
+        "Samuel P. Niblett",
+        "Sam Walton Norwood",
+        "Niamh O’Neill",
+        "Christoph Ortner",
+        "Kristin A. Persson",
+        "Karsten Reuter",
+        "Andrew S. Rosen",
+        "Louise A. M. Rosset",
+        "Lars L. Schaaf",
+        "Christoph Schran",
+        "Benjamin X. Shi",
+        "Eric Sivonxay",
+        "Tamás K. Stenczel",
+        "Christopher Sutton",
+        "Viktor Svahn",
+        "Thomas D. Swinburne",
+        "Jules Tilly",
+        "Cas van der Oord",
+        "Santiago Vargas",
+        "Eszter Varga-Umbrich",
+        "Tejs Vegge",
+        "Martin Vondrák",
+        "Yangshuai Wang",
+        "William C. Witt",
+        "Thomas Wolf",
+        "Fabian Zills",
+        "Gábor Csányi"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1063/5.0297006",
+      "journal": "The Journal of Chemical Physics"
+    },
+    "crosslearningbetweenelectronicstructuretheoriesforunifyingmolecularsurfaceandinorganiccrystalfoundationforcefields": {
+      "title": "Cross Learning between Electronic Structure Theories for Unifying Molecular, Surface, and Inorganic Crystal Foundation Force Fields",
+      "authors": [
+        "Ilyes Batatia",
+        "Chen Lin",
+        "Joseph Hart",
+        "Elliott Kasoar",
+        "Alin M. Elena",
+        "Sam Walton Norwood",
+        "Thomas Wolf",
+        "Gábor Csányi"
+      ],
+      "group_authors": [
+        "Alin Marin Elena",
+        "Elliott Kasoar"
+      ],
+      "preprint_doi": "10.48550/arXiv.2510.25380",
+      "arxiv_id": "2510.25380",
+      "doi": "10.48550/arXiv.2510.25380",
+      "journal": null
+    },
+    "equilibriumisotopefractionationincarbonatemineralsroleofmgcadistributionandthermaleffects": {
+      "title": "Equilibrium isotope fractionation in carbonate minerals: Role of Mg-Ca distribution and thermal effects",
+      "authors": [
+        "Paola Patron",
+        "Carolina Martinez",
+        "Alin M. Elena",
+        "Marc Blanchard",
+        "Carlos Pinilla"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1016/j.gca.2025.01.031",
+      "journal": "Geochimica et Cosmochimica Acta"
+    },
+    "ftorchloweringthetechnicalbarrierofincorporatingmlintofortranmodels": {
+      "title": "FTorch - lowering the technical barrier of incorporating ML into Fortran models",
+      "authors": [
+        "Dominic Orchard",
+        "Elliott Kasoar",
+        "Jack Atkinson",
+        "Thomas Meltzer",
+        "Simon Clifford",
+        "Athena Elafrou"
+      ],
+      "group_authors": [
+        "Elliott Kasoar"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.5194/egusphere-egu24-17852",
+      "journal": null
+    },
+    "ftorchalibraryforcouplingpytorchmodelstofortran": {
+      "title": "FTorch: a library for coupling PyTorch models to Fortran",
+      "authors": [
+        "Jack Atkinson",
+        "Athena Elafrou",
+        "Elliott Kasoar",
+        "Joseph G. Wallwork",
+        "Thomas Meltzer",
+        "Simon Clifford",
+        "Dominic Orchard",
+        "Chris Edsall"
+      ],
+      "group_authors": [
+        "Elliott Kasoar"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.21105/joss.07602",
+      "journal": "Journal of Open Source Software"
+    },
+    "impactofanharmonicityonthecarriermobilityofthepbfreecssnbr3perovskite": {
+      "title": "Impact of anharmonicity on the carrier mobility of the Pb-free CsSnBr 3 perovskite",
+      "authors": [
+        "Junwen Yin",
+        "Olle Hellman",
+        "Samuel Poncé"
+      ],
+      "group_authors": [
+        "Junwen Yin"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1103/yssy-5t2v",
+      "journal": "Physical Review B"
+    },
+    "machinelearnedpotentialforhighthroughputphononcalculationsofmetalorganicframeworks": {
+      "title": "Machine learned potential for high-throughput phonon calculations of metal—organic frameworks",
+      "authors": [
+        "Alin Marin Elena",
+        "Prathami Divakar Kamath",
+        "Théo Jaffrelot Inizan",
+        "Andrew S. Rosen",
+        "Federica Zanca",
+        "Kristin A. Persson"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1038/s41524-025-01611-8",
+      "journal": "Npj Computational Materials"
+    },
+    "modellingsilicausingmacempmachinelearntinteratomicpotentials": {
+      "title": "Modelling silica using MACE-MP machine learnt interatomic potentials",
+      "authors": [
+        "Jamal Abdul Nasir",
+        "Jingcheng Guan",
+        "Woongkyu Jee",
+        "Scott M. Woodley",
+        "Alexey A. Sokol",
+        "C. Richard A. Catlow",
+        "Alin-Marin Elena"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1039/d5cp01882j",
+      "journal": "Physical Chemistry Chemical Physics Pccp"
+    },
+    "thermalconductivityandthermaldiffusivityofmoltensaltsinsightsfrommoleculardynamicssimulationsandfundamentalbounds": {
+      "title": "Thermal Conductivity and Thermal Diffusivity of Molten Salts: Insights from Molecular Dynamics Simulations and Fundamental Bounds",
+      "authors": [
+        "C. Cockrell",
+        "M. Withington",
+        "H. L. Devereux",
+        "A. M. Elena",
+        "I. T. Todorov",
+        "Z. K. Liu",
+        "S. L. Shang",
+        "J. S. McCloy",
+        "P. A. Bingham",
+        "K. Trachenko"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1021/acs.jpcb.4c07565",
+      "journal": "The Journal of Physical Chemistry B"
+    },
+    "thermodynamicsandtransportinmoltenchloridesaltsandtheirmixtures": {
+      "title": "Thermodynamics and transport in molten chloride salts and their mixtures",
+      "authors": [
+        "Cillian Cockrell",
+        "Margaret-Ann Withington",
+        "Harvey L. Devereux",
+        "Alin M. Elena",
+        "Ilian T. Todorov",
+        "Zi-Kui Liu",
+        "Shun-Li Shang",
+        "James S. McCloy",
+        "Paul A. Bingham",
+        "Kostya Trachenko"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": "10.48550/arXiv.2501.01971",
+      "arxiv_id": "2501.01971",
+      "doi": "10.48550/arXiv.2501.01971",
+      "journal": "Physical Chemistry Chemical Physics"
+    },
+    "toolsandtechniquesformodularportablemachinelearningparameterisations": {
+      "title": "Tools and techniques for modular, portable (Machine Learning) parameterisations",
+      "authors": [
+        "Jack Atkinson",
+        "Dominic Orchard",
+        "Elliott Kasoar",
+        "Thomas Meltzer"
+      ],
+      "group_authors": [
+        "Elliott Kasoar"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.5194/egusphere-egu24-18057",
+      "journal": null
+    },
+    "controllingnanoclustergrowththroughnanoconfinementtheeffectofthenumberandnatureofmetalorganicframeworkfunctionalities": {
+      "title": "Controlling nanocluster growth through nanoconfinement: the effect of the number and nature of metal-organic framework functionalities",
+      "authors": [
+        "James King",
+        "Zhipeng Lin",
+        "Federica Zanca",
+        "Hui Luo",
+        "Linda Zhang",
+        "Patrick Cullen",
+        "Mohsen Danaie",
+        "Michael Hirscher",
+        "Simone Meloni",
+        "Alin M. Elena",
+        "Petra Á. Szilágyi"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1039/d4cp02422b",
+      "journal": "Physical Chemistry Chemical Physics"
+    },
+    "performanceofthemacemp0potentialforcalculatingviscosityinlifmoltensalt": {
+      "title": "Performance of the MACE-MP-0 potential for calculating viscosity in LiF molten salt.",
+      "authors": [
+        "Harvey L. Devereux",
+        "Margaret-Ann Withington",
+        "Cillian Cockrell",
+        "Kostya Trachenko",
+        "Alin Marin Elena"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": "10.48550/arXiv.2410.23679",
+      "arxiv_id": "2410.23679",
+      "doi": "10.48550/arXiv.2410.23679",
+      "journal": "arXiv"
+    },
+    "understandingnoblegasincorporationinmantlemineralsanatomisticstudy": {
+      "title": "Understanding noble gas incorporation in mantle minerals: an atomistic study",
+      "authors": [
+        "Alfredo Lora",
+        "Paola Patron",
+        "Alin M. Elena",
+        "Neil L. Allan",
+        "Carlos Pinilla"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1038/s41598-024-61963-x",
+      "journal": "Scientific Reports"
+    },
+    "viscosityboundsinliquidswithdifferentstructureandbondingtypes": {
+      "title": "Viscosity bounds in liquids with different structure and bonding types",
+      "authors": [
+        "M. Withington",
+        "H. L. Devereux",
+        "C. Cockrell",
+        "A. M. Elena",
+        "I. T. Todorov",
+        "Z. K. Liu",
+        "S. L. Shang",
+        "J. S. McCloy",
+        "P. A. Bingham",
+        "K. Trachenko"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1103/physrevb.109.094205",
+      "journal": "Physical Review B"
+    },
+    "experimentalandmodelingstudiesoflocalandnanoscaleparacresolbehavioracomparisonofclassicalforcefields": {
+      "title": "Experimental and Modeling Studies of Local and Nanoscale para-Cresol Behavior: A Comparison of Classical Force Fields",
+      "authors": [
+        "Katie S. C. Morton",
+        "Alin M. Elena",
+        "Jeff Armstrong",
+        "Alexander J. O’Malley"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1021/acs.jpca.2c08022",
+      "journal": "Journal of Physical Chemistry A"
+    },
+    "fastdynamicsandhigheffectivedimensionalityofliquidfluidity": {
+      "title": "Fast dynamics and high effective dimensionality of liquid fluidity",
+      "authors": [
+        "Cillian Cockrell",
+        "Oliver Dicks",
+        "Ilian T. Todorov",
+        "Alin M. Elena",
+        "Kostya Trachenko"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": "10.48550/arXiv.2304.11909",
+      "arxiv_id": "2304.11909",
+      "doi": "10.48550/arXiv.2304.11909",
+      "journal": "arXiv"
+    },
+    "interactivemoleculardynamicsinvirtualrealityformodellingmaterialsandcatalysts": {
+      "title": "Interactive molecular dynamics in virtual reality for modelling materials and catalysts",
+      "authors": [
+        "Joe Crossley-Lewis",
+        "Josh Dunn",
+        "Corneliu Buda",
+        "Glenn J. Sunley",
+        "Alin M. Elena",
+        "Ilian T. Todorov",
+        "Chin W. Yong",
+        "David R. Glowacki",
+        "Adrian J. Mulholland",
+        "Neil L. Allan"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1016/j.jmgm.2023.108606",
+      "journal": "Journal of Molecular Graphics and Modelling"
+    },
+    "matterantimatterrearrangementsusingthermatrixmethod": {
+      "title": "Matter-antimatter rearrangements using the R-matrix method",
+      "authors": [
+        "Elliott Kasoar",
+        "Martin Plummer",
+        "Lara Van Lydon",
+        "Mark M. Law"
+      ],
+      "group_authors": [
+        "Elliott Kasoar"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.3389/fphy.2023.1187537",
+      "journal": "Frontiers in Physics"
+    },
+    "tuningoctahedraltiltingbydopingtopreventdetrimentalphasetransitionandextendcarrierlifetimeinorganometallicperovskites": {
+      "title": "Tuning octahedral tilting by doping to prevent detrimental phase transition and extend carrier lifetime in organometallic perovskites",
+      "authors": [
+        "Junwen Yin",
+        "Zhongfei Xu",
+        "Qi Hu",
+        "Gilberto Teobaldi",
+        "Li-Min Liu",
+        "Oleg V. Prezhdo"
+      ],
+      "group_authors": [
+        "Junwen Yin"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1021/jacs.2c13593",
+      "journal": "Journal of the American Chemical Society"
+    },
+    "kineticmontecarlomodelingofoxidethinfilmgrowth": {
+      "title": "Kinetic Monte Carlo modeling of oxide thin film growth",
+      "authors": [
+        "John A. Purton",
+        "Alin M. Elena",
+        "Gilberto Teobaldi"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1063/5.0089043",
+      "journal": "Journal of Chemical Physics"
+    },
+    "materialsandmolecularmodelingattheexascale": {
+      "title": "Materials and Molecular Modeling at the Exascale",
+      "authors": [
+        "Thomas W. Keal",
+        "Alin-Marin Elena",
+        "Alexey A. Sokol",
+        "Karen Stoneham",
+        "Matt I. J. Probert",
+        "Clotilde S. Cucinotta",
+        "David J. Willock",
+        "Andrew J. Logsdail",
+        "Andrea Zen",
+        "Phil J. Hasnip",
+        "Ian J. Bush",
+        "Matthew Watkins",
+        "Dario Alfe",
+        "Chris-Kriton Skylaris",
+        "Basile F. E. Curchod",
+        "Qiong Cai",
+        "Scott M. Woodley"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1109/mcse.2022.3141328",
+      "journal": "Computing in Science and Engineering"
+    },
+    "theroleofthermalfluctuationsandvibrationalentropyatheoreticalinsightintotheδtoαtransitionoffapbi3": {
+      "title": "The role of thermal fluctuations and vibrational entropy: A theoretical insight into the $δ$-to-$α$ transition of FAPbI3",
+      "authors": [
+        "Junwen Yin"
+      ],
+      "group_authors": [
+        "Junwen Yin"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": null,
+      "journal": "The Journal of Physical Chemistry Letters"
+    },
+    "dl_polyaperformanceoverviewanalysingunderstandingandexploitingavailablehpctechnology": {
+      "title": "DL_POLY - A performance overview analysing, understanding and exploiting available HPC technology",
+      "authors": [
+        "Martyn F. Guest",
+        "Alin M. Elena",
+        "Aidan B. G. Chalk"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1080/08927022.2019.1603380",
+      "journal": "Molecular Simulation"
+    },
+    "radiationdamageeffectsinamorphouszirconolite": {
+      "title": "Radiation damage effects in amorphous zirconolite",
+      "authors": [
+        "A. Diver",
+        "O. Dicks",
+        "I.T. Todorov",
+        "A.M. Elena",
+        "K. Trachenko"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1016/j.jnucmat.2020.152654",
+      "journal": "Journal of Nuclear Materials"
+    },
+    "radiationdamageeffectsonheliumdiffusioninzircon": {
+      "title": "Radiation damage effects on Helium diffusion in zircon",
+      "authors": [
+        "Aaron Diver",
+        "Oliver Dicks",
+        "Alin Elena",
+        "Ilian Todorov",
+        "Thorstern Geisler",
+        "Kostya Trachenko"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": "10.48550/arXiv.2104.12599",
+      "arxiv_id": "2104.12599",
+      "doi": "10.48550/arXiv.2104.12599",
+      "journal": "arXiv"
+    },
+    "similarpatternsoftropicalprecipitationandcirculationchangesundersolarandgreenhousegasforcing": {
+      "title": "Similar patterns of tropical precipitation and circulation changes under solar and greenhouse gas forcing",
+      "authors": [
+        "Stergios Misios",
+        "Matthew Kasoar",
+        "Elliott Kasoar",
+        "Lesley Gray",
+        "Joanna Haigh",
+        "Stavros Stathopoulos",
+        "Konstantinos Kourtidis",
+        "Gunnar Myhre",
+        "Dirk Olivié",
+        "Drew Shindell",
+        "Tao Tang"
+      ],
+      "group_authors": [
+        "Elliott Kasoar"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1088/1748-9326/ac28b1",
+      "journal": "Environmental Research Letters"
+    },
+    "taskbasedparallelismwithopenmpacasestudywithdl_poly_4": {
+      "title": "Task-Based Parallelism with OpenMP: a case study with DL_POLY_4",
+      "authors": [
+        "Aidan B. G. Chalk",
+        "Alin M. Elena"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1080/08927022.2019.1606424",
+      "journal": "Molecular Simulation"
+    },
+    "evolutionofamorphousstructureunderirradiationzirconcasestudy": {
+      "title": "Evolution of amorphous structure under irradiation: Zircon case study",
+      "authors": [
+        "A Diver",
+        "O Dicks",
+        "A M Elena",
+        "I T Todorov",
+        "K Trachenko"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1088/1361-648x/ab9f51",
+      "journal": "Journal of Physics Condensed Matter"
+    },
+    "reactivemoleculardynamicsatconstantpressurevianonreactiveforcefieldsextendingtheempiricalvalencebondmethodtotheisothermalisobaricensemble": {
+      "title": "Reactive Molecular Dynamics at Constant Pressure via Nonreactive Force Fields: Extending the Empirical Valence Bond Method to the Isothermal-Isobaric Ensemble",
+      "authors": [
+        "Ivan Scivetti",
+        "Kakali Sen",
+        "Alin M. Elena",
+        "Ilian Todorov"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1021/acs.jpca.0c05461",
+      "journal": "Journal of Physical Chemistry A"
+    },
+    "subnanorutheniumspeciesanchoredontindioxidesurfaceforefficientalkalinehydrogenevolutionreaction": {
+      "title": "Subnano ruthenium species anchored on tin dioxide surface for efficient alkaline hydrogen evolution reaction",
+      "authors": [
+        "Wujie Dong",
+        "Yajing Zhang",
+        "Jie Xu",
+        "Jun-Wen Yin",
+        "Shuying Nong",
+        "Chenlong Dong",
+        "Zichao Liu",
+        "Bowei Dong",
+        "Li-Min Liu",
+        "Rui Si",
+        "Mingyang Chen",
+        "Jun Luo",
+        "Fuqiang Huang"
+      ],
+      "group_authors": [
+        "Junwen Yin"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1016/j.xcrp.2020.100026",
+      "journal": "Cell Reports Physical Science"
+    },
+    "thececamelectronicstructurelibraryandthemodularsoftwaredevelopmentparadigm": {
+      "title": "The CECAM electronic structure library and the modular software development paradigm",
+      "authors": [
+        "Micael J. T. Oliveira",
+        "Nick Papior",
+        "Yann Pouillon",
+        "Volker Blum",
+        "Emilio Artacho",
+        "Damien Caliste",
+        "Fabiano Corsetti",
+        "Stefano de Gironcoli",
+        "Alin M. Elena",
+        "Alberto García",
+        "Víctor M. García-Suárez",
+        "Luigi Genovese",
+        "William P. Huhn",
+        "Georg Huhs",
+        "Sebastian Kokott",
+        "Emine Küçükbenli",
+        "Ask H. Larsen",
+        "Alfio Lazzaro",
+        "Irina V. Lebedeva",
+        "Yingzhou Li",
+        "David López-Durán",
+        "Pablo López-Tarifa",
+        "Martin Lüders",
+        "Miguel A. L. Marques",
+        "Jan Minar",
+        "Stephan Mohr",
+        "Arash A. Mostofi",
+        "Alan O’Cais",
+        "Mike C. Payne",
+        "Thomas Ruh",
+        "Daniel G. A. Smith",
+        "José M. Soler",
+        "David A. Strubbe",
+        "Nicolas Tancogne-Dejean",
+        "Dominic Tildesley",
+        "Marc Torrent",
+        "Victor Wen-zhe Yu"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1063/5.0012901",
+      "journal": "Journal of Chemical Physics"
+    },
+    "ananopumpforlowtemperatureandefficientsolarwaterevaporation": {
+      "title": "A nanopump for low-temperature and efficient solar water evaporation",
+      "authors": [
+        "Yujie Zhao",
+        "Kaiqi Zhao",
+        "Junwen Yin",
+        "Jieying Yang",
+        "Jie Xu",
+        "Yizhuo Gu",
+        "Limin Liu",
+        "Jun Luo",
+        "Yan Li",
+        "Lidong Sun"
+      ],
+      "group_authors": [
+        "Junwen Yin"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1039/c9ta09281a",
+      "journal": "Journal of Materials Chemistry A"
+    },
+    "rationaldesignofultrasmallaunanoparticlesonfeviagalvanicreplacementunder60cforefficientmethanoloxidationreactioncatalyst": {
+      "title": "Rational design of ultrasmall Au nanoparticles on Fe via galvanic replacement under- 60° C for efficient methanol oxidation reaction catalyst",
+      "authors": [
+        "Shanpeng Wang",
+        "Junwen Yin",
+        "Hehe Wei",
+        "Kai Huang",
+        "Li-Min Liu",
+        "Hui Wu"
+      ],
+      "group_authors": [
+        "Junwen Yin"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1021/acsaem.8b01494",
+      "journal": "ACS Applied Energy Materials"
+    },
+    "reconsideringcalciumdehydrationastheratedeterminingstepincalciummineralgrowth": {
+      "title": "Reconsidering Calcium Dehydration as the Rate-Determining Step in Calcium Mineral Growth",
+      "authors": [
+        "Janou A. Koskamp",
+        "Sergio E. Ruiz-Hernandez",
+        "Devis Di Tommaso",
+        "Alin Marin Elena",
+        "Nora H. De Leeuw",
+        "Mariette Wolthers"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1021/acs.jpcc.9b06403",
+      "journal": "Journal of Physical Chemistry C"
+    },
+    "theoreticalandexperimentaldesignofptcooh2electrocatalystforefficientherperformanceinalkalinesolution": {
+      "title": "Theoretical and experimental design of Pt-Co (OH) 2 electrocatalyst for efficient HER performance in alkaline solution",
+      "authors": [
+        "Haijun Wu",
+        "Xiaoqing Zuo",
+        "Shan-Peng Wang",
+        "Jun-Wen Yin",
+        "Yan-Ning Zhang",
+        "Jialin Chen"
+      ],
+      "group_authors": [
+        "Junwen Yin"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": null,
+      "journal": "Progress in Natural Science: Materials International"
+    },
+    "chargetransferpromotedhighoxygenevolutionactivityofcoco9s8coreshellnanochains": {
+      "title": "Charge-transfer-promoted high oxygen evolution activity of Co@ Co9S8 core--shell nanochains",
+      "authors": [
+        "Junwen Yin"
+      ],
+      "group_authors": [
+        "Junwen Yin"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": null,
+      "journal": "ACS applied materials & interfaces"
+    },
+    "improvedelectrocatalyticperformanceinoverallwatersplittingwithrationaldesignofhierarchicalco3o4nifelayereddoublehydroxidecoreshellnanostructure": {
+      "title": "Improved Electrocatalytic Performance in Overall Water Splitting with Rational Design of Hierarchical Co3O4@ NiFe Layered Double Hydroxide Core-Shell Nanostructure",
+      "authors": [
+        "Shanpeng Wang",
+        "Jian Wu",
+        "Junwen Yin",
+        "Qi Hu",
+        "Dongsheng Geng",
+        "Li‐Min Liu"
+      ],
+      "group_authors": [
+        "Junwen Yin"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": null,
+      "journal": "ChemElectroChem"
+    },
+    "taskbasedparallelismwithopenmpacasestudywithdlpoly4": {
+      "title": "Task Based Parallelism with OpenMP: A Case Study with DL-POLY-4",
+      "authors": [
+        "Chalk Aidan B.G.",
+        "Elena Alin M."
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.3233/978-1-61499-843-3-497",
+      "journal": "Advances in Parallel Computing"
+    },
+    "welldispersedrutheniuminmesoporouscrystaltio2asanadvancedelectrocatalystforhydrogenevolutionreaction": {
+      "title": "Well-dispersed ruthenium in mesoporous crystal TiO2 as an advanced electrocatalyst for hydrogen evolution reaction",
+      "authors": [
+        "Junwen Yin"
+      ],
+      "group_authors": [
+        "Junwen Yin"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": null,
+      "journal": "Journal of the American Chemical Society"
+    },
+    "nearinfraredlightmanipulatedchemoselectivereductionsenabledbyanupconversionalsupersandwichnanostructure": {
+      "title": "Near-infrared light manipulated chemoselective reductions enabled by an upconversional supersandwich nanostructure",
+      "authors": [
+        "Zi-en Liu",
+        "Jie Wang",
+        "Yan Li",
+        "Xiaoxia Hu",
+        "Junwen Yin",
+        "Yeqing Peng",
+        "Zhihao Li",
+        "Yawen Li",
+        "Baomin Li",
+        "Quan Yuan"
+      ],
+      "group_authors": [
+        "Junwen Yin"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1021/acsami.5b05633",
+      "journal": "ACS Applied Materials & Interfaces"
+    },
+    "equilibriumandrateconstantsandreactionmechanismofthehfdissociationinthehfh2o7clusterbyabinitiorareeventsimulations": {
+      "title": "Equilibrium and rate constants, and reaction mechanism of the HF dissociation in the HF(H2O)7 cluster by ab initio rare event simulations",
+      "authors": [
+        "Alin Marin Elena",
+        "Simone Meloni",
+        "Giovanni Ciccotti"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1021/jp406982h",
+      "journal": "Journal of Physical Chemistry A"
+    },
+    "ringcurrentsinazulene": {
+      "title": "Ring currents in azulene",
+      "authors": [
+        "A.T. Paxton",
+        "T.N. Todorov",
+        "A.M. Elena"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1016/j.cplett.2009.10.041",
+      "journal": "Chemical Physics Letters"
+    },
+    "automaticgenerationofmatrixelementderivativesfortightbindingmodels": {
+      "title": "Automatic generation of matrix element derivatives for tight binding models",
+      "authors": [
+        "Alin M. Elena",
+        "Matthias Meister"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1103/physrevb.72.165107",
+      "journal": "Physical Review B - Condensed Matter and Materials Physics"
+    }
+  },
+  "dois": {
+    "10.48550/arxiv.2609.05877": {
+      "title": "A budget-dependent crossover between coverage-and response-based training-set selection for machine-learned interatomic potentials",
+      "authors": [
+        "Jia Bi",
+        "Alin-Marin Elena"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": "10.48550/arXiv.2609.05877",
+      "arxiv_id": "2609.05877",
+      "doi": "10.48550/arXiv.2609.05877",
+      "journal": "arXiv preprint arXiv:2609.05877"
+    },
+    "10.48550/arxiv.2609.39090": {
+      "title": "A strategic roadmap for an atomistic machine-learning ecosystem",
+      "authors": [
+        "Jörg Behler",
+        "Michele Ceriotti",
+        "Cecilia Clementi",
+        "Gábor Csányi",
+        "Alin-Marin Elena",
+        "Aditi Krishnapriyan",
+        "Joseph W. Abbott",
+        "Fabio Affinito",
+        "Albert P. Bartók",
+        "Ilyes Batatia",
+        "Filippo Bigi",
+        "Florian N. Brünig",
+        "Yannick Calvino Alonso",
+        "Giuseppe Carleo",
+        "Aurélie Champagne",
+        "Stefan Chmiela",
+        "Marc L. Descoteaux",
+        "Ralf Drautz",
+        "Alexandra Farcas",
+        "Meng Gao",
+        "Rohit Goswami",
+        "Michael F. Herbst",
+        "Christian Holm",
+        "James R. Kermode",
+        "Alexander L. M. Knoll",
+        "Tobias Kreiman",
+        "Marcel F. Langer",
+        "Hoang-Thien Luu",
+        "Yury Lysogorskiy",
+        "Mihai-Cosmin Marinica",
+        "Rocco Meli",
+        "Klaus-Robert Müller",
+        "Frank Noé",
+        "Mohamadhosein Nosratjoo",
+        "Simon Olsson",
+        "Christoph Ortner",
+        "Aldo S. Pasos-Trejo",
+        "Anyang Peng",
+        "Eric Qu",
+        "Andrea Rizzi",
+        "Mariana Rossi",
+        "Bassem Sboui",
+        "Gregor N. C. Simm",
+        "Alexandre Tkatchenko",
+        "Jacopo Venturin",
+        "O. Anatole von Lilienfeld",
+        "William C. Witt",
+        "Brandon M. Wood",
+        "Tigany Zarrouk",
+        "Fabian Zills"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": "10.48550/arXiv.2609.39090",
+      "arxiv_id": "2609.39090",
+      "doi": "10.48550/arXiv.2609.39090",
+      "journal": "arXiv preprint arxiv: 2609.39090"
+    },
+    "10.1039/d5dd00565e": {
+      "title": "Automatic generation of input files with optimised k-point meshes for Quantum ESPRESSO self-consistent field single-point total energy calculations",
+      "authors": [
+        "Elena Patyukova",
+        "Junwen Yin",
+        "Susmita Basak",
+        "Samuel Pinilla",
+        "Alin M. Elena",
+        "Gilberto Teobaldi"
+      ],
+      "group_authors": [
+        "Alin Marin Elena",
+        "Junwen Yin"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1039/d5dd00565e",
+      "journal": "Digital Discovery"
+    },
+    "10.48550/arxiv.2607.08351": {
+      "title": "Bond, orbital and spin order in d4/d6/d7 perovskite oxides: successes and limitations of foundation interatomic potentials",
+      "authors": [
+        "Swagata Acharya",
+        "Dimitar Pashov",
+        "Mark van Schilfgaarde",
+        "Alin M. Elena"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": "10.48550/arXiv.2607.08351",
+      "arxiv_id": "2607.08351",
+      "doi": "10.48550/arXiv.2607.08351",
+      "journal": "arxiv.org/abs/2607.08351"
+    },
+    "10.48550/arxiv.2607.18594": {
+      "title": "Data-driven Design of Metal-Organic Frameworks with Tunable Negative Thermal Expansion",
+      "authors": [
+        "Prathami Divakar Kamath",
+        "Francesco Tavani",
+        "Alin Marin Elena",
+        "Théo Jaffrelot Inizan",
+        "Yen-hsu Lin",
+        "Jian Yin",
+        "Wenqian Xu",
+        "Omar M. Yaghi",
+        "Kristin A. Persson"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": "10.48550/arXiv.2607.18594",
+      "arxiv_id": "2607.18594",
+      "doi": "10.48550/arXiv.2607.18594",
+      "journal": "arXiv preprint arXiv:2607.18594"
+    },
+    "10.48550/arxiv.2610.03444": {
+      "title": "Electronic Density versus Geometry for Machine-Learned Molecular Absorption Spectra",
+      "authors": [
+        "Siddharth Dhanpal",
+        "Peter Elliott",
+        "Paolo Emilio Trevisanutto",
+        "Alin M. Elena",
+        "Gilberto Teobaldi"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": "10.48550/arXiv.2610.03444",
+      "arxiv_id": "2610.03444",
+      "doi": "10.48550/arXiv.2610.03444",
+      "journal": null
+    },
+    "10.48550/arxiv.2606.12704": {
+      "title": "Fine-tuning MLIP foundation models: strategies for accuracy and transferability",
+      "authors": [
+        "Tamás Lajos Tompa",
+        "Eszter Varga-Umbrich",
+        "Ilyes Batatia",
+        "Alin M. Elena",
+        "Noam Bernstein",
+        "Gábor Csányi"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": "10.48550/arXiv.2606.12704",
+      "arxiv_id": "2606.12704",
+      "doi": "10.48550/arXiv.2606.12704",
+      "journal": "arXiv preprint arXiv:2606.12704"
+    },
+    "10.21203/rs.3.rs-11077916/v1": {
+      "title": "First-Principles Calculation of FE1-X SX Liquid Alloys at Conditions of Earth’s Outer Core",
+      "authors": [
+        "Aldemar de Moya Camacho",
+        "Issac Castillo",
+        "Alin M. Elena",
+        "Marc Blanchard",
+        "Guillaume Morard",
+        "Carlos Pinilla"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.21203/rs.3.rs-11077916/v1",
+      "journal": null
+    },
+    "10.1021/acsanm.6c00899": {
+      "title": "Functionalized MOFs for Subnanometric Control of Pd Speciation for Selective Hydrogenation of Butadiene",
+      "authors": [
+        "Donato Decarolis",
+        "Sahra Ahmed",
+        "James King",
+        "Alin-Marin Elena",
+        "Linda Zhang",
+        "Jeff Armstrong",
+        "Ines Lezcano-Gonzalez",
+        "Mohsen Danaie",
+        "Michael Hirscher",
+        "Simone Meloni",
+        "Andrew M. Beale",
+        "Petra Á. Szilágyi"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1021/acsanm.6c00899",
+      "journal": "ACS Applied Nano Materials"
+    },
+    "10.1021/acs.jpclett.6c00720": {
+      "title": "High-Pressure Inelastic Neutron Spectroscopy: Experimental Validation of Machine-Learned Interatomic Potential Energy Landscapes",
+      "authors": [
+        "Jeff Armstrong",
+        "Adam Jackson",
+        "Alin Elena"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1021/acs.jpclett.6c00720",
+      "journal": "The Journal of Physical Chemistry Letters"
+    },
+    "10.1103/2j8c-3z3h": {
+      "title": "Identify the switching of VO 3 and VO 4 and its effect on ferroelectric hafnia",
+      "authors": [
+        "Sida Li",
+        "Zihe Wang",
+        "Tingxiao Xie",
+        "Chuang Xue",
+        "Yufeng Xue",
+        "Qian Yin",
+        "Tongcai Yue",
+        "Junwen Yin",
+        "Tengfei Cao",
+        "Gilberto Teobaldi",
+        "Qi Hu",
+        "Li-Min Liu"
+      ],
+      "group_authors": [
+        "Junwen Yin"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1103/2j8c-3z3h",
+      "journal": "Physical Review B"
+    },
+    "10.48550/arxiv.2602.19411": {
+      "title": "MACE-POLAR-1: A Polarisable Electrostatic Foundation Model for Molecular Chemistry",
+      "authors": [
+        "Ilyes Batatia",
+        "William J. Baldwin",
+        "Domantas Kuryla",
+        "Joseph Hart",
+        "Elliott Kasoar",
+        "Alin M. Elena",
+        "Harry Moore",
+        "Mikołaj J. Gawkowski",
+        "Benjamin X. Shi",
+        "Venkat Kapil",
+        "Panagiotis Kourtis",
+        "Ioan-Bogdan Magdău",
+        "Gábor Csányi"
+      ],
+      "group_authors": [
+        "Alin Marin Elena",
+        "Elliott Kasoar"
+      ],
+      "preprint_doi": "10.48550/arXiv.2602.19411",
+      "arxiv_id": "2602.19411",
+      "doi": "10.48550/arXiv.2602.19411",
+      "journal": null
+    },
+    "10.1103/yk57-bt6t": {
+      "title": "Opposite impact of thermal expansion and phonon anharmonicity on the phonon-limited resistivity of elemental metals from first principles",
+      "authors": [
+        "Ao Wang",
+        "Junwen Yin",
+        "Félix Antoine Goudreault",
+        "Michel Côté",
+        "Olle Hellman",
+        "Samuel Poncé"
+      ],
+      "group_authors": [
+        "Junwen Yin"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1103/yk57-bt6t",
+      "journal": "Physical Review B"
+    },
+    "10.48550/arxiv.2606.15892": {
+      "title": "Scalar-pathway fidelity improves physical accuracy in short-range equivariant interatomic potentials",
+      "authors": [
+        "Jia Bi",
+        "Alin Marin Elena",
+        "Samuel Pinilla"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": "10.48550/arXiv.2606.15892",
+      "arxiv_id": "2606.15892",
+      "doi": "10.48550/arXiv.2606.15892",
+      "journal": "arXiv preprint arXiv:2606.15892"
+    },
+    "10.48550/arxiv.2608.16568": {
+      "title": "Scientific applications of quantum computing: challenges and opportunities",
+      "authors": [
+        "Bruno Camino",
+        "C. Richard A. Catlow",
+        "John Buckeridge",
+        "Alin M. Elena",
+        "Vladimir V. Gusev",
+        "Sarah Harris",
+        "Thomas W. Keal",
+        "Glenn Jones",
+        "Vivien Kendon",
+        "Syma Khalid",
+        "Phalgun Lolur",
+        "Jamal A. Nasir",
+        "Matthew J. Rosseinsky",
+        "Chris-Kriton Skylaris",
+        "Paul A. Warburton",
+        "Scott M. Woodley"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": "10.48550/arXiv.2608.16568",
+      "arxiv_id": "2608.16568",
+      "doi": "10.48550/arXiv.2608.16568",
+      "journal": "arXiv preprint arXiv:2608.16568"
+    },
+    "10.48550/arxiv.2608.28100": {
+      "title": "uMOF: A Universal Database, Benchmark, and Machine Learning Interatomic Potentials for Metal-Organic Frameworks",
+      "authors": [
+        "Théo Jaffrelot Inizan",
+        "Prathami Divakar Kamath",
+        "Alin Marin Elena",
+        "Kristin A. Persson"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": "10.48550/arXiv.2608.28100",
+      "arxiv_id": "2608.28100",
+      "doi": "10.48550/arXiv.2608.28100",
+      "journal": "arXiv preprint arXiv:2608.28100"
+    },
+    "10.1063/5.0297006": {
+      "title": "A foundation model for atomistic materials chemistry",
+      "authors": [
+        "Ilyes Batatia",
+        "Philipp Benner",
+        "Yuan Chiang",
+        "Alin M. Elena",
+        "Dávid P. Kovács",
+        "Janosh Riebesell",
+        "Xavier R. Advincula",
+        "Mark Asta",
+        "Matthew Avaylon",
+        "William J. Baldwin",
+        "Fabian Berger",
+        "Noam Bernstein",
+        "Arghya Bhowmik",
+        "Filippo Bigi",
+        "Samuel M. Blau",
+        "Vlad Cărare",
+        "Michele Ceriotti",
+        "Sanggyu Chong",
+        "James P. Darby",
+        "Sandip De",
+        "Flaviano Della Pia",
+        "Volker L. Deringer",
+        "Rokas Elijošius",
+        "Zakariya El-Machachi",
+        "Edvin Fako",
+        "Fabio Falcioni",
+        "Andrea C. Ferrari",
+        "John L. A. Gardner",
+        "Mikołaj J. Gawkowski",
+        "Annalena Genreith-Schriever",
+        "Janine George",
+        "Rhys E. A. Goodall",
+        "Jonas Grandel",
+        "Clare P. Grey",
+        "Petr Grigorev",
+        "Shuang Han",
+        "Will Handley",
+        "Hendrik H. Heenen",
+        "Kersti Hermansson",
+        "Cheuk Hin Ho",
+        "Stephan Hofmann",
+        "Christian Holm",
+        "Jad Jaafar",
+        "Konstantin S. Jakob",
+        "Hyunwook Jung",
+        "Venkat Kapil",
+        "Aaron D. Kaplan",
+        "Nima Karimitari",
+        "James R. Kermode",
+        "Panagiotis Kourtis",
+        "Namu Kroupa",
+        "Jolla Kullgren",
+        "Matthew C. Kuner",
+        "Domantas Kuryla",
+        "Guoda Liepuoniute",
+        "Chen Lin",
+        "Johannes T. Margraf",
+        "Ioan-Bogdan Magdău",
+        "Angelos Michaelides",
+        "J. Harry Moore",
+        "Aakash A. Naik",
+        "Samuel P. Niblett",
+        "Sam Walton Norwood",
+        "Niamh O’Neill",
+        "Christoph Ortner",
+        "Kristin A. Persson",
+        "Karsten Reuter",
+        "Andrew S. Rosen",
+        "Louise A. M. Rosset",
+        "Lars L. Schaaf",
+        "Christoph Schran",
+        "Benjamin X. Shi",
+        "Eric Sivonxay",
+        "Tamás K. Stenczel",
+        "Christopher Sutton",
+        "Viktor Svahn",
+        "Thomas D. Swinburne",
+        "Jules Tilly",
+        "Cas van der Oord",
+        "Santiago Vargas",
+        "Eszter Varga-Umbrich",
+        "Tejs Vegge",
+        "Martin Vondrák",
+        "Yangshuai Wang",
+        "William C. Witt",
+        "Thomas Wolf",
+        "Fabian Zills",
+        "Gábor Csányi"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1063/5.0297006",
+      "journal": "The Journal of Chemical Physics"
+    },
+    "10.48550/arxiv.2510.25380": {
+      "title": "Cross Learning between Electronic Structure Theories for Unifying Molecular, Surface, and Inorganic Crystal Foundation Force Fields",
+      "authors": [
+        "Ilyes Batatia",
+        "Chen Lin",
+        "Joseph Hart",
+        "Elliott Kasoar",
+        "Alin M. Elena",
+        "Sam Walton Norwood",
+        "Thomas Wolf",
+        "Gábor Csányi"
+      ],
+      "group_authors": [
+        "Alin Marin Elena",
+        "Elliott Kasoar"
+      ],
+      "preprint_doi": "10.48550/arXiv.2510.25380",
+      "arxiv_id": "2510.25380",
+      "doi": "10.48550/arXiv.2510.25380",
+      "journal": null
+    },
+    "10.1016/j.gca.2025.01.031": {
+      "title": "Equilibrium isotope fractionation in carbonate minerals: Role of Mg-Ca distribution and thermal effects",
+      "authors": [
+        "Paola Patron",
+        "Carolina Martinez",
+        "Alin M. Elena",
+        "Marc Blanchard",
+        "Carlos Pinilla"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1016/j.gca.2025.01.031",
+      "journal": "Geochimica et Cosmochimica Acta"
+    },
+    "10.5194/egusphere-egu24-17852": {
+      "title": "FTorch - lowering the technical barrier of incorporating ML into Fortran models",
+      "authors": [
+        "Dominic Orchard",
+        "Elliott Kasoar",
+        "Jack Atkinson",
+        "Thomas Meltzer",
+        "Simon Clifford",
+        "Athena Elafrou"
+      ],
+      "group_authors": [
+        "Elliott Kasoar"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.5194/egusphere-egu24-17852",
+      "journal": null
+    },
+    "10.21105/joss.07602": {
+      "title": "FTorch: a library for coupling PyTorch models to Fortran",
+      "authors": [
+        "Jack Atkinson",
+        "Athena Elafrou",
+        "Elliott Kasoar",
+        "Joseph G. Wallwork",
+        "Thomas Meltzer",
+        "Simon Clifford",
+        "Dominic Orchard",
+        "Chris Edsall"
+      ],
+      "group_authors": [
+        "Elliott Kasoar"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.21105/joss.07602",
+      "journal": "Journal of Open Source Software"
+    },
+    "10.1103/yssy-5t2v": {
+      "title": "Impact of anharmonicity on the carrier mobility of the Pb-free CsSnBr 3 perovskite",
+      "authors": [
+        "Junwen Yin",
+        "Olle Hellman",
+        "Samuel Poncé"
+      ],
+      "group_authors": [
+        "Junwen Yin"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1103/yssy-5t2v",
+      "journal": "Physical Review B"
+    },
+    "10.1038/s41524-025-01611-8": {
+      "title": "Machine learned potential for high-throughput phonon calculations of metal—organic frameworks",
+      "authors": [
+        "Alin Marin Elena",
+        "Prathami Divakar Kamath",
+        "Théo Jaffrelot Inizan",
+        "Andrew S. Rosen",
+        "Federica Zanca",
+        "Kristin A. Persson"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1038/s41524-025-01611-8",
+      "journal": "Npj Computational Materials"
+    },
+    "10.1039/d5cp01882j": {
+      "title": "Modelling silica using MACE-MP machine learnt interatomic potentials",
+      "authors": [
+        "Jamal Abdul Nasir",
+        "Jingcheng Guan",
+        "Woongkyu Jee",
+        "Scott M. Woodley",
+        "Alexey A. Sokol",
+        "C. Richard A. Catlow",
+        "Alin-Marin Elena"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1039/d5cp01882j",
+      "journal": "Physical Chemistry Chemical Physics Pccp"
+    },
+    "10.1021/acs.jpcb.4c07565": {
+      "title": "Thermal Conductivity and Thermal Diffusivity of Molten Salts: Insights from Molecular Dynamics Simulations and Fundamental Bounds",
+      "authors": [
+        "C. Cockrell",
+        "M. Withington",
+        "H. L. Devereux",
+        "A. M. Elena",
+        "I. T. Todorov",
+        "Z. K. Liu",
+        "S. L. Shang",
+        "J. S. McCloy",
+        "P. A. Bingham",
+        "K. Trachenko"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1021/acs.jpcb.4c07565",
+      "journal": "The Journal of Physical Chemistry B"
+    },
+    "10.48550/arxiv.2501.01971": {
+      "title": "Thermodynamics and transport in molten chloride salts and their mixtures",
+      "authors": [
+        "Cillian Cockrell",
+        "Margaret-Ann Withington",
+        "Harvey L. Devereux",
+        "Alin M. Elena",
+        "Ilian T. Todorov",
+        "Zi-Kui Liu",
+        "Shun-Li Shang",
+        "James S. McCloy",
+        "Paul A. Bingham",
+        "Kostya Trachenko"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": "10.48550/arXiv.2501.01971",
+      "arxiv_id": "2501.01971",
+      "doi": "10.48550/arXiv.2501.01971",
+      "journal": "Physical Chemistry Chemical Physics"
+    },
+    "10.5194/egusphere-egu24-18057": {
+      "title": "Tools and techniques for modular, portable (Machine Learning) parameterisations",
+      "authors": [
+        "Jack Atkinson",
+        "Dominic Orchard",
+        "Elliott Kasoar",
+        "Thomas Meltzer"
+      ],
+      "group_authors": [
+        "Elliott Kasoar"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.5194/egusphere-egu24-18057",
+      "journal": null
+    },
+    "10.1039/d4cp02422b": {
+      "title": "Controlling nanocluster growth through nanoconfinement: the effect of the number and nature of metal-organic framework functionalities",
+      "authors": [
+        "James King",
+        "Zhipeng Lin",
+        "Federica Zanca",
+        "Hui Luo",
+        "Linda Zhang",
+        "Patrick Cullen",
+        "Mohsen Danaie",
+        "Michael Hirscher",
+        "Simone Meloni",
+        "Alin M. Elena",
+        "Petra Á. Szilágyi"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1039/d4cp02422b",
+      "journal": "Physical Chemistry Chemical Physics"
+    },
+    "10.48550/arxiv.2410.23679": {
+      "title": "Performance of the MACE-MP-0 potential for calculating viscosity in LiF molten salt.",
+      "authors": [
+        "Harvey L. Devereux",
+        "Margaret-Ann Withington",
+        "Cillian Cockrell",
+        "Kostya Trachenko",
+        "Alin Marin Elena"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": "10.48550/arXiv.2410.23679",
+      "arxiv_id": "2410.23679",
+      "doi": "10.48550/arXiv.2410.23679",
+      "journal": "arXiv"
+    },
+    "10.1038/s41598-024-61963-x": {
+      "title": "Understanding noble gas incorporation in mantle minerals: an atomistic study",
+      "authors": [
+        "Alfredo Lora",
+        "Paola Patron",
+        "Alin M. Elena",
+        "Neil L. Allan",
+        "Carlos Pinilla"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1038/s41598-024-61963-x",
+      "journal": "Scientific Reports"
+    },
+    "10.1103/physrevb.109.094205": {
+      "title": "Viscosity bounds in liquids with different structure and bonding types",
+      "authors": [
+        "M. Withington",
+        "H. L. Devereux",
+        "C. Cockrell",
+        "A. M. Elena",
+        "I. T. Todorov",
+        "Z. K. Liu",
+        "S. L. Shang",
+        "J. S. McCloy",
+        "P. A. Bingham",
+        "K. Trachenko"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1103/physrevb.109.094205",
+      "journal": "Physical Review B"
+    },
+    "10.1021/acs.jpca.2c08022": {
+      "title": "Experimental and Modeling Studies of Local and Nanoscale para-Cresol Behavior: A Comparison of Classical Force Fields",
+      "authors": [
+        "Katie S. C. Morton",
+        "Alin M. Elena",
+        "Jeff Armstrong",
+        "Alexander J. O’Malley"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1021/acs.jpca.2c08022",
+      "journal": "Journal of Physical Chemistry A"
+    },
+    "10.48550/arxiv.2304.11909": {
+      "title": "Fast dynamics and high effective dimensionality of liquid fluidity",
+      "authors": [
+        "Cillian Cockrell",
+        "Oliver Dicks",
+        "Ilian T. Todorov",
+        "Alin M. Elena",
+        "Kostya Trachenko"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": "10.48550/arXiv.2304.11909",
+      "arxiv_id": "2304.11909",
+      "doi": "10.48550/arXiv.2304.11909",
+      "journal": "arXiv"
+    },
+    "10.1016/j.jmgm.2023.108606": {
+      "title": "Interactive molecular dynamics in virtual reality for modelling materials and catalysts",
+      "authors": [
+        "Joe Crossley-Lewis",
+        "Josh Dunn",
+        "Corneliu Buda",
+        "Glenn J. Sunley",
+        "Alin M. Elena",
+        "Ilian T. Todorov",
+        "Chin W. Yong",
+        "David R. Glowacki",
+        "Adrian J. Mulholland",
+        "Neil L. Allan"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1016/j.jmgm.2023.108606",
+      "journal": "Journal of Molecular Graphics and Modelling"
+    },
+    "10.3389/fphy.2023.1187537": {
+      "title": "Matter-antimatter rearrangements using the R-matrix method",
+      "authors": [
+        "Elliott Kasoar",
+        "Martin Plummer",
+        "Lara Van Lydon",
+        "Mark M. Law"
+      ],
+      "group_authors": [
+        "Elliott Kasoar"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.3389/fphy.2023.1187537",
+      "journal": "Frontiers in Physics"
+    },
+    "10.1021/jacs.2c13593": {
+      "title": "Tuning octahedral tilting by doping to prevent detrimental phase transition and extend carrier lifetime in organometallic perovskites",
+      "authors": [
+        "Junwen Yin",
+        "Zhongfei Xu",
+        "Qi Hu",
+        "Gilberto Teobaldi",
+        "Li-Min Liu",
+        "Oleg V. Prezhdo"
+      ],
+      "group_authors": [
+        "Junwen Yin"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1021/jacs.2c13593",
+      "journal": "Journal of the American Chemical Society"
+    },
+    "10.1063/5.0089043": {
+      "title": "Kinetic Monte Carlo modeling of oxide thin film growth",
+      "authors": [
+        "John A. Purton",
+        "Alin M. Elena",
+        "Gilberto Teobaldi"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1063/5.0089043",
+      "journal": "Journal of Chemical Physics"
+    },
+    "10.1109/mcse.2022.3141328": {
+      "title": "Materials and Molecular Modeling at the Exascale",
+      "authors": [
+        "Thomas W. Keal",
+        "Alin-Marin Elena",
+        "Alexey A. Sokol",
+        "Karen Stoneham",
+        "Matt I. J. Probert",
+        "Clotilde S. Cucinotta",
+        "David J. Willock",
+        "Andrew J. Logsdail",
+        "Andrea Zen",
+        "Phil J. Hasnip",
+        "Ian J. Bush",
+        "Matthew Watkins",
+        "Dario Alfe",
+        "Chris-Kriton Skylaris",
+        "Basile F. E. Curchod",
+        "Qiong Cai",
+        "Scott M. Woodley"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1109/mcse.2022.3141328",
+      "journal": "Computing in Science and Engineering"
+    },
+    "10.1080/08927022.2019.1603380": {
+      "title": "DL_POLY - A performance overview analysing, understanding and exploiting available HPC technology",
+      "authors": [
+        "Martyn F. Guest",
+        "Alin M. Elena",
+        "Aidan B. G. Chalk"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1080/08927022.2019.1603380",
+      "journal": "Molecular Simulation"
+    },
+    "10.1016/j.jnucmat.2020.152654": {
+      "title": "Radiation damage effects in amorphous zirconolite",
+      "authors": [
+        "A. Diver",
+        "O. Dicks",
+        "I.T. Todorov",
+        "A.M. Elena",
+        "K. Trachenko"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1016/j.jnucmat.2020.152654",
+      "journal": "Journal of Nuclear Materials"
+    },
+    "10.48550/arxiv.2104.12599": {
+      "title": "Radiation damage effects on Helium diffusion in zircon",
+      "authors": [
+        "Aaron Diver",
+        "Oliver Dicks",
+        "Alin Elena",
+        "Ilian Todorov",
+        "Thorstern Geisler",
+        "Kostya Trachenko"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": "10.48550/arXiv.2104.12599",
+      "arxiv_id": "2104.12599",
+      "doi": "10.48550/arXiv.2104.12599",
+      "journal": "arXiv"
+    },
+    "10.1088/1748-9326/ac28b1": {
+      "title": "Similar patterns of tropical precipitation and circulation changes under solar and greenhouse gas forcing",
+      "authors": [
+        "Stergios Misios",
+        "Matthew Kasoar",
+        "Elliott Kasoar",
+        "Lesley Gray",
+        "Joanna Haigh",
+        "Stavros Stathopoulos",
+        "Konstantinos Kourtidis",
+        "Gunnar Myhre",
+        "Dirk Olivié",
+        "Drew Shindell",
+        "Tao Tang"
+      ],
+      "group_authors": [
+        "Elliott Kasoar"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1088/1748-9326/ac28b1",
+      "journal": "Environmental Research Letters"
+    },
+    "10.1080/08927022.2019.1606424": {
+      "title": "Task-Based Parallelism with OpenMP: a case study with DL_POLY_4",
+      "authors": [
+        "Aidan B. G. Chalk",
+        "Alin M. Elena"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1080/08927022.2019.1606424",
+      "journal": "Molecular Simulation"
+    },
+    "10.1088/1361-648x/ab9f51": {
+      "title": "Evolution of amorphous structure under irradiation: Zircon case study",
+      "authors": [
+        "A Diver",
+        "O Dicks",
+        "A M Elena",
+        "I T Todorov",
+        "K Trachenko"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1088/1361-648x/ab9f51",
+      "journal": "Journal of Physics Condensed Matter"
+    },
+    "10.1021/acs.jpca.0c05461": {
+      "title": "Reactive Molecular Dynamics at Constant Pressure via Nonreactive Force Fields: Extending the Empirical Valence Bond Method to the Isothermal-Isobaric Ensemble",
+      "authors": [
+        "Ivan Scivetti",
+        "Kakali Sen",
+        "Alin M. Elena",
+        "Ilian Todorov"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1021/acs.jpca.0c05461",
+      "journal": "Journal of Physical Chemistry A"
+    },
+    "10.1016/j.xcrp.2020.100026": {
+      "title": "Subnano ruthenium species anchored on tin dioxide surface for efficient alkaline hydrogen evolution reaction",
+      "authors": [
+        "Wujie Dong",
+        "Yajing Zhang",
+        "Jie Xu",
+        "Jun-Wen Yin",
+        "Shuying Nong",
+        "Chenlong Dong",
+        "Zichao Liu",
+        "Bowei Dong",
+        "Li-Min Liu",
+        "Rui Si",
+        "Mingyang Chen",
+        "Jun Luo",
+        "Fuqiang Huang"
+      ],
+      "group_authors": [
+        "Junwen Yin"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1016/j.xcrp.2020.100026",
+      "journal": "Cell Reports Physical Science"
+    },
+    "10.1063/5.0012901": {
+      "title": "The CECAM electronic structure library and the modular software development paradigm",
+      "authors": [
+        "Micael J. T. Oliveira",
+        "Nick Papior",
+        "Yann Pouillon",
+        "Volker Blum",
+        "Emilio Artacho",
+        "Damien Caliste",
+        "Fabiano Corsetti",
+        "Stefano de Gironcoli",
+        "Alin M. Elena",
+        "Alberto García",
+        "Víctor M. García-Suárez",
+        "Luigi Genovese",
+        "William P. Huhn",
+        "Georg Huhs",
+        "Sebastian Kokott",
+        "Emine Küçükbenli",
+        "Ask H. Larsen",
+        "Alfio Lazzaro",
+        "Irina V. Lebedeva",
+        "Yingzhou Li",
+        "David López-Durán",
+        "Pablo López-Tarifa",
+        "Martin Lüders",
+        "Miguel A. L. Marques",
+        "Jan Minar",
+        "Stephan Mohr",
+        "Arash A. Mostofi",
+        "Alan O’Cais",
+        "Mike C. Payne",
+        "Thomas Ruh",
+        "Daniel G. A. Smith",
+        "José M. Soler",
+        "David A. Strubbe",
+        "Nicolas Tancogne-Dejean",
+        "Dominic Tildesley",
+        "Marc Torrent",
+        "Victor Wen-zhe Yu"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1063/5.0012901",
+      "journal": "Journal of Chemical Physics"
+    },
+    "10.1039/c9ta09281a": {
+      "title": "A nanopump for low-temperature and efficient solar water evaporation",
+      "authors": [
+        "Yujie Zhao",
+        "Kaiqi Zhao",
+        "Junwen Yin",
+        "Jieying Yang",
+        "Jie Xu",
+        "Yizhuo Gu",
+        "Limin Liu",
+        "Jun Luo",
+        "Yan Li",
+        "Lidong Sun"
+      ],
+      "group_authors": [
+        "Junwen Yin"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1039/c9ta09281a",
+      "journal": "Journal of Materials Chemistry A"
+    },
+    "10.1021/acsaem.8b01494": {
+      "title": "Rational design of ultrasmall Au nanoparticles on Fe via galvanic replacement under- 60° C for efficient methanol oxidation reaction catalyst",
+      "authors": [
+        "Shanpeng Wang",
+        "Junwen Yin",
+        "Hehe Wei",
+        "Kai Huang",
+        "Li-Min Liu",
+        "Hui Wu"
+      ],
+      "group_authors": [
+        "Junwen Yin"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1021/acsaem.8b01494",
+      "journal": "ACS Applied Energy Materials"
+    },
+    "10.1021/acs.jpcc.9b06403": {
+      "title": "Reconsidering Calcium Dehydration as the Rate-Determining Step in Calcium Mineral Growth",
+      "authors": [
+        "Janou A. Koskamp",
+        "Sergio E. Ruiz-Hernandez",
+        "Devis Di Tommaso",
+        "Alin Marin Elena",
+        "Nora H. De Leeuw",
+        "Mariette Wolthers"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1021/acs.jpcc.9b06403",
+      "journal": "Journal of Physical Chemistry C"
+    },
+    "10.3233/978-1-61499-843-3-497": {
+      "title": "Task Based Parallelism with OpenMP: A Case Study with DL-POLY-4",
+      "authors": [
+        "Chalk Aidan B.G.",
+        "Elena Alin M."
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.3233/978-1-61499-843-3-497",
+      "journal": "Advances in Parallel Computing"
+    },
+    "10.1021/acsami.5b05633": {
+      "title": "Near-infrared light manipulated chemoselective reductions enabled by an upconversional supersandwich nanostructure",
+      "authors": [
+        "Zi-en Liu",
+        "Jie Wang",
+        "Yan Li",
+        "Xiaoxia Hu",
+        "Junwen Yin",
+        "Yeqing Peng",
+        "Zhihao Li",
+        "Yawen Li",
+        "Baomin Li",
+        "Quan Yuan"
+      ],
+      "group_authors": [
+        "Junwen Yin"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1021/acsami.5b05633",
+      "journal": "ACS Applied Materials & Interfaces"
+    },
+    "10.1021/jp406982h": {
+      "title": "Equilibrium and rate constants, and reaction mechanism of the HF dissociation in the HF(H2O)7 cluster by ab initio rare event simulations",
+      "authors": [
+        "Alin Marin Elena",
+        "Simone Meloni",
+        "Giovanni Ciccotti"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1021/jp406982h",
+      "journal": "Journal of Physical Chemistry A"
+    },
+    "10.1016/j.cplett.2009.10.041": {
+      "title": "Ring currents in azulene",
+      "authors": [
+        "A.T. Paxton",
+        "T.N. Todorov",
+        "A.M. Elena"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1016/j.cplett.2009.10.041",
+      "journal": "Chemical Physics Letters"
+    },
+    "10.1103/physrevb.72.165107": {
+      "title": "Automatic generation of matrix element derivatives for tight binding models",
+      "authors": [
+        "Alin M. Elena",
+        "Matthias Meister"
+      ],
+      "group_authors": [
+        "Alin Marin Elena"
+      ],
+      "preprint_doi": null,
+      "arxiv_id": null,
+      "doi": "10.1103/physrevb.72.165107",
+      "journal": "Physical Review B - Condensed Matter and Materials Physics"
+    }
+  }
+}
