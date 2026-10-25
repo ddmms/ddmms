@@ -1586,6 +1586,8 @@ talks:
         self.assertIn('id="workshops"', events_html)
         self.assertIn("The Atomic Simulation Environment: Integration into Wider Community Projects", events_html)
         self.assertIn("cecam_ase_mainz_2026.jpeg", events_html)
+        self.assertIn("Quantum Computing in Materials and Molecular Sciences", events_html)
+        self.assertIn("https://royalsociety.org/science-events-and-lectures/2025/10/quantum-computing/", events_html)
         data = load_events()
         self.assertIn("categories", data)
         rendered = generate_events_html({"title": "Group Events", "categories": []})

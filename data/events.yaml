@@ -13,4 +13,9 @@ categories:
         url: "https://www.cecam.org/workshop-details/the-atomic-simulation-environment-integration-into-wider-community-projects-1509"
         image: "assets/images/cecam_ase_mainz_2026.jpeg"
         image_alt: "The Atomic Simulation Environment: Integration into Wider Community Projects"
+      - year: "2025"
+        title: "Quantum Computing in Materials and Molecular Sciences"
+        role: "Co-organiser: Alin Elena · Royal Society Scientific Discussion Meeting"
+        description: "A Royal Society Scientific Discussion Meeting at the Royal Society (London, UK, 6–7 October 2025) bringing together researchers and industry leaders in quantum computing, computational materials science, chemistry, and life sciences to evaluate current limitations and future opportunities."
+        url: "https://royalsociety.org/science-events-and-lectures/2025/10/quantum-computing/"
 
