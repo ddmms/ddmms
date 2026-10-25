@@ -167,8 +167,8 @@ class TestDDMMSSite(unittest.TestCase):
         self.assertIn('class="funding-pill"', research_html)
         self.assertIn("PSDI Data to Knowledge", research_html)
         self.assertIn("EP/X032701/1", research_html)
-        self.assertIn("EP/Y028759/1", research_html)
         self.assertIn("EP/V028537/1", research_html)
+        self.assertIn("Ada Lovelace Centre", research_html)
         self.assertIn("STFC Scientific Computing", research_html)
 
         from components.research import generate_research_html
