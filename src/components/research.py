@@ -23,7 +23,7 @@ RESEARCH_FILE = BASE_DIR / "data" / "research.yaml"
 
 
 def load_research(research_file: Optional[Union[str, Path]] = None) -> Dict[str, Any]:
-    """Load research approach and research themes from a YAML file (default: data/research.yaml).
+    """Load research approach and research areas from a YAML file (default: data/research.yaml).
 
     Requires a valid YAML file provided by the user. Raises FileNotFoundError
     if the file cannot be located.
@@ -71,11 +71,14 @@ def load_research(research_file: Optional[Union[str, Path]] = None) -> Dict[str,
         return {"approach": "", "themes": parsed}
 
     if isinstance(parsed, dict):
+        title = parsed.get("title") or "Research Areas"
         approach = parsed.get("approach") or parsed.get("subtitle") or ""
-        themes = parsed.get("themes") or parsed.get("research_themes") or []
+        themes = parsed.get("areas") or parsed.get("themes") or parsed.get("research_themes") or []
         return {
+            "title": title,
             "approach": approach,
             "themes": themes,
+            "areas": themes,
         }
 
     return {"approach": "", "themes": []}
@@ -111,7 +114,7 @@ def generate_research_html(
 
     page_meta = research_data if isinstance(research_data, dict) else {}
     hero_html = render_page_hero(
-        str(page_meta.get("title") or "Research Themes"),
+        str(page_meta.get("title") or "Research Areas"),
         subtitle,
     )
 

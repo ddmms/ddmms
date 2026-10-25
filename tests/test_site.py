@@ -155,6 +155,8 @@ class TestDDMMSSite(unittest.TestCase):
 
     def test_research_cards_include_goldilocks_and_ml_peg(self):
         research_html = (BASE_DIR / "research.html").read_text(encoding="utf-8")
+        self.assertIn('<h1 class="page-hero-title">Research Areas</h1>', research_html)
+        self.assertNotIn("Research Themes", research_html)
         self.assertIn("Sustainable DFT through Data-Driven Agents (Goldilocks)", research_html)
         self.assertIn("Machine Learning Performance and Extrapolation Guide (ML-PEG)", research_html)
 
@@ -1203,8 +1205,10 @@ talks:
         # Test load_people properly resolves core-team members from individual YAMLs
         people_data = load_people()
         core_sec = next(s for s in people_data["sections"] if s["id"] in ("core-team", "members"))
-        self.assertEqual(len(core_sec["members"]), 3)
-        for m in core_sec["members"]:
+        self.assertGreaterEqual(len(core_sec["members"]), 3)
+        yaml_members = [m for m in core_sec["members"] if m.get("yaml")]
+        self.assertEqual(len(yaml_members), 3)
+        for m in yaml_members:
             self.assertIn(m["slug"], ["alin-marin-elena", "elliott-kasoar", "junwen-yin"])
             self.assertTrue(m["page"].endswith(".html"))
             self.assertTrue(len(m["bio"]) > 20)

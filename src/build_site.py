@@ -199,7 +199,7 @@ def main():
     total_people = sum(len(s.get("members", [])) for s in people_data.get("sections", []))
     print(
         f"Loaded {len(pubs)} publications, {len(authors)} authors, "
-        f"{len(news)} news items, {len(research_data.get('themes', []))} research themes, "
+        f"{len(news)} news items, {len(research_data.get('areas') or research_data.get('themes', []))} research areas, "
         f"{total_people} people records, {len(software_data.get('packages', []))} software packages, "
         f"and group mission."
     )
