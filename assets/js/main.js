@@ -127,17 +127,8 @@
     // Two-line header Level-2 subline controller
     const sublineWrap = headerScope.querySelector('.header-subline-wrap');
     const subGroups = headerScope.querySelectorAll('.header-subline-group');
-    const availableGroups = new Set();
-    subGroups.forEach(g => {
-      const grp = g.getAttribute('data-nav-group');
-      if (grp) availableGroups.add(grp);
-    });
-
-    let currentVisibleGroup = null;
 
     function showSubGroup(groupName) {
-      if (currentVisibleGroup === groupName) return;
-
       let hasMatch = false;
       subGroups.forEach(g => {
         if (g.getAttribute('data-nav-group') === groupName) {
@@ -150,16 +141,14 @@
       if (sublineWrap) {
         if (hasMatch) {
           sublineWrap.classList.add('is-visible');
-          currentVisibleGroup = groupName;
         } else {
           sublineWrap.classList.remove('is-visible');
-          currentVisibleGroup = null;
         }
       }
     }
 
     // Set initial Level-2 subline according to active section
-    if (activeSection && availableGroups.has(activeSection)) {
+    if (activeSection) {
       showSubGroup(activeSection);
     }
 
@@ -168,33 +157,16 @@
     level1Pills.forEach(pill => {
       const targetGroup = pill.getAttribute('data-nav-target');
       pill.addEventListener('mouseenter', () => {
-        if (availableGroups.has(targetGroup)) {
-          showSubGroup(targetGroup);
-        } else if (activeSection && availableGroups.has(activeSection)) {
-          showSubGroup(activeSection);
-        } else {
-          showSubGroup(null);
-        }
+        if (targetGroup) showSubGroup(targetGroup);
       });
       pill.addEventListener('focus', () => {
-        if (availableGroups.has(targetGroup)) {
-          showSubGroup(targetGroup);
-        } else if (activeSection && availableGroups.has(activeSection)) {
-          showSubGroup(activeSection);
-        } else {
-          showSubGroup(null);
-        }
+        if (targetGroup) showSubGroup(targetGroup);
       });
     });
 
     const headerNavArea = headerScope.closest('.site-header') || headerScope;
-    headerNavArea.addEventListener('mouseleave', (e) => {
-      if (e.relatedTarget && headerNavArea.contains(e.relatedTarget)) return;
-      if (activeSection && availableGroups.has(activeSection)) {
-        showSubGroup(activeSection);
-      } else {
-        showSubGroup(null);
-      }
+    headerNavArea.addEventListener('mouseleave', () => {
+      showSubGroup(activeSection);
     });
 
     // Apply active classes on all nav links, pills, and chips
@@ -580,31 +552,6 @@
           el.innerHTML = `  <footer class="site-footer">
     <div class="container">
       <div class="footer-grid">
-        <div class="footer-brand">
-          <h4>Data Driven Materials and Molecular Science</h4>
-          <p>Accelerating atomistic discovery through physics-informed machine learning, multiscale molecular simulation, and open-source scientific workflows.</p>
-        </div>
-        <div class="footer-col">
-          <h5>Affiliations</h5>
-          <ul class="footer-links">
-            <li><a href="https://www.scd.stfc.ac.uk" target="_blank" rel="noopener noreferrer">STFC SCD</a></li>
-            <li><a href="https://www.ukri.org" target="_blank" rel="noopener noreferrer">UKRI</a></li>
-            <li><a href="https://www.psdi.ac.uk" target="_blank" rel="noopener noreferrer">PSDI Data to Knowledge</a></li>
-            <li><a href="https://www.ccp5.ac.uk" target="_blank" rel="noopener noreferrer">CCP5</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <span>&copy; 2026 Data Driven Materials and Molecular Science (DDMMS). Licensed under BSD-3-Clause.</span>
-        <span>United Kingdom</span>
-      </div>
-    </div>
-  </footer>
-  <div class="toast" id="toast" role="alert" aria-live="polite"></div>`;
-          initFooter(el);
-        });
-    });
-  }
         <div class="footer-brand">
           <h4>Data Driven Materials and Molecular Science</h4>
           <p>Accelerating atomistic discovery through physics-informed machine learning, multiscale molecular simulation, and open-source scientific workflows.</p>
