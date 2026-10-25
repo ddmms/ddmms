@@ -994,6 +994,9 @@ contact:
 
         self.assertIn("CCP5 Summer School", teaching_html)
         self.assertIn('href="https://spring2026.camml.ac.uk"', teaching_html)
+        self.assertIn('href="https://summer2024.ccp5.ac.uk"', teaching_html)
+        self.assertIn('href="https://www.psdi.ac.uk/event/machine-learning-autumn-school-2023/"', teaching_html)
+        self.assertIn("Machine Learning for Atomistic Modelling Autumn School", teaching_html)
         self.assertIn('href="https://www.ccpnth.ac.uk/events/ai4nth2026/"', teaching_html)
         self.assertIn("Lecturer: Junwen Yin", teaching_html)
         # Every event photo referenced in training.yaml exists on disk
