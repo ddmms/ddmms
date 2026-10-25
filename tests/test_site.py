@@ -993,6 +993,8 @@ contact:
         self.assertNotIn("Atharva Anturkar", teaching_html)
 
         self.assertIn("CCP5 Summer School", teaching_html)
+        self.assertIn("Newcastle University", teaching_html)
+        self.assertIn("Daresbury Laboratory", teaching_html)
         self.assertIn('href="https://spring2026.camml.ac.uk"', teaching_html)
         self.assertIn('href="https://summer2024.ccp5.ac.uk"', teaching_html)
         self.assertIn('href="https://www.psdi.ac.uk/event/machine-learning-autumn-school-2023/"', teaching_html)
