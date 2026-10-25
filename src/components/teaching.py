@@ -60,12 +60,12 @@ def generate_teaching_html(teaching: Optional[Dict[str, Any]] = None) -> str:
         teaching = load_teaching()
 
     hero_html = render_page_hero(
-        str(teaching.get("title") or "Teaching &amp; Training"),
+        str(teaching.get("title") or "Training"),
         str(teaching.get("intro") or "").strip(),
     )
 
     subnav_html, categories_html = render_category_sections(
-        teaching.get("categories") or [], "Teaching page quick navigation"
+        teaching.get("categories") or [], "Training page quick navigation"
     )
 
     return f"""<!DOCTYPE html>
@@ -73,8 +73,8 @@ def generate_teaching_html(teaching: Optional[Dict[str, Any]] = None) -> str:
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Teaching | Data Driven Materials and Molecular Science</title>
-  <meta name="description" content="Schools and workshops run by the Data Driven Materials and Molecular Science group.">
+  <title>Training | Data Driven Materials and Molecular Science</title>
+  <meta name="description" content="Schools and training programmes run by the Data Driven Materials and Molecular Science group.">
   <link rel="icon" type="image/svg+xml" href="assets/logos/ddmms.svg">
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">

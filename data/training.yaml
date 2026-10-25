@@ -1,5 +1,5 @@
-title: "Teaching &amp; Training"
-intro: "Schools and workshops run by DDMMS members."
+title: "Training"
+intro: "Schools and training programmes run or co-organised by DDMMS members."
 
 # Each category: id (used for the jump link), title, optional description and:
 #   events  - dated list, newest first: year, title, optional role, description,
@@ -33,7 +33,4 @@ categories:
         role: "Organisers"
         url: "https://summer2025.ccp5.ac.uk"
 
-  - id: "workshops"
-    title: "Workshops"
-    events: []
 

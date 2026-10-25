@@ -924,20 +924,19 @@ contact:
         from components.teaching import load_teaching, generate_teaching_html
 
         teaching_html = (BASE_DIR / "teaching.html").read_text(encoding="utf-8")
-        self.assertIn("<title>Teaching | Data Driven Materials and Molecular Science</title>", teaching_html)
+        self.assertIn("<title>Training | Data Driven Materials and Molecular Science</title>", teaching_html)
 
-        # One section per category, each with a jump link at the top
+        # Sections
         categories = [
             ("schools", "Schools"),
-            ("workshops", "Workshops"),
         ]
         for cat_id, cat_title in categories:
             self.assertIn(f'<section class="category-section" id="{cat_id}">', teaching_html)
             self.assertIn(f'<h2 class="home-heading">{cat_title}</h2>', teaching_html)
-            self.assertIn(f'<a href="#{cat_id}" class="subnav-pill">{cat_title}</a>', teaching_html)
         # Check sections exist / don't exist
         self.assertNotIn('id="placements"', teaching_html)
         self.assertNotIn('id="graduate-scheme"', teaching_html)
+        self.assertNotIn('id="workshops"', teaching_html)
         self.assertNotIn('id="phd"', teaching_html)
         self.assertNotIn("PhD Programme", teaching_html)
         self.assertNotIn("STFC Graduate Scheme", teaching_html)
@@ -955,8 +954,6 @@ contact:
             for event in cat.get("events") or []:
                 if event.get("image"):
                     self.assertTrue((BASE_DIR / event["image"]).is_file(), f"Missing image {event['image']}")
-        # Workshops has no entries yet
-        self.assertEqual(teaching_html.count("Details coming soon."), 1)
 
         # PhD programme moved to People page
         people_html = (BASE_DIR / "people.html").read_text(encoding="utf-8")
@@ -1571,6 +1568,11 @@ talks:
         events_html = (BASE_DIR / "events.html").read_text(encoding="utf-8")
         self.assertIn("Events", events_html)
         self.assertIn("CaMML Spring School 2027", events_html)
+        self.assertIn('id="workshops"', events_html)
+        self.assertIn('href="#workshops"', events_html)
+        self.assertIn('href="#upcoming"', events_html)
+        self.assertIn("The Atomic Simulation Environment: Integration into Wider Community Projects", events_html)
+        self.assertIn("cecam_ase_mainz_2026.jpeg", events_html)
         data = load_events()
         self.assertIn("categories", data)
         rendered = generate_events_html({"title": "Group Events", "categories": []})

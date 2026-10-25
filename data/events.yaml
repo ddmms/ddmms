@@ -29,3 +29,14 @@ categories:
           - text: "Event website and applications"
             url: "https://spring2027.camml.ac.uk"
 
+  - id: "workshops"
+    title: "Workshops"
+    events:
+      - year: "2026"
+        title: "The Atomic Simulation Environment: Integration into Wider Community Projects"
+        role: "Organiser: Alin Elena · CECAM Flagship Workshop"
+        description: "A CECAM Flagship Workshop at CECAM-DE-SMSM (Mainz, Germany, 15–19 June 2026) bringing together developers of electronic structure codes and community packages built on ASE to test core redesigns, plugin architectures, and ensure compatibility for ASE v4."
+        url: "https://www.cecam.org/workshop-details/the-atomic-simulation-environment-integration-into-wider-community-projects-1509"
+        image: "assets/images/cecam_ase_mainz_2026.jpeg"
+        image_alt: "The Atomic Simulation Environment: Integration into Wider Community Projects"
+

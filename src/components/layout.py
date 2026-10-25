@@ -19,6 +19,7 @@ PAGE_HERO_IMAGES: Dict[str, str] = {
     "news": "assets/images/heroes/news_banner.jpg",
     "milestone": "assets/images/heroes/news_banner.jpg",
     "teach": "assets/images/heroes/teaching_talks_banner.jpg",
+    "train": "assets/images/heroes/teaching_talks_banner.jpg",
     "course": "assets/images/heroes/teaching_talks_banner.jpg",
     "talk": "assets/images/heroes/teaching_talks_banner.jpg",
     "seminar": "assets/images/heroes/teaching_talks_banner.jpg",
