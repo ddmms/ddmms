@@ -100,25 +100,114 @@
   function initHeader(headerScope) {
     if (!headerScope) return;
 
-    // Apply active link on all nav links, pills, and chips
-    const currentFilename = window.location.pathname.split('/').pop() || 'index.html';
-    const isPeopleSubpage = currentFilename.endsWith('-elena.html') || currentFilename.endsWith('-kasoar.html') || currentFilename.endsWith('-yin.html') || window.location.pathname.includes('/people/');
-    headerScope.querySelectorAll('.nav-desktop .nav-item a, .nav-pill, .subnav-pill, .corner-nav-link, .corner-subnav-chip, .mobile-nav-item a').forEach(link => {
-      const href = link.getAttribute('href');
-      if (href === currentFilename || (currentFilename === '' && href === 'index.html') || (isPeopleSubpage && href === 'people.html')) {
-        link.classList.add('active');
-        const parentDropdown = link.closest('.nav-item-has-dropdown');
-        if (parentDropdown) {
-          const mainLink = parentDropdown.querySelector('.nav-link-main');
-          if (mainLink) mainLink.classList.add('active');
+    const currentPath = window.location.pathname;
+    const currentFilename = currentPath.split('/').pop() || 'index.html';
+    const currentHash = window.location.hash;
+
+    // Detect active section
+    let activeSection = '';
+    if (['research.html', 'talks.html', 'teaching.html'].includes(currentFilename)) {
+      activeSection = 'research';
+    } else if (
+      currentFilename === 'people.html' ||
+      currentFilename.endsWith('-elena.html') ||
+      currentFilename.endsWith('-kasoar.html') ||
+      currentFilename.endsWith('-yin.html') ||
+      currentPath.includes('/people/')
+    ) {
+      activeSection = 'people';
+    } else if (currentFilename === 'code.html') {
+      activeSection = 'software';
+    } else if (currentFilename === 'publications.html') {
+      activeSection = 'publications';
+    } else if (currentFilename === 'index.html' || currentFilename === '') {
+      activeSection = 'home';
+    }
+
+    // Two-line header Level-2 subline controller
+    const sublineWrap = headerScope.querySelector('.header-subline-wrap');
+    const subGroups = headerScope.querySelectorAll('.header-subline-group');
+
+    function showSubGroup(groupName) {
+      let hasMatch = false;
+      subGroups.forEach(g => {
+        if (g.getAttribute('data-nav-group') === groupName) {
+          g.classList.add('active');
+          hasMatch = true;
+        } else {
+          g.classList.remove('active');
         }
-        // If it's a chip inside a corner nav group, expand that group
-        const parentGroup = link.closest('.corner-nav-group');
-        if (parentGroup) {
-          const subpanel = parentGroup.querySelector('.corner-subnav-panel');
-          const toggleBtn = parentGroup.querySelector('.corner-nav-group-toggle-btn');
-          if (subpanel) subpanel.classList.add('show');
-          if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'true');
+      });
+      if (sublineWrap) {
+        if (hasMatch) {
+          sublineWrap.classList.add('is-visible');
+        } else {
+          sublineWrap.classList.remove('is-visible');
+        }
+      }
+    }
+
+    // Set initial Level-2 subline according to active section
+    if (activeSection) {
+      showSubGroup(activeSection);
+    }
+
+    // Hover & focus on Level-1 top line pills dynamically populates Level-2 second line
+    const level1Pills = headerScope.querySelectorAll('.header-nav-level1 .nav-pill');
+    level1Pills.forEach(pill => {
+      const targetGroup = pill.getAttribute('data-nav-target');
+      pill.addEventListener('mouseenter', () => {
+        if (targetGroup) showSubGroup(targetGroup);
+      });
+      pill.addEventListener('focus', () => {
+        if (targetGroup) showSubGroup(targetGroup);
+      });
+    });
+
+    const headerNavArea = headerScope.closest('.site-header') || headerScope;
+    headerNavArea.addEventListener('mouseleave', () => {
+      showSubGroup(activeSection);
+    });
+
+    // Apply active classes on all nav links, pills, and chips
+    headerScope.querySelectorAll('.nav-desktop .nav-item a, .nav-pill, .subnav-pill, .corner-nav-link, .corner-subnav-chip, .mobile-nav-item a').forEach(link => {
+      const href = link.getAttribute('href') || '';
+      const hrefClean = href.split('#')[0];
+
+      // Level 1 top line pill
+      if (link.closest('.header-nav-level1')) {
+        const target = link.getAttribute('data-nav-target');
+        if (target === activeSection) {
+          link.classList.add('active');
+        }
+      } else if (link.closest('.header-subline-group')) {
+        // Level 2 second line sub-pill
+        if (href === currentFilename || (currentFilename === '' && href === 'index.html')) {
+          link.classList.add('active');
+        } else if (hrefClean === currentFilename && currentHash && href.includes(currentHash)) {
+          link.classList.add('active');
+        } else if (currentFilename === 'research.html' && href === 'research.html') {
+          link.classList.add('active');
+        } else if (currentFilename === 'code.html' && href === 'code.html') {
+          link.classList.add('active');
+        } else if (currentFilename === 'people.html' && !currentHash && href === 'people.html#members') {
+          link.classList.add('active');
+        }
+      } else {
+        // Drawer / fallback links
+        if (hrefClean === currentFilename || (currentFilename === '' && hrefClean === 'index.html')) {
+          link.classList.add('active');
+          const parentGroup = link.closest('.corner-nav-group');
+          if (parentGroup) {
+            const subpanel = parentGroup.querySelector('.corner-subnav-panel');
+            const toggleBtn = parentGroup.querySelector('.corner-nav-group-toggle-btn');
+            if (subpanel) subpanel.classList.add('show');
+            if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'true');
+          }
+        } else if (activeSection === 'people' && hrefClean === 'people.html') {
+          link.classList.add('active');
+        } else if (activeSection === 'research' && hrefClean === 'research.html') {
+          link.classList.add('active');
         }
       }
     });
@@ -318,35 +407,27 @@
         </div>
       </a>
 
-      <!-- Navigation Menu Pills of different colours -->
-      <nav class="header-nav-pills" aria-label="Primary Navigation">
-        <a href="index.html" class="nav-pill nav-pill-home" style="--pill-color: #06b6d4; --pill-rgb: 6, 182, 212;">
+      <!-- Navigation Menu Pills (First Level on Top Line) -->
+      <nav class="header-nav-pills header-nav-level1" aria-label="Primary Navigation">
+        <a href="index.html" class="nav-pill nav-pill-home" data-nav-target="home" style="--pill-color: #06b6d4; --pill-rgb: 6, 182, 212;">
           <span class="nav-pill-dot"></span>
           <span>Home</span>
         </a>
-        <a href="people.html" class="nav-pill nav-pill-people" style="--pill-color: #10b981; --pill-rgb: 16, 185, 129;">
+        <a href="people.html" class="nav-pill nav-pill-people" data-nav-target="people" style="--pill-color: #10b981; --pill-rgb: 16, 185, 129;">
           <span class="nav-pill-dot"></span>
           <span>People</span>
         </a>
-        <a href="research.html" class="nav-pill nav-pill-research" style="--pill-color: #8b5cf6; --pill-rgb: 139, 92, 246;">
+        <a href="research.html" class="nav-pill nav-pill-research" data-nav-target="research" style="--pill-color: #8b5cf6; --pill-rgb: 139, 92, 246;">
           <span class="nav-pill-dot"></span>
           <span>Research</span>
         </a>
-        <a href="publications.html" class="nav-pill nav-pill-pubs" style="--pill-color: #0ea5e9; --pill-rgb: 14, 165, 233;">
+        <a href="publications.html" class="nav-pill nav-pill-pubs" data-nav-target="publications" style="--pill-color: #0ea5e9; --pill-rgb: 14, 165, 233;">
           <span class="nav-pill-dot"></span>
           <span>Publications</span>
         </a>
-        <a href="code.html" class="nav-pill nav-pill-code" style="--pill-color: #f59e0b; --pill-rgb: 245, 158, 11;">
+        <a href="code.html" class="nav-pill nav-pill-code" data-nav-target="software" style="--pill-color: #f59e0b; --pill-rgb: 245, 158, 11;">
           <span class="nav-pill-dot"></span>
           <span>Software</span>
-        </a>
-        <a href="talks.html" class="nav-pill nav-pill-talks" style="--pill-color: #6366f1; --pill-rgb: 99, 102, 241;">
-          <span class="nav-pill-dot"></span>
-          <span>Talks</span>
-        </a>
-        <a href="teaching.html" class="nav-pill nav-pill-teaching" style="--pill-color: #ec4899; --pill-rgb: 236, 72, 153;">
-          <span class="nav-pill-dot"></span>
-          <span>Teaching</span>
         </a>
       </nav>
 
@@ -372,6 +453,76 @@
             <span></span>
           </span>
         </button>
+      </div>
+    </div>
+
+    <!-- Second Line for Level 2 Entries (Sub-pills populated by active section or hover) -->
+    <div class="header-subline-wrap" id="header-subline-wrap">
+      <div class="container header-subline-container">
+        <nav class="header-nav-subline" aria-label="Secondary Navigation">
+          <!-- Research Sub-pills (Level 2) -->
+          <div class="header-subline-group" data-nav-group="research">
+            <span class="subline-label">Research:</span>
+            <a href="research.html" class="nav-pill nav-pill-sub" style="--pill-color: #2dd4bf; --pill-rgb: 45, 212, 191;">
+              <span class="nav-pill-dot"></span>
+              <span>Themes</span>
+            </a>
+            <a href="talks.html" class="nav-pill nav-pill-sub" style="--pill-color: #f472b6; --pill-rgb: 244, 114, 182;">
+              <span class="nav-pill-dot"></span>
+              <span>Talks</span>
+            </a>
+            <a href="teaching.html" class="nav-pill nav-pill-sub" style="--pill-color: #a78bfa; --pill-rgb: 167, 139, 250;">
+              <span class="nav-pill-dot"></span>
+              <span>Teaching</span>
+            </a>
+          </div>
+
+          <!-- People Sub-pills (Level 2) -->
+          <div class="header-subline-group" data-nav-group="people">
+            <span class="subline-label">People:</span>
+            <a href="people.html#members" class="nav-pill nav-pill-sub" style="--pill-color: #34d399; --pill-rgb: 52, 211, 153;">
+              <span class="nav-pill-dot"></span>
+              <span>Members</span>
+            </a>
+            <a href="people.html#former-members" class="nav-pill nav-pill-sub" style="--pill-color: #38bdf8; --pill-rgb: 56, 189, 248;">
+              <span class="nav-pill-dot"></span>
+              <span>Former Members</span>
+            </a>
+            <a href="people.html#collaborators" class="nav-pill nav-pill-sub" style="--pill-color: #fbbf24; --pill-rgb: 251, 191, 36;">
+              <span class="nav-pill-dot"></span>
+              <span>Collaborators</span>
+            </a>
+            <a href="people.html#visitors" class="nav-pill nav-pill-sub" style="--pill-color: #c084fc; --pill-rgb: 192, 132, 252;">
+              <span class="nav-pill-dot"></span>
+              <span>Visitors</span>
+            </a>
+          </div>
+
+          <!-- Software Sub-pills (Level 2) -->
+          <div class="header-subline-group" data-nav-group="software">
+            <span class="subline-label">Software:</span>
+            <a href="code.html" class="nav-pill nav-pill-sub" style="--pill-color: #6366f1; --pill-rgb: 99, 102, 241;">
+              <span class="nav-pill-dot"></span>
+              <span>All Packages</span>
+            </a>
+            <a href="code.html#janus-core" class="nav-pill nav-pill-sub" style="--pill-color: #22d3ee; --pill-rgb: 34, 211, 238;">
+              <span class="nav-pill-dot"></span>
+              <span>janus-core</span>
+            </a>
+            <a href="code.html#pack-mm" class="nav-pill nav-pill-sub" style="--pill-color: #fb923c; --pill-rgb: 251, 146, 60;">
+              <span class="nav-pill-dot"></span>
+              <span>pack-mm</span>
+            </a>
+            <a href="code.html#aiida-mlip" class="nav-pill nav-pill-sub" style="--pill-color: #4ade80; --pill-rgb: 74, 222, 128;">
+              <span class="nav-pill-dot"></span>
+              <span>aiida-mlip</span>
+            </a>
+            <a href="code.html#goldilocks" class="nav-pill nav-pill-sub" style="--pill-color: #facc15; --pill-rgb: 250, 204, 21;">
+              <span class="nav-pill-dot"></span>
+              <span>goldilocks</span>
+            </a>
+          </div>
+        </nav>
       </div>
     </div>
 

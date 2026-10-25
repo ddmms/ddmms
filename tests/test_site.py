@@ -1533,13 +1533,16 @@ talks:
         self.assertIn("90deg", style_css)
 
     def test_header_nav_pills_different_colours(self):
-        """Verify navigation pills are present at the top of the header with different colors."""
+        """Verify navigation pills are present at the top of the header on two lines with different colors."""
         header_html = (BASE_DIR / "header.html").read_text(encoding="utf-8")
-        self.assertIn('class="header-nav-pills"', header_html)
+        self.assertIn('header-nav-pills', header_html)
+        self.assertIn('header-nav-level1', header_html)
+        self.assertIn('header-subline-wrap', header_html)
+        self.assertIn('header-nav-subline', header_html)
         self.assertIn('class="nav-pill', header_html)
         self.assertIn('class="nav-pill-dot"', header_html)
 
-        # Check pills exist for core pages
+        # Check pills exist for core pages (top line and second line sub-pills like research)
         for expected in ("Home", "People", "Research", "Publications", "Software", "Talks", "Teaching"):
             self.assertIn(f"<span>{expected}</span>", header_html)
 
@@ -1553,6 +1556,8 @@ talks:
         # Check CSS styles exist
         style_css = (BASE_DIR / "assets" / "css" / "style.css").read_text(encoding="utf-8")
         self.assertIn(".header-nav-pills", style_css)
+        self.assertIn(".header-subline-wrap", style_css)
+        self.assertIn(".header-subline-group", style_css)
         self.assertIn(".nav-pill", style_css)
         self.assertIn(".nav-pill.active", style_css)
 

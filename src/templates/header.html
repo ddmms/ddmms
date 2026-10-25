@@ -8,35 +8,27 @@
         </div>
       </a>
 
-      <!-- Navigation Menu Pills of different colours -->
-      <nav class="header-nav-pills" aria-label="Primary Navigation">
-        <a href="index.html" class="nav-pill nav-pill-home" style="--pill-color: #06b6d4; --pill-rgb: 6, 182, 212;">
+      <!-- Navigation Menu Pills (First Level on Top Line) -->
+      <nav class="header-nav-pills header-nav-level1" aria-label="Primary Navigation">
+        <a href="index.html" class="nav-pill nav-pill-home" data-nav-target="home" style="--pill-color: #06b6d4; --pill-rgb: 6, 182, 212;">
           <span class="nav-pill-dot"></span>
           <span>Home</span>
         </a>
-        <a href="people.html" class="nav-pill nav-pill-people" style="--pill-color: #10b981; --pill-rgb: 16, 185, 129;">
+        <a href="people.html" class="nav-pill nav-pill-people" data-nav-target="people" style="--pill-color: #10b981; --pill-rgb: 16, 185, 129;">
           <span class="nav-pill-dot"></span>
           <span>People</span>
         </a>
-        <a href="research.html" class="nav-pill nav-pill-research" style="--pill-color: #8b5cf6; --pill-rgb: 139, 92, 246;">
+        <a href="research.html" class="nav-pill nav-pill-research" data-nav-target="research" style="--pill-color: #8b5cf6; --pill-rgb: 139, 92, 246;">
           <span class="nav-pill-dot"></span>
           <span>Research</span>
         </a>
-        <a href="publications.html" class="nav-pill nav-pill-pubs" style="--pill-color: #0ea5e9; --pill-rgb: 14, 165, 233;">
+        <a href="publications.html" class="nav-pill nav-pill-pubs" data-nav-target="publications" style="--pill-color: #0ea5e9; --pill-rgb: 14, 165, 233;">
           <span class="nav-pill-dot"></span>
           <span>Publications</span>
         </a>
-        <a href="code.html" class="nav-pill nav-pill-code" style="--pill-color: #f59e0b; --pill-rgb: 245, 158, 11;">
+        <a href="code.html" class="nav-pill nav-pill-code" data-nav-target="software" style="--pill-color: #f59e0b; --pill-rgb: 245, 158, 11;">
           <span class="nav-pill-dot"></span>
           <span>Software</span>
-        </a>
-        <a href="talks.html" class="nav-pill nav-pill-talks" style="--pill-color: #6366f1; --pill-rgb: 99, 102, 241;">
-          <span class="nav-pill-dot"></span>
-          <span>Talks</span>
-        </a>
-        <a href="teaching.html" class="nav-pill nav-pill-teaching" style="--pill-color: #ec4899; --pill-rgb: 236, 72, 153;">
-          <span class="nav-pill-dot"></span>
-          <span>Teaching</span>
         </a>
       </nav>
 
@@ -62,6 +54,76 @@
             <span></span>
           </span>
         </button>
+      </div>
+    </div>
+
+    <!-- Second Line for Level 2 Entries (Sub-pills populated by active section or hover) -->
+    <div class="header-subline-wrap" id="header-subline-wrap">
+      <div class="container header-subline-container">
+        <nav class="header-nav-subline" aria-label="Secondary Navigation">
+          <!-- Research Sub-pills (Level 2) -->
+          <div class="header-subline-group" data-nav-group="research">
+            <span class="subline-label">Research:</span>
+            <a href="research.html" class="nav-pill nav-pill-sub" style="--pill-color: #2dd4bf; --pill-rgb: 45, 212, 191;">
+              <span class="nav-pill-dot"></span>
+              <span>Themes</span>
+            </a>
+            <a href="talks.html" class="nav-pill nav-pill-sub" style="--pill-color: #f472b6; --pill-rgb: 244, 114, 182;">
+              <span class="nav-pill-dot"></span>
+              <span>Talks</span>
+            </a>
+            <a href="teaching.html" class="nav-pill nav-pill-sub" style="--pill-color: #a78bfa; --pill-rgb: 167, 139, 250;">
+              <span class="nav-pill-dot"></span>
+              <span>Teaching</span>
+            </a>
+          </div>
+
+          <!-- People Sub-pills (Level 2) -->
+          <div class="header-subline-group" data-nav-group="people">
+            <span class="subline-label">People:</span>
+            <a href="people.html#members" class="nav-pill nav-pill-sub" style="--pill-color: #34d399; --pill-rgb: 52, 211, 153;">
+              <span class="nav-pill-dot"></span>
+              <span>Members</span>
+            </a>
+            <a href="people.html#former-members" class="nav-pill nav-pill-sub" style="--pill-color: #38bdf8; --pill-rgb: 56, 189, 248;">
+              <span class="nav-pill-dot"></span>
+              <span>Former Members</span>
+            </a>
+            <a href="people.html#collaborators" class="nav-pill nav-pill-sub" style="--pill-color: #fbbf24; --pill-rgb: 251, 191, 36;">
+              <span class="nav-pill-dot"></span>
+              <span>Collaborators</span>
+            </a>
+            <a href="people.html#visitors" class="nav-pill nav-pill-sub" style="--pill-color: #c084fc; --pill-rgb: 192, 132, 252;">
+              <span class="nav-pill-dot"></span>
+              <span>Visitors</span>
+            </a>
+          </div>
+
+          <!-- Software Sub-pills (Level 2) -->
+          <div class="header-subline-group" data-nav-group="software">
+            <span class="subline-label">Software:</span>
+            <a href="code.html" class="nav-pill nav-pill-sub" style="--pill-color: #6366f1; --pill-rgb: 99, 102, 241;">
+              <span class="nav-pill-dot"></span>
+              <span>All Packages</span>
+            </a>
+            <a href="code.html#janus-core" class="nav-pill nav-pill-sub" style="--pill-color: #22d3ee; --pill-rgb: 34, 211, 238;">
+              <span class="nav-pill-dot"></span>
+              <span>janus-core</span>
+            </a>
+            <a href="code.html#pack-mm" class="nav-pill nav-pill-sub" style="--pill-color: #fb923c; --pill-rgb: 251, 146, 60;">
+              <span class="nav-pill-dot"></span>
+              <span>pack-mm</span>
+            </a>
+            <a href="code.html#aiida-mlip" class="nav-pill nav-pill-sub" style="--pill-color: #4ade80; --pill-rgb: 74, 222, 128;">
+              <span class="nav-pill-dot"></span>
+              <span>aiida-mlip</span>
+            </a>
+            <a href="code.html#goldilocks" class="nav-pill nav-pill-sub" style="--pill-color: #facc15; --pill-rgb: 250, 204, 21;">
+              <span class="nav-pill-dot"></span>
+              <span>goldilocks</span>
+            </a>
+          </div>
+        </nav>
       </div>
     </div>
 
