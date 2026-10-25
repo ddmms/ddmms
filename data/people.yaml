@@ -35,7 +35,7 @@ sections:
         role: "Graduate"
         join_date: "2023-09-01"
         left_date: "2024-08-31"
-      - name: "Elena Patyukova"
+      - name: "Dr Elena Patyukova"
     #     avatar: "assets/images/photo.jpg"   # or initials, e.g. "FN"
         role: "Computational Scientist"
     #     affiliation: "DDMMS &bull; STFC SCD (2022&ndash;2024)"
@@ -47,7 +47,7 @@ sections:
     #     links:
     #       - text: "ORCID"
     #         url: "https://orcid.org/..."
-      - name: "Federica Zanca"
+      - name: "Dr Federica Zanca"
         role: "Computational Scientist"
         join_date: "2023-01-01"
         left_date: "2024-08-31"
