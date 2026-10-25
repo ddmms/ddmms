@@ -60,7 +60,7 @@ sections:
     empty_text: "Collaborators will be listed here soon."
     members: 
       - name: "Dr Cillian Cockrell"
-        avatar: "CC"
+        avatar: "assets/images/cillian_cockrell.jpg"
         role: "Lecturer" 
         affiliation: "University of Bangor"
         links:
@@ -70,7 +70,7 @@ sections:
             url: "https://www.bangor.ac.uk/staff/scse/cillian-cockrell-688383/en"
 
       - name: "Prof Alexander Shluger"
-        avatar: "AS"
+        avatar: "assets/images/alexander_shluger.jpg"
         role: "Professor of Physics"
         affiliation: "University College London (UCL)"
         links:
@@ -80,7 +80,7 @@ sections:
             url: "https://profiles.ucl.ac.uk/4314-alexander-shluger"
 
       - name: "Dr Keith Butler"
-        avatar: "KB"
+        avatar: "assets/images/keith_butler.jpg"
         role: "Associate Professor in Computational Materials Chemistry"
         affiliation: "University College London (UCL)"
         links:
@@ -90,7 +90,7 @@ sections:
             url: "https://profiles.ucl.ac.uk/25193-keith-butler"
 
       - name: "Dr Jeff Armstrong"
-        avatar: "JA"
+        avatar: "assets/images/jeff_armstrong.png"
         role: "Instrument Scientist"
         affiliation: "ISIS Neutron and Muon Source, STFC"
         links:
@@ -100,7 +100,7 @@ sections:
             url: "https://www.isis.stfc.ac.uk/instruments/tosca/"
 
       - name: "Prof Gábor Csányi"
-        avatar: "GC"
+        avatar: "assets/images/gabor_csanyi.jpg"
         role: "Director"
         affiliation: "Max Planck Institute for Polymer Research"
         links:

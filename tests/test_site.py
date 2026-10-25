@@ -606,6 +606,8 @@ themes:
         self.assertIn("Dr Keith Butler", collab_names)
         self.assertIn("Dr Jeff Armstrong", collab_names)
         self.assertIn("Prof Gábor Csányi", collab_names)
+        for m in collab_section["members"]:
+            self.assertTrue(m.get("avatar", "").startswith("assets/images/"))
 
         # Test custom YAML people loading
         with tempfile.NamedTemporaryFile("w+", encoding="utf-8", delete=False, suffix=".yaml") as tpf:
