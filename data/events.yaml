@@ -3,32 +3,6 @@ intro: "Conferences, workshops, summer schools and seminars organised or hosted 
 
 # Format matching data/training.yaml.
 categories:
-  - id: "upcoming"
-    title: "Upcoming & Recent Events"
-    cards:
-      - title: "CaMML Spring School 2027"
-        url: "https://spring2027.camml.ac.uk"
-        status: "Apply by 26 November 2026"
-        details:
-          - label: "Dates"
-            value: "5–9 April 2027"
-          - label: "Location"
-            value: "STFC Daresbury Laboratory, UK"
-          - label: "For"
-            value: "PhD students in materials and molecular simulation who can code but are new to machine learning; a limited number of places may be available for industrial applicants"
-          - label: "Key dates"
-            value: "Apply by 26 November 2026 · outcome by 17 December 2026 · payment by 13 February 2027"
-          - label: "Fee"
-            value: "£250 per student, including 5 nights' accommodation, breakfast, lunches, coffee breaks, the school BBQ and poster session refreshments"
-          - label: "Places"
-            value: "Limited to 40; if oversubscribed, the organisers will favour a diverse group of attendees"
-          - label: "Organised by"
-            value: "PSDI and AIchemy, with support from STFC-SCD, CCP5, CCP9 and CECAM"
-        description: "The Chemical and Materials Machine Learning School is an international training course on the latest machine learning methods for atomistic simulation of materials and molecules. Talks and hands-on sessions cover the basics of machine learning, machine learning interatomic potentials and graph neural networks, and attendees can present a poster on their work."
-        links:
-          - text: "Event website and applications"
-            url: "https://spring2027.camml.ac.uk"
-
   - id: "workshops"
     title: "Workshops"
     events:

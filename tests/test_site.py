@@ -928,11 +928,14 @@ contact:
 
         # Sections
         categories = [
+            ("upcoming", "Upcoming"),
             ("schools", "Schools"),
         ]
         for cat_id, cat_title in categories:
             self.assertIn(f'<section class="category-section" id="{cat_id}">', teaching_html)
             self.assertIn(f'<h2 class="home-heading">{cat_title}</h2>', teaching_html)
+            self.assertIn(f'<a href="#{cat_id}" class="subnav-pill">{cat_title}</a>', teaching_html)
+        self.assertIn("CaMML Spring School 2027", teaching_html)
         # Check sections exist / don't exist
         self.assertNotIn('id="placements"', teaching_html)
         self.assertNotIn('id="graduate-scheme"', teaching_html)
@@ -1074,7 +1077,7 @@ categories:
         self.assertIn("NVIDIA Atomistic Simulation Summit 2026", talks_html)
         self.assertIn("Machine Learned Potentials for Phonon Calculations of Metal–Organic Frameworks", talks_html)
         self.assertIn("UKPorMat", talks_html)
-        self.assertIn("https://www.ukpormat.com/", talks_html)
+        self.assertIn("uk-porous-materials-(ukpormat)-annual-conference-2026", talks_html)
         self.assertIn("Bridging the Gap Between Theory and Experiment", talks_html)
         self.assertIn("XAFS 2026", talks_html)
         self.assertIn("https://xafs2026.org/XAFS2026/", talks_html)
@@ -1578,10 +1581,9 @@ talks:
         from components.events import load_events, generate_events_html
         events_html = (BASE_DIR / "events.html").read_text(encoding="utf-8")
         self.assertIn("Events", events_html)
-        self.assertIn("CaMML Spring School 2027", events_html)
+        self.assertNotIn("CaMML Spring School 2027", events_html)
+        self.assertNotIn('id="upcoming"', events_html)
         self.assertIn('id="workshops"', events_html)
-        self.assertIn('href="#workshops"', events_html)
-        self.assertIn('href="#upcoming"', events_html)
         self.assertIn("The Atomic Simulation Environment: Integration into Wider Community Projects", events_html)
         self.assertIn("cecam_ase_mainz_2026.jpeg", events_html)
         data = load_events()
