@@ -62,6 +62,8 @@ categories:
         title: "CCP5 Summer School"
         role: "Co-Organiser: Alin Elena · Lecturer: Alin Elena"
         url: "https://summer2025.ccp5.ac.uk"
+        image: "assets/images/ccp5_2025.png"
+        image_alt: "Participants at the CCP5 Summer School 2025 at Newcastle University"
         description: "Held at Newcastle University (20–31 July 2025), this annual two-week school offered in-depth training in condensed-matter molecular simulation, bridging theoretical statistical mechanics with hands-on computational workflows in molecular dynamics and Monte Carlo methods."
       - year: "2025"
         title: "CaMML Spring School"
