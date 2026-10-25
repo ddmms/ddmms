@@ -3662,6 +3662,18 @@ a.org-chain-link:hover {
   color: var(--text-muted);
 }
 
+.home-prose a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 500;
+  transition: var(--transition);
+}
+
+.home-prose a:hover {
+  color: var(--primary-hover);
+}
+
 .home-lead,
 .home-prose .home-lead {
   font-size: clamp(1.1rem, 1.6vw, 1.25rem);

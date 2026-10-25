@@ -454,25 +454,7 @@ def generate_index_html(
       </div>
     </section>
 
-    <section class="home-section" id="opportunities">
-      <div class="container home-narrow">
-        <div class="section-heading-wrap">
-          <h2 class="home-heading">{opp_title}</h2>
-          <p class="home-subtitle">{opp_intro}</p>
-        </div>
-        <div class="opp-grid">
-{rendered_opp_cards}
-        </div>
-        <div class="home-section-footer">
-          <a href="opportunities.html" class="news-expand-btn">
-            <span>View all opportunities &amp; schemes</span>
-            <span class="news-expand-btn-icon">&rarr;</span>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <section class="home-section home-section-alt" id="collaborate">
+    <section class="home-section" id="collaborate">
       <div class="container home-narrow">
         <div class="section-heading-wrap">
           <h2 class="home-heading">{collab_title}</h2>

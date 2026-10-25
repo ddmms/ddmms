@@ -456,11 +456,19 @@ class TestDDMMSSite(unittest.TestCase):
         self.assertIn("Recent Highlights &amp; News", index_html)
         # Homepage is a single column: no sidebar
         self.assertNotIn('class="about-grid"', index_html)
-        # All sub-menu entries (News, Opportunities, Collaborate) are sections on the homepage
+        # Homepage sections: mission, news, collaborate (opportunities section removed)
         self.assertIn('id="news"', index_html)
-        self.assertIn('id="opportunities"', index_html)
+        self.assertNotIn('id="opportunities"', index_html)
         self.assertIn('id="collaborate"', index_html)
         self.assertLess(index_html.index('id="mission"'), index_html.index('id="news-section"'))
+
+        # Mission prose contains hyperlinks to CMMS, SCD, STFC, UKRI, Daresbury, Rutherford Appleton
+        self.assertIn('href="https://www.sc.stfc.ac.uk/research-and-expertise/computational-materials-and-molecular-science/"', index_html)
+        self.assertIn('href="https://www.sc.stfc.ac.uk/"', index_html)
+        self.assertIn('href="https://www.ukri.org/councils/stfc/"', index_html)
+        self.assertIn('href="https://www.ukri.org/"', index_html)
+        self.assertIn('href="https://www.ukri.org/who-we-are/stfc/facilities/daresbury-laboratory/"', index_html)
+        self.assertIn('href="https://www.ukri.org/who-we-are/stfc/facilities/rutherford-appleton-laboratory/"', index_html)
 
         # Brand links point to index.html as landing page
         content = (BASE_DIR / "header.html").read_text(encoding="utf-8")
