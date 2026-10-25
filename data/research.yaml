@@ -12,7 +12,10 @@ themes:
       - programme: "CCP5"
         grant: "EP/V028537/1"
         url: "https://www.ccp5.ac.uk"
+      - programme: "Ada Lovelace Centre"
+        url: "https://www.adalovelacecentre.ac.uk"
       - programme: "STFC Scientific Computing"
+        url: "https://www.sc.stfc.ac.uk/"
     description:
       - "Accurate modeling of chemical reactivity, phase transitions, and defect dynamics requires potential energy surfaces that respect rotational, translational, and permutational invariances. We develop and extend equivariant graph neural network potentials such as MACE, SevenNet, and CHGNet."
       - "Key research topics include the incorporation of polarisable long-range electrostatics (MACE-POLAR), optimal active-learning criteria that balance coverage and model uncertainty, and cross-learning strategies connecting molecular, surface, and inorganic solid phases."
@@ -27,7 +30,10 @@ themes:
       - programme: "CCP5"
         grant: "EP/V028537/1"
         url: "https://www.ccp5.ac.uk"
+      - programme: "Ada Lovelace Centre"
+        url: "https://www.adalovelacecentre.ac.uk"
       - programme: "STFC Scientific Computing"
+        url: "https://www.sc.stfc.ac.uk/"
     description:
       - "Metal-Organic Frameworks (MOFs) exhibit remarkable chemical modularity, ultra-high surface areas, and tunable mechanical properties such as negative thermal expansion (NTE). We curate the uMOF benchmark database and build dedicated ML potentials that enable high-throughput phonon calculations, thermodynamic stability screening, and gas adsorption modeling."
     links:
@@ -42,7 +48,9 @@ themes:
         grant: "EP/V028537/1"
         url: "https://www.ccp5.ac.uk"
       - programme: "Ada Lovelace Centre"
+        url: "https://www.adalovelacecentre.ac.uk"
       - programme: "STFC Scientific Computing"
+        url: "https://www.sc.stfc.ac.uk/"
     description:
       - "Molten salts serve as critical thermal storage media and coolants in next-generation nuclear and concentrated solar energy systems. We perform molecular dynamics simulations to quantify self-diffusion, ionic conductivity, shear viscosity, and thermal conductivity from first principles, testing fundamental theoretical bounds and experimental calibrations."
     links:
@@ -57,10 +65,12 @@ themes:
         grant: "EP/X032701/1"
         url: "https://www.psdi.ac.uk"
       - programme: "Ada Lovelace Centre"
+        url: "https://www.adalovelacecentre.ac.uk"
       - programme: "CCP5"
         grant: "EP/V028537/1"
         url: "https://www.ccp5.ac.uk"
       - programme: "STFC Scientific Computing"
+        url: "https://www.sc.stfc.ac.uk/"
     description:
       - "Bridging the gap between interatomic potentials and scientific discovery requires seamless automation. With janus-core and the aiida-mlip plugin, we provide unified pipelines with full data provenance for geometry relaxation (BFGS, FIRE, FrechetCellFilter), equation of state fitting, full 6x6 elasticity stiffness tensors ($C_{ij}$), and climbing image nudged elastic band (CI-NEB) minimum energy pathways."
     links:
@@ -75,7 +85,9 @@ themes:
         grant: "EP/X032701/1"
         url: "https://www.psdi.ac.uk"
       - programme: "STFC Scientific Computing"
+        url: "https://www.sc.stfc.ac.uk/"
       - programme: "Ada Lovelace Centre"
+        url: "https://www.adalovelacecentre.ac.uk"
       - programme: "CCP5"
         grant: "EP/V028537/1"
         url: "https://www.ccp5.ac.uk"
@@ -103,6 +115,7 @@ themes:
         grant: "EP/V028537/1"
         url: "https://www.ccp5.ac.uk"
       - programme: "STFC Scientific Computing"
+        url: "https://www.sc.stfc.ac.uk/"
     description:
       - "Evaluating machine-learned interatomic potentials requires going beyond simple training force and energy RMSE errors to evaluate true physical stability, phase behavior, and uncertainty quantification. The <strong>ML-PEG</strong> benchmarking platform establishes rigorous evaluation protocols to stress-test MLIPs across diverse chemical systems, out-of-distribution scenarios, and extrapolation limits."
       - "Alongside standardized community benchmarks, ML-PEG provides an interactive web dashboard for transparently comparing foundation models and dataset baselines across materials discovery tasks."
