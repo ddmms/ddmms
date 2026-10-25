@@ -18,7 +18,7 @@ sections:
         yaml: "data/people/junwen-yin.yaml"
         join_date: "2024-11-01"
       - name: "Loki Coward"
-        
+        yaml: "data/people/loki-coward.yaml"
         join_date: "2026-10-01"
 
   - id: "former-members"
