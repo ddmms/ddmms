@@ -524,6 +524,11 @@ a:hover {
   position: relative;
 }
 
+.nav-pill::before {
+  content: none !important;
+  display: none !important;
+}
+
 .nav-pill-dot {
   width: 7px;
   height: 7px;
@@ -1542,6 +1547,12 @@ a:hover {
   text-decoration: none;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   white-space: nowrap;
+}
+
+.site-footer a::before,
+.footer-nav-menu-wrap a::before {
+  content: none !important;
+  display: none !important;
 }
 
 .site-footer .nav-pill:hover {

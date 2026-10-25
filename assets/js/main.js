@@ -127,8 +127,17 @@
     // Two-line header Level-2 subline controller
     const sublineWrap = headerScope.querySelector('.header-subline-wrap');
     const subGroups = headerScope.querySelectorAll('.header-subline-group');
+    const availableGroups = new Set();
+    subGroups.forEach(g => {
+      const grp = g.getAttribute('data-nav-group');
+      if (grp) availableGroups.add(grp);
+    });
+
+    let currentVisibleGroup = null;
 
     function showSubGroup(groupName) {
+      if (currentVisibleGroup === groupName) return;
+
       let hasMatch = false;
       subGroups.forEach(g => {
         if (g.getAttribute('data-nav-group') === groupName) {
@@ -141,14 +150,16 @@
       if (sublineWrap) {
         if (hasMatch) {
           sublineWrap.classList.add('is-visible');
+          currentVisibleGroup = groupName;
         } else {
           sublineWrap.classList.remove('is-visible');
+          currentVisibleGroup = null;
         }
       }
     }
 
     // Set initial Level-2 subline according to active section
-    if (activeSection) {
+    if (activeSection && availableGroups.has(activeSection)) {
       showSubGroup(activeSection);
     }
 
@@ -157,16 +168,33 @@
     level1Pills.forEach(pill => {
       const targetGroup = pill.getAttribute('data-nav-target');
       pill.addEventListener('mouseenter', () => {
-        if (targetGroup) showSubGroup(targetGroup);
+        if (availableGroups.has(targetGroup)) {
+          showSubGroup(targetGroup);
+        } else if (activeSection && availableGroups.has(activeSection)) {
+          showSubGroup(activeSection);
+        } else {
+          showSubGroup(null);
+        }
       });
       pill.addEventListener('focus', () => {
-        if (targetGroup) showSubGroup(targetGroup);
+        if (availableGroups.has(targetGroup)) {
+          showSubGroup(targetGroup);
+        } else if (activeSection && availableGroups.has(activeSection)) {
+          showSubGroup(activeSection);
+        } else {
+          showSubGroup(null);
+        }
       });
     });
 
     const headerNavArea = headerScope.closest('.site-header') || headerScope;
-    headerNavArea.addEventListener('mouseleave', () => {
-      showSubGroup(activeSection);
+    headerNavArea.addEventListener('mouseleave', (e) => {
+      if (e.relatedTarget && headerNavArea.contains(e.relatedTarget)) return;
+      if (activeSection && availableGroups.has(activeSection)) {
+        showSubGroup(activeSection);
+      } else {
+        showSubGroup(null);
+      }
     });
 
     // Apply active classes on all nav links, pills, and chips
@@ -555,8 +583,17 @@
     // Two-line footer Level-2 subline controller
     const sublineWrap = footerScope.querySelector('.footer-subline-wrap');
     const subGroups = footerScope.querySelectorAll('.footer-subline-group');
+    const availableGroups = new Set();
+    subGroups.forEach(g => {
+      const grp = g.getAttribute('data-nav-group');
+      if (grp) availableGroups.add(grp);
+    });
+
+    let currentFooterVisibleGroup = null;
 
     function showFooterSubGroup(groupName) {
+      if (currentFooterVisibleGroup === groupName) return;
+
       let hasMatch = false;
       subGroups.forEach(g => {
         if (g.getAttribute('data-nav-group') === groupName) {
@@ -569,13 +606,15 @@
       if (sublineWrap) {
         if (hasMatch) {
           sublineWrap.classList.add('is-visible');
+          currentFooterVisibleGroup = groupName;
         } else {
           sublineWrap.classList.remove('is-visible');
+          currentFooterVisibleGroup = null;
         }
       }
     }
 
-    if (activeSection) {
+    if (activeSection && availableGroups.has(activeSection)) {
       showFooterSubGroup(activeSection);
     }
 
@@ -584,20 +623,37 @@
     level1Pills.forEach(pill => {
       const targetGroup = pill.getAttribute('data-nav-target');
       pill.addEventListener('mouseenter', () => {
-        if (targetGroup) showFooterSubGroup(targetGroup);
+        if (availableGroups.has(targetGroup)) {
+          showFooterSubGroup(targetGroup);
+        } else if (activeSection && availableGroups.has(activeSection)) {
+          showFooterSubGroup(activeSection);
+        } else {
+          showFooterSubGroup(null);
+        }
       });
       pill.addEventListener('focus', () => {
-        if (targetGroup) showFooterSubGroup(targetGroup);
+        if (availableGroups.has(targetGroup)) {
+          showFooterSubGroup(targetGroup);
+        } else if (activeSection && availableGroups.has(activeSection)) {
+          showFooterSubGroup(activeSection);
+        } else {
+          showFooterSubGroup(null);
+        }
       });
     });
 
     const menuWrap = footerScope.querySelector('.footer-nav-menu-wrap') || footerScope;
-    menuWrap.addEventListener('mouseleave', () => {
-      showFooterSubGroup(activeSection);
+    menuWrap.addEventListener('mouseleave', (e) => {
+      if (e.relatedTarget && menuWrap.contains(e.relatedTarget)) return;
+      if (activeSection && availableGroups.has(activeSection)) {
+        showFooterSubGroup(activeSection);
+      } else {
+        showFooterSubGroup(null);
+      }
     });
 
     // Mark active link
-    footerScope.querySelectorAll('.nav-pill, .subnav-pill').forEach(pill => {
+    footerScope.querySelectorAll('.nav-pill').forEach(pill => {
       const href = pill.getAttribute('href');
       if (
         href === currentFilename ||
@@ -632,24 +688,24 @@
           el.innerHTML = `  <footer class="site-footer">
     <div class="container">
       <div class="footer-nav-menu-wrap">
-        <nav class="header-nav-pills footer-nav-pills footer-nav-level1 footer-pills-list" aria-label="Footer Navigation">
-          <a href="index.html" class="nav-pill subnav-pill nav-pill-home" data-nav-target="home" style="--pill-color: #06b6d4; --pill-rgb: 6, 182, 212;">
+        <nav class="header-nav-pills footer-nav-pills footer-nav-level1 footer-pills-list subnav-pill" aria-label="Footer Navigation">
+          <a href="index.html" class="nav-pill nav-pill-home" data-nav-target="home" style="--pill-color: #06b6d4; --pill-rgb: 6, 182, 212;">
             <span class="nav-pill-dot"></span>
             <span>Home</span>
           </a>
-          <a href="people.html" class="nav-pill subnav-pill nav-pill-people" data-nav-target="people" style="--pill-color: #10b981; --pill-rgb: 16, 185, 129;">
+          <a href="people.html" class="nav-pill nav-pill-people" data-nav-target="people" style="--pill-color: #10b981; --pill-rgb: 16, 185, 129;">
             <span class="nav-pill-dot"></span>
             <span>People</span>
           </a>
-          <a href="research.html" class="nav-pill subnav-pill nav-pill-research" data-nav-target="research" style="--pill-color: #8b5cf6; --pill-rgb: 139, 92, 246;">
+          <a href="research.html" class="nav-pill nav-pill-research" data-nav-target="research" style="--pill-color: #8b5cf6; --pill-rgb: 139, 92, 246;">
             <span class="nav-pill-dot"></span>
             <span>Research</span>
           </a>
-          <a href="publications.html" class="nav-pill subnav-pill nav-pill-pubs" data-nav-target="publications" style="--pill-color: #0ea5e9; --pill-rgb: 14, 165, 233;">
+          <a href="publications.html" class="nav-pill nav-pill-pubs" data-nav-target="publications" style="--pill-color: #0ea5e9; --pill-rgb: 14, 165, 233;">
             <span class="nav-pill-dot"></span>
             <span>Publications</span>
           </a>
-          <a href="code.html" class="nav-pill subnav-pill nav-pill-code" data-nav-target="software" style="--pill-color: #f59e0b; --pill-rgb: 245, 158, 11;">
+          <a href="code.html" class="nav-pill nav-pill-code" data-nav-target="software" style="--pill-color: #f59e0b; --pill-rgb: 245, 158, 11;">
             <span class="nav-pill-dot"></span>
             <span>Software</span>
           </a>
@@ -660,19 +716,19 @@
             <nav class="header-nav-subline footer-nav-subline" aria-label="Footer Secondary Navigation">
               <div class="header-subline-group footer-subline-group" data-nav-group="research">
                 <span class="subline-label">Research:</span>
-                <a href="research.html" class="nav-pill subnav-pill nav-pill-sub" style="--pill-color: #2dd4bf; --pill-rgb: 45, 212, 191;">
+                <a href="research.html" class="nav-pill nav-pill-sub" style="--pill-color: #2dd4bf; --pill-rgb: 45, 212, 191;">
                   <span class="nav-pill-dot"></span>
                   <span>Areas</span>
                 </a>
-                <a href="talks.html" class="nav-pill subnav-pill nav-pill-sub" style="--pill-color: #f472b6; --pill-rgb: 244, 114, 182;">
+                <a href="talks.html" class="nav-pill nav-pill-sub" style="--pill-color: #f472b6; --pill-rgb: 244, 114, 182;">
                   <span class="nav-pill-dot"></span>
                   <span>Talks</span>
                 </a>
-                <a href="teaching.html" class="nav-pill subnav-pill nav-pill-sub" style="--pill-color: #a78bfa; --pill-rgb: 167, 139, 250;">
+                <a href="teaching.html" class="nav-pill nav-pill-sub" style="--pill-color: #a78bfa; --pill-rgb: 167, 139, 250;">
                   <span class="nav-pill-dot"></span>
                   <span>Training</span>
                 </a>
-                <a href="events.html" class="nav-pill subnav-pill nav-pill-sub" style="--pill-color: #fb7185; --pill-rgb: 251, 113, 133;">
+                <a href="events.html" class="nav-pill nav-pill-sub" style="--pill-color: #fb7185; --pill-rgb: 251, 113, 133;">
                   <span class="nav-pill-dot"></span>
                   <span>Events</span>
                 </a>
