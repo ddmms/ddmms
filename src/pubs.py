@@ -81,6 +81,47 @@ def load_orcids_from_yaml(yaml_path: str = DEFAULT_AUTHORS_PATH) -> Dict[str, st
     return mapping
 
 
+def load_all_author_names(yaml_path: str = DEFAULT_AUTHORS_PATH) -> List[str]:
+    """Load all author names from authors.yaml/csv, whether they have a valid ORCID or not."""
+    p = Path(yaml_path)
+    if not p.is_file():
+        alt = BASE_DIR / yaml_path
+        if alt.is_file():
+            p = alt
+        else:
+            return []
+
+    names: List[str] = []
+    content = p.read_text(encoding="utf-8-sig")
+    if p.suffix.lower() in (".yaml", ".yml") or ("\n- " in content or content.startswith("- ")):
+        try:
+            data = yaml.safe_load(content)
+        except Exception:
+            data = None
+        if isinstance(data, list):
+            for item in data:
+                if isinstance(item, dict) and item.get("name"):
+                    names.append(str(item["name"]).strip())
+        elif isinstance(data, dict):
+            raw_list = data.get("authors")
+            if isinstance(raw_list, list):
+                for item in raw_list:
+                    if isinstance(item, dict) and item.get("name"):
+                        names.append(str(item["name"]).strip())
+            else:
+                for k, v in data.items():
+                    if k.lower() not in ("authors", "title", "description") and v:
+                        names.append(str(v).strip())
+    else:
+        reader = csv.reader(content.splitlines())
+        for row in reader:
+            if not row or row[0].startswith("#") or row[0].lower() in ("orcid", "id"):
+                continue
+            if len(row) >= 2 and row[1].strip():
+                names.append(row[1].strip())
+    return names
+
+
 def load_orcids_from_csv(csv_path: str = DEFAULT_AUTHORS_PATH) -> Dict[str, str]:
     """Load ORCID to author name mapping from a CSV or YAML file.
 
@@ -532,6 +573,28 @@ def aggregate_publications(
                     doi_map[doi] = work_copy
                 if norm_title:
                     title_map[norm_title] = work_copy
+
+    # Merge any additional group authors listed in authors.yaml (e.g. without a valid ORCID)
+    # who appear in a publication's author list
+    all_names = load_all_author_names()
+    for pub in deduped:
+        existing_group = pub.setdefault("group_authors", [])
+        pub_authors = pub.get("authors", [])
+        for g_name in all_names:
+            if g_name in existing_group:
+                continue
+            g_tokens = [tok for tok in g_name.lower().replace("-", " ").split() if len(tok) > 1]
+            if not g_tokens:
+                continue
+            g_family = g_tokens[-1]
+            g_first = g_tokens[0]
+            for a in pub_authors:
+                a_tokens = a.lower().replace("-", " ").split()
+                if g_family in a_tokens:
+                    other = [t for t in a_tokens if t != g_family]
+                    if any(g_first in o or (len(o) == 1 and o == g_first[0]) for o in other):
+                        existing_group.append(g_name)
+                        break
 
     # Sort descending by year (Unknowns at the end), then alphabetically by title
     def sort_key(item):

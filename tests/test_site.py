@@ -1303,6 +1303,23 @@ talks:
         self.assertIn("Jian Yin", all_authors)
         self.assertIn("Gábor Csányi", all_authors)
 
+        # Verify that authors without valid ORCID from authors.yaml are loaded and tracked
+        from build_site import load_data
+        loaded_pubs, loaded_authors = load_data()
+        self.assertIn("Federica Zanca", loaded_authors.values())
+        self.assertIn("Elena Patyukova", loaded_authors.values())
+
+        # Verify they are enriched into group_authors for their publications
+        zanca_pubs = [p for p in loaded_pubs if "Federica Zanca" in p.get("group_authors", [])]
+        self.assertGreaterEqual(len(zanca_pubs), 2)
+        patyukova_pubs = [p for p in loaded_pubs if "Elena Patyukova" in p.get("group_authors", [])]
+        self.assertGreaterEqual(len(patyukova_pubs), 1)
+
+        # Verify publications.html authors-data JSON script contains them
+        pubs_html = (BASE_DIR / "publications.html").read_text(encoding="utf-8")
+        self.assertIn("Federica Zanca", pubs_html)
+        self.assertIn("Elena Patyukova", pubs_html)
+
     def test_publications_default_2024_onwards(self):
         """Verify that the group publications list defaults to 2024 onwards."""
         pubs_html = (BASE_DIR / "publications.html").read_text(encoding="utf-8")

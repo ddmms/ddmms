@@ -307,9 +307,10 @@
       if (authorsList.length > 0) {
         const authorsWrapper = document.createElement('div');
         authorsWrapper.className = 'pub-authors';
-        const groupAuthorCandidates = (pub.group_authors && pub.group_authors.length > 0)
-          ? pub.group_authors
-          : Object.values(authorsDict);
+        const groupAuthorCandidates = Array.from(new Set([
+          ...Object.values(authorsDict),
+          ...(pub.group_authors || [])
+        ]));
 
         authorsList.forEach((author, idx) => {
           const matchedGroup = matchAuthorFromFile(author, groupAuthorCandidates);
@@ -321,13 +322,15 @@
             const chip = document.createElement('span');
             chip.className = 'author-chip';
             chip.title = `Filter by ${matchedGroup}`;
-            chip.innerHTML = `
+            const orcidVal = nameToOrcid[matchedGroup];
+            const hasValidOrcid = Boolean(orcidVal && /^\d{4}-\d{4}-\d{4}-\d{3}[\dX]$/i.test(orcidVal));
+            const iconSvg = hasValidOrcid ? `
               <svg class="orcid-icon" viewBox="0 0 256 256">
                 <path d="M256 128c0 70.7-57.3 128-128 128S0 198.7 0 128 57.3 0 128 0s128 57.3 128 128z"/>
                 <path fill="#fff" d="M86.3 186.2H70.9V79.1h15.4v107.1zM78.6 62.2c-5.5 0-10-4.5-10-10s4.5-10 10-10 10 4.5 10 10-4.5 10-10 10zm108.8 77.8c0 27.8-19.8 46.2-49.9 46.2H108V79.1h31.6c28.2 0 47.8 19.5 47.8 46.5v14.4zm-16.1-.7c0-20.7-13.8-32.9-33.1-32.9h-14.7v72.8h14.7c20 0 33.1-13.1 33.1-34.1v-5.8z"/>
               </svg>
-              <span>${escapeHtml(author)}</span>
-            `;
+            ` : '';
+            chip.innerHTML = `${iconSvg}<span>${escapeHtml(author)}</span>`;
             chip.addEventListener('click', (e) => {
               e.preventDefault();
               if (authorFilter) {

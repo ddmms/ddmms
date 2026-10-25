@@ -118,6 +118,21 @@ __all__ = [
 ]
 
 
+ORCID_PATTERN = re.compile(r"^(\d{4}-\d{4}-\d{4}-\d{3}[\dX])$", re.IGNORECASE)
+
+
+def add_author_entry(target_dict: Dict[str, str], raw_orcid: Any, raw_name: Any):
+    """Add author to target_dict, using cleaned ORCID if valid, or a unique no-orcid key."""
+    name = str(raw_name or "").strip()
+    if not name:
+        return
+    clean_orcid = re.sub(r"^https?://(www\.)?orcid\.org/", "", str(raw_orcid or ""), flags=re.IGNORECASE).strip()
+    if ORCID_PATTERN.match(clean_orcid):
+        target_dict[clean_orcid] = name
+    else:
+        target_dict[f"no-orcid-{name}"] = name
+
+
 def load_data():
     """Load publications from publications.json and authors from data/authors.yaml (or CSV fallback)."""
     pubs = []
@@ -125,11 +140,7 @@ def load_data():
         with open(PUBLICATIONS_FILE, "r", encoding="utf-8") as f:
             pubs = json.load(f)
 
-    authors = {
-        "0000-0002-7013-6670": "Alin Marin Elena",
-        "0009-0005-2015-9478": "Elliott Kasoar",
-        "0000-0001-7374-9352": "Junwen Yin",
-    }
+    authors = {}
 
     authors_path = AUTHORS_FILE
     if not authors_path.exists():
@@ -152,33 +163,54 @@ def load_data():
             if isinstance(loaded_yaml, list):
                 for item in loaded_yaml:
                     if isinstance(item, dict):
-                        orcid = str(item.get("orcid") or item.get("id") or "").strip()
-                        name = str(item.get("name") or "").strip()
-                        if orcid and name:
-                            clean_orcid = re.sub(r"^https?://(www\.)?orcid\.org/", "", orcid, flags=re.IGNORECASE).strip()
-                            authors[clean_orcid] = name
+                        add_author_entry(authors, item.get("orcid") or item.get("id"), item.get("name"))
             elif isinstance(loaded_yaml, dict):
                 raw_authors = loaded_yaml.get("authors", loaded_yaml)
                 if isinstance(raw_authors, list):
                     for item in raw_authors:
                         if isinstance(item, dict):
-                            orcid = str(item.get("orcid") or item.get("id") or "").strip()
-                            name = str(item.get("name") or "").strip()
-                            if orcid and name:
-                                clean_orcid = re.sub(r"^https?://(www\.)?orcid\.org/", "", orcid, flags=re.IGNORECASE).strip()
-                                authors[clean_orcid] = name
+                            add_author_entry(authors, item.get("orcid") or item.get("id"), item.get("name"))
                 elif isinstance(raw_authors, dict):
                     for k, v in raw_authors.items():
-                        clean_orcid = re.sub(r"^https?://(www\.)?orcid\.org/", "", str(k), flags=re.IGNORECASE).strip()
-                        authors[clean_orcid] = str(v).strip()
+                        add_author_entry(authors, k, v)
         else:
             reader = csv.reader(content.splitlines())
             for row in reader:
                 if not row or row[0].startswith("#") or row[0].lower() in ("orcid", "id"):
                     continue
                 if len(row) >= 2:
-                    clean_orcid = re.sub(r"^https?://(www\.)?orcid\.org/", "", row[0].strip(), flags=re.IGNORECASE).strip()
-                    authors[clean_orcid] = row[1].strip()
+                    add_author_entry(authors, row[0], row[1])
+
+    if not authors:
+        authors = {
+            "0000-0002-7013-6670": "Alin Marin Elena",
+            "0009-0005-2015-9478": "Elliott Kasoar",
+            "0000-0001-7374-9352": "Junwen Yin",
+        }
+
+    # Ensure any group member from authors (with or without a valid ORCID) present in
+    # pub["authors"] is tracked in pub["group_authors"]
+    group_author_names = list(authors.values())
+    for pub in pubs:
+        existing_group = pub.setdefault("group_authors", [])
+        pub_authors = pub.get("authors", [])
+        for g_name in group_author_names:
+            if g_name in existing_group:
+                continue
+            g_clean = g_name.lower().replace("-", " ")
+            g_tokens = [tok for tok in g_clean.split() if len(tok) > 1]
+            if not g_tokens:
+                continue
+            g_family = g_tokens[-1]
+            g_first = g_tokens[0]
+            for a in pub_authors:
+                a_clean = a.lower().replace("-", " ")
+                a_tokens = a_clean.split()
+                if g_family in a_tokens:
+                    other = [t for t in a_tokens if t != g_family]
+                    if any(g_first in o or (len(o) == 1 and o == g_first[0]) for o in other):
+                        existing_group.append(g_name)
+                        break
 
     return pubs, authors
 

@@ -31,6 +31,7 @@ from pubs import (
     load_orcids,
     load_orcids_from_csv,
     load_orcids_from_yaml,
+    load_all_author_names,
     normalize_title,
     select_best_summary,
 )
@@ -310,6 +311,29 @@ https://orcid.org/0000-0001-6068-6786,Gilberto Teobaldi
             self.assertEqual(len(loaded), 2)
             self.assertEqual(loaded["0000-0002-7013-6670"], "Alin Marin Elena")
             self.assertEqual(loaded["0000-0001-6068-6786"], "Gilberto Teobaldi")
+        finally:
+            if os.path.exists(tmp_path):
+                os.remove(tmp_path)
+
+    def test_load_all_author_names(self):
+        yaml_content = """# Group members
+- orcid: "0000-0002-7013-6670"
+  name: "Alin Marin Elena"
+- orcid: ""
+  name: "Federica Zanca"
+- orcid: "xx"
+  name: "Elena Patyukova"
+"""
+        with tempfile.NamedTemporaryFile("w+", delete=False, suffix=".yaml") as tmp:
+            tmp.write(yaml_content)
+            tmp_path = tmp.name
+
+        try:
+            names = load_all_author_names(tmp_path)
+            self.assertEqual(len(names), 3)
+            self.assertIn("Alin Marin Elena", names)
+            self.assertIn("Federica Zanca", names)
+            self.assertIn("Elena Patyukova", names)
         finally:
             if os.path.exists(tmp_path):
                 os.remove(tmp_path)
