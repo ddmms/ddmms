@@ -8,7 +8,8 @@ role: "Group Leader &bull; Computational Scientist(Principal)"
 affiliation: "STFC SCD, UKRI | CCP5 Scientific Secretary"
 email: "alin-marin.elena@stfc.ac.uk"
 highlighted_work:
-  - "batatia20257006"
+  - id: "batatia20257006"
+    image: "assets/images/highlights/184110_1_5.0297006.figures.online.f3.jpg"
   - "janus-core"
   - "pack-mm"
   
