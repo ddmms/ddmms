@@ -27,6 +27,15 @@ talks:
     url: "https://xafs2026.org/XAFS2026/"
 
   - year: "2026"
+    title: "Machine Learned Potentials for Phonon Calculations of Metal–Organic Frameworks"
+    type: "Contributed Talk"
+    speaker: "Dr. Alin Marin Elena"
+    event: "9th Annual UK Porous Materials Conference (UKPorMat), 9-10 June, University of Bristol, UK"
+    description: "High-throughput phonon calculations in metal-organic frameworks using fine-tuned MACE foundation models within the quasi-harmonic approximation."
+    url: "https://www.rsc.org/events/find-an-event/uk-porous-materials-(ukpormat)-annual-conference-2026"
+
+
+  - year: "2026"
     title: "Machine Learning Performance and Extrapolation Guide (ML-PEG)"
     type: "Invited talk"
     speaker: "Dr. Alin Marin Elena"
@@ -34,10 +43,4 @@ talks:
     description: "Invited talk presented with James Kermode in the session on Infrastructure Developments. Covers ML-PEG, a modular framework to develop, run, and visualise automated, interactive test suites for machine-learned interatomic potentials."
     url: "https://www.cecam.org/workshop-details/a-roadmap-for-an-atomistic-machine-learning-software-ecosystem-1376"
 
-  - year: "2025"
-    title: "Machine Learned Potentials for Phonon Calculations of Metal–Organic Frameworks"
-    type: "Presentation"
-    speaker: "Dr. Alin Marin Elena"
-    event: "8th Annual UK Porous Materials Conference (UKPorMat), University of Birmingham, UK"
-    description: "High-throughput phonon calculations in metal-organic frameworks using fine-tuned MACE foundation models within the quasi-harmonic approximation."
-    url: "https://www.ukpormat.com/"
+ 
