@@ -6,5 +6,11 @@ page: "loki-coward.html"
 join_date: "2026-10-01"
 role: "ALC PhD Student"
 affiliation: "University of Bangor"
+bio: ""
+short_bio: ""
+tags:
+  - "ML Interatomic Potentials"
+  - "Molecular Dynamics"
+  - "Molten Salts" 
 #email: "alin-marin.elena@stfc.ac.uk"
 
