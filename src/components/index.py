@@ -135,8 +135,24 @@ def render_affiliations_carousel_html(affiliations: Optional[Dict[str, Any]]) ->
 
         if hierarchy:
             steps = []
+            default_colors = {
+                "UKRI": ("#e5243b", "229, 36, 59"),
+                "STFC": ("#0072ce", "0, 114, 206"),
+                "SCD": ("#10b981", "16, 185, 129"),
+                "CMMS": ("#8b5cf6", "139, 92, 246"),
+                "DDMMS": ("#06b6d4", "6, 182, 212"),
+            }
             for i, level in enumerate(hierarchy):
                 current_cls = " is-current" if i == len(hierarchy) - 1 else ""
+                short_code = str(level.get("short", "")).strip()
+                short_upper = short_code.upper()
+                org_slug = short_code.lower()
+                org_cls = f" org-{org_slug}" if org_slug else ""
+
+                fallback_color, fallback_rgb = default_colors.get(short_upper, ("#7dd3fc", "125, 211, 252"))
+                color = str(level.get("color") or fallback_color).strip()
+                rgb = str(level.get("color_rgb") or fallback_rgb).strip()
+
                 name = level.get("name", "")
                 url = str(level.get("url") or "").strip()
                 if url:
@@ -149,8 +165,10 @@ def render_affiliations_carousel_html(affiliations: Optional[Dict[str, Any]]) ->
                     name_html = f'<span class="org-chain-name">{name}</span>'
                 badge = str(level.get("badge") or "").strip()
                 badge_html = f'\n                    <span class="org-chain-badge">{badge}</span>' if badge else ""
-                steps.append(f"""                  <li class="org-chain-step{current_cls}">
-                    <span class="org-chain-short">{level.get("short", "")}</span>
+                style_attr = f' style="--step-color: {html.escape(color, quote=True)}; --step-rgb: {html.escape(rgb, quote=True)};"'
+                data_attr = f' data-org="{html.escape(org_slug, quote=True)}"' if org_slug else ""
+                steps.append(f"""                  <li class="org-chain-step{current_cls}{org_cls}"{data_attr}{style_attr}>
+                    <span class="org-chain-short">{short_code}</span>
                     {name_html}{badge_html}
                   </li>""")
             steps_html = "\n".join(steps)

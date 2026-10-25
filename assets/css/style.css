@@ -3351,17 +3351,50 @@ a:hover {
 }
 
 .org-chain-step {
+  --step-color: #7dd3fc;
+  --step-rgb: 125, 211, 252;
   position: relative;
   display: flex;
   align-items: center;
   gap: 0.9rem;
   padding: 0.5rem 0.95rem;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(var(--step-rgb), 0.35);
   border-radius: var(--radius-md);
-  background: rgba(255, 255, 255, 0.06);
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
+  background: rgba(var(--step-rgb), 0.12);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
   transition: var(--transition);
+}
+
+/* Institutional Branding specifics (defaults / fallbacks) */
+.org-chain-step[data-org="ukri"],
+.org-chain-step.org-ukri {
+  --step-color: #e5243b;
+  --step-rgb: 229, 36, 59;
+}
+
+.org-chain-step[data-org="stfc"],
+.org-chain-step.org-stfc {
+  --step-color: #0072ce;
+  --step-rgb: 0, 114, 206;
+}
+
+.org-chain-step[data-org="scd"],
+.org-chain-step.org-scd {
+  --step-color: #10b981;
+  --step-rgb: 16, 185, 129;
+}
+
+.org-chain-step[data-org="cmms"],
+.org-chain-step.org-cmms {
+  --step-color: #8b5cf6;
+  --step-rgb: 139, 92, 246;
+}
+
+.org-chain-step[data-org="ddmms"],
+.org-chain-step.org-ddmms {
+  --step-color: #06b6d4;
+  --step-rgb: 6, 182, 212;
 }
 
 /* connector line between levels, centred under the acronym chip */
@@ -3372,35 +3405,47 @@ a:hover {
   top: 100%;
   width: 2px;
   height: 0.5rem;
-  background: linear-gradient(to bottom, rgba(125, 211, 252, 0.7), rgba(125, 211, 252, 0.25));
+  background: linear-gradient(to bottom, rgba(var(--step-rgb), 0.85), rgba(var(--step-rgb), 0.2));
+  z-index: 2;
 }
 
 .org-chain-step:has(.org-chain-link):hover {
-  border-color: rgba(125, 211, 252, 0.5);
-  background: rgba(255, 255, 255, 0.12);
+  border-color: var(--step-color);
+  background: rgba(var(--step-rgb), 0.24);
+  box-shadow: 0 4px 20px rgba(var(--step-rgb), 0.35);
+  transform: translateY(-2px);
 }
 
 .org-chain-short {
   flex: 0 0 4.2rem;
   padding: 0.25rem 0;
   border-radius: var(--radius-sm);
-  background: rgba(125, 211, 252, 0.16);
-  color: #bae6fd;
+  background: rgba(var(--step-rgb), 0.28);
+  border: 1px solid rgba(var(--step-rgb), 0.5);
+  color: #ffffff;
   font-size: 0.76rem;
   font-weight: 800;
   letter-spacing: 0.06em;
   text-align: center;
+  transition: var(--transition);
+}
+
+.org-chain-step:hover .org-chain-short {
+  background: var(--step-color);
+  color: #0b1324;
+  border-color: var(--step-color);
+  box-shadow: 0 0 12px rgba(var(--step-rgb), 0.6);
 }
 
 .org-chain-name {
   font-size: 0.92rem;
   line-height: 1.3;
-  color: rgba(241, 245, 249, 0.9);
+  color: rgba(241, 245, 249, 0.94);
 }
 
 a.org-chain-link,
 a.org-chain-link:hover {
-  color: rgba(241, 245, 249, 0.95);
+  color: rgba(241, 245, 249, 0.98);
 }
 
 /* stretch the link over the whole row */
@@ -3416,30 +3461,32 @@ a.org-chain-link:hover {
 }
 
 .org-chain-link:focus-visible::after {
-  outline: 2px solid #7dd3fc;
+  outline: 2px solid var(--step-color);
   outline-offset: 2px;
 }
 
 .org-chain-ext {
   margin-left: auto;
-  color: rgba(186, 230, 253, 0.55);
+  color: rgba(var(--step-rgb), 0.75);
   transition: var(--transition);
 }
 
 .org-chain-step:hover .org-chain-ext {
-  color: #ffffff;
+  color: var(--step-color);
   transform: translate(2px, -2px);
 }
 
 .org-chain-step.is-current {
-  border-color: rgba(125, 211, 252, 0.6);
-  background: linear-gradient(135deg, rgba(56, 189, 248, 0.3), rgba(129, 140, 248, 0.22));
-  box-shadow: 0 8px 30px rgba(56, 189, 248, 0.3);
+  border-color: var(--step-color);
+  background: linear-gradient(135deg, rgba(var(--step-rgb), 0.36), rgba(var(--step-rgb), 0.16));
+  box-shadow: 0 8px 30px rgba(var(--step-rgb), 0.4);
 }
 
 .org-chain-step.is-current .org-chain-short {
-  background: #ffffff;
-  color: #0b1f4d;
+  background: var(--step-color);
+  border-color: var(--step-color);
+  color: #081325;
+  box-shadow: 0 0 14px rgba(var(--step-rgb), 0.6);
 }
 
 .org-chain-step.is-current .org-chain-name {
@@ -3452,14 +3499,17 @@ a.org-chain-link:hover {
   top: -0.65rem;
   right: 0.9rem;
   padding: 0.05rem 0.55rem;
-  border: 1px solid rgba(125, 211, 252, 0.6);
+  border: 1px solid var(--step-color);
   border-radius: var(--radius-full);
-  background: #0e3a66;
-  color: #e0f2fe;
+  background: rgba(var(--step-rgb), 0.35);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  color: #ffffff;
   font-size: 0.6rem;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
 /* Desktop: the chain runs left to right across the full width */
@@ -3484,7 +3534,8 @@ a.org-chain-link:hover {
     top: calc(50% - 1px);
     width: 1.25rem;
     height: 2px;
-    background: linear-gradient(to right, rgba(125, 211, 252, 0.7), rgba(125, 211, 252, 0.25));
+    background: linear-gradient(to right, rgba(var(--step-rgb), 0.85), rgba(255, 255, 255, 0.15));
+    z-index: 2;
   }
 
   .carousel-slide-org .org-chain-short {

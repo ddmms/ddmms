@@ -772,6 +772,14 @@ paragraphs:
             self.assertIn(f'<span class="org-chain-short">{short}</span>', index_html)
         self.assertEqual(index_html.count("org-chain-step is-current"), 1)
 
+        # Institutional branding colors on hero rectangles
+        self.assertIn('data-org="stfc"', index_html)
+        self.assertIn('--step-color: #0072ce', index_html, "STFC rectangle must use STFC branding blue")
+        self.assertIn('data-org="ukri"', index_html)
+        self.assertIn('data-org="scd"', index_html)
+        self.assertIn('data-org="cmms"', index_html)
+        self.assertIn('data-org="ddmms"', index_html)
+
         # Work-site photos are referenced and exist on disk
         for img in ("daresbury_laboratory.jpg", "rutherford_appleton_laboratory.jpg"):
             self.assertIn(f'src="assets/images/{img}"', index_html)
