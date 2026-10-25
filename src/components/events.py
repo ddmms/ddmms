@@ -90,3 +90,4 @@ def generate_events_html(events: Optional[Dict[str, Any]] = None) -> str:
   <script src="assets/js/main.js"></script>
 </body>
 </html>"""
+
