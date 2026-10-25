@@ -1,5 +1,6 @@
 """Research page component and data loader for the DDMMS website."""
 
+import html
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 import yaml
@@ -84,6 +85,33 @@ def load_research(research_file: Optional[Union[str, Path]] = None) -> Dict[str,
     return {"approach": "", "themes": []}
 
 
+def _render_funding_pill(item: Any) -> str:
+    """Render a single funding pill from a string or dictionary."""
+    if isinstance(item, str):
+        text = item.strip()
+        if not text:
+            return ""
+        return f'<span class="funding-pill">{html.escape(text)}</span>'
+
+    if isinstance(item, dict):
+        prog = str(item.get("programme") or item.get("name") or item.get("text") or item.get("title") or "").strip()
+        grant = str(item.get("grant") or item.get("grant_number") or item.get("code") or item.get("number") or item.get("id") or "").strip()
+        if prog and grant:
+            text = f"{prog} ({grant})"
+        else:
+            text = prog or grant
+        if not text:
+            return ""
+        url = str(item.get("url") or item.get("link") or "").strip()
+        if url:
+            is_external = url.startswith(("http://", "https://"))
+            target_attr = ' target="_blank" rel="noopener noreferrer"' if is_external else ''
+            return f'<a href="{html.escape(url, quote=True)}" class="funding-pill"{target_attr}>{html.escape(text)}&nbsp;<span aria-hidden="true">&#8599;</span></a>'
+        return f'<span class="funding-pill">{html.escape(text)}</span>'
+
+    return ""
+
+
 def generate_research_html(
     research_data: Optional[Union[Dict[str, Any], List[Dict[str, Any]]]] = None,
     approach: Optional[Union[str, Dict[str, Any]]] = None,
@@ -139,6 +167,29 @@ def generate_research_html(
 
         desc_html = "\n".join(desc_paragraphs)
 
+        # Funding pills
+        funding_raw = theme.get("funding") or theme.get("grants") or []
+        funding_pills = []
+        if isinstance(funding_raw, (list, tuple)):
+            for f_item in funding_raw:
+                pill = _render_funding_pill(f_item)
+                if pill:
+                    funding_pills.append(pill)
+        elif isinstance(funding_raw, (str, dict)):
+            pill = _render_funding_pill(funding_raw)
+            if pill:
+                funding_pills.append(pill)
+
+        funding_html = ""
+        if funding_pills:
+            pills_str = "\n                ".join(funding_pills)
+            funding_html = f"""            <div class="research-funding">
+              <span class="funding-label">Funding:</span>
+              <div class="funding-pills">
+                {pills_str}
+              </div>
+            </div>"""
+
         # Format action buttons/links
         raw_links = theme.get("links") or theme.get("buttons") or []
         if not raw_links and (theme.get("link") or theme.get("url")):
@@ -174,10 +225,16 @@ def generate_research_html(
             {links_str}
           </div>"""
 
+        top_parts = [f'            <h2 class="research-card-title">{title}</h2>']
+        if desc_html:
+            top_parts.append(desc_html)
+        if funding_html:
+            top_parts.append(funding_html)
+        top_content = "\n".join(top_parts)
+
         cards.append(f"""        <article class="research-card">
           <div class="research-card-top">
-            <h2 class="research-card-title">{title}</h2>
-{desc_html}
+{top_content}
           </div>
 {actions_html}
         </article>""")

@@ -160,6 +160,40 @@ class TestDDMMSSite(unittest.TestCase):
         self.assertIn("Sustainable DFT through Data-Driven Agents (Goldilocks)", research_html)
         self.assertIn("Machine Learning Performance and Extrapolation Guide (ML-PEG)", research_html)
 
+    def test_research_funding_pills(self):
+        research_html = (BASE_DIR / "research.html").read_text(encoding="utf-8")
+        self.assertIn('class="research-funding"', research_html)
+        self.assertIn('class="funding-label"', research_html)
+        self.assertIn('class="funding-pill"', research_html)
+        self.assertIn("PSDI Data to Knowledge", research_html)
+        self.assertIn("EP/X032701/1", research_html)
+        self.assertIn("EP/Y028759/1", research_html)
+        self.assertIn("EP/V028537/1", research_html)
+        self.assertIn("STFC Scientific Computing", research_html)
+
+        from components.research import generate_research_html
+        # Test string-based funding
+        rendered = generate_research_html({
+            "themes": [{
+                "title": "Quantum ML",
+                "description": "Test desc",
+                "funding": ["EPSRC EP/TEST1234", "STFC Facility"]
+            }]
+        })
+        self.assertIn("EPSRC EP/TEST1234", rendered)
+        self.assertIn("STFC Facility", rendered)
+        self.assertIn('class="funding-pill"', rendered)
+
+        # Test dictionary-based funding with URL
+        rendered_dict = generate_research_html({
+            "themes": [{
+                "title": "Quantum ML",
+                "funding": [{"programme": "Horizon Europe", "grant": "101010", "url": "https://example.com/grant"}]
+            }]
+        })
+        self.assertIn("Horizon Europe (101010)", rendered_dict)
+        self.assertIn('href="https://example.com/grant"', rendered_dict)
+
     def test_key_facts_card_removed(self):
         index_html = (BASE_DIR / "index.html").read_text(encoding="utf-8")
         self.assertNotIn("Key Facts &amp; Infrastructure", index_html)

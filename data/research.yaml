@@ -5,6 +5,14 @@ approach:
 themes:
   - id: mlips
     title: "Foundation Machine-Learned Interatomic Potentials (MLIPs)"
+    funding:
+      - programme: "PSDI Data to Knowledge"
+        grant: "EP/X032701/1"
+        url: "https://www.psdi.ac.uk"
+      - programme: "AIchemy"
+        grant: "EP/Y028759/1"
+        url: "https://aichemy.ac.uk"
+      - programme: "STFC Scientific Computing"
     description:
       - "Accurate modeling of chemical reactivity, phase transitions, and defect dynamics requires potential energy surfaces that respect rotational, translational, and permutational invariances. We develop and extend equivariant graph neural network potentials such as MACE, SevenNet, and CHGNet."
       - "Key research topics include the incorporation of polarisable long-range electrostatics (MACE-POLAR), optimal active-learning criteria that balance coverage and model uncertainty, and cross-learning strategies connecting molecular, surface, and inorganic solid phases."
@@ -15,6 +23,11 @@ themes:
 
   - id: mofs
     title: "Metal-Organic Frameworks &amp; Nanoporous Networks"
+    funding:
+      - programme: "CCP5"
+        grant: "EP/V028537/1"
+        url: "https://www.ccp5.ac.uk"
+      - programme: "STFC Scientific Computing"
     description:
       - "Metal-Organic Frameworks (MOFs) exhibit remarkable chemical modularity, ultra-high surface areas, and tunable mechanical properties such as negative thermal expansion (NTE). We curate the uMOF benchmark database and build dedicated ML potentials that enable high-throughput phonon calculations, thermodynamic stability screening, and gas adsorption modeling."
     links:
@@ -24,6 +37,9 @@ themes:
 
   - id: molten-salts
     title: "Complex Fluids, Molten Salts &amp; Transport Phenomena"
+    funding:
+      - programme: "STFC Scientific Computing"
+      - programme: "UKRI"
     description:
       - "Molten salts serve as critical thermal storage media and coolants in next-generation nuclear and concentrated solar energy systems. We perform molecular dynamics simulations to quantify self-diffusion, ionic conductivity, shear viscosity, and thermal conductivity from first principles, testing fundamental theoretical bounds and experimental calibrations."
     links:
@@ -33,6 +49,14 @@ themes:
 
   - id: workflows
     title: "High-Throughput Simulation Workflows with janus-core &amp; aiida-mlip"
+    funding:
+      - programme: "PSDI Data to Knowledge"
+        grant: "EP/X032701/1"
+        url: "https://www.psdi.ac.uk"
+      - programme: "CCP5"
+        grant: "EP/V028537/1"
+        url: "https://www.ccp5.ac.uk"
+      - programme: "STFC Scientific Computing"
     description:
       - "Bridging the gap between interatomic potentials and scientific discovery requires seamless automation. With janus-core and the aiida-mlip plugin, we provide unified pipelines with full data provenance for geometry relaxation (BFGS, FIRE, FrechetCellFilter), equation of state fitting, full 6x6 elasticity stiffness tensors ($C_{ij}$), and climbing image nudged elastic band (CI-NEB) minimum energy pathways."
     links:
@@ -42,6 +66,11 @@ themes:
 
   - id: goldilocks
     title: "Sustainable DFT through Data-Driven Agents (Goldilocks)"
+    funding:
+      - programme: "PSDI Data to Knowledge"
+        grant: "EP/X032701/1"
+        url: "https://www.psdi.ac.uk"
+      - programme: "STFC Scientific Computing"
     description:
       - "Electronic-structure calculations make up a large share of the work on national supercomputers such as ARCHER2, and choosing their settings by trial and error wastes compute and electricity. With the <strong>PSDI (Physical Sciences Data Infrastructure) Data to Knowledge</strong> initiative, we develop <a href=\"https://goldilocks.ac.uk\" target=\"_blank\" rel=\"noopener noreferrer\"><strong>Goldilocks</strong> (goldilocks.ac.uk)</a>, which recommends the settings for a DFT calculation from a crystal structure, records the basis for each recommendation, and generates the input files and submission script needed to run it: never under-converged, never wasteful."
       - "Goldilocks is a data-driven pipeline. <strong>goldilocks-data</strong> runs AiiDA convergence campaigns with real DFT calculations, <strong>goldilocks-ml</strong> trains and evaluates models on the results, and <strong>goldilocks-core</strong> applies them to new structures; each stage publishes its datasets or models on PSDI before the next stage uses them. <strong>goldilocks-agent</strong>, in development, adds an AI assistant that orchestrates these workflows, post-processes results and explains its recommendations in plain language. The k-point work is peer-reviewed in RSC <em>Digital Discovery</em> (2026, DOI: 10.1039/d5dd00565e)."
@@ -58,6 +87,11 @@ themes:
 
   - id: ml-peg
     title: "Machine Learning Performance and Extrapolation Guide (ML-PEG)"
+    funding:
+      - programme: "PSDI Data to Knowledge"
+        grant: "EP/X032701/1"
+        url: "https://www.psdi.ac.uk"
+      - programme: "STFC Scientific Computing"
     description:
       - "Evaluating machine-learned interatomic potentials requires going beyond simple training force and energy RMSE errors to evaluate true physical stability, phase behavior, and uncertainty quantification. The <strong>ML-PEG</strong> benchmarking platform establishes rigorous evaluation protocols to stress-test MLIPs across diverse chemical systems, out-of-distribution scenarios, and extrapolation limits."
       - "Alongside standardized community benchmarks, ML-PEG provides an interactive web dashboard for transparently comparing foundation models and dataset baselines across materials discovery tasks."
