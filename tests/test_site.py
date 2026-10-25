@@ -214,17 +214,18 @@ class TestDDMMSSite(unittest.TestCase):
         self.assertIn("assets/images/junwen_yin.jpeg", (BASE_DIR / "people.html").read_text(encoding="utf-8"))
 
     def test_separate_navigation_links(self):
+        header_content = (BASE_DIR / "header.html").read_text(encoding="utf-8")
+        self.assertIn('href="index.html"', header_content, "Separate link index.html missing in header.html")
+        self.assertIn('href="people.html"', header_content, "Separate link people.html missing in header.html")
+        self.assertIn('href="research.html"', header_content, "Separate link research.html missing in header.html")
+        self.assertIn('href="publications.html"', header_content, "Separate link publications.html missing in header.html")
+        self.assertIn('href="code.html"', header_content, "Separate link code.html missing in header.html")
+        self.assertIn('href="teaching.html"', header_content, "Separate link teaching.html missing in header.html")
+        self.assertIn('href="talks.html"', header_content, "Separate link talks.html missing in header.html")
+        self.assertIn('href="events.html"', header_content, "Separate link events.html missing in header.html")
+        # Neither header nor footer should contain excluded entries outside the menu and submenus
         for fname in ["header.html", "footer.html"]:
             content = (BASE_DIR / fname).read_text(encoding="utf-8")
-            self.assertIn('href="index.html"', content, f"Separate link index.html missing in {fname}")
-            self.assertIn('href="people.html"', content, f"Separate link people.html missing in {fname}")
-            self.assertIn('href="research.html"', content, f"Separate link research.html missing in {fname}")
-            self.assertIn('href="publications.html"', content, f"Separate link publications.html missing in {fname}")
-            self.assertIn('href="code.html"', content, f"Separate link code.html missing in {fname}")
-            self.assertIn('href="teaching.html"', content, f"Separate link teaching.html missing in {fname}")
-            self.assertIn('href="talks.html"', content, f"Separate link talks.html missing in {fname}")
-            self.assertIn('href="events.html"', content, f"Separate link events.html missing in {fname}")
-            # Neither header nor footer navigation should contain entries outside the menu and submenus
             self.assertNotIn('href="awards.html"', content, f"awards.html should not be in navigation {fname}")
             self.assertNotIn('href="news.html"', content, f"news.html should not be in navigation {fname}")
             self.assertNotIn('href="opportunities.html"', content, f"opportunities.html should not be in navigation {fname}")
@@ -302,13 +303,8 @@ class TestDDMMSSite(unittest.TestCase):
         self.assertIn("footer-grid", footer_content)
         self.assertIn("footer-links", footer_content)
         self.assertIn("Affiliations", footer_content)
-        self.assertIn("footer-pills-list", footer_content)
-        self.assertIn("subnav-pill", footer_content)
-        self.assertIn("footer-nav-pills", footer_content)
-        # Verify navigation pills appear before the footer-grid (at top of footer)
-        pills_idx = footer_content.find("footer-nav-pills")
-        grid_idx = footer_content.find("footer-grid")
-        self.assertGreater(grid_idx, pills_idx, "footer-nav-pills must appear before footer-grid")
+        # Footer menu is removed since the header menu is always sticky on
+        self.assertNotIn("footer-nav-pills", footer_content)
 
     def test_build_site_get_footer_container(self):
         import build_site
@@ -1549,20 +1545,13 @@ talks:
         for expected in ("Home", "People", "Research", "Publications", "Software", "Areas", "Talks", "Training", "Events"):
             self.assertIn(f"<span>{expected}</span>", header_html)
 
-        # Verify footer also follows the same menu style
+        # Footer menu is removed since the header menu is always sticky on
         footer_html = (BASE_DIR / "footer.html").read_text(encoding="utf-8")
-        self.assertIn('footer-nav-pills', footer_html)
-        self.assertIn('footer-nav-level1', footer_html)
-        self.assertIn('footer-subline-wrap', footer_html)
-        self.assertIn('footer-subline-group', footer_html)
-        for expected in ("Home", "People", "Research", "Publications", "Software", "Areas", "Talks", "Training", "Events"):
-            self.assertIn(f"<span>{expected}</span>", footer_html)
+        self.assertNotIn('footer-nav-pills', footer_html)
 
         # People and Software should not have submenus
         self.assertNotIn('data-nav-group="people"', header_html)
         self.assertNotIn('data-nav-group="software"', header_html)
-        self.assertNotIn('data-nav-group="people"', footer_html)
-        self.assertNotIn('data-nav-group="software"', footer_html)
 
         # Check pills have different colours via --pill-color style attributes
         import re
@@ -1576,9 +1565,6 @@ talks:
         self.assertIn(".header-nav-pills", style_css)
         self.assertIn(".header-subline-wrap", style_css)
         self.assertIn(".header-subline-group", style_css)
-        self.assertIn(".footer-nav-menu-wrap", style_css)
-        self.assertIn(".footer-subline-wrap", style_css)
-        self.assertIn(".footer-subline-group", style_css)
         self.assertIn(".nav-pill", style_css)
         self.assertIn(".nav-pill.active", style_css)
 

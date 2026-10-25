@@ -556,114 +556,6 @@
   // --- Reusable Footer Dynamic Loader ---
   function initFooter(footerScope) {
     if (!footerScope) return;
-
-    const currentPath = window.location.pathname;
-    const currentFilename = currentPath.split('/').pop() || 'index.html';
-
-    // Detect active section
-    let activeSection = '';
-    if (['research.html', 'talks.html', 'teaching.html', 'events.html'].includes(currentFilename)) {
-      activeSection = 'research';
-    } else if (
-      currentFilename === 'people.html' ||
-      currentFilename.endsWith('-elena.html') ||
-      currentFilename.endsWith('-kasoar.html') ||
-      currentFilename.endsWith('-yin.html') ||
-      currentPath.includes('/people/')
-    ) {
-      activeSection = 'people';
-    } else if (currentFilename === 'code.html') {
-      activeSection = 'software';
-    } else if (currentFilename === 'publications.html') {
-      activeSection = 'publications';
-    } else if (currentFilename === 'index.html' || currentFilename === '') {
-      activeSection = 'home';
-    }
-
-    // Two-line footer Level-2 subline controller
-    const sublineWrap = footerScope.querySelector('.footer-subline-wrap');
-    const subGroups = footerScope.querySelectorAll('.footer-subline-group');
-    const availableGroups = new Set();
-    subGroups.forEach(g => {
-      const grp = g.getAttribute('data-nav-group');
-      if (grp) availableGroups.add(grp);
-    });
-
-    let currentFooterVisibleGroup = null;
-
-    function showFooterSubGroup(groupName) {
-      if (currentFooterVisibleGroup === groupName) return;
-
-      let hasMatch = false;
-      subGroups.forEach(g => {
-        if (g.getAttribute('data-nav-group') === groupName) {
-          g.classList.add('active');
-          hasMatch = true;
-        } else {
-          g.classList.remove('active');
-        }
-      });
-      if (sublineWrap) {
-        if (hasMatch) {
-          sublineWrap.classList.add('is-visible');
-          currentFooterVisibleGroup = groupName;
-        } else {
-          sublineWrap.classList.remove('is-visible');
-          currentFooterVisibleGroup = null;
-        }
-      }
-    }
-
-    if (activeSection && availableGroups.has(activeSection)) {
-      showFooterSubGroup(activeSection);
-    }
-
-    // Hover & focus on Level-1 pills
-    const level1Pills = footerScope.querySelectorAll('.footer-nav-level1 .nav-pill');
-    level1Pills.forEach(pill => {
-      const targetGroup = pill.getAttribute('data-nav-target');
-      pill.addEventListener('mouseenter', () => {
-        if (availableGroups.has(targetGroup)) {
-          showFooterSubGroup(targetGroup);
-        } else if (activeSection && availableGroups.has(activeSection)) {
-          showFooterSubGroup(activeSection);
-        } else {
-          showFooterSubGroup(null);
-        }
-      });
-      pill.addEventListener('focus', () => {
-        if (availableGroups.has(targetGroup)) {
-          showFooterSubGroup(targetGroup);
-        } else if (activeSection && availableGroups.has(activeSection)) {
-          showFooterSubGroup(activeSection);
-        } else {
-          showFooterSubGroup(null);
-        }
-      });
-    });
-
-    const menuWrap = footerScope.querySelector('.footer-nav-menu-wrap') || footerScope;
-    menuWrap.addEventListener('mouseleave', (e) => {
-      if (e.relatedTarget && menuWrap.contains(e.relatedTarget)) return;
-      if (activeSection && availableGroups.has(activeSection)) {
-        showFooterSubGroup(activeSection);
-      } else {
-        showFooterSubGroup(null);
-      }
-    });
-
-    // Mark active link
-    footerScope.querySelectorAll('.nav-pill').forEach(pill => {
-      const href = pill.getAttribute('href');
-      if (
-        href === currentFilename ||
-        (currentFilename === '' && href === 'index.html') ||
-        (href === 'people.html' && activeSection === 'people' && !pill.classList.contains('nav-pill-sub')) ||
-        (href === 'research.html' && activeSection === 'research' && currentFilename === 'research.html' && !pill.classList.contains('nav-pill-sub'))
-      ) {
-        pill.classList.add('active');
-      }
-    });
   }
 
   function loadReusableFooter() {
@@ -687,57 +579,32 @@
           console.debug('Dynamic fetch of footer.html failed, using fallback:', err);
           el.innerHTML = `  <footer class="site-footer">
     <div class="container">
-      <div class="footer-nav-menu-wrap">
-        <nav class="header-nav-pills footer-nav-pills footer-nav-level1 footer-pills-list subnav-pill" aria-label="Footer Navigation">
-          <a href="index.html" class="nav-pill nav-pill-home" data-nav-target="home" style="--pill-color: #06b6d4; --pill-rgb: 6, 182, 212;">
-            <span class="nav-pill-dot"></span>
-            <span>Home</span>
-          </a>
-          <a href="people.html" class="nav-pill nav-pill-people" data-nav-target="people" style="--pill-color: #10b981; --pill-rgb: 16, 185, 129;">
-            <span class="nav-pill-dot"></span>
-            <span>People</span>
-          </a>
-          <a href="research.html" class="nav-pill nav-pill-research" data-nav-target="research" style="--pill-color: #8b5cf6; --pill-rgb: 139, 92, 246;">
-            <span class="nav-pill-dot"></span>
-            <span>Research</span>
-          </a>
-          <a href="publications.html" class="nav-pill nav-pill-pubs" data-nav-target="publications" style="--pill-color: #0ea5e9; --pill-rgb: 14, 165, 233;">
-            <span class="nav-pill-dot"></span>
-            <span>Publications</span>
-          </a>
-          <a href="code.html" class="nav-pill nav-pill-code" data-nav-target="software" style="--pill-color: #f59e0b; --pill-rgb: 245, 158, 11;">
-            <span class="nav-pill-dot"></span>
-            <span>Software</span>
-          </a>
-        </nav>
-
-        <div class="header-subline-wrap footer-subline-wrap" id="footer-subline-wrap">
-          <div class="header-subline-container footer-subline-container">
-            <nav class="header-nav-subline footer-nav-subline" aria-label="Footer Secondary Navigation">
-              <div class="header-subline-group footer-subline-group" data-nav-group="research">
-                <span class="subline-label">Research:</span>
-                <a href="research.html" class="nav-pill nav-pill-sub" style="--pill-color: #2dd4bf; --pill-rgb: 45, 212, 191;">
-                  <span class="nav-pill-dot"></span>
-                  <span>Areas</span>
-                </a>
-                <a href="talks.html" class="nav-pill nav-pill-sub" style="--pill-color: #f472b6; --pill-rgb: 244, 114, 182;">
-                  <span class="nav-pill-dot"></span>
-                  <span>Talks</span>
-                </a>
-                <a href="teaching.html" class="nav-pill nav-pill-sub" style="--pill-color: #a78bfa; --pill-rgb: 167, 139, 250;">
-                  <span class="nav-pill-dot"></span>
-                  <span>Training</span>
-                </a>
-                <a href="events.html" class="nav-pill nav-pill-sub" style="--pill-color: #fb7185; --pill-rgb: 251, 113, 133;">
-                  <span class="nav-pill-dot"></span>
-                  <span>Events</span>
-                </a>
-              </div>
-            </nav>
-          </div>
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <h4>Data Driven Materials and Molecular Science</h4>
+          <p>Accelerating atomistic discovery through physics-informed machine learning, multiscale molecular simulation, and open-source scientific workflows.</p>
+        </div>
+        <div class="footer-col">
+          <h5>Affiliations</h5>
+          <ul class="footer-links">
+            <li><a href="https://www.scd.stfc.ac.uk" target="_blank" rel="noopener noreferrer">STFC SCD</a></li>
+            <li><a href="https://www.ukri.org" target="_blank" rel="noopener noreferrer">UKRI</a></li>
+            <li><a href="https://www.psdi.ac.uk" target="_blank" rel="noopener noreferrer">PSDI Data to Knowledge</a></li>
+            <li><a href="https://www.ccp5.ac.uk" target="_blank" rel="noopener noreferrer">CCP5</a></li>
+          </ul>
         </div>
       </div>
-      <div class="footer-grid">
+      <div class="footer-bottom">
+        <span>&copy; 2026 Data Driven Materials and Molecular Science (DDMMS). Licensed under BSD-3-Clause.</span>
+        <span>United Kingdom</span>
+      </div>
+    </div>
+  </footer>
+  <div class="toast" id="toast" role="alert" aria-live="polite"></div>`;
+          initFooter(el);
+        });
+    });
+  }
         <div class="footer-brand">
           <h4>Data Driven Materials and Molecular Science</h4>
           <p>Accelerating atomistic discovery through physics-informed machine learning, multiscale molecular simulation, and open-source scientific workflows.</p>
