@@ -12,6 +12,14 @@ intro: "Invited and contributed talks given by DDMMS members at conferences, wor
 talks:
   - year: "2026"
     title: "ML-PEG: Machine Learning Performance and Extrapolation Guide"
+    type: "Contributed talk"
+    speaker: "Elliott Kasoar"
+    event: "46th CCP5 Annual General Meeting and Conference (CCP5 AGM 2026), University of Edinburgh, UK"
+    description: "Session 1 (9–11 September 2026). Presentation on ML-PEG, evaluating machine learning interatomic potential performance and extrapolation boundaries."
+    url: "https://agm46.ccp5.ac.uk/"
+
+  - year: "2026"
+    title: "ML-PEG: Machine Learning Performance and Extrapolation Guide"
     type: "Invited talk"
     speaker: "Dr. Alin Marin Elena"
     event: "NVIDIA Atomistic Simulation Summit 2026, Mainz, Germany"

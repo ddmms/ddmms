@@ -1084,6 +1084,8 @@ categories:
         self.assertIn("Machine Learning Performance and Extrapolation Guide (ML-PEG)", talks_html)
         self.assertIn("a-roadmap-for-an-atomistic-machine-learning-software-ecosystem-1376", talks_html)
         self.assertIn("Dr. Alin Marin Elena", talks_html)
+        self.assertIn("Elliott Kasoar", talks_html)
+        self.assertIn("https://agm46.ccp5.ac.uk/", talks_html)
 
         # Empty state when there are no talks
         rendered = generate_talks_html({"title": "Talks", "talks": []})
@@ -1586,6 +1588,8 @@ talks:
         self.assertIn('id="workshops"', events_html)
         self.assertIn("The Atomic Simulation Environment: Integration into Wider Community Projects", events_html)
         self.assertIn("cecam_ase_mainz_2026.jpeg", events_html)
+        self.assertIn("46th CCP5 Annual General Meeting and Conference", events_html)
+        self.assertIn("https://agm46.ccp5.ac.uk/", events_html)
         self.assertIn("Quantum Computing in Materials and Molecular Sciences", events_html)
         self.assertIn("https://royalsociety.org/science-events-and-lectures/2025/10/quantum-computing/", events_html)
         data = load_events()

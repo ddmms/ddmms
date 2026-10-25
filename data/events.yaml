@@ -7,6 +7,11 @@ categories:
     title: "Workshops"
     events:
       - year: "2026"
+        title: "46th CCP5 Annual General Meeting and Conference"
+        role: "Co-organiser: Alin Elena · CCP5 Annual Meeting"
+        description: "The 46th Annual General Meeting and Conference of CCP5 (University of Edinburgh, 9–11 September 2026), bringing together the community to showcase research and software developments in molecular and materials simulation."
+        url: "https://agm46.ccp5.ac.uk/"
+      - year: "2026"
         title: "The Atomic Simulation Environment: Integration into Wider Community Projects"
         role: "Organiser: Alin Elena · CECAM Flagship Workshop"
         description: "A CECAM Flagship Workshop at CECAM-DE-SMSM (Mainz, Germany, 15–19 June 2026) bringing together developers of electronic structure codes and community packages built on ASE to test core redesigns, plugin architectures, and ensure compatibility for ASE v4."
