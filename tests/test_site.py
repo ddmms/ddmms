@@ -913,7 +913,6 @@ contact:
             ("schools", "Schools"),
             ("workshops", "Workshops"),
             ("phd", "PhD Programme"),
-            ("graduate-scheme", "STFC Graduate Scheme"),
         ]
         for cat_id, cat_title in categories:
             self.assertIn(f'<section class="category-section" id="{cat_id}">', teaching_html)
@@ -921,6 +920,8 @@ contact:
             self.assertIn(f'<a href="#{cat_id}" class="subnav-pill">{cat_title}</a>', teaching_html)
         # Check sections exist
         self.assertNotIn('id="placements"', teaching_html)
+        self.assertNotIn('id="graduate-scheme"', teaching_html)
+        self.assertNotIn("STFC Graduate Scheme", teaching_html)
         self.assertNotIn("stfccareers.co.uk", teaching_html)
         self.assertNotIn('href="collaborate.html#contact"', teaching_html)
         self.assertNotIn('opportunities.html', teaching_html)
@@ -938,7 +939,7 @@ contact:
         self.assertEqual(teaching_html.count("Details coming soon."), 1)
 
         # Ongoing PhD project as a card, not a dated list entry
-        phd_block = teaching_html[teaching_html.index('id="phd"'):teaching_html.index('id="graduate-scheme"')]
+        phd_block = teaching_html[teaching_html.index('id="phd"'):]
         self.assertIn('<li class="info-card">', phd_block)
         self.assertNotIn('class="teaching-item', phd_block)
         self.assertIn('<span class="card-status">In progress</span>', phd_block)
@@ -949,13 +950,6 @@ contact:
         # Students are listed with their project, not on the People page
         people_html = (BASE_DIR / "people.html").read_text(encoding="utf-8")
         self.assertNotIn("Atharva Anturkar", people_html)
-
-        # Past graduates, names only
-        grad_block = teaching_html[teaching_html.index('id="graduate-scheme"'):]
-        self.assertIn('<h3 class="category-subheading">Past graduates in DDMMS</h3>', grad_block)
-        for name in ("Muhammad Mohsin", "Jessica Gould", "Willow Sparks"):
-            self.assertIn(f"{name}</li>", grad_block)
-        self.assertNotIn("@stfc.ac.uk", grad_block)
 
         with tempfile.NamedTemporaryFile("w+", encoding="utf-8", delete=False, suffix=".yaml") as tf:
             tf.write("""title: "Courses"

@@ -1,5 +1,5 @@
 title: "Teaching &amp; Training"
-intro: "Schools and workshops run by DDMMS members, PhD projects we co-supervise and graduates who trained with us."
+intro: "Schools and workshops run by DDMMS members and PhD projects we co-supervise."
 
 # Each category: id (used for the jump link), title, optional description and:
 #   events  - dated list, newest first: year, title, optional role, description,
@@ -59,11 +59,3 @@ categories:
           - label: "Duration"
             value: "4 years"
         description: "Building machine-learned interatomic potentials and running large-scale molecular dynamics of ferroelectric HfO<sub>2</sub>-based films for ultra-low-power memory in AI hardware, validated against X-ray diffraction at Diamond Light Source (I07), and extending janus-core."
-
-  - id: "graduate-scheme"
-    title: "STFC Graduate Scheme"
-    members_title: "Past graduates in DDMMS"
-    members:
-      - name: "Muhammad Mohsin"
-      - name: "Jessica Gould"
-      - name: "Willow Sparks"
