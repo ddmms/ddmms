@@ -50,6 +50,8 @@ categories:
         title: "CCP5 Summer School"
         role: "Co-Organiser: Alin Elena · Lecturer: Alin Elena"
         url: "https://summer2026.ccp5.ac.uk"
+        image: "assets/images/ccp5_summer_2026.png"
+        image_alt: "Group photo of the CCP5 Summer School 2026 at Newcastle University"
         description: "An intensive two-week training school held at Newcastle University (19–30 July 2026), organised by CCP5 with CECAM sponsorship. It provides a comprehensive introduction to the theoretical foundations of molecular simulation alongside practical sessions on computational methods and advanced simulation techniques."
       - year: "2026"
         title: "CaMML Spring School"
