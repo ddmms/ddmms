@@ -106,7 +106,7 @@
 
     // Detect active section
     let activeSection = '';
-    if (['research.html', 'talks.html', 'teaching.html'].includes(currentFilename)) {
+    if (['research.html', 'talks.html', 'teaching.html', 'events.html'].includes(currentFilename)) {
       activeSection = 'research';
     } else if (
       currentFilename === 'people.html' ||
@@ -475,51 +475,9 @@
               <span class="nav-pill-dot"></span>
               <span>Teaching</span>
             </a>
-          </div>
-
-          <!-- People Sub-pills (Level 2) -->
-          <div class="header-subline-group" data-nav-group="people">
-            <span class="subline-label">People:</span>
-            <a href="people.html#members" class="nav-pill nav-pill-sub" style="--pill-color: #34d399; --pill-rgb: 52, 211, 153;">
+            <a href="events.html" class="nav-pill nav-pill-sub" style="--pill-color: #fb7185; --pill-rgb: 251, 113, 133;">
               <span class="nav-pill-dot"></span>
-              <span>Members</span>
-            </a>
-            <a href="people.html#former-members" class="nav-pill nav-pill-sub" style="--pill-color: #38bdf8; --pill-rgb: 56, 189, 248;">
-              <span class="nav-pill-dot"></span>
-              <span>Former Members</span>
-            </a>
-            <a href="people.html#collaborators" class="nav-pill nav-pill-sub" style="--pill-color: #fbbf24; --pill-rgb: 251, 191, 36;">
-              <span class="nav-pill-dot"></span>
-              <span>Collaborators</span>
-            </a>
-            <a href="people.html#visitors" class="nav-pill nav-pill-sub" style="--pill-color: #c084fc; --pill-rgb: 192, 132, 252;">
-              <span class="nav-pill-dot"></span>
-              <span>Visitors</span>
-            </a>
-          </div>
-
-          <!-- Software Sub-pills (Level 2) -->
-          <div class="header-subline-group" data-nav-group="software">
-            <span class="subline-label">Software:</span>
-            <a href="code.html" class="nav-pill nav-pill-sub" style="--pill-color: #6366f1; --pill-rgb: 99, 102, 241;">
-              <span class="nav-pill-dot"></span>
-              <span>All Packages</span>
-            </a>
-            <a href="code.html#janus-core" class="nav-pill nav-pill-sub" style="--pill-color: #22d3ee; --pill-rgb: 34, 211, 238;">
-              <span class="nav-pill-dot"></span>
-              <span>janus-core</span>
-            </a>
-            <a href="code.html#pack-mm" class="nav-pill nav-pill-sub" style="--pill-color: #fb923c; --pill-rgb: 251, 146, 60;">
-              <span class="nav-pill-dot"></span>
-              <span>pack-mm</span>
-            </a>
-            <a href="code.html#aiida-mlip" class="nav-pill nav-pill-sub" style="--pill-color: #4ade80; --pill-rgb: 74, 222, 128;">
-              <span class="nav-pill-dot"></span>
-              <span>aiida-mlip</span>
-            </a>
-            <a href="code.html#goldilocks" class="nav-pill nav-pill-sub" style="--pill-color: #facc15; --pill-rgb: 250, 204, 21;">
-              <span class="nav-pill-dot"></span>
-              <span>goldilocks</span>
+              <span>Events</span>
             </a>
           </div>
         </nav>

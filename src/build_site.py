@@ -28,6 +28,7 @@ COLLABORATE_FILE = BASE_DIR / "data" / "collaborate.yaml"
 TEACHING_FILE = BASE_DIR / "data" / "teaching.yaml"
 TALKS_FILE = BASE_DIR / "data" / "talks.yaml"
 OPPORTUNITIES_FILE = BASE_DIR / "data" / "opportunities.yaml"
+EVENTS_FILE = BASE_DIR / "data" / "events.yaml"
 
 # Import modular components with flexible path resolution
 try:
@@ -43,6 +44,7 @@ try:
     from .components.teaching import generate_teaching_html, load_teaching
     from .components.talks import generate_talks_html, load_talks
     from .components.opportunities import generate_opportunities_html, load_opportunities
+    from .components.events import generate_events_html, load_events
 except (ImportError, ValueError):
     try:
         from components.header import generate_header_html, get_header
@@ -57,6 +59,7 @@ except (ImportError, ValueError):
         from components.teaching import generate_teaching_html, load_teaching
         from components.talks import generate_talks_html, load_talks
         from components.opportunities import generate_opportunities_html, load_opportunities
+        from components.events import generate_events_html, load_events
     except ImportError:
         from src.components.header import generate_header_html, get_header
         from src.components.footer import generate_footer_html, get_footer
@@ -70,6 +73,7 @@ except (ImportError, ValueError):
         from src.components.teaching import generate_teaching_html, load_teaching
         from src.components.talks import generate_talks_html, load_talks
         from src.components.opportunities import generate_opportunities_html, load_opportunities
+        from src.components.events import generate_events_html, load_events
 
 __all__ = [
     "BASE_DIR",
@@ -84,6 +88,7 @@ __all__ = [
     "TEACHING_FILE",
     "TALKS_FILE",
     "OPPORTUNITIES_FILE",
+    "EVENTS_FILE",
     "load_data",
     "load_news",
     "load_research",
@@ -94,6 +99,7 @@ __all__ = [
     "load_teaching",
     "load_talks",
     "load_opportunities",
+    "load_events",
     "generate_header_html",
     "get_header",
     "generate_footer_html",
@@ -110,6 +116,7 @@ __all__ = [
     "generate_teaching_html",
     "generate_talks_html",
     "generate_opportunities_html",
+    "generate_events_html",
     "build_site",
     "main",
 ]
@@ -193,6 +200,7 @@ def main():
     teaching_data = load_teaching()
     talks_data = load_talks()
     opportunities_data = load_opportunities()
+    events_data = load_events()
     total_people = sum(len(s.get("members", [])) for s in people_data.get("sections", []))
     print(
         f"Loaded {len(pubs)} publications, {len(authors)} authors, "
@@ -222,6 +230,7 @@ def main():
         "news.html": generate_news_html(news),
         "talks.html": generate_talks_html(talks_data),
         "teaching.html": generate_teaching_html(teaching_data),
+        "events.html": generate_events_html(events_data),
         "opportunities.html": generate_opportunities_html(opportunities_data),
         "collaborate.html": generate_collaborate_html(collaborate_data),
     }

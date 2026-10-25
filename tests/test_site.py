@@ -36,7 +36,8 @@ class TestDDMMSSite(unittest.TestCase):
             "teaching.html",
             "collaborate.html",
             "talks.html",
-            "opportunities.html"
+            "opportunities.html",
+            "events.html",
         ]
 
 
@@ -54,7 +55,7 @@ class TestDDMMSSite(unittest.TestCase):
         self.assertNotIn("news", content_lower, "news should not be in header.html navigation menu")
         # 5 main entries + sub-items exist in collapsible menu
         main_entries = ["home", "people", "research", "publications", "software"]
-        sub_items = ["talks", "teaching"]
+        sub_items = ["talks", "teaching", "events"]
         for item in main_entries + sub_items:
             self.assertIn(item, content_lower, f"Menu item '{item}' missing from header.html")
         # Top menu (nav-desktop) is removed; only the collapsible corner menu is retained
@@ -222,6 +223,7 @@ class TestDDMMSSite(unittest.TestCase):
             self.assertIn('href="code.html"', content, f"Separate link code.html missing in {fname}")
             self.assertIn('href="teaching.html"', content, f"Separate link teaching.html missing in {fname}")
             self.assertIn('href="talks.html"', content, f"Separate link talks.html missing in {fname}")
+            self.assertIn('href="events.html"', content, f"Separate link events.html missing in {fname}")
             # Neither header nor footer navigation should contain entries outside the menu and submenus
             self.assertNotIn('href="awards.html"', content, f"awards.html should not be in navigation {fname}")
             self.assertNotIn('href="news.html"', content, f"news.html should not be in navigation {fname}")
@@ -1512,6 +1514,7 @@ talks:
             ("news.html", "news_banner.jpg"),
             ("talks.html", "teaching_talks_banner.jpg"),
             ("teaching.html", "teaching_talks_banner.jpg"),
+            ("events.html", "teaching_talks_banner.jpg"),
             ("collaborate.html", "collaborate_banner.jpg"),
             ("opportunities.html", "collaborate_banner.jpg"),
             ("alin-marin-elena.html", "people_banner.jpg"),
@@ -1543,8 +1546,12 @@ talks:
         self.assertIn('class="nav-pill-dot"', header_html)
 
         # Check pills exist for core pages (top line and second line sub-pills like research)
-        for expected in ("Home", "People", "Research", "Publications", "Software", "Talks", "Teaching"):
+        for expected in ("Home", "People", "Research", "Publications", "Software", "Themes", "Talks", "Teaching", "Events"):
             self.assertIn(f"<span>{expected}</span>", header_html)
+
+        # People and Software should not have submenus
+        self.assertNotIn('data-nav-group="people"', header_html)
+        self.assertNotIn('data-nav-group="software"', header_html)
 
         # Check pills have different colours via --pill-color style attributes
         import re
@@ -1560,6 +1567,18 @@ talks:
         self.assertIn(".header-subline-group", style_css)
         self.assertIn(".nav-pill", style_css)
         self.assertIn(".nav-pill.active", style_css)
+
+    def test_events_page(self):
+        from components.events import load_events, generate_events_html
+        events_html = (BASE_DIR / "events.html").read_text(encoding="utf-8")
+        self.assertIn("Events", events_html)
+        self.assertIn("CaMML Spring School 2027", events_html)
+        data = load_events()
+        self.assertIn("categories", data)
+        rendered = generate_events_html({"title": "Group Events", "categories": []})
+        self.assertIn("Group Events", rendered)
+        with self.assertRaises(FileNotFoundError):
+            load_events(Path("/nonexistent/events.yaml"))
 
 
 if __name__ == "__main__":
