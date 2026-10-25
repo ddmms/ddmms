@@ -58,7 +58,15 @@ sections:
     title: "Collaborators"
     subtitle: "Academic collaborators, national laboratory partners, and international consortia advancing atomistic simulation and scientific machine learning."
     empty_text: "Collaborators will be listed here soon."
-    members: []
+    members: 
+    - name: "Dr Cillian Cockrell"
+      role: "Lecturer" 
+      affiliation: "University of Bangor"
+      links:
+        - text: "ORCID"
+          url: "https://orcid.org/0000-0002-8501-7287" 
+        - text: "website"
+          url: "https://www.bangor.ac.uk/staff/scse/cillian-cockrell-688383/en"
     # Same entry format as former-members above.
 
   - id: "visitors"
