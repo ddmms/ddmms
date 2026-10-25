@@ -17,3 +17,11 @@ talks:
     event: "NVIDIA Atomistic Simulation Summit 2026, Mainz, Germany"
     description: "Session: AI agents and Autonomous Labs (3–4 September 2026 at Max Planck Institute for Polymer Research)."
     url: "https://events.nvidia.com/atomistic-simulation-summit"
+
+  - year: "2025"
+    title: "Machine Learned Potentials for Phonon Calculations of Metal–Organic Frameworks"
+    type: "Presentation"
+    speaker: "Dr. Alin Marin Elena"
+    event: "8th Annual UK Porous Materials Conference (UKPorMat), University of Birmingham, UK"
+    description: "High-throughput phonon calculations in metal-organic frameworks using fine-tuned MACE foundation models within the quasi-harmonic approximation."
+    url: "https://www.ukpormat.com/"
