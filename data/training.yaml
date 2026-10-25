@@ -76,6 +76,8 @@ categories:
         title: "CCP5 Summer School"
         role: "Co-Organiser: Alin Elena · Lecturer: Alin Elena"
         url: "https://summer2024.ccp5.ac.uk"
+        image: "assets/images/ccp5_2024.webp"
+        image_alt: "Participants at the CCP5 Summer School 2024 at Newcastle University"
         description: "Organised by CCP5 and sponsored by CECAM at Newcastle University (14–25 July 2024), providing early-career researchers and PhD students with theoretical instruction, practical computational masterclasses, and seminars across state-of-the-art molecular simulation."
       - year: "2023"
         title: "Machine Learning for Atomistic Modelling Autumn School"

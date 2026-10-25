@@ -998,6 +998,7 @@ contact:
         self.assertIn('href="https://summer2026.ccp5.ac.uk"', teaching_html)
         self.assertIn("assets/images/ccp5_summer_2026.png", teaching_html)
         self.assertIn("assets/images/ccp5_2025.png", teaching_html)
+        self.assertIn("assets/images/ccp5_2024.webp", teaching_html)
         self.assertIn('href="https://spring2026.camml.ac.uk"', teaching_html)
         self.assertIn('href="https://spring2025.camml.ac.uk/about/"', teaching_html)
         self.assertIn('href="https://summer2024.ccp5.ac.uk"', teaching_html)
