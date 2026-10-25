@@ -18,6 +18,14 @@ talks:
     description: "Session: AI agents and Autonomous Labs (3–4 September 2026 at Max Planck Institute for Polymer Research)."
     url: "https://events.nvidia.com/atomistic-simulation-summit"
 
+  - year: "2026"
+    title: "Bridging the Gap Between Theory and Experiment: Augmenting MD-EXAFS with Machine Learning Interatomic Potentials for Complex Materials Research"
+    type: "Contributed talk"
+    speaker: "Dr. Alin Marin Elena"
+    event: "19th International Conference on X-ray Absorption Fine Structure (XAFS 2026), Chiang Mai, Thailand"
+    description: "Session: Computational Methods and Data Analysis (21–26 June 2026, Chiang Mai, Thailand)."
+    url: "https://xafs2026.org/XAFS2026/"
+
   - year: "2025"
     title: "Machine Learned Potentials for Phonon Calculations of Metal–Organic Frameworks"
     type: "Presentation"

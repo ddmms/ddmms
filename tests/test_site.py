@@ -1075,6 +1075,9 @@ categories:
         self.assertIn("Machine Learned Potentials for Phonon Calculations of Metal–Organic Frameworks", talks_html)
         self.assertIn("UKPorMat", talks_html)
         self.assertIn("https://www.ukpormat.com/", talks_html)
+        self.assertIn("Bridging the Gap Between Theory and Experiment", talks_html)
+        self.assertIn("XAFS 2026", talks_html)
+        self.assertIn("https://xafs2026.org/XAFS2026/", talks_html)
         self.assertIn("Dr. Alin Marin Elena", talks_html)
 
         # Empty state when there are no talks
