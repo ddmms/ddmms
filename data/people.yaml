@@ -21,6 +21,33 @@ sections:
         yaml: "data/people/loki-coward.yaml"
         join_date: "2026-10-01"
 
+  - id: "alc-phd"
+    nav_title: "ALC PhD Programme"
+    title: "ALC PhD Programme"
+    subtitle: "PhD students funded through the Ada Lovelace Centre programme co-supervised by DDMMS members with partner universities."
+    members:
+      - name: "Atharva Anturkar"
+        avatar: "AA"
+        role: "ALC PhD Student"
+        affiliation: "University College London (UCL)"
+        bio: "Machine learning and atomistic simulations of ferroelectric functional oxides for ultra-low-power AI technologies."
+        links:
+          - text: "Project"
+            url: "https://www.ucl.ac.uk/mathematical-physical-sciences/data-intensive-science-and-industry/study-here/available-phd-projects/projects-mssl-space-science-computational-physical-sciences"
+          - text: "ALC"
+            url: "https://www.adalovelacecentre.ac.uk/phd-projects/"
+
+      - name: "Mueen Taj"
+        avatar: "MT"
+        role: "ALC PhD Student"
+        affiliation: "University College London (UCL)"
+        bio: "Developing machine learning approaches to enhance the analysis of neutron spectroscopy experiments, bridging density functional theory with molecular dynamics."
+        links:
+          - text: "Group"
+            url: "https://mdi-group.github.io/people/"
+          - text: "ALC"
+            url: "https://www.adalovelacecentre.ac.uk/phd-projects/"
+
   - id: "former-members"
     nav_title: "Former Members"
     title: "Former Members"

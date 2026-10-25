@@ -589,6 +589,7 @@ themes:
         section_ids = [s["id"] for s in people_data["sections"]]
         self.assertTrue("members" in section_ids or "core-team" in section_ids)
         self.assertIn("former-members", section_ids)
+        self.assertIn("alc-phd", section_ids)
         self.assertIn("collaborators", section_ids)
         self.assertIn("visitors", section_ids)
 
@@ -598,6 +599,12 @@ themes:
         self.assertIn("Dr. Alin Marin Elena", names)
         self.assertIn("Elliott Kasoar", names)
         self.assertIn("Dr. Junwen Yin", names)
+
+        # Verify ALC PhD programme members
+        phd_section = next(s for s in people_data["sections"] if s["id"] == "alc-phd")
+        phd_names = [m["name"] for m in phd_section["members"]]
+        self.assertIn("Atharva Anturkar", phd_names)
+        self.assertIn("Mueen Taj", phd_names)
 
         # Verify collaborators include research partners
         collab_section = next(s for s in people_data["sections"] if s["id"] == "collaborators")
@@ -922,19 +929,21 @@ contact:
         categories = [
             ("schools", "Schools"),
             ("workshops", "Workshops"),
-            ("phd", "PhD Programme"),
         ]
         for cat_id, cat_title in categories:
             self.assertIn(f'<section class="category-section" id="{cat_id}">', teaching_html)
             self.assertIn(f'<h2 class="home-heading">{cat_title}</h2>', teaching_html)
             self.assertIn(f'<a href="#{cat_id}" class="subnav-pill">{cat_title}</a>', teaching_html)
-        # Check sections exist
+        # Check sections exist / don't exist
         self.assertNotIn('id="placements"', teaching_html)
         self.assertNotIn('id="graduate-scheme"', teaching_html)
+        self.assertNotIn('id="phd"', teaching_html)
+        self.assertNotIn("PhD Programme", teaching_html)
         self.assertNotIn("STFC Graduate Scheme", teaching_html)
         self.assertNotIn("stfccareers.co.uk", teaching_html)
         self.assertNotIn('href="collaborate.html#contact"', teaching_html)
         self.assertNotIn('opportunities.html', teaching_html)
+        self.assertNotIn("Atharva Anturkar", teaching_html)
 
         self.assertIn("CCP5 Summer School", teaching_html)
         self.assertIn('href="https://spring2026.camml.ac.uk"', teaching_html)
@@ -948,18 +957,11 @@ contact:
         # Workshops has no entries yet
         self.assertEqual(teaching_html.count("Details coming soon."), 1)
 
-        # Ongoing PhD project as a card, not a dated list entry
-        phd_block = teaching_html[teaching_html.index('id="phd"'):]
-        self.assertIn('<li class="info-card">', phd_block)
-        self.assertNotIn('class="teaching-item', phd_block)
-        self.assertIn('<span class="card-status">In progress</span>', phd_block)
-        self.assertIn("Properties of Functional Oxides", phd_block)
-        self.assertIn("<dd>Atharva Anturkar</dd>", phd_block)
-        self.assertIn("<dd>Prof Alexander Shluger and Dr Junwen Yin</dd>", phd_block)
-        self.assertIn('href="https://www.adalovelacecentre.ac.uk/phd-projects/"', phd_block)
-        # Students are listed with their project, not on the People page
+        # PhD programme moved to People page
         people_html = (BASE_DIR / "people.html").read_text(encoding="utf-8")
-        self.assertNotIn("Atharva Anturkar", people_html)
+        self.assertIn("Atharva Anturkar", people_html)
+        self.assertIn("Mueen Taj", people_html)
+        self.assertIn("ALC PhD Programme", people_html)
 
         with tempfile.NamedTemporaryFile("w+", encoding="utf-8", delete=False, suffix=".yaml") as tf:
             tf.write("""title: "Courses"

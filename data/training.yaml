@@ -1,5 +1,5 @@
 title: "Teaching &amp; Training"
-intro: "Schools and workshops run by DDMMS members and PhD projects we co-supervise."
+intro: "Schools and workshops run by DDMMS members."
 
 # Each category: id (used for the jump link), title, optional description and:
 #   events  - dated list, newest first: year, title, optional role, description,
@@ -37,25 +37,3 @@ categories:
     title: "Workshops"
     events: []
 
-  - id: "phd"
-    title: "PhD Programme"
-    description: "PhD projects co-supervised by DDMMS members with partner universities."
-    cards:
-      - title: "Properties of Functional Oxides – Using machine learning and atomistic simulations to improve AI technologies"
-        url: "https://www.ucl.ac.uk/mathematical-physical-sciences/data-intensive-science-and-industry/study-here/available-phd-projects/projects-mssl-space-science-computational-physical-sciences"
-        status: "In progress"
-        details:
-          - label: "PhD student"
-            value: "Atharva Anturkar"
-          - label: "Supervisors"
-            value: "Prof Alexander Shluger and Dr Junwen Yin"
-          - label: "University"
-            value: "University College London (UCL)"
-          - label: "Programme"
-            value: "ALC PhD programme"
-            url: "https://www.adalovelacecentre.ac.uk/phd-projects/"
-          - label: "Started"
-            value: "2026"
-          - label: "Duration"
-            value: "4 years"
-        description: "Building machine-learned interatomic potentials and running large-scale molecular dynamics of ferroelectric HfO<sub>2</sub>-based films for ultra-low-power memory in AI hardware, validated against X-ray diffraction at Diamond Light Source (I07), and extending janus-core."

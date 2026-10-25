@@ -346,7 +346,12 @@ def generate_people_html(people_data: Optional[Dict[str, Any]] = None) -> str:
         else:
             grid_html = ""
 
-        anchor_alias = f'      <span id="core-team" aria-hidden="true"></span>\n' if sec_id == "members" else ""
+        if sec_id == "members":
+            anchor_alias = '      <span id="core-team" aria-hidden="true"></span>\n'
+        elif sec_id == "alc-phd":
+            anchor_alias = '      <span id="phd" aria-hidden="true"></span>\n'
+        else:
+            anchor_alias = ""
 
         sections_rendered.append(f"""{anchor_alias}      <!-- {sec_title} Section -->
       <section id="{sec_id}" class="people-section">
