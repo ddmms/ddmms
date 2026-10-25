@@ -57,6 +57,8 @@ categories:
         title: "CaMML Spring School"
         role: "Co-Organiser: Alin Elena · Lecturer: Alin Elena"
         url: "https://spring2026.camml.ac.uk"
+        image: "assets/images/camml_spring_2026.jpeg"
+        image_alt: "Participants at the CaMML Spring School 2026 at STFC Daresbury Laboratory"
         description: "A five-day hands-on course at STFC Daresbury Laboratory (13–17 April 2026), organised by PSDI and AIchemy with support from STFC-SCD, PSDS, CCP5, and CCP9, covering the fundamentals of machine learning, neural network interatomic potentials, and graph neural networks for materials."
       - year: "2025"
         title: "CCP5 Summer School"
