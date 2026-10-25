@@ -1,34 +1,58 @@
   <footer class="site-footer">
     <div class="container">
-      <!-- Quick Navigation Pills at top of footer -->
-      <nav class="subpage-nav-bar footer-nav-pills" aria-label="Footer quick navigation">
-        <div class="subpage-nav-scroller footer-pills-list">
-          <a href="index.html" class="subnav-pill" style="--pill-color: #57cbcc;">
-            <span class="subnav-pill-title">Home</span>
+      <!-- Quick Navigation Menu at top of footer (two lines matching header style) -->
+      <div class="footer-nav-menu-wrap">
+        <nav class="header-nav-pills footer-nav-pills footer-nav-level1 footer-pills-list" aria-label="Footer Navigation">
+          <a href="index.html" class="nav-pill subnav-pill nav-pill-home" data-nav-target="home" style="--pill-color: #06b6d4; --pill-rgb: 6, 182, 212;">
+            <span class="nav-pill-dot"></span>
+            <span>Home</span>
           </a>
-          <a href="people.html" class="subnav-pill" style="--pill-color: #2dd4bf;">
-            <span class="subnav-pill-title">People</span>
+          <a href="people.html" class="nav-pill subnav-pill nav-pill-people" data-nav-target="people" style="--pill-color: #10b981; --pill-rgb: 16, 185, 129;">
+            <span class="nav-pill-dot"></span>
+            <span>People</span>
           </a>
-          <a href="research.html" class="subnav-pill" style="--pill-color: #4ade80;">
-            <span class="subnav-pill-title">Research</span>
+          <a href="research.html" class="nav-pill subnav-pill nav-pill-research" data-nav-target="research" style="--pill-color: #8b5cf6; --pill-rgb: 139, 92, 246;">
+            <span class="nav-pill-dot"></span>
+            <span>Research</span>
           </a>
-          <a href="talks.html" class="subnav-pill" style="--pill-color: #a78bfa;">
-            <span class="subnav-pill-title">Talks</span>
+          <a href="publications.html" class="nav-pill subnav-pill nav-pill-pubs" data-nav-target="publications" style="--pill-color: #0ea5e9; --pill-rgb: 14, 165, 233;">
+            <span class="nav-pill-dot"></span>
+            <span>Publications</span>
           </a>
-          <a href="teaching.html" class="subnav-pill" style="--pill-color: #818cf8;">
-            <span class="subnav-pill-title">Teaching</span>
+          <a href="code.html" class="nav-pill subnav-pill nav-pill-code" data-nav-target="software" style="--pill-color: #f59e0b; --pill-rgb: 245, 158, 11;">
+            <span class="nav-pill-dot"></span>
+            <span>Software</span>
           </a>
-          <a href="events.html" class="subnav-pill" style="--pill-color: #fb7185;">
-            <span class="subnav-pill-title">Events</span>
-          </a>
-          <a href="publications.html" class="subnav-pill" style="--pill-color: #38bdf8;">
-            <span class="subnav-pill-title">Publications</span>
-          </a>
-          <a href="code.html" class="subnav-pill" style="--pill-color: #fbbf24;">
-            <span class="subnav-pill-title">Software</span>
-          </a>
+        </nav>
+
+        <!-- Second Line for Level 2 Entries (Sub-pills for Research) -->
+        <div class="header-subline-wrap footer-subline-wrap" id="footer-subline-wrap">
+          <div class="header-subline-container footer-subline-container">
+            <nav class="header-nav-subline footer-nav-subline" aria-label="Footer Secondary Navigation">
+              <!-- Research Sub-pills (Level 2) -->
+              <div class="header-subline-group footer-subline-group" data-nav-group="research">
+                <span class="subline-label">Research:</span>
+                <a href="research.html" class="nav-pill subnav-pill nav-pill-sub" style="--pill-color: #2dd4bf; --pill-rgb: 45, 212, 191;">
+                  <span class="nav-pill-dot"></span>
+                  <span>Areas</span>
+                </a>
+                <a href="talks.html" class="nav-pill subnav-pill nav-pill-sub" style="--pill-color: #f472b6; --pill-rgb: 244, 114, 182;">
+                  <span class="nav-pill-dot"></span>
+                  <span>Talks</span>
+                </a>
+                <a href="teaching.html" class="nav-pill subnav-pill nav-pill-sub" style="--pill-color: #a78bfa; --pill-rgb: 167, 139, 250;">
+                  <span class="nav-pill-dot"></span>
+                  <span>Training</span>
+                </a>
+                <a href="events.html" class="nav-pill subnav-pill nav-pill-sub" style="--pill-color: #fb7185; --pill-rgb: 251, 113, 133;">
+                  <span class="nav-pill-dot"></span>
+                  <span>Events</span>
+                </a>
+              </div>
+            </nav>
+          </div>
         </div>
-      </nav>
+      </div>
 
       <div class="footer-grid">
         <div class="footer-brand">

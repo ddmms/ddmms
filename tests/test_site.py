@@ -1546,12 +1546,23 @@ talks:
         self.assertIn('class="nav-pill-dot"', header_html)
 
         # Check pills exist for core pages (top line and second line sub-pills like research)
-        for expected in ("Home", "People", "Research", "Publications", "Software", "Themes", "Talks", "Teaching", "Events"):
+        for expected in ("Home", "People", "Research", "Publications", "Software", "Areas", "Talks", "Training", "Events"):
             self.assertIn(f"<span>{expected}</span>", header_html)
+
+        # Verify footer also follows the same menu style
+        footer_html = (BASE_DIR / "footer.html").read_text(encoding="utf-8")
+        self.assertIn('footer-nav-pills', footer_html)
+        self.assertIn('footer-nav-level1', footer_html)
+        self.assertIn('footer-subline-wrap', footer_html)
+        self.assertIn('footer-subline-group', footer_html)
+        for expected in ("Home", "People", "Research", "Publications", "Software", "Areas", "Talks", "Training", "Events"):
+            self.assertIn(f"<span>{expected}</span>", footer_html)
 
         # People and Software should not have submenus
         self.assertNotIn('data-nav-group="people"', header_html)
         self.assertNotIn('data-nav-group="software"', header_html)
+        self.assertNotIn('data-nav-group="people"', footer_html)
+        self.assertNotIn('data-nav-group="software"', footer_html)
 
         # Check pills have different colours via --pill-color style attributes
         import re
@@ -1565,6 +1576,9 @@ talks:
         self.assertIn(".header-nav-pills", style_css)
         self.assertIn(".header-subline-wrap", style_css)
         self.assertIn(".header-subline-group", style_css)
+        self.assertIn(".footer-nav-menu-wrap", style_css)
+        self.assertIn(".footer-subline-wrap", style_css)
+        self.assertIn(".footer-subline-group", style_css)
         self.assertIn(".nav-pill", style_css)
         self.assertIn(".nav-pill.active", style_css)
 
