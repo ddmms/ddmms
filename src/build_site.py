@@ -10,6 +10,7 @@ import json
 import re
 import sys
 from pathlib import Path
+from typing import Any, Dict, List, Optional
 import yaml
 
 # Paths
