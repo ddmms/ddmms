@@ -87,6 +87,24 @@ sections:
     subtitle: "Academic collaborators, national laboratory partners, and international consortia advancing atomistic simulation and scientific machine learning."
     empty_text: "Collaborators will be listed here soon."
     members: 
+      - name: "Prof Gábor Csányi"
+        avatar: "assets/images/gabor_csanyi.jpg"
+        role: "Director"
+        affiliation: "Max Planck Institute for Polymer Research"
+        links:
+          - text: "ORCID"
+            url: "https://orcid.org/0000-0002-8180-2034"
+          - text: "website"
+            url: "https://www.mpip-mainz.mpg.de/1131192/01_Director"
+      - name: "Prof Alexander Shluger"
+        avatar: "assets/images/alexander_shluger.jpg"
+        role: "Professor of Physics"
+        affiliation: "University College London (UCL)"
+        links:
+          - text: "ORCID"
+            url: "https://orcid.org/0000-0002-2488-0896"
+          - text: "website"
+            url: "https://profiles.ucl.ac.uk/4314-alexander-shluger"
       - name: "Dr Cillian Cockrell"
         avatar: "assets/images/cillian_cockrell.jpg"
         role: "Lecturer" 
@@ -97,15 +115,6 @@ sections:
           - text: "website"
             url: "https://www.bangor.ac.uk/staff/scse/cillian-cockrell-688383/en"
 
-      - name: "Prof Alexander Shluger"
-        avatar: "assets/images/alexander_shluger.jpg"
-        role: "Professor of Physics"
-        affiliation: "University College London (UCL)"
-        links:
-          - text: "ORCID"
-            url: "https://orcid.org/0000-0002-2488-0896"
-          - text: "website"
-            url: "https://profiles.ucl.ac.uk/4314-alexander-shluger"
 
       - name: "Dr Keith Butler"
         avatar: "assets/images/keith_butler.jpg"
@@ -127,15 +136,6 @@ sections:
           - text: "website"
             url: "https://www.isis.stfc.ac.uk/instruments/tosca/"
 
-      - name: "Prof Gábor Csányi"
-        avatar: "assets/images/gabor_csanyi.jpg"
-        role: "Director"
-        affiliation: "Max Planck Institute for Polymer Research"
-        links:
-          - text: "ORCID"
-            url: "https://orcid.org/0000-0002-8180-2034"
-          - text: "website"
-            url: "https://www.mpip-mainz.mpg.de/1131192/01_Director"
     # Same entry format as former-members above.
 
   - id: "visitors"
