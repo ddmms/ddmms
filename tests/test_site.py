@@ -603,6 +603,7 @@ themes:
         # Verify ALC PhD programme members
         phd_section = next(s for s in people_data["sections"] if s["id"] == "alc-phd")
         phd_names = [m["name"] for m in phd_section["members"]]
+        self.assertIn("Loki Coward", phd_names)
         self.assertIn("Atharva Anturkar", phd_names)
         self.assertIn("Mueen Taj", phd_names)
 

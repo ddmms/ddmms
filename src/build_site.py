@@ -228,9 +228,9 @@ def main():
         "collaborate.html": generate_collaborate_html(collaborate_data),
     }
 
-    # Generate individual profile pages for core team members
+    # Generate individual profile pages for members with dedicated pages
     for sec in people_data.get("sections", []):
-        if sec.get("id") in ("core-team", "members"):
+        if sec.get("id") in ("core-team", "members", "alc-phd"):
             for member in sec.get("members", []):
                 page_filename = member.get("page")
                 slug = member.get("slug")
