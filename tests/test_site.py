@@ -1078,6 +1078,8 @@ categories:
         self.assertIn("Bridging the Gap Between Theory and Experiment", talks_html)
         self.assertIn("XAFS 2026", talks_html)
         self.assertIn("https://xafs2026.org/XAFS2026/", talks_html)
+        self.assertIn("Machine Learning Performance and Extrapolation Guide (ML-PEG)", talks_html)
+        self.assertIn("a-roadmap-for-an-atomistic-machine-learning-software-ecosystem-1376", talks_html)
         self.assertIn("Dr. Alin Marin Elena", talks_html)
 
         # Empty state when there are no talks

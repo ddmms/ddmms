@@ -26,6 +26,14 @@ talks:
     description: "Session: Computational Methods and Data Analysis (21–26 June 2026, Chiang Mai, Thailand)."
     url: "https://xafs2026.org/XAFS2026/"
 
+  - year: "2026"
+    title: "Machine Learning Performance and Extrapolation Guide (ML-PEG)"
+    type: "Invited talk"
+    speaker: "Dr. Alin Marin Elena"
+    event: "CECAM Workshop: A roadmap for an atomistic machine learning software ecosystem, EPFL, Lausanne, Switzerland"
+    description: "Invited talk presented with James Kermode in the session on Infrastructure Developments. Covers ML-PEG, a modular framework to develop, run, and visualise automated, interactive test suites for machine-learned interatomic potentials."
+    url: "https://www.cecam.org/workshop-details/a-roadmap-for-an-atomistic-machine-learning-software-ecosystem-1376"
+
   - year: "2025"
     title: "Machine Learned Potentials for Phonon Calculations of Metal–Organic Frameworks"
     type: "Presentation"
