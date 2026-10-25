@@ -649,6 +649,10 @@ themes:
         self.assertIn("Dr Jeff Armstrong", collab_names)
         self.assertIn("Prof Gábor Csányi", collab_names)
         self.assertIn("Dr Jacob Wilkins", collab_names)
+        self.assertIn("Dr Marco Molinari", collab_names)
+        self.assertIn("Prathami Kamath", collab_names)
+        self.assertIn("Dr Théo Jaffrelot Inizan", collab_names)
+        self.assertIn("Prof Petra Ágota Szilágyi", collab_names)
         for m in collab_section["members"]:
             self.assertTrue(m.get("avatar", "").startswith("assets/images/"))
 

@@ -146,6 +146,46 @@ sections:
           - text: "website"
             url: "https://www.sc.stfc.ac.uk/team/"
 
+      - name: "Dr Marco Molinari"
+        avatar: "assets/images/marco_molinari.jpg"
+        role: "Reader in Computational Chemistry and Materials Science"
+        affiliation: "University of Huddersfield"
+        links:
+          - text: "ORCID"
+            url: "https://orcid.org/0000-0001-7144-6075"
+          - text: "website"
+            url: "https://pure.hud.ac.uk/en/persons/marco-molinari/"
+
+      - name: "Prathami Kamath"
+        avatar: "assets/images/prathami_kamath.jpg"
+        role: "Graduate Student Researcher"
+        affiliation: "UC Berkeley &amp; Lawrence Berkeley National Laboratory"
+        links:
+          - text: "ORCID"
+            url: "https://orcid.org/0009-0005-1646-105X"
+          - text: "website"
+            url: "https://perssongroup.lbl.gov/people"
+
+      - name: "Dr Théo Jaffrelot Inizan"
+        avatar: "assets/images/theo_jaffrelot_inizan.jpg"
+        role: "Founding Scientist, Archean &amp; Associate Researcher, LBNL"
+        affiliation: "Archean &amp; Lawrence Berkeley National Laboratory"
+        links:
+          - text: "ORCID"
+            url: "https://orcid.org/0000-0002-2433-1619"
+          - text: "website"
+            url: "https://theojaffrelot.com/"
+
+      - name: "Prof Petra Ágota Szilágyi"
+        avatar: "assets/images/petra_agota_szilagyi.jpg"
+        role: "Professor in Catalysis and Organic Chemistry"
+        affiliation: "University of Oslo (UiO)"
+        links:
+          - text: "ORCID"
+            url: "https://orcid.org/0000-0003-1221-3022"
+          - text: "website"
+            url: "https://www.mn.uio.no/kjemi/english/people/aca/petraas/petraas"
+
     # Same entry format as former-members above.
 
   - id: "visitors"
