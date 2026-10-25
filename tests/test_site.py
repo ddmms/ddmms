@@ -599,6 +599,14 @@ themes:
         self.assertIn("Elliott Kasoar", names)
         self.assertIn("Dr. Junwen Yin", names)
 
+        # Verify collaborators include research partners
+        collab_section = next(s for s in people_data["sections"] if s["id"] == "collaborators")
+        collab_names = [m["name"] for m in collab_section["members"]]
+        self.assertIn("Prof Alexander Shluger", collab_names)
+        self.assertIn("Dr Keith Butler", collab_names)
+        self.assertIn("Dr Jeff Armstrong", collab_names)
+        self.assertIn("Prof Gábor Csányi", collab_names)
+
         # Test custom YAML people loading
         with tempfile.NamedTemporaryFile("w+", encoding="utf-8", delete=False, suffix=".yaml") as tpf:
             tpf.write("""subtitle: "Custom team description."
