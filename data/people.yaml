@@ -136,6 +136,16 @@ sections:
           - text: "website"
             url: "https://www.isis.stfc.ac.uk/instruments/tosca/"
 
+      - name: "Dr Jacob Wilkins"
+        avatar: "assets/images/jacob_wilkins.png"
+        role: "Research Software Engineer"
+        affiliation: "Scientific Computing Department, STFC"
+        links:
+          - text: "ORCID"
+            url: "https://orcid.org/0009-0004-9147-3475"
+          - text: "website"
+            url: "https://www.sc.stfc.ac.uk/team/"
+
     # Same entry format as former-members above.
 
   - id: "visitors"

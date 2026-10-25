@@ -293,9 +293,9 @@ class TestDDMMSSite(unittest.TestCase):
             self.assertNotIn(placeholder, people_html, f"Placeholder {placeholder!r} should not be published")
         # Ensure specific names are removed
         self.assertNotIn("Matteo Salvalaglio", people_html)
-        self.assertNotIn("Jacob Wilkins", people_html)
         self.assertNotIn("Francesca Peccati", people_html)
         self.assertNotIn("Alexander Neate", people_html)
+        self.assertIn("Dr Jacob Wilkins", people_html)
 
     def test_people_subnav_anchors(self):
         people_html = (BASE_DIR / "people.html").read_text(encoding="utf-8")
@@ -648,6 +648,7 @@ themes:
         self.assertIn("Dr Keith Butler", collab_names)
         self.assertIn("Dr Jeff Armstrong", collab_names)
         self.assertIn("Prof Gábor Csányi", collab_names)
+        self.assertIn("Dr Jacob Wilkins", collab_names)
         for m in collab_section["members"]:
             self.assertTrue(m.get("avatar", "").startswith("assets/images/"))
 
