@@ -22,25 +22,33 @@ except (ImportError, ValueError):
         from src.components.sections import render_category_sections
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
-TEACHING_FILE = BASE_DIR / "data" / "teaching.yaml"
+TRAINING_FILE = BASE_DIR / "data" / "training.yaml"
+TEACHING_FILE = TRAINING_FILE
 
 
-def load_teaching(teaching_file: Optional[Union[str, Path]] = None) -> Dict[str, Any]:
-    """Load Teaching page content from a YAML file (default: data/teaching.yaml).
+def load_training(training_file: Optional[Union[str, Path]] = None) -> Dict[str, Any]:
+    """Load Training page content from a YAML file (default: data/training.yaml).
 
     Raises FileNotFoundError if the file cannot be located.
     """
-    if teaching_file is None:
-        target_path = TEACHING_FILE
-    else:
-        target_path = Path(teaching_file)
+    if training_file is None:
+        target_path = TRAINING_FILE
         if not target_path.is_file():
-            target_path = BASE_DIR / teaching_file
+            fallback_legacy = BASE_DIR / "data" / "teaching.yaml"
+            if fallback_legacy.is_file():
+                target_path = fallback_legacy
+    else:
+        target_path = Path(training_file)
+        if not target_path.is_file():
+            target_path = BASE_DIR / training_file
     if not target_path.is_file():
-        raise FileNotFoundError(f"Teaching YAML file not found: '{teaching_file or TEACHING_FILE}'")
+        raise FileNotFoundError(f"Training YAML file not found: '{training_file or TRAINING_FILE}'")
 
     parsed = yaml.safe_load(target_path.read_text(encoding="utf-8-sig"))
     return parsed if isinstance(parsed, dict) else {}
+
+
+load_teaching = load_training
 
 
 def generate_teaching_html(teaching: Optional[Dict[str, Any]] = None) -> str:

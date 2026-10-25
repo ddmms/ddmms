@@ -1,7 +1,7 @@
 title: "Events"
 intro: "Conferences, workshops, summer schools and seminars organised or hosted by the Data Driven Materials and Molecular Science group."
 
-# Format matching data/teaching.yaml and data/opportunities.yaml.
+# Format matching data/training.yaml.
 categories:
   - id: "upcoming"
     title: "Upcoming & Recent Events"

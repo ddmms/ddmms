@@ -9,20 +9,17 @@ try:
     from .header import get_header
     from .footer import get_footer
     from .news import load_news
-    from .opportunities import load_opportunities
     from .collaborate import load_collaborate
 except (ImportError, ValueError):
     try:
         from components.header import get_header
         from components.footer import get_footer
         from components.news import load_news
-        from components.opportunities import load_opportunities
         from components.collaborate import load_collaborate
     except ImportError:
         from src.components.header import get_header
         from src.components.footer import get_footer
         from src.components.news import load_news
-        from src.components.opportunities import load_opportunities
         from src.components.collaborate import load_collaborate
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -240,8 +237,8 @@ def generate_index_html(
     authors=None,
     news=None,
     mission: Optional[Union[Dict[str, Any], List[str], str]] = None,
-    opportunities: Optional[Dict[str, Any]] = None,
     collaborate: Optional[Dict[str, Any]] = None,
+    **_kwargs,
 ):
     """Generate the index / about homepage HTML dynamically."""
     header_html = get_header("index")
@@ -347,52 +344,6 @@ def generate_index_html(
 {latest_news_html}
             </ul>
         </div>"""
-
-    # Extract opportunities data for home page section
-    if opportunities is None:
-        try:
-            opportunities = load_opportunities()
-        except Exception:
-            opportunities = {}
-
-    opp_title = str(opportunities.get("title") or "Opportunities").strip()
-    opp_intro = str(opportunities.get("intro") or "Upcoming events and ways to study, train and work with DDMMS at STFC.").strip()
-    opp_categories = opportunities.get("categories") or []
-
-    opp_cards_html = []
-    for cat in opp_categories:
-        cat_id = cat.get("id", "")
-        cat_title = cat.get("title", "")
-        cat_desc = cat.get("description", "")
-        cat_cards = cat.get("cards", [])
-        if cat_cards:
-            for card in cat_cards:
-                c_title = card.get("title", "")
-                c_status = card.get("status", "")
-                c_desc = card.get("description", "")
-                c_url = card.get("url", "")
-                status_badge = f'<span class="opp-badge">{c_status}</span>' if c_status else ""
-                opp_cards_html.append(f"""            <div class="opp-card">
-              <div class="opp-card-header">
-                <h3 class="opp-card-title">{c_title}</h3>{status_badge}
-              </div>
-              <p class="opp-card-desc">{c_desc}</p>
-              <div class="opp-card-footer">
-                <a href="{c_url or 'opportunities.html'}" class="opp-card-link" target="_blank" rel="noopener noreferrer">Event details &amp; apply &rarr;</a>
-              </div>
-            </div>""")
-        elif cat_desc:
-            opp_cards_html.append(f"""            <div class="opp-card">
-              <div class="opp-card-header">
-                <h3 class="opp-card-title">{cat_title}</h3>
-              </div>
-              <p class="opp-card-desc">{cat_desc}</p>
-              <div class="opp-card-footer">
-                <a href="opportunities.html#{cat_id}" class="opp-card-link">Explore {cat_title} &rarr;</a>
-              </div>
-            </div>""")
-
-    rendered_opp_cards = "\n".join(opp_cards_html)
 
     # Extract collaborate data for home page section
     if collaborate is None:

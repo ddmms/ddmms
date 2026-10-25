@@ -77,7 +77,7 @@ def load_person(person_file: Union[str, Path]) -> Dict[str, Any]:
 
 
 def load_people(people_file: Optional[Union[str, Path]] = None) -> Dict[str, Any]:
-    """Load people sections, members, partner consortia, and opportunities from a YAML file.
+    """Load people sections, members, and partner consortia from a YAML file.
 
     Resolves individual member YAML files for core team members or any member
     referencing a YAML file via `yaml:` or `file:`. Raises FileNotFoundError if

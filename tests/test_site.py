@@ -36,7 +36,6 @@ class TestDDMMSSite(unittest.TestCase):
             "teaching.html",
             "collaborate.html",
             "talks.html",
-            "opportunities.html",
             "events.html",
         ]
 
@@ -845,9 +844,9 @@ paragraphs:
         self.assertIn('<h1 class="page-hero-title">Collaborate With Us</h1>', collab_html)
         self.assertNotIn('class="feature-list"', collab_html, "no filler lists without real content")
         self.assertIn('href="mailto:', collab_html)
-        # About research collaboration; recruitment lives on the Opportunities page
+        # About research collaboration
         self.assertNotIn("prospective PhD", collab_html)
-        self.assertIn('<a href="opportunities.html">Opportunities</a>', collab_html)
+        self.assertNotIn('opportunities.html', collab_html)
         # Collaborators and research networks, moved here from the People page
         self.assertIn('<section class="home-section" id="collaborators">', collab_html)
         self.assertIn('<h3 class="network-title">Collaborative Research Networks</h3>', collab_html)
@@ -918,17 +917,17 @@ contact:
             self.assertIn(f'<section class="category-section" id="{cat_id}">', teaching_html)
             self.assertIn(f'<h2 class="home-heading">{cat_title}</h2>', teaching_html)
             self.assertIn(f'<a href="#{cat_id}" class="subnav-pill">{cat_title}</a>', teaching_html)
-        # Open calls live on the Opportunities page now, linked from the intro
-        self.assertIn('<a href="opportunities.html">Opportunities</a>', teaching_html)
+        # Check sections exist
         self.assertNotIn('id="placements"', teaching_html)
         self.assertNotIn("stfccareers.co.uk", teaching_html)
         self.assertNotIn('href="collaborate.html#contact"', teaching_html)
+        self.assertNotIn('opportunities.html', teaching_html)
 
         self.assertIn("CCP5 Summer School", teaching_html)
         self.assertIn('href="https://spring2026.camml.ac.uk"', teaching_html)
         self.assertIn('href="https://www.ccpnth.ac.uk/events/ai4nth2026/"', teaching_html)
         self.assertIn("Lecturer: Junwen Yin", teaching_html)
-        # Every event photo referenced in teaching.yaml exists on disk
+        # Every event photo referenced in training.yaml exists on disk
         for cat in load_teaching().get("categories") or []:
             for event in cat.get("events") or []:
                 if event.get("image"):
@@ -993,7 +992,7 @@ categories:
             tf_path.unlink()
 
         with self.assertRaises(FileNotFoundError):
-            load_teaching(Path("/nonexistent/teaching.yaml"))
+            load_teaching(Path("/nonexistent/training.yaml"))
 
     def test_category_sections_renderer(self):
         from components.sections import render_category_sections
@@ -1050,41 +1049,14 @@ categories:
         subnav, _ = render_category_sections([{"id": "solo", "title": "Solo"}], "x")
         self.assertEqual(subnav, "")
 
-    def test_opportunities_page(self):
-        from components.opportunities import load_opportunities, generate_opportunities_html
-
-        html_text = (BASE_DIR / "opportunities.html").read_text(encoding="utf-8")
-        self.assertIn("<title>Opportunities | Data Driven Materials and Molecular Science</title>", html_text)
-        self.assertIn('<h1 class="page-hero-title">Opportunities</h1>', html_text)
-        for cat_id, cat_title in (
-            ("events", "Events"),
-            ("graduate-scheme", "STFC Graduate Scheme"),
-            ("placements", "STFC Industrial and Summer Placements"),
-        ):
-            self.assertIn(f'<section class="category-section" id="{cat_id}">', html_text)
-            self.assertIn(f'<a href="#{cat_id}" class="subnav-pill">{cat_title}</a>', html_text)
-        # ALC has no PhD projects from 2027, so there is no PhD section
-        self.assertNotIn('id="phd"', html_text)
-        self.assertNotIn("PhD Projects", html_text)
-
-        # CaMML 2027 as an event card with its key details
-        events = html_text[html_text.index('id="events"'):html_text.index('id="graduate-scheme"')]
-        self.assertIn("CaMML Spring School 2027", events)
-        self.assertIn('<span class="card-status">Apply by 26 November 2026</span>', events)
-        self.assertIn("<dd>5–9 April 2027</dd>", events)
-        self.assertIn("£250 per student", events)
-        self.assertIn('href="https://spring2027.camml.ac.uk"', events)
-
-        # The buttons moved here from the Teaching page
-        self.assertIn('href="https://stfccareers.co.uk/graduates/"', html_text)
-        self.assertIn('href="https://stfccareers.co.uk/students/"', html_text)
-
-        data = load_opportunities()
-        self.assertEqual(data["title"], "Opportunities")
-        rendered = generate_opportunities_html({"title": "Openings", "categories": []})
-        self.assertIn('<h1 class="page-hero-title">Openings</h1>', rendered)
-        with self.assertRaises(FileNotFoundError):
-            load_opportunities(Path("/nonexistent/opportunities.yaml"))
+    def test_opportunities_removed(self):
+        self.assertFalse((BASE_DIR / "data" / "opportunities.yaml").exists())
+        self.assertFalse((BASE_DIR / "opportunities.html").exists())
+        # Verify training.yaml exists and is loaded
+        from components.teaching import load_training, TRAINING_FILE
+        self.assertTrue(TRAINING_FILE.is_file())
+        training_data = load_training()
+        self.assertIn("categories", training_data)
 
     def test_talks_page(self):
         import tempfile
@@ -1132,7 +1104,7 @@ talks:
     def test_inner_pages_share_flat_page_hero(self):
         for fname in ("people.html", "publications.html", "research.html", "code.html",
                       "news.html", "teaching.html", "collaborate.html", "talks.html",
-                      "opportunities.html", "junwen-yin.html"):
+                      "events.html", "junwen-yin.html"):
             content = (BASE_DIR / fname).read_text(encoding="utf-8")
             self.assertIn('<section class="page-hero">', content, f"{fname} is missing the shared page hero")
             self.assertEqual(content.count('<h1 '), 1, f"{fname} should have exactly one h1")
@@ -1528,7 +1500,6 @@ talks:
             ("teaching.html", "teaching_talks_banner.jpg"),
             ("events.html", "teaching_talks_banner.jpg"),
             ("collaborate.html", "collaborate_banner.jpg"),
-            ("opportunities.html", "collaborate_banner.jpg"),
             ("alin-marin-elena.html", "people_banner.jpg"),
         ]
         for fname, expected_img in pages_to_check:

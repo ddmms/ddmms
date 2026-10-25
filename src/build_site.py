@@ -25,9 +25,9 @@ PEOPLE_FILE = BASE_DIR / "data" / "people.yaml"
 SOFTWARE_FILE = BASE_DIR / "data" / "software.yaml"
 MISSION_FILE = BASE_DIR / "data" / "mission.yaml"
 COLLABORATE_FILE = BASE_DIR / "data" / "collaborate.yaml"
-TEACHING_FILE = BASE_DIR / "data" / "teaching.yaml"
+TRAINING_FILE = BASE_DIR / "data" / "training.yaml"
+TEACHING_FILE = TRAINING_FILE
 TALKS_FILE = BASE_DIR / "data" / "talks.yaml"
-OPPORTUNITIES_FILE = BASE_DIR / "data" / "opportunities.yaml"
 EVENTS_FILE = BASE_DIR / "data" / "events.yaml"
 
 # Import modular components with flexible path resolution
@@ -41,9 +41,8 @@ try:
     from .components.people import generate_people_html, load_people, generate_person_html, load_person
     from .components.research import generate_research_html, load_research
     from .components.collaborate import generate_collaborate_html, load_collaborate
-    from .components.teaching import generate_teaching_html, load_teaching
+    from .components.teaching import generate_teaching_html, load_teaching, load_training
     from .components.talks import generate_talks_html, load_talks
-    from .components.opportunities import generate_opportunities_html, load_opportunities
     from .components.events import generate_events_html, load_events
 except (ImportError, ValueError):
     try:
@@ -56,9 +55,8 @@ except (ImportError, ValueError):
         from components.people import generate_people_html, load_people, generate_person_html, load_person
         from components.research import generate_research_html, load_research
         from components.collaborate import generate_collaborate_html, load_collaborate
-        from components.teaching import generate_teaching_html, load_teaching
+        from components.teaching import generate_teaching_html, load_teaching, load_training
         from components.talks import generate_talks_html, load_talks
-        from components.opportunities import generate_opportunities_html, load_opportunities
         from components.events import generate_events_html, load_events
     except ImportError:
         from src.components.header import generate_header_html, get_header
@@ -70,9 +68,8 @@ except (ImportError, ValueError):
         from src.components.people import generate_people_html, load_people, generate_person_html, load_person
         from src.components.research import generate_research_html, load_research
         from src.components.collaborate import generate_collaborate_html, load_collaborate
-        from src.components.teaching import generate_teaching_html, load_teaching
+        from src.components.teaching import generate_teaching_html, load_teaching, load_training
         from src.components.talks import generate_talks_html, load_talks
-        from src.components.opportunities import generate_opportunities_html, load_opportunities
         from src.components.events import generate_events_html, load_events
 
 __all__ = [
@@ -85,9 +82,9 @@ __all__ = [
     "SOFTWARE_FILE",
     "MISSION_FILE",
     "COLLABORATE_FILE",
+    "TRAINING_FILE",
     "TEACHING_FILE",
     "TALKS_FILE",
-    "OPPORTUNITIES_FILE",
     "EVENTS_FILE",
     "load_data",
     "load_news",
@@ -96,9 +93,9 @@ __all__ = [
     "load_software",
     "load_mission",
     "load_collaborate",
+    "load_training",
     "load_teaching",
     "load_talks",
-    "load_opportunities",
     "load_events",
     "generate_header_html",
     "get_header",
@@ -115,7 +112,6 @@ __all__ = [
     "generate_collaborate_html",
     "generate_teaching_html",
     "generate_talks_html",
-    "generate_opportunities_html",
     "generate_events_html",
     "build_site",
     "main",
@@ -197,9 +193,8 @@ def main():
     software_data = load_software()
     mission_data = load_mission()
     collaborate_data = load_collaborate()
-    teaching_data = load_teaching()
+    teaching_data = load_training()
     talks_data = load_talks()
-    opportunities_data = load_opportunities()
     events_data = load_events()
     total_people = sum(len(s.get("members", [])) for s in people_data.get("sections", []))
     print(
@@ -220,7 +215,6 @@ def main():
             authors,
             news,
             mission=mission_data,
-            opportunities=opportunities_data,
             collaborate=collaborate_data,
         ),
         "publications.html": generate_publications_html(pubs, authors),
@@ -231,7 +225,6 @@ def main():
         "talks.html": generate_talks_html(talks_data),
         "teaching.html": generate_teaching_html(teaching_data),
         "events.html": generate_events_html(events_data),
-        "opportunities.html": generate_opportunities_html(opportunities_data),
         "collaborate.html": generate_collaborate_html(collaborate_data),
     }
 
