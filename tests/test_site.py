@@ -1070,8 +1070,11 @@ categories:
 
         talks_html = (BASE_DIR / "talks.html").read_text(encoding="utf-8")
         self.assertIn("<title>Talks | Data Driven Materials and Molecular Science</title>", talks_html)
+        self.assertIn("ML-PEG: Machine Learning Performance and Extrapolation Guide", talks_html)
+        self.assertIn("NVIDIA Atomistic Simulation Summit 2026", talks_html)
+        self.assertIn("Dr. Alin Marin Elena", talks_html)
 
-        # No talks yet: an empty-state line instead of an empty list
+        # Empty state when there are no talks
         rendered = generate_talks_html({"title": "Talks", "talks": []})
         self.assertIn('<p class="list-empty">', rendered)
         self.assertNotIn('class="talks-list"', rendered)

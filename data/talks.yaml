@@ -9,4 +9,11 @@ intro: "Invited and contributed talks given by DDMMS members at conferences, wor
 #     speaker: "Speaker Name"
 #     event: "Conference name, City"
 #     url: "https://example.com/slides"
-talks: []
+talks:
+  - year: "2026"
+    title: "ML-PEG: Machine Learning Performance and Extrapolation Guide"
+    type: "Invited talk"
+    speaker: "Dr. Alin Marin Elena"
+    event: "NVIDIA Atomistic Simulation Summit 2026, Mainz, Germany"
+    description: "Session: AI agents and Autonomous Labs (3–4 September 2026 at Max Planck Institute for Polymer Research)."
+    url: "https://events.nvidia.com/atomistic-simulation-summit"
