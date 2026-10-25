@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - master
   workflow_dispatch:
   schedule:
     # Run every Monday at 05:00 UTC to sync with ORCID API
