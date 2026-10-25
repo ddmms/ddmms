@@ -1,5 +1,5 @@
 title: "Teaching &amp; Training"
-intro: "Schools and workshops run by DDMMS members, PhD projects we co-supervise and graduates who trained with us. For current openings, see <a href=\"opportunities.html\">Opportunities</a>."
+intro: "Schools and workshops run by DDMMS members, PhD projects we co-supervise and graduates who trained with us."
 
 # Each category: id (used for the jump link), title, optional description and:
 #   events  - dated list, newest first: year, title, optional role, description,
@@ -9,7 +9,6 @@ intro: "Schools and workshops run by DDMMS members, PhD projects we co-supervise
 #   members - name chips, with an optional members_title heading
 #   links   - buttons (text + url), shown last
 # A category with none of these shows "Details coming soon."
-# Open calls (events to apply for, PhD and STFC schemes) live in data/opportunities.yaml.
 categories:
   - id: "schools"
     title: "Schools"
