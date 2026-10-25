@@ -57,9 +57,11 @@ def load_software(software_file: Optional[Union[str, Path]] = None) -> Dict[str,
         return {"subtitle": "", "packages": parsed}
 
     if isinstance(parsed, dict):
+        title = str(parsed.get("title") or "Software &amp; Skills").strip()
         subtitle = str(parsed.get("subtitle") or "").strip()
         packages = parsed.get("packages") or parsed.get("software") or parsed.get("tools") or []
         return {
+            "title": title,
             "subtitle": subtitle,
             "packages": packages,
         }
@@ -187,7 +189,7 @@ def generate_code_html(
 
     page_meta = software_data if isinstance(software_data, dict) else {}
     hero_html = render_page_hero(
-        str(page_meta.get("title") or "Software &amp; Tools"),
+        str(page_meta.get("title") or "Software &amp; Skills"),
         subtitle,
     )
 
@@ -196,8 +198,8 @@ def generate_code_html(
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Code &amp; Software | Data Driven Materials and Molecular Science</title>
-  <meta name="description" content="Open-source scientific software packages developed by DDMMS: janus-core, aiida-mlip, aiidalab-mlip, pack-mm, ml-peg, and goldilocks.">
+  <title>Software &amp; Skills | Data Driven Materials and Molecular Science</title>
+  <meta name="description" content="Open-source scientific software packages and skills developed by DDMMS: janus-core, aiida-mlip, aiidalab-mlip, pack-mm, ml-peg, and goldilocks.">
   <link rel="icon" type="image/svg+xml" href="assets/logos/ddmms.svg">
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">

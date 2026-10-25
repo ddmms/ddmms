@@ -706,11 +706,16 @@ sections:
         # Test loading the actual data/software.yaml
         software_data = load_software()
         self.assertIsInstance(software_data, dict)
+        self.assertEqual(software_data.get("title"), "Software &amp; Skills")
         self.assertIn("packages", software_data)
         pkg_ids = [p["id"] for p in software_data["packages"]]
         expected_pkgs = ["janus-core", "aiida-mlip", "aiidalab-mlip", "pack-mm", "ml-peg", "goldilocks"]
         for exp in expected_pkgs:
             self.assertIn(exp, pkg_ids)
+
+        code_html = (BASE_DIR / "code.html").read_text(encoding="utf-8")
+        self.assertIn("Software &amp; Skills", code_html)
+        self.assertNotIn("Software &amp; Tools", code_html)
 
         # Test custom YAML software loading
         with tempfile.NamedTemporaryFile("w+", encoding="utf-8", delete=False, suffix=".yaml") as tsf:
