@@ -84,5 +84,12 @@ categories:
         role: "Co-Organiser: Alin Elena · Lecturer: Alin Elena"
         url: "https://www.psdi.ac.uk/event/machine-learning-autumn-school-2023/"
         description: "A three-day training school held at STFC Daresbury Laboratory (18–20 September 2023), organised by the PSDI initiative in collaboration with PSDS, AI4SD, STFC-SCD, and CCP5, introducing PhD researchers to machine learning principles and atomistic modeling techniques."
+      - year: "2023"
+        title: "Open Science with the Atomic Simulation Environment"
+        role: "Co-Organiser: Alin Elena · Lecturer: Alin Elena"
+        url: "https://ase-lib.org/events/2023-04-Daresbury-workshop/"
+        image: "assets/images/ase_daresbury_2023.jpg"
+        image_alt: "Participants at the Open Science with ASE workshop at STFC Daresbury Laboratory"
+        description: "A CECAM Flagship Workshop held at STFC Daresbury Laboratory (24–28 April 2023), supported by CECAM, Psi-k, CCP5, CCP9, the Ada Lovelace Centre, and PSDI, featuring research talks, hands-on tutorials for reproducible calculations with ASE, and developer code sprints."
 
 
