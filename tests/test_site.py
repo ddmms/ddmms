@@ -347,6 +347,18 @@ class TestDDMMSSite(unittest.TestCase):
         self.assertNotIn('id="visitors"', rendered)
         self.assertNotIn('href="#visitors"', rendered)
 
+    def test_people_uses_short_bio_and_profile_uses_bio(self):
+        people_html = (BASE_DIR / "people.html").read_text(encoding="utf-8")
+        alin_html = (BASE_DIR / "alin-marin-elena.html").read_text(encoding="utf-8")
+
+        # people.html uses short_bio
+        self.assertIn("Group Leader of DDMMS focusing on machine-learned interatomic potentials", people_html)
+        self.assertNotIn("Alin is the scientific secretary of", people_html)
+
+        # Individual profile uses full bio
+        self.assertIn("Alin is the scientific secretary of", alin_html)
+        self.assertIn("Alin leads the Data Driven Materials and Molecular Science research group.", alin_html)
+
     def test_reusable_footer_file_exists_and_valid(self):
         footer_path = BASE_DIR / "footer.html"
         self.assertTrue(footer_path.exists(), "footer.html does not exist")

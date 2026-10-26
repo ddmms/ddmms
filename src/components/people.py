@@ -215,7 +215,8 @@ def generate_people_html(people_data: Optional[Dict[str, Any]] = None) -> str:
             avatar = str(member.get("avatar") or "").strip()
             role = str(member.get("role") or "").strip()
             affiliation = str(member.get("affiliation") or "").strip()
-            bio = format_bio_links(str(member.get("bio") or "").strip())
+            card_bio = str(member.get("short_bio") or member.get("bio") or "").strip()
+            bio = format_bio_links(card_bio)
             tenure = str(member.get("tenure") or "").strip()
             if not tenure:
                 j_d = member.get("join_date") or member.get("joined")
