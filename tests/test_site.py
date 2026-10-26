@@ -1172,6 +1172,8 @@ categories:
         self.assertIn("https://indico.ictp.it/event/10842/other-view?view=ictptimetable", talks_html)
         self.assertIn("10th International Workshop of Materials Physics", talks_html)
         self.assertIn("https://infim.ro/event/10th-international-workshop-of-materials-physics/", talks_html)
+        self.assertIn("COSY Semester Opening Event", talks_html)
+        self.assertIn("https://porelab.no/2025/08/12/cosy-semester-opening-event/", talks_html)
 
         # Empty state when there are no talks
         rendered = generate_talks_html({"title": "Talks", "talks": []})

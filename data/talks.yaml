@@ -68,6 +68,14 @@ talks:
     url: "https://www.cecam.org/workshop-details/a-roadmap-for-an-atomistic-machine-learning-software-ecosystem-1376"
 
   - year: "2025"
+    title: "Machine Learnt Interatomic Potentials for High-Throughput Phonon Calculations of Metal-Organic Frameworks"
+    type: "Invited talk"
+    speaker: "Dr. Alin Marin Elena"
+    event: "COSY Semester Opening Event & Friday Physics Colloquium, PoreLab, NTNU, Trondheim, Norway"
+    description: "Invited talk (22 August 2025, Realfagbygget) at the COSY (COmputational multi-Scale materials societY) Gemini Center event in collaboration with the Friday Physics Colloquium. Presents machine-learned potentials for high-throughput phonon calculations and thermodynamic property prediction in metal-organic frameworks."
+    url: "https://porelab.no/2025/08/12/cosy-semester-opening-event/"
+
+  - year: "2025"
     title: "Keynote: HPC Best Practices"
     type: "Keynote talk"
     speaker: "Dr. Alin Marin Elena"
