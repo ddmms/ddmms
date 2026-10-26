@@ -109,7 +109,7 @@ packages:
     badge:
       text: "goldilocks.ac.uk"
       style: "background:#ecfdf5; color:#065f46;"
-    description: "Recommends the settings for a DFT calculation from a crystal structure, records the basis for each recommendation, and generates the input files and submission script, so calculations are neither under-converged nor wasteful. Built as a data-driven pipeline with the <strong>PSDI (Physical Sciences Data Infrastructure) Data to Knowledge</strong> initiative to cut compute and electricity waste on national supercomputers such as ARCHER2."
+    description: "Recommends the settings for a DFT calculation from a crystal structure, records the basis for each recommendation, and generates the input files and submission script, so calculations are neither under-converged nor wasteful. Built as a data-driven pipeline, with funding from the <a href=\"https://www.adalovelacecentre.ac.uk\" target=\"_blank\" rel=\"noopener noreferrer\"><strong>Ada Lovelace Centre</strong></a> and <a href=\"https://gtr.ukri.org/projects?ref=EP%2FZ530657%2F1\" target=\"_blank\" rel=\"noopener noreferrer\"><strong>EPSRC</strong> (EP/Z530657/1)</a>, to cut compute and electricity waste on national supercomputers such as ARCHER2."
     features:
       - "<strong>goldilocks-data</strong>: AiiDA convergence campaigns with real DFT calculations, published as training datasets on PSDI"
       - "<strong>goldilocks-ml</strong>: reproducible training and evaluation, with versioned models published on PSDI"

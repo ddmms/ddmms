@@ -91,18 +91,13 @@ themes:
     image: "assets/images/research/goldilocks.jpg"
     image_alt: "Goldilocks automated DFT convergence and k-point mesh optimization agent"
     funding:
-      - programme: "PSDI Data to Knowledge"
-        grant: "EP/X032701/1"
-        url: "https://www.psdi.ac.uk"
-      - programme: "STFC Scientific Computing"
-        url: "https://www.sc.stfc.ac.uk/"
       - programme: "Ada Lovelace Centre"
         url: "https://www.adalovelacecentre.ac.uk"
-      - programme: "CCP5"
-        grant: "EP/V028537/1"
-        url: "https://www.ccp5.ac.uk"
+      - programme: "EPSRC"
+        grant: "EP/Z530657/1"
+        url: "https://gtr.ukri.org/projects?ref=EP%2FZ530657%2F1"
     description:
-      - "Electronic-structure calculations make up a large share of the work on national supercomputers such as ARCHER2, and choosing their settings by trial and error wastes compute and electricity. With the <strong>PSDI (Physical Sciences Data Infrastructure) Data to Knowledge</strong> initiative, we develop <a href=\"https://goldilocks.ac.uk\" target=\"_blank\" rel=\"noopener noreferrer\"><strong>Goldilocks</strong> (goldilocks.ac.uk)</a>, which recommends the settings for a DFT calculation from a crystal structure, records the basis for each recommendation, and generates the input files and submission script needed to run it: never under-converged, never wasteful."
+      - "Electronic-structure calculations make up a large share of the work on national supercomputers such as ARCHER2, and choosing their settings by trial and error wastes compute and electricity. With funding from the <a href=\"https://www.adalovelacecentre.ac.uk\" target=\"_blank\" rel=\"noopener noreferrer\"><strong>Ada Lovelace Centre</strong></a> and <a href=\"https://gtr.ukri.org/projects?ref=EP%2FZ530657%2F1\" target=\"_blank\" rel=\"noopener noreferrer\"><strong>EPSRC</strong> (EP/Z530657/1)</a>, we develop <a href=\"https://goldilocks.ac.uk\" target=\"_blank\" rel=\"noopener noreferrer\"><strong>Goldilocks</strong> (goldilocks.ac.uk)</a>, which recommends the settings for a DFT calculation from a crystal structure, records the basis for each recommendation, and generates the input files and submission script needed to run it: never under-converged, never wasteful."
       - "Goldilocks is a data-driven pipeline. <strong>goldilocks-data</strong> runs AiiDA convergence campaigns with real DFT calculations, <strong>goldilocks-ml</strong> trains and evaluates models on the results, and <strong>goldilocks-core</strong> applies them to new structures; each stage publishes its datasets or models on PSDI before the next stage uses them. <strong>goldilocks-agent</strong>, in development, adds an AI assistant that orchestrates these workflows, post-processes results and explains its recommendations in plain language. The k-point work is peer-reviewed in RSC <em>Digital Discovery</em> (2026, DOI: 10.1039/d5dd00565e)."
     links:
       - text: "goldilocks.ac.uk &rarr;"

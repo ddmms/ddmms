@@ -68,7 +68,7 @@ affiliations:
       image_position: "50% 50%"
       text_side: "right"
       image_alt: "Project Goldilocks data-driven DFT automation platform"
-      description: "Recommends converged, cost-efficient settings for DFT calculations from crystal structures, eliminating under-converged results and compute waste on national supercomputers. Developed with the under EPSRC Living Labs initiative."
+      description: "Recommends converged, cost-efficient settings for DFT calculations from crystal structures, eliminating under-converged results and compute waste on national supercomputers. Developed under the EPSRC Living Labs initiative."
       links:
         - text: "Visit goldilocks.ac.uk"
           url: "https://goldilocks.ac.uk"
