@@ -1654,6 +1654,12 @@ talks:
         people_html = (BASE_DIR / "people.html").read_text(encoding="utf-8")
         self.assertIn("2024&ndash;2026", people_html)
         self.assertIn("2023&ndash;2024", people_html)
+        # Current PhD student with an expected end date
+        self.assertIn('<span class="person-tenure">2026&ndash;2030</span>', people_html)
+        # A stay within one year shows the year once, not "2026–2026"
+        self.assertIn("Willow Sparks", people_html)
+        self.assertIn('<span class="person-tenure">2026</span>', people_html)
+        self.assertNotIn("2026&ndash;2026", people_html)
 
     def test_header_hero_pictures_and_blending(self):
         """Verify generic header pictures are present for each page and blended in CSS."""
