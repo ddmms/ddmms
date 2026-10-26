@@ -68,6 +68,14 @@ talks:
     url: "https://www.cecam.org/workshop-details/a-roadmap-for-an-atomistic-machine-learning-software-ecosystem-1376"
 
   - year: "2025"
+    title: "Keynote: HPC Best Practices"
+    type: "Keynote talk"
+    speaker: "Dr. Alin Marin Elena"
+    event: "Magurele Summer School for Computing in a Rapidly Evolving Society (Parallel Algorithms and Optimizations), Măgurele, Romania"
+    description: "Opening keynote lecture (3 July 2025) delivered at the ICTP Magurele Summer School (smr 4077), addressing modern high-performance computing best practices, parallel optimization principles, and scalable scientific simulation workflows."
+    url: "https://indico.ictp.it/event/10842/other-view?view=ictptimetable"
+
+  - year: "2025"
     title: "Materials Highlight: Machine Learned Interatomic Potential for High-Throughput Phonon Calculations of Metal-Organic Frameworks"
     type: "Showcase talk"
     speaker: "Dr. Alin Marin Elena"

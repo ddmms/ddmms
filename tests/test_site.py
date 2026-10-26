@@ -1027,6 +1027,9 @@ contact:
         self.assertIn('href="https://www.mcc.hec.ac.uk/events/ml-training-july-2025/"', teaching_html)
         self.assertIn("Organiser: Elliott Kasoar", teaching_html)
         self.assertIn("Machine Learning Interatomic Potentials (MLIPs) Training Workshop", teaching_html)
+        self.assertIn('href="https://indico.ictp.it/event/10842/other-view?view=ictptimetable"', teaching_html)
+        self.assertIn("Magurele Summer School for Computing in a Rapidly Evolving Society", teaching_html)
+        self.assertIn("Lecturer: Alin Elena · Keynote Speaker: Alin Elena", teaching_html)
         # Every event photo referenced in training.yaml exists on disk
         for cat in load_teaching().get("categories") or []:
             for event in cat.get("events") or []:
@@ -1165,6 +1168,8 @@ categories:
         self.assertIn("https://www.mcc.hec.ac.uk/events/mcc-conference-2026/", talks_html)
         self.assertIn("Ada Lovelace Centre Scientific Computing Showcase Event", talks_html)
         self.assertIn("https://indico.stfc.ac.uk/event/1554/timetable/?view=standard_numbered", talks_html)
+        self.assertIn("Keynote: HPC Best Practices", talks_html)
+        self.assertIn("https://indico.ictp.it/event/10842/other-view?view=ictptimetable", talks_html)
 
         # Empty state when there are no talks
         rendered = generate_talks_html({"title": "Talks", "talks": []})
