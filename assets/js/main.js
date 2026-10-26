@@ -737,16 +737,53 @@
 
       const prevBtn = carousel.querySelector('.carousel-prev');
       const nextBtn = carousel.querySelector('.carousel-next');
-      if (prevBtn) prevBtn.addEventListener('click', () => goTo(currentIndex() - 1));
-      if (nextBtn) nextBtn.addEventListener('click', () => goTo(currentIndex() + 1));
-      dots.forEach((dot, i) => dot.addEventListener('click', () => goTo(i)));
+      if (prevBtn) prevBtn.addEventListener('click', () => { goTo(currentIndex() - 1); restartAutoplay(); });
+      if (nextBtn) nextBtn.addEventListener('click', () => { goTo(currentIndex() + 1); restartAutoplay(); });
+      dots.forEach((dot, i) => dot.addEventListener('click', () => { goTo(i); restartAutoplay(); }));
 
       track.addEventListener('keydown', e => {
         if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
           e.preventDefault();
           goTo(currentIndex() + (e.key === 'ArrowRight' ? 1 : -1));
+          restartAutoplay();
         }
       });
+
+      // Auto-cycle after ~5s (default 5000ms), pausing on hover, focus, or tab-switch
+      const autoplayDelay = parseInt(carousel.dataset.interval || '5000', 10);
+      let timer = null;
+      let isPaused = false;
+
+      function startAutoplay() {
+        if (slides.length <= 1 || timer !== null) return;
+        timer = setInterval(() => {
+          if (!isPaused && document.visibilityState !== 'hidden') {
+            goTo(currentIndex() + 1);
+          }
+        }, autoplayDelay);
+      }
+
+      function stopAutoplay() {
+        if (timer !== null) {
+          clearInterval(timer);
+          timer = null;
+        }
+      }
+
+      function restartAutoplay() {
+        stopAutoplay();
+        startAutoplay();
+      }
+
+      carousel.addEventListener('mouseenter', () => { isPaused = true; });
+      carousel.addEventListener('mouseleave', () => { isPaused = false; });
+      carousel.addEventListener('focusin', () => { isPaused = true; });
+      carousel.addEventListener('focusout', () => { isPaused = false; });
+      document.addEventListener('visibilitychange', () => {
+        isPaused = document.visibilityState === 'hidden';
+      });
+
+      startAutoplay();
 
       let frame = null;
       track.addEventListener('scroll', () => {

@@ -116,11 +116,18 @@ def render_affiliations_carousel_html(affiliations: Optional[Dict[str, Any]]) ->
         hierarchy = [h for h in (slide.get("hierarchy") or []) if isinstance(h, dict)]
         image = str(slide.get("image") or "").strip()
 
-        links_html = "\n".join(
-            f'                  <a href="{html.escape(str(link.get("url", "")), quote=True)}" class="slide-link" target="_blank" rel="noopener noreferrer">{link.get("text", "")}&nbsp;<span aria-hidden="true">&#8599;</span></a>'
-            for link in (slide.get("links") or [])
-            if isinstance(link, dict) and link.get("url")
-        )
+        slide_link_items = []
+        for link in (slide.get("links") or []):
+            if isinstance(link, dict) and link.get("url"):
+                link_url = str(link.get("url", "")).strip()
+                link_text = link.get("text", "")
+                is_ext = link_url.startswith("http://") or link_url.startswith("https://")
+                ext_attrs = ' target="_blank" rel="noopener noreferrer"' if is_ext else ""
+                icon = '&nbsp;<span aria-hidden="true">&#8599;</span>' if is_ext else '&nbsp;<span aria-hidden="true">&rarr;</span>'
+                slide_link_items.append(
+                    f'                  <a href="{html.escape(link_url, quote=True)}" class="slide-link"{ext_attrs}>{link_text}{icon}</a>'
+                )
+        links_html = "\n".join(slide_link_items)
         links_block_html = f"""
                 <div class="slide-links">
 {links_html}
@@ -236,7 +243,7 @@ def render_affiliations_carousel_html(affiliations: Optional[Dict[str, Any]]) ->
           </button>
         </div>"""
 
-    return f"""    <section class="hero-carousel" id="affiliations" data-carousel aria-roledescription="carousel" aria-label="{title}">
+    return f"""    <section class="hero-carousel" id="affiliations" data-carousel data-interval="5000" aria-roledescription="carousel" aria-label="{title}">
         <div class="carousel-track" tabindex="0">
 {slides_html}
         </div>{controls_html}

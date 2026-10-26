@@ -822,33 +822,41 @@ paragraphs:
         # Carousel sits at the top of the page, before the mission text
         self.assertIn('class="hero-carousel"', index_html)
         self.assertIn("data-carousel", index_html)
+        self.assertIn('data-interval="5000"', index_html)
         self.assertLess(index_html.index('class="hero-carousel"'), index_html.index('id="mission"'))
         # The mission keeps its original tagline under the heading
         self.assertIn('<p class="home-subtitle">Using statistical physics, quantum mechanics', index_html)
 
-        for title in ("Data Driven Materials and Molecular Science Group", "Daresbury Laboratory", "Rutherford Appleton Laboratory"):
+        for title in (
+            "Data Driven Materials and Molecular Science Group",
+            "MACE-MP: Foundation Model for Materials Chemistry",
+            "ML-PEG: Machine Learning Performance and Extrapolation Guide",
+            "Project Goldilocks: AI-Driven DFT Automation",
+        ):
             self.assertIn(f'<h2 class="slide-title">{title}</h2>', index_html)
         # No small uppercase labels above headings; the department slide has no buttons
         # and its title sits above the chain
         for label_cls in ("slide-eyebrow", "home-eyebrow"):
             self.assertNotIn(label_cls, index_html)
-        self.assertEqual(index_html.count('class="slide-links"'), 2)
+        self.assertEqual(index_html.count('class="slide-links"'), 3)
         self.assertLess(index_html.index("Molecular Science Group</h2>"), index_html.index('class="org-chain"'))
         for url in (
             "https://www.ukri.org/",
             "https://www.ukri.org/councils/stfc/",
             "https://www.sc.stfc.ac.uk/",
             "https://www.sc.stfc.ac.uk/research-and-expertise/computational-materials-and-molecular-science/",
-            "https://www.ukri.org/who-we-are/stfc/facilities/daresbury-laboratory/",
-            "https://www.ukri.org/who-we-are/stfc/facilities/rutherford-appleton-laboratory/",
+            "https://doi.org/10.1063/5.0297006",
+            "https://ml-peg.stfc.ac.uk",
+            "https://goldilocks.ac.uk",
         ):
             self.assertIn(f'href="{url}"', index_html)
 
         # Prev/next buttons and one dot per slide, wired up in main.js
         self.assertIn('class="carousel-btn carousel-prev"', index_html)
         self.assertIn('class="carousel-btn carousel-next"', index_html)
-        self.assertEqual(index_html.count('class="carousel-dot"'), 3)
+        self.assertEqual(index_html.count('class="carousel-dot"'), 4)
         self.assertIn("function initCarousels()", main_js)
+        self.assertIn("startAutoplay", main_js)
 
         # Organisational chain ends with the DDMMS group highlighted
         for short in ("UKRI", "STFC", "SCD", "CMMS", "DDMMS"):
@@ -870,10 +878,14 @@ paragraphs:
         # CMMS has no logo wrap
         self.assertNotIn('src="assets/logos/cmms', index_html)
 
-        # Work-site photos are referenced and exist on disk
-        for img in ("daresbury_laboratory.jpg", "rutherford_appleton_laboratory.jpg"):
-            self.assertIn(f'src="assets/images/{img}"', index_html)
-            self.assertTrue((BASE_DIR / "assets" / "images" / img).is_file(), f"Missing image {img}")
+        # Highlight images are referenced and exist on disk
+        for img_rel in (
+            "highlights/184110_1_5.0297006.figures.online.f3.jpg",
+            "research/ml_peg.jpg",
+            "research/goldilocks.jpg",
+        ):
+            self.assertIn(f'src="assets/images/{img_rel}"', index_html)
+            self.assertTrue((BASE_DIR / "assets" / "images" / img_rel).is_file(), f"Missing image {img_rel}")
 
     def test_render_affiliations_carousel_html(self):
         from components.index import render_affiliations_carousel_html
