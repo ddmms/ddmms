@@ -838,7 +838,8 @@ paragraphs:
             self.assertIn("Custom Group Vision", rendered_html)
             self.assertIn("Pioneering atomic intelligence.", rendered_html)
             self.assertIn("Custom mission paragraph one describing high accuracy simulation.", rendered_html)
-            self.assertIn('<p class="home-lead">', rendered_html)
+            # Mission paragraphs share one style: no larger lead-in
+            self.assertNotIn('<p class="home-lead">', rendered_html)
         finally:
             if tmf_path.exists():
                 tmf_path.unlink()

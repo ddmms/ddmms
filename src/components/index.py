@@ -293,12 +293,12 @@ def generate_index_html(
         affiliations_data = {}
 
     paragraphs = [str(p).strip() for p in raw_paragraphs if str(p).strip()]
-    # The first paragraph is shown as a larger lead-in
+    # All paragraphs share one style so the block reads evenly
     mission_paragraphs_html = "\n".join(
-        f"""          <p{' class="home-lead"' if i == 0 else ''}>
+        f"""          <p>
             {p}
           </p>"""
-        for i, p in enumerate(paragraphs)
+        for p in paragraphs
     )
     subtitle_html = f'\n        <p class="home-subtitle">{mission_subtitle}</p>' if mission_subtitle else ""
 
