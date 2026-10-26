@@ -162,10 +162,21 @@ def render_affiliations_carousel_html(affiliations: Optional[Dict[str, Any]]) ->
                     name_html = f'<span class="org-chain-name">{name}</span>'
                 badge = str(level.get("badge") or "").strip()
                 badge_html = f'\n                    <span class="org-chain-badge">{badge}</span>' if badge else ""
+                logo = str(level.get("logo") or "").strip()
+                if logo:
+                    logo_html = (
+                        f'\n                    <span class="org-chain-logo-wrap">'
+                        f'<img src="{html.escape(logo, quote=True)}" alt="{html.escape(short_code, quote=True)} logo" class="org-chain-logo" loading="lazy">'
+                        f'</span>'
+                    )
+                    has_logo_cls = " has-logo"
+                else:
+                    logo_html = ""
+                    has_logo_cls = ""
                 style_attr = f' style="--step-color: {html.escape(color, quote=True)}; --step-rgb: {html.escape(rgb, quote=True)};"'
                 data_attr = f' data-org="{html.escape(org_slug, quote=True)}"' if org_slug else ""
-                steps.append(f"""                  <li class="org-chain-step{current_cls}{org_cls}"{data_attr}{style_attr}>
-                    <span class="org-chain-short">{short_code}</span>
+                steps.append(f"""                  <li class="org-chain-step{current_cls}{org_cls}{has_logo_cls}"{data_attr}{style_attr}>
+                    <span class="org-chain-short">{short_code}</span>{logo_html}
                     {name_html}{badge_html}
                   </li>""")
             steps_html = "\n".join(steps)

@@ -855,13 +855,20 @@ paragraphs:
             self.assertIn(f'<span class="org-chain-short">{short}</span>', index_html)
         self.assertEqual(index_html.count("org-chain-step is-current"), 1)
 
-        # Institutional branding colors on hero rectangles
+        # Institutional branding colors and logos on hero rectangles
         self.assertIn('data-org="stfc"', index_html)
         self.assertIn('--step-color: #0072ce', index_html, "STFC rectangle must use STFC branding blue")
         self.assertIn('data-org="ukri"', index_html)
         self.assertIn('data-org="scd"', index_html)
         self.assertIn('data-org="cmms"', index_html)
         self.assertIn('data-org="ddmms"', index_html)
+
+        # Institutional logos rendered for organisations that have one
+        for logo_file in ("ukri.svg", "stfc.png", "scd.svg", "ddmms.svg"):
+            self.assertIn(f'src="assets/logos/{logo_file}"', index_html)
+            self.assertTrue((BASE_DIR / "assets" / "logos" / logo_file).is_file(), f"Missing logo {logo_file}")
+        # CMMS has no logo wrap
+        self.assertNotIn('src="assets/logos/cmms', index_html)
 
         # Work-site photos are referenced and exist on disk
         for img in ("daresbury_laboratory.jpg", "rutherford_appleton_laboratory.jpg"):
@@ -880,7 +887,7 @@ paragraphs:
                 {
                     "title": "Org Slide",
                     "hierarchy": [
-                        {"short": "A", "name": "Alpha", "url": "https://example.com/alpha"},
+                        {"short": "A", "name": "Alpha", "url": "https://example.com/alpha", "logo": "assets/logos/a.svg"},
                         {"short": "B", "name": "Beta", "badge": "Us"},
                     ],
                     "links": [{"text": "Org site", "url": "https://example.com/org"}],
@@ -897,6 +904,7 @@ paragraphs:
         self.assertIn('aria-label="Where We Work"', rendered)
         self.assertIn('aria-label="1 of 2: Org Slide"', rendered)
         self.assertIn('<ol class="org-chain" aria-label="Organisational hierarchy: A &gt; B">', rendered)
+        self.assertIn('<img src="assets/logos/a.svg" alt="A logo" class="org-chain-logo"', rendered)
         self.assertIn('<a href="https://example.com/alpha" class="org-chain-name org-chain-link"', rendered)
         self.assertIn('<span class="org-chain-name">Beta</span>', rendered)
         self.assertIn('<span class="org-chain-badge">Us</span>', rendered)

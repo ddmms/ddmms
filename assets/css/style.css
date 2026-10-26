@@ -3437,6 +3437,35 @@ a:hover {
   box-shadow: 0 0 12px rgba(var(--step-rgb), 0.6);
 }
 
+.org-chain-logo-wrap {
+  flex: 0 0 4.2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.2rem 0.45rem;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  transition: var(--transition);
+}
+
+.org-chain-step:hover .org-chain-logo-wrap {
+  background: #ffffff;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+  transform: translateY(-1px);
+}
+
+.org-chain-logo {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
 .org-chain-name {
   font-size: 0.92rem;
   line-height: 1.3;
@@ -3543,9 +3572,23 @@ a.org-chain-link:hover {
     width: 4.2rem;
   }
 
+  .carousel-slide-org .org-chain-logo-wrap {
+    order: -1;
+    flex: none;
+    width: 100%;
+    height: 2.75rem;
+    padding: 0.35rem 0.65rem;
+    margin-bottom: 0.15rem;
+  }
+
+  .carousel-slide-org .org-chain-name {
+    padding-right: 1.25rem;
+  }
+
   .carousel-slide-org .org-chain-ext {
     position: absolute;
-    top: 0.9rem;
+    top: auto;
+    bottom: 0.85rem;
     right: 1rem;
   }
 }
