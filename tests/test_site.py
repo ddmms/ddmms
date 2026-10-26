@@ -1163,6 +1163,8 @@ categories:
         self.assertIn("https://agm46.ccp5.ac.uk/", talks_html)
         self.assertIn("MCC Conference 2026", talks_html)
         self.assertIn("https://www.mcc.hec.ac.uk/events/mcc-conference-2026/", talks_html)
+        self.assertIn("Ada Lovelace Centre Scientific Computing Showcase Event", talks_html)
+        self.assertIn("https://indico.stfc.ac.uk/event/1554/timetable/?view=standard_numbered", talks_html)
 
         # Empty state when there are no talks
         rendered = generate_talks_html({"title": "Talks", "talks": []})

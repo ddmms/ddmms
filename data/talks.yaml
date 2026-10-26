@@ -67,4 +67,10 @@ talks:
     description: "Invited talk presented with James Kermode in the session on Infrastructure Developments. Covers ML-PEG, a modular framework to develop, run, and visualise automated, interactive test suites for machine-learned interatomic potentials."
     url: "https://www.cecam.org/workshop-details/a-roadmap-for-an-atomistic-machine-learning-software-ecosystem-1376"
 
- 
+  - year: "2025"
+    title: "Materials Highlight: Machine Learned Interatomic Potential for High-Throughput Phonon Calculations of Metal-Organic Frameworks"
+    type: "Showcase talk"
+    speaker: "Dr. Alin Marin Elena"
+    event: "Ada Lovelace Centre Scientific Computing Showcase Event, Rutherford Appleton Laboratory (RAL), UK"
+    description: "Materials Highlight talk (19 June 2025, RAL Visitor Centre). Presenting MACE-MP-MOF0, a fine-tuned machine learning potential and high-throughput workflow that corrects unphysical imaginary modes and enables accurate thermal expansion and mechanical property predictions across diverse MOF structures."
+    url: "https://indico.stfc.ac.uk/event/1554/timetable/?view=standard_numbered"
