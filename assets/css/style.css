@@ -872,7 +872,8 @@ a:hover {
 .corner-theme-panel {
   position: absolute;
   top: calc(100% + 8px);
-  right: 1.5rem;
+  /* Align with the right edge of the centred .container, not the viewport */
+  right: max(1.5rem, calc((100% - var(--container-max)) / 2 + 1.5rem));
   width: clamp(260px, 85vw, 300px);
   background: var(--card-bg);
   backdrop-filter: blur(20px);
@@ -1069,7 +1070,8 @@ a:hover {
 .mobile-drawer {
   position: absolute;
   top: calc(100% + 8px);
-  right: 1.5rem;
+  /* Align with the right edge of the centred .container, not the viewport */
+  right: max(1.5rem, calc((100% - var(--container-max)) / 2 + 1.5rem));
   width: clamp(320px, 92vw, 380px);
   max-width: calc(100vw - 2rem);
   max-height: calc(100vh - 6rem);
@@ -4690,6 +4692,11 @@ a.funding-pill:hover {
   .container {
     padding-left: 1rem;
     padding-right: 1rem;
+  }
+  .corner-theme-panel,
+  .corner-menu-panel,
+  .mobile-drawer {
+    right: 1rem;
   }
   .section-wrapper {
     padding: 2.25rem 0;
