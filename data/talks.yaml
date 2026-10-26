@@ -82,3 +82,12 @@ talks:
     event: "Ada Lovelace Centre Scientific Computing Showcase Event, Rutherford Appleton Laboratory (RAL), UK"
     description: "Materials Highlight talk (19 June 2025, RAL Visitor Centre). Presenting MACE-MP-MOF0, a fine-tuned machine learning potential and high-throughput workflow that corrects unphysical imaginary modes and enables accurate thermal expansion and mechanical property predictions across diverse MOF structures."
     url: "https://indico.stfc.ac.uk/event/1554/timetable/?view=standard_numbered"
+
+  - year: "2025"
+    title: "Machine Learned Interatomic Potentials for Modelling Porous Materials"
+    type: "Invited talk"
+    speaker: "Dr. Alin Marin Elena"
+    event: "10th International Workshop of Materials Physics (IWMP-10), Măgurele, Romania"
+    description: "Invited talk (15 May 2025) in Session 3: Recent Advances in Computational Materials Science, hosted by the National Institute of Materials Physics (NIMP). Explores fine-tuned machine learning potentials (MACE-MP-MOF0) for high-throughput phonon and thermodynamic calculations in zeolites and metal-organic frameworks."
+    url: "https://infim.ro/event/10th-international-workshop-of-materials-physics/"
+
