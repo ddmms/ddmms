@@ -27,6 +27,14 @@ talks:
     url: "https://events.nvidia.com/atomistic-simulation-summit"
 
   - year: "2026"
+    title: "MMM Hub Software Spotlight: Janus ML"
+    type: "Invited talk"
+    speaker: "Dr. Alin Marin Elena"
+    event: "MMM Hub Software Spotlight, Thomas Young Centre, London, UK (Online)"
+    description: "Invited presentation (26 August 2026). Overview of the Janus ML software suite, practical demonstration of job submission and workflows on the MMM Hub Young Tier 2 supercomputer, and applications in machine-learned interatomic potentials from recent research."
+    url: "https://thomasyoungcentre.org/event/mmm-hub-software-spotlight-janus-ml/"
+
+  - year: "2026"
     title: "Bridging the Gap Between Theory and Experiment: Machine Learning Inter-atomic Potentials for Metal Organic Frameworks"
     type: "Contributed talk"
     speaker: "Dr. Alin Marin Elena"

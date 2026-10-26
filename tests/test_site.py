@@ -1182,6 +1182,8 @@ categories:
         self.assertIn("https://infim.ro/event/10th-international-workshop-of-materials-physics/", talks_html)
         self.assertIn("COSY Semester Opening Event", talks_html)
         self.assertIn("https://porelab.no/2025/08/12/cosy-semester-opening-event/", talks_html)
+        self.assertIn("MMM Hub Software Spotlight: Janus ML", talks_html)
+        self.assertIn("https://thomasyoungcentre.org/event/mmm-hub-software-spotlight-janus-ml/", talks_html)
 
         # Empty state when there are no talks
         rendered = generate_talks_html({"title": "Talks", "talks": []})
