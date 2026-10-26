@@ -64,10 +64,10 @@ affiliations:
         - text: "GitHub Repository"
           url: "https://github.com/ddmms/ml-peg"
     - title: "Project Goldilocks: AI-Driven Agentic DFT Automation"
-      image: "assets/images/research/goldilocks.jpg"
-      image_position: "50% 50%"
+      image: "assets/images/highlights/d5dd00565e-ga.png"
+      image_position: "0% 50%"
       text_side: "right"
-      image_alt: "Project Goldilocks data-driven DFT automation platform"
+      image_alt: "Goldilocks input generation app predicting a converged k-point spacing for Quantum ESPRESSO (Digital Discovery 2026)"
       description: "Recommends converged, cost-efficient settings for DFT calculations from crystal structures, eliminating under-converged results and compute waste on national supercomputers. Developed under the EPSRC Living Labs initiative."
       links:
         - text: "Visit goldilocks.ac.uk"

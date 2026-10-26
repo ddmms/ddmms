@@ -4131,6 +4131,12 @@ a.org-chain-link:hover {
   transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
+/* Diagrams: show the whole image at its own aspect ratio */
+.research-card-image-contain {
+  height: auto;
+  object-fit: contain;
+}
+
 .research-card:hover .research-card-image {
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);

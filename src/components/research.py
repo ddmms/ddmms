@@ -235,6 +235,10 @@ def generate_research_html(
         # Image support on the right
         image = str(theme.get("image") or "").strip()
         image_alt = str(theme.get("image_alt") or f"{title} illustration").strip()
+        # image_fit: contain shows the whole image (diagrams) instead of cropping it
+        image_cls = "research-card-image"
+        if str(theme.get("image_fit") or "").strip().lower() == "contain":
+            image_cls += " research-card-image-contain"
 
         media_html = ""
         card_classes = ["research-card"]
@@ -242,7 +246,7 @@ def generate_research_html(
             card_classes.append("has-image")
             media_html = f"""          <div class="research-card-media">
             <a href="{html.escape(image, quote=True)}" target="_blank" rel="noopener noreferrer" class="research-card-image-link" title="View full size image">
-              <img src="{html.escape(image, quote=True)}" alt="{html.escape(image_alt, quote=True)}" class="research-card-image" loading="lazy">
+              <img src="{html.escape(image, quote=True)}" alt="{html.escape(image_alt, quote=True)}" class="{image_cls}" loading="lazy">
             </a>
           </div>"""
 

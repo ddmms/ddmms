@@ -203,7 +203,10 @@ class TestDDMMSSite(unittest.TestCase):
         self.assertIn("assets/images/research/mofs.jpg", research_html)
         self.assertIn("assets/images/research/molten_salts.jpg", research_html)
         self.assertIn("assets/images/research/workflows.jpg", research_html)
-        self.assertIn("assets/images/research/goldilocks.jpg", research_html)
+        self.assertIn("assets/images/highlights/d5dd00565e-ga.png", research_html)
+        # Goldilocks graphical abstract is shown whole, not cropped
+        self.assertIn('class="research-card-image research-card-image-contain"', research_html)
+        self.assertEqual(research_html.count("research-card-image-contain"), 1)
         self.assertIn("assets/images/research/ml_peg.jpg", research_html)
 
     def test_key_facts_card_removed(self):
@@ -911,7 +914,7 @@ paragraphs:
         for img_rel in (
             "highlights/184110_1_5.0297006.figures.online.f3.jpg",
             "research/ml_peg.jpg",
-            "research/goldilocks.jpg",
+            "highlights/d5dd00565e-ga.png",
         ):
             self.assertIn(f'src="assets/images/{img_rel}"', index_html)
             self.assertTrue((BASE_DIR / "assets" / "images" / img_rel).is_file(), f"Missing image {img_rel}")

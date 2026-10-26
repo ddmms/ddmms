@@ -88,8 +88,9 @@ themes:
 
   - id: goldilocks
     title: "Sustainable DFT through Data-Driven Agents (Goldilocks)"
-    image: "assets/images/research/goldilocks.jpg"
-    image_alt: "Goldilocks automated DFT convergence and k-point mesh optimization agent"
+    image: "assets/images/highlights/d5dd00565e-ga.png"
+    image_fit: "contain"
+    image_alt: "Goldilocks input generation app predicting a converged k-point spacing for Quantum ESPRESSO (Digital Discovery 2026)"
     funding:
       - programme: "Ada Lovelace Centre"
         url: "https://www.adalovelacecentre.ac.uk"
