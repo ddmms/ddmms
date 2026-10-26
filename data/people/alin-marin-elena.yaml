@@ -13,7 +13,10 @@ highlighted_work:
   - "janus-core"
   - "pack-mm"
   
-bio: "Alin leads the Data Driven Materials and Molecular Science research group. Current work focuses on physics-informed machine learning (machine-learnt interatomic potentials), transport properties in complex liquids and molten salts, porous materials, and explaining experimental results via atomistic modelling."
+bio: |
+  Alin leads the Data Driven Materials and Molecular Science research group.
+
+  Current work focuses on physics-informed machine learning (machine-learnt interatomic potentials), transport properties in complex liquids and molten salts, porous materials, and explaining experimental results via atomistic modelling.
 short_bio: "Group Leader of DDMMS focusing on machine-learned interatomic potentials, complex liquids, porous materials, and multiscale materials modelling."
 research_interests:
   - "Machine-learned interatomic potentials (MLIPs) and MACE foundation models"
