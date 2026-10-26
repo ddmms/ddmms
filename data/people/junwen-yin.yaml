@@ -9,16 +9,28 @@ email: "junwen.yin@stfc.ac.uk"
 highlighted_work:
   - "goldilocks"
   - "patyukova2026565e"
-bio: "Junwen develops first-principles methods and the tools that automate them. Current work covers electron–phonon coupling and phonon anharmonicity from DFT and DFPT, including carrier mobility in halide perovskites and the phonon-limited resistivity of metals; nonadiabatic coupling and excited-state dynamics in CP2K; and ferroelectric hafnia. Junwen also develops Goldilocks, which uses high-throughput DFT data, machine learning and AI agents to choose converged, cost-efficient calculation parameters."
-short_bio: "Computational scientist working on electron–phonon coupling, DFT and DFPT, perovskites, nonadiabatic dynamics in CP2K, and Goldilocks: high-throughput DFT, machine learning and AI agents for converged calculation parameters."
+bio: |
+  Junwen is the lead developer of [Goldilocks](https://goldilocks.ac.uk), which uses high-throughput DFT, machine learning and LLM-based AI agents to choose converged, cost-efficient settings for DFT calculations, so that less compute and electricity is wasted on national supercomputers such as ARCHER2.
+
+  Goldilocks turns a crystal structure into recommended calculation settings, records the basis for each recommendation, and generates the input files and submission script needed to run it. It draws on machine-learning models and datasets published on PSDI, including converged k-point meshes for more than 17,000 structures. The tool runs as a command-line program, a browser application, an HTTP API and an MCP server for AI assistants; an LLM-based agent, in development, orchestrates scientific workflows and explains its recommendations in plain language. The k-point work is published in [Digital Discovery (2026)](https://doi.org/10.1039/d5dd00565e).
+
+  Alongside Goldilocks, Junwen works on first-principles methods and their applications: electron–phonon coupling and phonon anharmonicity from DFT and DFPT, including carrier mobility in halide perovskites and the phonon-limited resistivity of metals; nonadiabatic coupling and excited-state dynamics in CP2K; and ferroelectric hafnia.
+short_bio: "Computational scientist and lead developer of Goldilocks: high-throughput DFT, machine learning and LLM-based AI agents for converged, cost-efficient DFT settings. Also works on electron–phonon coupling, DFPT, perovskites and nonadiabatic dynamics in CP2K."
 research_interests:
+  - "High-throughput DFT and automated convergence of calculation parameters (Goldilocks)"
+  - "Machine learning, LLMs and AI agents for electronic-structure workflows"
+  - "Research software for automated DFT: command-line tools, web applications, APIs and MCP servers"
   - "Electron–phonon coupling, phonon anharmonicity and carrier transport from DFT and DFPT"
   - "Halide perovskites and ferroelectric hafnia"
   - "Nonadiabatic coupling and excited-state dynamics in CP2K"
-  - "High-throughput DFT and automated convergence of calculation parameters (Goldilocks)"
-  - "Machine learning and AI agents for electronic-structure workflows"
   - "Catalytic, electrochemical and photoactive interfaces"
 tags:
+  - "Goldilocks"
+  - "High-Throughput Calculations"
+  - "Machine Learning"
+  - "LLMs"
+  - "AI Agents"
+  - "Research Software"
   - "DFT"
   - "DFPT"
   - "Electron–Phonon Coupling"
@@ -26,10 +38,6 @@ tags:
   - "Perovskites"
   - "Catalytic Interfaces"
   - "CP2K Framework"
-  - "High-Throughput Calculations"
-  - "Machine Learning"
-  - "AI Agents"
-  - "Goldilocks"
 links:
   - text: "ORCID"
     url: "https://orcid.org/0000-0001-7374-9352"
