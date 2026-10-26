@@ -367,6 +367,14 @@ class TestDDMMSSite(unittest.TestCase):
         self.assertIn("footer-grid", footer_content)
         self.assertIn("footer-links", footer_content)
         self.assertIn("Affiliations", footer_content)
+        # Periodic table resource link
+        self.assertIn("https://periodic.elena.re", footer_content)
+        # Affiliation links and CoSeC
+        self.assertIn("https://www.cosec.ac.uk", footer_content)
+        # Affiliation logos
+        for logo in ("ukri.svg", "stfc.png", "scd.svg", "cosec.png", "ccp5.png", "psdi.svg"):
+            self.assertIn(f"assets/logos/{logo}", footer_content)
+            self.assertTrue((BASE_DIR / "assets" / "logos" / logo).is_file(), f"Missing footer logo {logo}")
         # Footer menu is removed since the header menu is always sticky on
         self.assertNotIn("footer-nav-pills", footer_content)
 

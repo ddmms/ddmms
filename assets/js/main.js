@@ -559,10 +559,17 @@
         <div class="footer-col">
           <h5>Affiliations</h5>
           <ul class="footer-links">
-            <li><a href="https://www.scd.stfc.ac.uk" target="_blank" rel="noopener noreferrer">STFC SCD</a></li>
+            <li><a href="https://www.sc.stfc.ac.uk" target="_blank" rel="noopener noreferrer">STFC SCD</a></li>
             <li><a href="https://www.ukri.org" target="_blank" rel="noopener noreferrer">UKRI</a></li>
+            <li><a href="https://www.cosec.ac.uk" target="_blank" rel="noopener noreferrer">CoSeC</a></li>
             <li><a href="https://www.psdi.ac.uk" target="_blank" rel="noopener noreferrer">PSDI Data to Knowledge</a></li>
             <li><a href="https://www.ccp5.ac.uk" target="_blank" rel="noopener noreferrer">CCP5</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Resources</h5>
+          <ul class="footer-links">
+            <li><a href="https://periodic.elena.re" target="_blank" rel="noopener noreferrer">Periodic Table (periodic.elena.re)</a></li>
           </ul>
         </div>
       </div>
@@ -724,41 +731,45 @@
       const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
       const currentIndex = () => Math.round(track.scrollLeft / Math.max(track.clientWidth, 1));
+      let activeIndex = 0;
 
       function goTo(index) {
-        const target = (index + slides.length) % slides.length;
-        track.scrollTo({ left: target * track.clientWidth, behavior: reduceMotion ? 'auto' : 'smooth' });
+        activeIndex = (index + slides.length) % slides.length;
+        const targetSlide = slides[activeIndex];
+        const leftPos = targetSlide ? targetSlide.offsetLeft : activeIndex * track.clientWidth;
+        track.scrollTo({ left: leftPos, behavior: reduceMotion ? 'auto' : 'smooth' });
+        updateDots();
       }
 
       function updateDots() {
-        const active = currentIndex();
+        const active = activeIndex;
         dots.forEach((dot, i) => dot.setAttribute('aria-current', i === active ? 'true' : 'false'));
       }
 
       const prevBtn = carousel.querySelector('.carousel-prev');
       const nextBtn = carousel.querySelector('.carousel-next');
-      if (prevBtn) prevBtn.addEventListener('click', () => { goTo(currentIndex() - 1); restartAutoplay(); });
-      if (nextBtn) nextBtn.addEventListener('click', () => { goTo(currentIndex() + 1); restartAutoplay(); });
+      if (prevBtn) prevBtn.addEventListener('click', () => { goTo(activeIndex - 1); restartAutoplay(); });
+      if (nextBtn) nextBtn.addEventListener('click', () => { goTo(activeIndex + 1); restartAutoplay(); });
       dots.forEach((dot, i) => dot.addEventListener('click', () => { goTo(i); restartAutoplay(); }));
 
       track.addEventListener('keydown', e => {
         if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
           e.preventDefault();
-          goTo(currentIndex() + (e.key === 'ArrowRight' ? 1 : -1));
+          goTo(activeIndex + (e.key === 'ArrowRight' ? 1 : -1));
           restartAutoplay();
         }
       });
 
-      // Auto-cycle after ~5s (default 5000ms), pausing on hover, focus, or tab-switch
+      // Auto-revolve every 5s (default 5000ms), pausing only if tab is hidden
       const autoplayDelay = parseInt(carousel.dataset.interval || '5000', 10);
       let timer = null;
-      let isPaused = false;
 
       function startAutoplay() {
-        if (slides.length <= 1 || timer !== null) return;
+        if (slides.length <= 1) return;
+        stopAutoplay();
         timer = setInterval(() => {
-          if (!isPaused && document.visibilityState !== 'hidden') {
-            goTo(currentIndex() + 1);
+          if (document.visibilityState !== 'hidden') {
+            goTo(activeIndex + 1);
           }
         }, autoplayDelay);
       }
@@ -775,12 +786,12 @@
         startAutoplay();
       }
 
-      carousel.addEventListener('mouseenter', () => { isPaused = true; });
-      carousel.addEventListener('mouseleave', () => { isPaused = false; });
-      carousel.addEventListener('focusin', () => { isPaused = true; });
-      carousel.addEventListener('focusout', () => { isPaused = false; });
       document.addEventListener('visibilitychange', () => {
-        isPaused = document.visibilityState === 'hidden';
+        if (document.visibilityState === 'hidden') {
+          stopAutoplay();
+        } else {
+          startAutoplay();
+        }
       });
 
       startAutoplay();
@@ -788,7 +799,10 @@
       let frame = null;
       track.addEventListener('scroll', () => {
         if (frame) cancelAnimationFrame(frame);
-        frame = requestAnimationFrame(updateDots);
+        frame = requestAnimationFrame(() => {
+          activeIndex = currentIndex();
+          updateDots();
+        });
       }, { passive: true });
 
       // the browser may restore or jump the scroll position after init (e.g. #slide links)
