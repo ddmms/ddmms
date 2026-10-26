@@ -1024,6 +1024,9 @@ contact:
         self.assertIn("Open Science with the Atomic Simulation Environment", teaching_html)
         self.assertIn('href="https://www.ccpnth.ac.uk/events/ai4nth2026/"', teaching_html)
         self.assertIn("Lecturer: Junwen Yin", teaching_html)
+        self.assertIn('href="https://www.mcc.hec.ac.uk/events/ml-training-july-2025/"', teaching_html)
+        self.assertIn("Organiser: Elliott Kasoar", teaching_html)
+        self.assertIn("Machine Learning Interatomic Potentials (MLIPs) Training Workshop", teaching_html)
         # Every event photo referenced in training.yaml exists on disk
         for cat in load_teaching().get("categories") or []:
             for event in cat.get("events") or []:
