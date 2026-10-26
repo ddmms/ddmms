@@ -38,6 +38,17 @@ ORCID_SVG = (
 )
 
 
+def format_bio_links(text: str) -> str:
+    """Format bio text by converting markdown links [text](url) to HTML links."""
+    if not text:
+        return ""
+    return re.sub(
+        r'\[([^\]]+)\]\((https?://[^)]+)\)',
+        r'<a href="\2" target="_blank" rel="noopener noreferrer">\1</a>',
+        text,
+    )
+
+
 def load_person(person_file: Union[str, Path]) -> Dict[str, Any]:
     """Load an individual person's YAML file.
 
@@ -204,7 +215,7 @@ def generate_people_html(people_data: Optional[Dict[str, Any]] = None) -> str:
             avatar = str(member.get("avatar") or "").strip()
             role = str(member.get("role") or "").strip()
             affiliation = str(member.get("affiliation") or "").strip()
-            bio = str(member.get("bio") or "").strip()
+            bio = format_bio_links(str(member.get("bio") or "").strip())
             tenure = str(member.get("tenure") or "").strip()
             if not tenure:
                 j_d = member.get("join_date") or member.get("joined")
@@ -803,7 +814,7 @@ def generate_person_html(
         or ""
     ).strip()
     email = str(person_data.get("email") or "").strip()
-    bio = str(person_data.get("bio") or "").strip()
+    bio = format_bio_links(str(person_data.get("bio") or "").strip())
     short_bio = str(person_data.get("short_bio") or "").strip()
     tags = person_data.get("tags") or []
     links = person_data.get("links") or []

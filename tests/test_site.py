@@ -248,6 +248,11 @@ class TestDDMMSSite(unittest.TestCase):
         avatar_pos = alin_page.find("profile-header-avatar-wrap")
         self.assertGreater(avatar_pos, details_pos, "Profile header avatar should be placed on the right of details")
 
+        # Verify bio hyperlinks are properly rendered as HTML anchors
+        self.assertIn('href="https://camml.ac.uk"', alin_page)
+        self.assertIn('href="https://gtr.ukri.org/person/041472A8-A559-4803-8020-1E0AC0E5D905"', alin_page)
+        self.assertNotIn('[CaMML school]', alin_page)
+
     def test_elliott_kasoar_picture_used(self):
         img_path = BASE_DIR / "assets" / "images" / "elliott_kasoar.jpg"
         self.assertTrue(img_path.exists(), "elliott_kasoar.jpg image does not exist")
