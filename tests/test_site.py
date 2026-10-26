@@ -860,7 +860,7 @@ paragraphs:
             "Data Driven Materials and Molecular Science Group",
             "MACE-MP: Foundation Model for Materials Chemistry",
             "ML-PEG: Machine Learning Performance and Extrapolation Guide",
-            "Project Goldilocks: AI-Driven DFT Automation",
+            "Project Goldilocks: AI-Driven Agentic DFT Automation",
         ):
             self.assertIn(f'<h2 class="slide-title">{title}</h2>', index_html)
         # No small uppercase labels above headings; the department slide has no buttons
