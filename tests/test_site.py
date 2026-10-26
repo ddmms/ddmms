@@ -194,6 +194,18 @@ class TestDDMMSSite(unittest.TestCase):
         self.assertIn("Horizon Europe (101010)", rendered_dict)
         self.assertIn('href="https://example.com/grant"', rendered_dict)
 
+    def test_research_images(self):
+        research_html = (BASE_DIR / "research.html").read_text(encoding="utf-8")
+        self.assertIn('class="research-card has-image"', research_html)
+        self.assertIn('class="research-card-media"', research_html)
+        self.assertIn('class="research-card-image"', research_html)
+        self.assertIn("assets/images/highlights/184110_1_5.0297006.figures.online.f3.jpg", research_html)
+        self.assertIn("assets/images/research/mofs.jpg", research_html)
+        self.assertIn("assets/images/research/molten_salts.jpg", research_html)
+        self.assertIn("assets/images/research/workflows.jpg", research_html)
+        self.assertIn("assets/images/research/goldilocks.jpg", research_html)
+        self.assertIn("assets/images/research/ml_peg.jpg", research_html)
+
     def test_key_facts_card_removed(self):
         index_html = (BASE_DIR / "index.html").read_text(encoding="utf-8")
         self.assertNotIn("Key Facts &amp; Infrastructure", index_html)

@@ -5,6 +5,8 @@ approach:
 themes:
   - id: mlips
     title: "Foundation Machine-Learned Interatomic Potentials (MLIPs)"
+    image: "assets/images/highlights/184110_1_5.0297006.figures.online.f3.jpg"
+    image_alt: "MACE equivariant graph neural network potential accuracy and active learning (Batatia et al., 2025)"
     funding:
       - programme: "PSDI Data to Knowledge"
         grant: "EP/X032701/1"
@@ -26,6 +28,8 @@ themes:
 
   - id: mofs
     title: "Metal-Organic Frameworks &amp; Nanoporous Networks"
+    image: "assets/images/research/mofs.jpg"
+    image_alt: "Metal-Organic Framework (MOF) crystalline porous framework and guest-host adsorption channels"
     funding:
       - programme: "CCP5"
         grant: "EP/V028537/1"
@@ -43,6 +47,8 @@ themes:
 
   - id: molten-salts
     title: "Complex Fluids, Molten Salts &amp; Transport Phenomena"
+    image: "assets/images/research/molten_salts.jpg"
+    image_alt: "Molecular dynamics simulation of molten salt transport phenomena and ionic diffusion"
     funding:
       - programme: "CCP5"
         grant: "EP/V028537/1"
@@ -60,6 +66,8 @@ themes:
 
   - id: workflows
     title: "High-Throughput Simulation Workflows with janus-core &amp; aiida-mlip"
+    image: "assets/images/research/workflows.jpg"
+    image_alt: "High-throughput simulation workflows with janus-core and aiida-mlip"
     funding:
       - programme: "PSDI Data to Knowledge"
         grant: "EP/X032701/1"
@@ -80,6 +88,8 @@ themes:
 
   - id: goldilocks
     title: "Sustainable DFT through Data-Driven Agents (Goldilocks)"
+    image: "assets/images/research/goldilocks.jpg"
+    image_alt: "Goldilocks automated DFT convergence and k-point mesh optimization agent"
     funding:
       - programme: "PSDI Data to Knowledge"
         grant: "EP/X032701/1"
@@ -107,6 +117,8 @@ themes:
 
   - id: ml-peg
     title: "Machine Learning Performance and Extrapolation Guide (ML-PEG)"
+    image: "assets/images/research/ml_peg.jpg"
+    image_alt: "Machine Learning Performance and Extrapolation Guide (ML-PEG) benchmarking dashboard"
     funding:
       - programme: "PSDI Data to Knowledge"
         grant: "EP/X032701/1"

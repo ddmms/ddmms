@@ -232,11 +232,32 @@ def generate_research_html(
             top_parts.append(funding_html)
         top_content = "\n".join(top_parts)
 
-        cards.append(f"""        <article class="research-card">
-          <div class="research-card-top">
+        # Image support on the right
+        image = str(theme.get("image") or "").strip()
+        image_alt = str(theme.get("image_alt") or f"{title} illustration").strip()
+
+        media_html = ""
+        card_classes = ["research-card"]
+        if image:
+            card_classes.append("has-image")
+            media_html = f"""          <div class="research-card-media">
+            <a href="{html.escape(image, quote=True)}" target="_blank" rel="noopener noreferrer" class="research-card-image-link" title="View full size image">
+              <img src="{html.escape(image, quote=True)}" alt="{html.escape(image_alt, quote=True)}" class="research-card-image" loading="lazy">
+            </a>
+          </div>"""
+
+        theme_id = str(theme.get("id") or "").strip()
+        id_attr = f' id="{html.escape(theme_id, quote=True)}"' if theme_id else ""
+        class_attr = " ".join(card_classes)
+
+        cards.append(f"""        <article class="{class_attr}"{id_attr}>
+          <div class="research-card-body">
+            <div class="research-card-top">
 {top_content}
-          </div>
+            </div>
 {actions_html}
+          </div>
+{media_html}
         </article>""")
 
     cards_html = "\n\n".join(cards)
