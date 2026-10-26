@@ -1158,6 +1158,8 @@ categories:
         self.assertIn("Dr. Alin Marin Elena", talks_html)
         self.assertIn("Elliott Kasoar", talks_html)
         self.assertIn("https://agm46.ccp5.ac.uk/", talks_html)
+        self.assertIn("MCC Conference 2026", talks_html)
+        self.assertIn("https://www.mcc.hec.ac.uk/events/mcc-conference-2026/", talks_html)
 
         # Empty state when there are no talks
         rendered = generate_talks_html({"title": "Talks", "talks": []})

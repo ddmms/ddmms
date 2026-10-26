@@ -27,6 +27,22 @@ talks:
     url: "https://events.nvidia.com/atomistic-simulation-summit"
 
   - year: "2026"
+    title: "Bridging the Gap Between Theory and Experiment: Machine Learning Inter-atomic Potentials for Metal Organic Frameworks"
+    type: "Contributed talk"
+    speaker: "Dr. Alin Marin Elena"
+    event: "MCC Conference 2026 (8th Conference of the Materials Chemistry Consortium), STFC Daresbury Laboratory, UK"
+    description: "Session 3: Bulk (Thursday 2 July 2026). Presenting advances in machine learning interatomic potentials for metal-organic frameworks, connecting theoretical vibrational properties with experimental characterisation."
+    url: "https://www.mcc.hec.ac.uk/events/mcc-conference-2026/"
+
+  - year: "2026"
+    title: "ML-PEG: Machine Learning Performance and Extrapolation Guide"
+    type: "Contributed talk"
+    speaker: "Elliott Kasoar"
+    event: "MCC Conference 2026 (8th Conference of the Materials Chemistry Consortium), STFC Daresbury Laboratory, UK"
+    description: "Session 1: Algorithms (Wednesday 1 July 2026). Presentation on ML-PEG, co-authored with Joseph Hart, Ilyes Batatia, Domantas Kuryla, Alin M. Elena, and Gábor Csányi, introducing rigorous benchmarks and interactive evaluation for foundation MLIPs."
+    url: "https://www.mcc.hec.ac.uk/events/mcc-conference-2026/"
+
+  - year: "2026"
     title: "Bridging the Gap Between Theory and Experiment: Augmenting MD-EXAFS with Machine Learning Interatomic Potentials for Complex Materials Research"
     type: "Contributed talk"
     speaker: "Dr. Alin Marin Elena"
