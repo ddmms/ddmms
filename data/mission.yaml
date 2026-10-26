@@ -4,7 +4,7 @@ subtitle: "Using statistical physics, quantum mechanics, and artificial intellig
 paragraphs:
   - 'The <strong>Data Driven Materials and Molecular Science (DDMMS)</strong> group is part of the <a href="https://www.sc.stfc.ac.uk/research-and-expertise/computational-materials-and-molecular-science/" target="_blank" rel="noopener noreferrer">Computational Materials and Molecular Science (CMMS) Theme</a> hosted within the <a href="https://www.sc.stfc.ac.uk/" target="_blank" rel="noopener noreferrer">Scientific Computing Department (SCD)</a> of the <a href="https://www.ukri.org/councils/stfc/" target="_blank" rel="noopener noreferrer">Science and Technology Facilities Council (STFC)</a>, part of <a href="https://www.ukri.org/" target="_blank" rel="noopener noreferrer">UK Research and Innovation (UKRI)</a>, based at <a href="https://www.ukri.org/who-we-are/stfc/facilities/daresbury-laboratory/" target="_blank" rel="noopener noreferrer">Daresbury Laboratory</a> and <a href="https://www.ukri.org/who-we-are/stfc/facilities/rutherford-appleton-laboratory/" target="_blank" rel="noopener noreferrer">Rutherford Appleton Laboratory</a>.'
   - "Computational materials science has long faced a fundamental trade-off: high-accuracy quantum mechanical calculations (such as density functional theory and post-Hartree-Fock) are computationally expensive and limited to small systems, whereas classical empirical force fields scale to millions of atoms but suffer from fixed functional forms and limited chemical transferability."
-  - "Our core mission is to eliminate this trade-off by constructing robust, physics-informed machine-learned interatomic potentials (MLIPs), creating automated calculation workflows, and running extreme-scale simulations on high-performance computing facilities."
+  - "Our core mission is to eliminate this trade-off by constructing robust, physics-informed machine-learned interatomic potentials (MLIPs), creating automated/agentic computational workflows, and running extreme-scale simulations on high-performance computing facilities."
 
 affiliations:
   title: "Our Home at STFC"
@@ -63,7 +63,7 @@ affiliations:
           url: "https://ml-peg.stfc.ac.uk"
         - text: "GitHub Repository"
           url: "https://github.com/ddmms/ml-peg"
-    - title: "Project Goldilocks: AI-Driven DFT Automation"
+    - title: "Project Goldilocks: AI-Driven Agentic DFT Automation"
       image: "assets/images/research/goldilocks.jpg"
       image_position: "50% 50%"
       text_side: "right"
