@@ -367,8 +367,12 @@ class TestDDMMSSite(unittest.TestCase):
         self.assertIn("footer-grid", footer_content)
         self.assertIn("footer-links", footer_content)
         self.assertIn("Affiliations", footer_content)
-        # Periodic table resource link
+        # Periodic table resource link (only resource link in footer)
         self.assertIn("https://periodic.elena.re", footer_content)
+        self.assertNotIn("ML-PEG Platform", footer_content)
+        self.assertNotIn("Project Goldilocks", footer_content)
+        # Affiliations column removed from footer-grid
+        self.assertNotIn("<h5>Affiliations</h5>", footer_content)
         # Affiliation links and CoSeC
         self.assertIn("https://www.cosec.ac.uk", footer_content)
         # Affiliation logos

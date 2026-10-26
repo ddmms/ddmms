@@ -557,16 +557,6 @@
           <p>Accelerating atomistic discovery through physics-informed machine learning, multiscale molecular simulation, and open-source scientific workflows.</p>
         </div>
         <div class="footer-col">
-          <h5>Affiliations</h5>
-          <ul class="footer-links">
-            <li><a href="https://www.sc.stfc.ac.uk" target="_blank" rel="noopener noreferrer">STFC SCD</a></li>
-            <li><a href="https://www.ukri.org" target="_blank" rel="noopener noreferrer">UKRI</a></li>
-            <li><a href="https://www.cosec.ac.uk" target="_blank" rel="noopener noreferrer">CoSeC</a></li>
-            <li><a href="https://www.psdi.ac.uk" target="_blank" rel="noopener noreferrer">PSDI Data to Knowledge</a></li>
-            <li><a href="https://www.ccp5.ac.uk" target="_blank" rel="noopener noreferrer">CCP5</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
           <h5>Resources</h5>
           <ul class="footer-links">
             <li><a href="https://periodic.elena.re" target="_blank" rel="noopener noreferrer">Periodic Table (periodic.elena.re)</a></li>
