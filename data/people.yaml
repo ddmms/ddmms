@@ -31,6 +31,8 @@ sections:
         avatar: "AA"
         role: "ALC PhD Student"
         affiliation: "University College London (UCL)"
+        join_date: "2026-09-01"
+        left_date: "2030-08-31"   # expected end of the four-year PhD
         bio: "Machine learning and atomistic simulations of ferroelectric functional oxides for ultra-low-power AI technologies."
         links:
           - text: "Project"
@@ -55,6 +57,10 @@ sections:
     subtitle: ""
     empty_text: ""
     members:
+      - name: "Willow Sparks"
+        role: "Graduate"
+        join_date: "2026-04-01"
+        left_date: "2026-09-30"
       - name: "Jessie Gould"
         role: "Graduate"
         join_date: "2023-09-01"

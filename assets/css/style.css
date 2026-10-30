@@ -872,7 +872,8 @@ a:hover {
 .corner-theme-panel {
   position: absolute;
   top: calc(100% + 8px);
-  right: 1.5rem;
+  /* Align with the right edge of the centred .container, not the viewport */
+  right: max(1.5rem, calc((100% - var(--container-max)) / 2 + 1.5rem));
   width: clamp(260px, 85vw, 300px);
   background: var(--card-bg);
   backdrop-filter: blur(20px);
@@ -1069,7 +1070,8 @@ a:hover {
 .mobile-drawer {
   position: absolute;
   top: calc(100% + 8px);
-  right: 1.5rem;
+  /* Align with the right edge of the centred .container, not the viewport */
+  right: max(1.5rem, calc((100% - var(--container-max)) / 2 + 1.5rem));
   width: clamp(320px, 92vw, 380px);
   max-width: calc(100vw - 2rem);
   max-height: calc(100vh - 6rem);
@@ -4129,6 +4131,12 @@ a.org-chain-link:hover {
   transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
+/* Diagrams: show the whole image at its own aspect ratio */
+.research-card-image-contain {
+  height: auto;
+  object-fit: contain;
+}
+
 .research-card:hover .research-card-image {
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
@@ -4206,7 +4214,8 @@ a.funding-pill:hover {
   border-top: 2px solid var(--border);
 }
 
-.people-section + .people-section {
+/* "~" not "+": anchor spans (e.g. #phd) can sit between sections */
+.people-section ~ .people-section {
   margin-top: 3rem;
 }
 
@@ -4690,6 +4699,11 @@ a.funding-pill:hover {
   .container {
     padding-left: 1rem;
     padding-right: 1rem;
+  }
+  .corner-theme-panel,
+  .corner-menu-panel,
+  .mobile-drawer {
+    right: 1rem;
   }
   .section-wrapper {
     padding: 2.25rem 0;

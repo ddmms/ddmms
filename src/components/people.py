@@ -224,7 +224,9 @@ def generate_people_html(people_data: Optional[Dict[str, Any]] = None) -> str:
                 if j_d and l_d:
                     m_j = re.search(r"\b(19\d\d|20\d\d)\b", str(j_d))
                     m_l = re.search(r"\b(19\d\d|20\d\d)\b", str(l_d))
-                    if m_j and m_l:
+                    if m_j and m_l and m_j.group(1) == m_l.group(1):
+                        tenure = m_j.group(1)
+                    elif m_j and m_l:
                         tenure = f"{m_j.group(1)}&ndash;{m_l.group(1)}"
                 elif j_d and sec_id in ("former-members", "alumni"):
                     m_j = re.search(r"\b(19\d\d|20\d\d)\b", str(j_d))

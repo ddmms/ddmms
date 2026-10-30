@@ -203,7 +203,10 @@ class TestDDMMSSite(unittest.TestCase):
         self.assertIn("assets/images/research/mofs.jpg", research_html)
         self.assertIn("assets/images/research/molten_salts.jpg", research_html)
         self.assertIn("assets/images/research/workflows.jpg", research_html)
-        self.assertIn("assets/images/research/goldilocks.jpg", research_html)
+        self.assertIn("assets/images/highlights/d5dd00565e-ga.png", research_html)
+        # Goldilocks graphical abstract is shown whole, not cropped
+        self.assertIn('class="research-card-image research-card-image-contain"', research_html)
+        self.assertEqual(research_html.count("research-card-image-contain"), 1)
         self.assertIn("assets/images/research/ml_peg.jpg", research_html)
 
     def test_key_facts_card_removed(self):
@@ -835,7 +838,8 @@ paragraphs:
             self.assertIn("Custom Group Vision", rendered_html)
             self.assertIn("Pioneering atomic intelligence.", rendered_html)
             self.assertIn("Custom mission paragraph one describing high accuracy simulation.", rendered_html)
-            self.assertIn('<p class="home-lead">', rendered_html)
+            # Mission paragraphs share one style: no larger lead-in
+            self.assertNotIn('<p class="home-lead">', rendered_html)
         finally:
             if tmf_path.exists():
                 tmf_path.unlink()
@@ -911,7 +915,7 @@ paragraphs:
         for img_rel in (
             "highlights/184110_1_5.0297006.figures.online.f3.jpg",
             "research/ml_peg.jpg",
-            "research/goldilocks.jpg",
+            "highlights/d5dd00565e-ga.png",
         ):
             self.assertIn(f'src="assets/images/{img_rel}"', index_html)
             self.assertTrue((BASE_DIR / "assets" / "images" / img_rel).is_file(), f"Missing image {img_rel}")
@@ -1651,6 +1655,12 @@ talks:
         people_html = (BASE_DIR / "people.html").read_text(encoding="utf-8")
         self.assertIn("2024&ndash;2026", people_html)
         self.assertIn("2023&ndash;2024", people_html)
+        # Current PhD student with an expected end date
+        self.assertIn('<span class="person-tenure">2026&ndash;2030</span>', people_html)
+        # A stay within one year shows the year once, not "2026–2026"
+        self.assertIn("Willow Sparks", people_html)
+        self.assertIn('<span class="person-tenure">2026</span>', people_html)
+        self.assertNotIn("2026&ndash;2026", people_html)
 
     def test_header_hero_pictures_and_blending(self):
         """Verify generic header pictures are present for each page and blended in CSS."""
