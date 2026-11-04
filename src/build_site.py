@@ -8,18 +8,30 @@ loading data feeds (publications, authors, news), and writing static HTML assets
 import csv
 import json
 import re
-import sys
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict
 import yaml
+
+# Entry point: run as `python -m src.build_site` from the repository root.
+from src.components.header import generate_header_html, get_header
+from src.components.footer import generate_footer_html, get_footer
+from src.components.news import load_news, generate_news_html
+from src.components.index import generate_index_html, generate_about_html, load_mission
+from src.components.code import generate_code_html, generate_software_html, load_software
+from src.components.publications import generate_publications_html
+from src.components.people import generate_people_html, load_people, generate_person_html, load_person
+from src.components.research import generate_research_html, load_research
+from src.components.collaborate import generate_collaborate_html, load_collaborate
+from src.components.teaching import generate_teaching_html, load_teaching, load_training
+from src.components.talks import generate_talks_html, load_talks
+from src.components.events import generate_events_html, load_events
+
 
 # Paths
 BASE_DIR = Path(__file__).resolve().parent.parent
 PUBLICATIONS_FILE = BASE_DIR / "publications.json"
 AUTHORS_FILE = BASE_DIR / "data" / "authors.yaml"
 AUTHORS_CSV_FILE = BASE_DIR / "data" / "authors.csv"
-HEADER_FILE = BASE_DIR / "header.html"
-FOOTER_FILE = BASE_DIR / "footer.html"
 NEWS_FILE = BASE_DIR / "data" / "news.yaml"
 RESEARCH_FILE = BASE_DIR / "data" / "research.yaml"
 PEOPLE_FILE = BASE_DIR / "data" / "people.yaml"
@@ -30,48 +42,6 @@ TRAINING_FILE = BASE_DIR / "data" / "training.yaml"
 TEACHING_FILE = TRAINING_FILE
 TALKS_FILE = BASE_DIR / "data" / "talks.yaml"
 EVENTS_FILE = BASE_DIR / "data" / "events.yaml"
-
-# Import modular components with flexible path resolution
-try:
-    from .components.header import generate_header_html, get_header
-    from .components.footer import generate_footer_html, get_footer
-    from .components.news import load_news, generate_news_html
-    from .components.index import generate_index_html, generate_about_html, load_mission
-    from .components.code import generate_code_html, generate_software_html, load_software
-    from .components.publications import generate_publications_html
-    from .components.people import generate_people_html, load_people, generate_person_html, load_person
-    from .components.research import generate_research_html, load_research
-    from .components.collaborate import generate_collaborate_html, load_collaborate
-    from .components.teaching import generate_teaching_html, load_teaching, load_training
-    from .components.talks import generate_talks_html, load_talks
-    from .components.events import generate_events_html, load_events
-except (ImportError, ValueError):
-    try:
-        from components.header import generate_header_html, get_header
-        from components.footer import generate_footer_html, get_footer
-        from components.news import load_news, generate_news_html
-        from components.index import generate_index_html, generate_about_html, load_mission
-        from components.code import generate_code_html, generate_software_html, load_software
-        from components.publications import generate_publications_html
-        from components.people import generate_people_html, load_people, generate_person_html, load_person
-        from components.research import generate_research_html, load_research
-        from components.collaborate import generate_collaborate_html, load_collaborate
-        from components.teaching import generate_teaching_html, load_teaching, load_training
-        from components.talks import generate_talks_html, load_talks
-        from components.events import generate_events_html, load_events
-    except ImportError:
-        from src.components.header import generate_header_html, get_header
-        from src.components.footer import generate_footer_html, get_footer
-        from src.components.news import load_news, generate_news_html
-        from src.components.index import generate_index_html, generate_about_html, load_mission
-        from src.components.code import generate_code_html, generate_software_html, load_software
-        from src.components.publications import generate_publications_html
-        from src.components.people import generate_people_html, load_people, generate_person_html, load_person
-        from src.components.research import generate_research_html, load_research
-        from src.components.collaborate import generate_collaborate_html, load_collaborate
-        from src.components.teaching import generate_teaching_html, load_teaching, load_training
-        from src.components.talks import generate_talks_html, load_talks
-        from src.components.events import generate_events_html, load_events
 
 __all__ = [
     "BASE_DIR",
@@ -237,12 +207,9 @@ def main():
         f"and group mission."
     )
 
-    header_content = generate_header_html()
-    footer_content = generate_footer_html()
-
+    # The header and footer are inlined into every page by components.layout,
+    # so they are not written out as standalone partials.
     pages = {
-        "header.html": header_content,
-        "footer.html": footer_content,
         "index.html": generate_index_html(
             pubs,
             authors,

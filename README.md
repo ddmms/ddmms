@@ -9,7 +9,7 @@ Instructions to build and serve the static website locally using [uv](https://do
 Fetch the latest publication records from ORCID and write them to `publications.json` and `PUBLICATIONS.md`. This step does **not** generate HTML pages. Run it on first setup and whenever you want to refresh the publication list:
 
 ```bash
-uv run --with requests --with pyyaml python src/pubs.py
+uv run python -m src.pubs
 ```
 
 ### 2. Generate HTML Pages
@@ -17,7 +17,7 @@ uv run --with requests --with pyyaml python src/pubs.py
 Build all HTML pages from local data (including `publications.json`). Always run this step, including after step 1:
 
 ```bash
-uv run --with pyyaml python src/build_site.py
+uv run python -m src.build_site
 ```
 
 ## Preview Locally

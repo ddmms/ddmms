@@ -28,7 +28,7 @@ def _render_link_button(link: Dict[str, Any], indent: str = "          ") -> str
 
 
 def _link_buttons(links: List[Any], indent: str) -> List[str]:
-    return [_render_link_button(l, indent + "  ") for l in links or [] if isinstance(l, dict) and l.get("url")]
+    return [_render_link_button(link, indent + "  ") for link in links or [] if isinstance(link, dict) and link.get("url")]
 
 
 def _render_event(event: Dict[str, Any]) -> str:

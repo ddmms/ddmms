@@ -6,24 +6,16 @@ Distributed under the terms of the BSD 3-Clause License.
 import argparse
 import csv
 from datetime import datetime, timezone
-import html
 import json
 import os
 from pathlib import Path
 import re
-import sys
 from typing import Any, Dict, List, Optional, Sequence, Union
 import requests
 import yaml
 
 # HTML generation is delegated to components.publications; re-export for backward compatibility
-try:
-    from .components.publications import build_html_page, generate_html
-except (ImportError, ValueError):
-    try:
-        from components.publications import build_html_page, generate_html
-    except ImportError:
-        from src.components.publications import build_html_page, generate_html
+from src.components.publications import build_html_page, generate_html
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 DEFAULT_AUTHORS_PATH = str(BASE_DIR / "data" / "authors.yaml")
@@ -781,7 +773,7 @@ def main():
         export_json(pubs, output_path=args.json)
 
     print("Publications data synchronization complete!")
-    print("To generate or rebuild the website pages, run: python src/build_site.py")
+    print("To generate or rebuild the website pages, run: python -m src.build_site")
 
 
 if __name__ == "__main__":

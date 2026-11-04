@@ -1,5 +1,6 @@
 """Header component for the DDMMS website."""
 
+from functools import lru_cache
 from pathlib import Path
 from typing import Optional, Union
 
@@ -46,12 +47,19 @@ def generate_header_html(
     return content
 
 
-def get_header(active_page="home", full_markup=False):
-    """Return the reusable site header container or full markup.
+@lru_cache(maxsize=1)
+def _default_header_html() -> str:
+    """Read and cache the default header template, which is identical for every page."""
+    return generate_header_html()
 
-    Individual HTML pages reuse the separate header.html file directly,
-    eliminating duplicate header markup across pages.
+
+def get_header(active_page="home"):
+    """Return the full site header markup, for inlining into a generated page.
+
+    The header is baked into each page at build time rather than fetched by the
+    browser, so navigation works without JavaScript and needs no extra request.
+    ``active_page`` is accepted for call-site readability; the active section is
+    highlighted at runtime by ``initHeader`` in assets/js/main.js, which derives
+    it from the current URL.
     """
-    if full_markup:
-        return generate_header_html()
-    return '  <div id="site-header" data-include-header></div>'
+    return _default_header_html()
