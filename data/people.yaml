@@ -12,7 +12,7 @@ sections:
 
       - name: "Elliott Kasoar"
         yaml: "data/people/elliott-kasoar.yaml"
-        join_date: "2024-10-01"
+        join_date: "2022-10-10"
 
       - name: "Dr. Junwen Yin"
         yaml: "data/people/junwen-yin.yaml"
@@ -87,7 +87,7 @@ sections:
     #         url: "https://orcid.org/..."
       - name: "Dr Federica Zanca"
         role: "Computational Scientist"
-        join_date: "2023-01-01"
+        join_date: "2023-06-02"
         left_date: "2024-08-31"
 
 
