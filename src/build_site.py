@@ -113,51 +113,56 @@ def load_data():
 
     authors = {}
 
-    authors_path = AUTHORS_FILE
-    if not authors_path.exists():
-        for cand in (BASE_DIR / "data" / "authors.yml", AUTHORS_CSV_FILE):
-            if cand.exists():
-                authors_path = cand
-                break
+    candidates = (AUTHORS_FILE, BASE_DIR / "data" / "authors.yml", AUTHORS_CSV_FILE)
+    authors_path = next((cand for cand in candidates if cand.exists()), None)
 
-    if authors_path.exists():
-        content = authors_path.read_text(encoding="utf-8-sig")
-        is_yaml = authors_path.suffix.lower() in (".yaml", ".yml") or ("\n- " in content or content.startswith("- "))
-        loaded_yaml = None
-        if is_yaml:
-            try:
-                loaded_yaml = yaml.safe_load(content)
-            except Exception:
-                loaded_yaml = None
+    # This list drives which names are highlighted as group members on every
+    # publication, so a missing or unreadable file is a build error rather than
+    # something to paper over with defaults.
+    if authors_path is None:
+        raise FileNotFoundError(
+            "No authors file found. Expected one of: "
+            + ", ".join(str(c) for c in candidates)
+        )
 
-        if loaded_yaml:
-            if isinstance(loaded_yaml, list):
-                for item in loaded_yaml:
+    content = authors_path.read_text(encoding="utf-8-sig")
+    suffix_is_yaml = authors_path.suffix.lower() in (".yaml", ".yml")
+    is_yaml = suffix_is_yaml or ("\n- " in content or content.startswith("- "))
+    loaded_yaml = None
+    if is_yaml:
+        try:
+            loaded_yaml = yaml.safe_load(content)
+        except yaml.YAMLError as exc:
+            raise ValueError(f"Could not parse authors file {authors_path}: {exc}") from exc
+
+    if loaded_yaml:
+        if isinstance(loaded_yaml, list):
+            for item in loaded_yaml:
+                if isinstance(item, dict):
+                    add_author_entry(authors, item.get("orcid") or item.get("id"), item.get("name"))
+        elif isinstance(loaded_yaml, dict):
+            raw_authors = loaded_yaml.get("authors", loaded_yaml)
+            if isinstance(raw_authors, list):
+                for item in raw_authors:
                     if isinstance(item, dict):
                         add_author_entry(authors, item.get("orcid") or item.get("id"), item.get("name"))
-            elif isinstance(loaded_yaml, dict):
-                raw_authors = loaded_yaml.get("authors", loaded_yaml)
-                if isinstance(raw_authors, list):
-                    for item in raw_authors:
-                        if isinstance(item, dict):
-                            add_author_entry(authors, item.get("orcid") or item.get("id"), item.get("name"))
-                elif isinstance(raw_authors, dict):
-                    for k, v in raw_authors.items():
-                        add_author_entry(authors, k, v)
-        else:
-            reader = csv.reader(content.splitlines())
-            for row in reader:
-                if not row or row[0].startswith("#") or row[0].lower() in ("orcid", "id"):
-                    continue
-                if len(row) >= 2:
-                    add_author_entry(authors, row[0], row[1])
+            elif isinstance(raw_authors, dict):
+                for k, v in raw_authors.items():
+                    add_author_entry(authors, k, v)
+    elif suffix_is_yaml:
+        raise ValueError(f"Authors file {authors_path} is empty or holds no author entries.")
+    else:
+        reader = csv.reader(content.splitlines())
+        for row in reader:
+            if not row or row[0].startswith("#") or row[0].lower() in ("orcid", "id"):
+                continue
+            if len(row) >= 2:
+                add_author_entry(authors, row[0], row[1])
 
     if not authors:
-        authors = {
-            "0000-0002-7013-6670": "Alin Marin Elena",
-            "0009-0005-2015-9478": "Elliott Kasoar",
-            "0000-0001-7374-9352": "Junwen Yin",
-        }
+        raise ValueError(
+            f"No usable author entries in {authors_path}; each entry needs a name."
+        )
 
     # Ensure any group member from authors (with or without a valid ORCID) present in
     # pub["authors"] is tracked in pub["group_authors"]

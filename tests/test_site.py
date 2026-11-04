@@ -151,6 +151,44 @@ class TestDDMMSSite(unittest.TestCase):
             data = json.load(f)
         self.assert_publications_well_formed(data, "publications.json")
 
+    def test_unusable_authors_file_fails_loudly(self):
+        """A bad authors.yaml must raise, not silently fall back to a few hardcoded names.
+
+        This list decides which names are highlighted as group members on every
+        publication, so quietly substituting defaults would drop people from the
+        site with no visible error.
+        """
+        import shutil
+        import tempfile
+        import build_site
+
+        original = build_site.AUTHORS_FILE
+        with tempfile.TemporaryDirectory() as tmp:
+            backup = Path(tmp) / "authors.yaml"
+            shutil.copy(original, backup)
+            cases = {
+                "missing file": None,
+                "malformed YAML": "authors:\n  - name: 'unclosed\n   bad: [1,2\n",
+                "empty file": "",
+                "entries without a name": "authors:\n  - orcid: '0000-0000-0000-0000'\n",
+            }
+            try:
+                for label, content in cases.items():
+                    with self.subTest(case=label):
+                        if content is None:
+                            original.unlink()
+                        else:
+                            original.write_text(content, encoding="utf-8")
+                        with self.assertRaises((FileNotFoundError, ValueError), msg=label):
+                            build_site.load_data()
+            finally:
+                shutil.copy(backup, original)
+
+        # The real file still loads, so the guards are not over-eager
+        _, authors = build_site.load_data()
+        self.assertGreater(len(authors), 0)
+        self.assertIn("Alin Marin Elena", authors.values())
+
     def test_awards_completely_removed(self):
         self.assertFalse((BASE_DIR / "data" / "awards.yaml").exists(), "data/awards.yaml should not exist")
         self.assertFalse((BASE_DIR / "src" / "components" / "awards.py").exists(), "src/components/awards.py should not exist")

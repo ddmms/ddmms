@@ -10,6 +10,7 @@ import json
 import os
 from pathlib import Path
 import re
+import sys
 from typing import Any, Dict, List, Optional, Sequence, Union
 import requests
 import yaml
@@ -325,8 +326,18 @@ def select_best_summary(summaries: List[Dict[str, Any]]) -> Dict[str, Any]:
     return summaries[0]
 
 
-def fetch_member_works(orcid_id: str, cache_dir: str = "data/cache") -> List[Dict[str, Any]]:
-    """Retrieve all work summaries for an individual ORCID record, with offline cache support."""
+def fetch_member_works(
+    orcid_id: str,
+    cache_dir: str = "data/cache",
+    failures: Optional[List[str]] = None,
+) -> List[Dict[str, Any]]:
+    """Retrieve all work summaries for an individual ORCID record, with offline cache support.
+
+    An empty result is ambiguous on its own: it means either that the author
+    genuinely has no works, or that the fetch failed and no cache was available.
+    When a ``failures`` list is passed, this ORCID is appended to it in the
+    second case, so callers can tell the two apart.
+    """
     url = f"{ORCID_API_BASE}/{orcid_id}/works"
     data = None
     try:
@@ -358,6 +369,9 @@ def fetch_member_works(orcid_id: str, cache_dir: str = "data/cache") -> List[Dic
                 print(f"Warning: Could not read cache for {orcid_id}: {e}")
 
     if not data:
+        print(f"Error: no publication data available for {orcid_id} (network failed and no cache)")
+        if failures is not None:
+            failures.append(orcid_id)
         return []
 
     group_items = data.get("group") or []
@@ -464,8 +478,14 @@ def normalize_title(title: str) -> str:
 def aggregate_publications(
     orcids: Sequence[str] | Dict[str, str] | None = None,
     cache_dir: str = "data/cache",
+    failures: Optional[List[str]] = None,
 ) -> List[Dict[str, Any]]:
-    """Fetch and deduplicate publications across all researchers with author tracking."""
+    """Fetch and deduplicate publications across all researchers with author tracking.
+
+    Any ORCID whose records could not be retrieved at all is appended to
+    ``failures`` when that list is provided, so the caller can refuse to write
+    out a partial bibliography.
+    """
     if orcids is None:
         mapping = ORCID_IDS
     elif isinstance(orcids, dict):
@@ -482,7 +502,7 @@ def aggregate_publications(
     title_map: Dict[str, Dict[str, Any]] = {}
 
     for orcid, author_name in mapping.items():
-        works = fetch_member_works(orcid, cache_dir=cache_dir)
+        works = fetch_member_works(orcid, cache_dir=cache_dir, failures=failures)
         for work in works:
             doi = work.get("doi")
             norm_title = normalize_title(work["title"])
@@ -757,12 +777,31 @@ def main():
         orcids_input = orcid_dict
 
     print(f"Fetching / reading publications for {len(orcid_dict)} author(s)...")
-    pubs = aggregate_publications(orcids_input, cache_dir=args.cache_dir)
+    failures: List[str] = []
+    pubs = aggregate_publications(orcids_input, cache_dir=args.cache_dir, failures=failures)
+
+    # Bail out before writing anything. Overwriting a good publications.json with
+    # a partial or empty one would silently drop publications from the site on
+    # the next build, which is worse than failing the run.
+    if failures:
+        print(
+            f"Error: could not retrieve publications for {len(failures)} of "
+            f"{len(orcid_dict)} author(s): {', '.join(failures)}.\n"
+            "Refusing to write a partial bibliography; existing output left untouched.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
 
     if not pubs:
-        print("Warning: No publications found or fetched.")
-    else:
-        print(f"Aggregated {len(pubs)} unique publication records.")
+        print(
+            "Error: no publications were found for any author. This usually means the "
+            "ORCID API is unreachable or the author list is wrong.\n"
+            "Refusing to write an empty bibliography; existing output left untouched.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    print(f"Aggregated {len(pubs)} unique publication records.")
 
     # Write Markdown
     if not args.no_markdown and args.output:
