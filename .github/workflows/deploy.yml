@@ -38,18 +38,8 @@ jobs:
           python -m pip install --upgrade pip
           pip install .
 
-      # src/pubs.py falls back to this cache when the ORCID API is unreachable,
-      # and refuses to write a partial bibliography otherwise. Without the cache
-      # restored here, every run starts cold and a single transient API failure
-      # would block the deploy.
-      - name: Restore ORCID response cache
-        uses: actions/cache@v4
-        with:
-          path: data/cache
-          key: orcid-cache-${{ github.run_id }}
-          restore-keys: |
-            orcid-cache-
-
+      # data/cache is committed, so the checkout always provides a fallback for
+      # src/pubs.py if the ORCID API is unreachable.
       - name: Fetch publications from ORCID
         run: |
           python -m src.pubs
@@ -76,6 +66,11 @@ jobs:
             news.html
             publications.json
             PUBLICATIONS.md
+
+      # The whole checkout is published, so strip what the site does not serve.
+      - name: Remove build artefacts before publishing
+        run: |
+          rm -rf build *.egg-info data/cache
 
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v6

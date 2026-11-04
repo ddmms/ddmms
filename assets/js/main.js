@@ -332,25 +332,12 @@
     applyTheme(currentTheme);
   }
 
-  // The header is inlined into every page at build time, so scope the header
-  // behaviour to the <header> element itself. Passing its parent would scope to
-  // <body>, where closest('.site-header') finds nothing and the subnav
-  // mouseleave reset would bind to the document instead of the header.
+  // Scope to the <header> itself: its parent is <body>, where
+  // closest('.site-header') finds nothing and mouseleave never fires.
   const existingHeader = document.querySelector('.site-header');
   if (existingHeader) {
     initHeader(existingHeader);
   }
-
-  // Bind any existing theme toggle buttons or option buttons outside dynamic header
-  document.querySelectorAll('.theme-option-btn, .theme-swatch-pill').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      const themeId = btn.getAttribute('data-theme-id') || btn.getAttribute('data-theme-name');
-      if (themeId) {
-        applyTheme(themeId);
-      }
-    });
-  });
 
   // --- Toast Notification Utility ---
   window.showToast = function (message) {
@@ -609,9 +596,7 @@
     });
   }
 
-  // The header and footer are inlined into every page at build time by
-  // src/components/layout.py, so there is nothing to fetch here; initHeader is
-  // wired up above against the markup already present in the document.
+  // Header and footer are inlined at build time; nothing to fetch.
   function initPage() {
     initNewsToggle();
     initCarousels();

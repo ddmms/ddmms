@@ -531,6 +531,54 @@ class TestPubsFailFast(unittest.TestCase):
                 )
         self.assertEqual(failures, [], "cache fallback should not be reported as a failure")
 
+    @staticmethod
+    def _cache_with_works(cache_dir, orcid, n):
+        payload = {"group": [{"work-summary": [{
+            "title": {"title": {"value": f"Paper {i}"}},
+            "publication-date": {"year": {"value": "2025"}},
+            "type": "journal-article",
+            "external-ids": {"external-id": []},
+            "display-index": "0",
+        }]} for i in range(n)]}
+        with open(os.path.join(cache_dir, f"{orcid}.json"), "w", encoding="utf-8") as f:
+            json.dump(payload, f)
+
+    def test_empty_200_does_not_clobber_a_populated_cache(self):
+        """ORCID can return an empty 200 during an incident; that must not erase good data."""
+        from pubs import fetch_member_works
+
+        orcid = "0000-0000-0000-0001"
+        empty = MagicMock(status_code=200)
+        empty.json.return_value = {"group": []}
+
+        with tempfile.TemporaryDirectory() as cache:
+            self._cache_with_works(cache, orcid, 2)
+            failures = []
+            with patch("pubs.requests.get", return_value=empty):
+                works = fetch_member_works(orcid, cache_dir=cache, failures=failures, backoff=0)
+
+            with open(os.path.join(cache, f"{orcid}.json"), encoding="utf-8") as f:
+                still_cached = len(json.load(f)["group"])
+
+        self.assertEqual(still_cached, 2, "the populated cache must survive an empty response")
+        self.assertEqual(len(works), 2, "the cached works should be used instead")
+        self.assertEqual(failures, [], "recovering from cache is not a failure")
+
+    def test_empty_200_is_accepted_when_cache_is_also_empty(self):
+        """An author with genuinely no works must not be treated as an error."""
+        from pubs import fetch_member_works
+
+        empty = MagicMock(status_code=200)
+        empty.json.return_value = {"group": []}
+        with tempfile.TemporaryDirectory() as cache:
+            failures = []
+            with patch("pubs.requests.get", return_value=empty):
+                works = fetch_member_works(
+                    "0000-0000-0000-0001", cache_dir=cache, failures=failures, backoff=0
+                )
+        self.assertEqual(works, [])
+        self.assertEqual(failures, [], "no works and no cache is a legitimate empty result")
+
     def _run_main_expecting_exit(self, fetch_side_effect):
         """Run pubs.main() against a temp output dir and return (exit_code, files_written)."""
         import pubs as pubs_mod

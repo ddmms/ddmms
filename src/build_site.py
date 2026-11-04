@@ -116,9 +116,7 @@ def load_data():
     candidates = (AUTHORS_FILE, BASE_DIR / "data" / "authors.yml", AUTHORS_CSV_FILE)
     authors_path = next((cand for cand in candidates if cand.exists()), None)
 
-    # This list drives which names are highlighted as group members on every
-    # publication, so a missing or unreadable file is a build error rather than
-    # something to paper over with defaults.
+    # Drives group-member highlighting on every publication: fail, don't default.
     if authors_path is None:
         raise FileNotFoundError(
             "No authors file found. Expected one of: "
@@ -212,8 +210,7 @@ def main():
         f"and group mission."
     )
 
-    # The header and footer are inlined into every page by components.layout,
-    # so they are not written out as standalone partials.
+    # Header and footer are inlined by components.layout, not written separately.
     pages = {
         "index.html": generate_index_html(
             pubs,

@@ -17,17 +17,14 @@ dependencies = [
 ]
 
 # No console scripts: the generator reads data/ and writes HTML relative to the
-# repository root, so it is run from a checkout with
-#   python -m src.pubs        (fetch publications from ORCID)
-#   python -m src.build_site  (generate the pages)
-# Installing the project is how the pinned dependencies above get resolved.
+# repo root, so run it from a checkout via `python -m src.pubs` then
+# `python -m src.build_site`. Installing is just how the pins above resolve.
 
 [tool.setuptools]
 packages = ["src", "src.components", "src.pages"]
 
 [tool.setuptools.package-data]
-# The header/footer templates are read at runtime by components.header/.footer,
-# so they must ship with the package rather than only existing in a checkout.
+# Read at runtime by components.header/.footer, so they must ship in the wheel.
 src = ["templates/*.html"]
 
 [tool.ruff]
@@ -40,13 +37,11 @@ exclude = ["build"]
 select = ["E4", "E7", "E9", "F"]
 
 [tool.ruff.lint.per-file-ignores]
-# These modules deliberately re-export names for callers and tests; the imports
-# look unused locally but are part of the public surface (see each __all__).
+# These modules re-export names (see each __all__); the imports only look unused.
 "src/__init__.py" = ["F401"]
 "src/build_site.py" = ["F401"]
 "src/pubs.py" = ["F401"]
 "src/components/__init__.py" = ["F401"]
 "src/pages/__init__.py" = ["F401"]
-# Tests import symbols to assert they exist and are importable, and must set up
-# sys.path before importing the modules under test.
+# Tests assert symbols are importable, and set up sys.path before importing.
 "tests/*" = ["F401", "E402"]

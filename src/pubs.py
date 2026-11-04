@@ -327,6 +327,20 @@ def select_best_summary(summaries: List[Dict[str, Any]]) -> Dict[str, Any]:
     return summaries[0]
 
 
+def _cached_work_count(orcid_id: str, cache_dir: str) -> int:
+    """Number of work groups in this author's cached ORCID response, 0 if none."""
+    if not cache_dir:
+        return 0
+    cache_file = os.path.join(cache_dir, f"{orcid_id}.json")
+    if not os.path.isfile(cache_file):
+        return 0
+    try:
+        with open(cache_file, "r", encoding="utf-8") as f:
+            return len(json.load(f).get("group") or [])
+    except (OSError, ValueError):
+        return 0
+
+
 def fetch_member_works(
     orcid_id: str,
     cache_dir: str = "data/cache",
@@ -354,6 +368,14 @@ def fetch_member_works(
             resp = requests.get(url, headers=HEADERS, timeout=15)
             if resp.status_code == 200:
                 data = resp.json()
+                # An empty 200 may be an ORCID glitch; don't let it overwrite a
+                # cache that has works and silently drop this author.
+                cached = _cached_work_count(orcid_id, cache_dir)
+                if not (data.get("group") or []) and cached > 0:
+                    print(f"Warning: ORCID returned no works for {orcid_id}; keeping {cached} cached.")
+                    data = None
+                    retryable = False
+                    break
                 if cache_dir:
                     try:
                         os.makedirs(cache_dir, exist_ok=True)
@@ -797,9 +819,7 @@ def main():
     failures: List[str] = []
     pubs = aggregate_publications(orcids_input, cache_dir=args.cache_dir, failures=failures)
 
-    # Bail out before writing anything. Overwriting a good publications.json with
-    # a partial or empty one would silently drop publications from the site on
-    # the next build, which is worse than failing the run.
+    # Bail out before writing: a partial file would silently drop publications.
     if failures:
         print(
             f"Error: could not retrieve publications for {len(failures)} of "
