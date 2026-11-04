@@ -332,10 +332,13 @@
     applyTheme(currentTheme);
   }
 
-  // Check if header is already present in DOM
+  // The header is inlined into every page at build time, so scope the header
+  // behaviour to the <header> element itself. Passing its parent would scope to
+  // <body>, where closest('.site-header') finds nothing and the subnav
+  // mouseleave reset would bind to the document instead of the header.
   const existingHeader = document.querySelector('.site-header');
   if (existingHeader) {
-    initHeader(existingHeader.parentElement || existingHeader);
+    initHeader(existingHeader);
   }
 
   // Bind any existing theme toggle buttons or option buttons outside dynamic header

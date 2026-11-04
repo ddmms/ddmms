@@ -11,6 +11,7 @@ import os
 from pathlib import Path
 import re
 import sys
+import time
 from typing import Any, Dict, List, Optional, Sequence, Union
 import requests
 import yaml
@@ -330,8 +331,15 @@ def fetch_member_works(
     orcid_id: str,
     cache_dir: str = "data/cache",
     failures: Optional[List[str]] = None,
+    max_attempts: int = 3,
+    backoff: float = 2.0,
 ) -> List[Dict[str, Any]]:
     """Retrieve all work summaries for an individual ORCID record, with offline cache support.
+
+    Transient failures (network errors, 429, 5xx) are retried up to
+    ``max_attempts`` times with a linear ``backoff`` in seconds, since a single
+    blip from the ORCID API should not fail a whole run. A 4xx other than 429 is
+    not retried, as it will not fix itself.
 
     An empty result is ambiguous on its own: it means either that the author
     genuinely has no works, or that the fetch failed and no cache was available.
@@ -340,22 +348,31 @@ def fetch_member_works(
     """
     url = f"{ORCID_API_BASE}/{orcid_id}/works"
     data = None
-    try:
-        resp = requests.get(url, headers=HEADERS, timeout=15)
-        if resp.status_code == 200:
-            data = resp.json()
-            if cache_dir:
-                try:
-                    os.makedirs(cache_dir, exist_ok=True)
-                    cache_file = os.path.join(cache_dir, f"{orcid_id}.json")
-                    with open(cache_file, "w", encoding="utf-8") as f:
-                        json.dump(data, f, indent=2)
-                except OSError:
-                    pass
-        else:
+    for attempt in range(1, max_attempts + 1):
+        retryable = True
+        try:
+            resp = requests.get(url, headers=HEADERS, timeout=15)
+            if resp.status_code == 200:
+                data = resp.json()
+                if cache_dir:
+                    try:
+                        os.makedirs(cache_dir, exist_ok=True)
+                        cache_file = os.path.join(cache_dir, f"{orcid_id}.json")
+                        with open(cache_file, "w", encoding="utf-8") as f:
+                            json.dump(data, f, indent=2)
+                    except OSError:
+                        pass
+                break
+            retryable = resp.status_code == 429 or resp.status_code >= 500
             print(f"Warning: Failed to fetch {orcid_id} (HTTP {resp.status_code})")
-    except requests.RequestException as e:
-        print(f"Warning: Network error fetching {orcid_id}: {e}")
+        except requests.RequestException as e:
+            print(f"Warning: Network error fetching {orcid_id}: {e}")
+
+        if not retryable or attempt == max_attempts:
+            break
+        delay = backoff * attempt
+        print(f"  Retrying {orcid_id} in {delay:.0f}s (attempt {attempt + 1} of {max_attempts})...")
+        time.sleep(delay)
 
     # Fallback to local cache if network response not available
     if not data and cache_dir:

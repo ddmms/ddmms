@@ -473,9 +473,48 @@ class TestPubsFailFast(unittest.TestCase):
 
         failures = []
         with patch("pubs.requests.get", side_effect=requests.RequestException("down")):
-            works = fetch_member_works("0000-0000-0000-0001", cache_dir="", failures=failures)
+            works = fetch_member_works(
+                "0000-0000-0000-0001", cache_dir="", failures=failures, max_attempts=1
+            )
         self.assertEqual(works, [])
         self.assertEqual(failures, ["0000-0000-0000-0001"])
+
+    def test_fetch_member_works_retries_transient_failures(self):
+        """A single blip from the ORCID API should not fail the run."""
+        import requests
+        from pubs import fetch_member_works
+
+        ok = MagicMock(status_code=200)
+        ok.json.return_value = {"group": []}
+        attempts = [requests.RequestException("blip"), MagicMock(status_code=503), ok]
+
+        failures = []
+        with patch("pubs.time.sleep") as sleep, \
+             patch("pubs.requests.get", side_effect=attempts) as get:
+            fetch_member_works("0000-0000-0000-0001", cache_dir="", failures=failures, backoff=0)
+
+        self.assertEqual(get.call_count, 3, "should retry a network error and a 503")
+        self.assertEqual(failures, [], "a recovered fetch is not a failure")
+        self.assertEqual(sleep.call_count, 2, "should back off between attempts")
+
+    def test_fetch_member_works_does_not_retry_client_errors(self):
+        """A 404 will not fix itself, so retrying only wastes time."""
+        from pubs import fetch_member_works
+
+        failures = []
+        with patch("pubs.requests.get", return_value=MagicMock(status_code=404)) as get:
+            fetch_member_works("0000-0000-0000-0001", cache_dir="", failures=failures, backoff=0)
+
+        self.assertEqual(get.call_count, 1)
+        self.assertEqual(failures, ["0000-0000-0000-0001"])
+
+    def test_fetch_member_works_retries_rate_limiting(self):
+        from pubs import fetch_member_works
+
+        with patch("pubs.requests.get", return_value=MagicMock(status_code=429)) as get:
+            fetch_member_works("0000-0000-0000-0001", cache_dir="", backoff=0)
+
+        self.assertEqual(get.call_count, 3, "429 is transient and should be retried")
 
     def test_fetch_member_works_no_failure_when_cache_rescues(self):
         """Degrading to the cache is not a failure; the data is still complete."""
@@ -487,7 +526,9 @@ class TestPubsFailFast(unittest.TestCase):
                 json.dump({"group": []}, f)
             failures = []
             with patch("pubs.requests.get", side_effect=requests.RequestException("down")):
-                fetch_member_works("0000-0000-0000-0001", cache_dir=cache, failures=failures)
+                fetch_member_works(
+                    "0000-0000-0000-0001", cache_dir=cache, failures=failures, backoff=0
+                )
         self.assertEqual(failures, [], "cache fallback should not be reported as a failure")
 
     def _run_main_expecting_exit(self, fetch_side_effect):

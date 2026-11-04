@@ -1,5 +1,6 @@
 [build-system]
-requires = ["setuptools>=68"]
+# >=77 for PEP 639 `license` as an SPDX string (below that it is rejected).
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -23,6 +24,11 @@ dependencies = [
 
 [tool.setuptools]
 packages = ["src", "src.components", "src.pages"]
+
+[tool.setuptools.package-data]
+# The header/footer templates are read at runtime by components.header/.footer,
+# so they must ship with the package rather than only existing in a checkout.
+src = ["templates/*.html"]
 
 [tool.ruff]
 line-length = 120

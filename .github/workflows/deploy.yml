@@ -38,6 +38,18 @@ jobs:
           python -m pip install --upgrade pip
           pip install .
 
+      # src/pubs.py falls back to this cache when the ORCID API is unreachable,
+      # and refuses to write a partial bibliography otherwise. Without the cache
+      # restored here, every run starts cold and a single transient API failure
+      # would block the deploy.
+      - name: Restore ORCID response cache
+        uses: actions/cache@v4
+        with:
+          path: data/cache
+          key: orcid-cache-${{ github.run_id }}
+          restore-keys: |
+            orcid-cache-
+
       - name: Fetch publications from ORCID
         run: |
           python -m src.pubs

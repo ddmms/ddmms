@@ -158,31 +158,32 @@ class TestDDMMSSite(unittest.TestCase):
         publication, so quietly substituting defaults would drop people from the
         site with no visible error.
         """
-        import shutil
         import tempfile
+        from unittest.mock import patch
         import build_site
 
-        original = build_site.AUTHORS_FILE
-        with tempfile.TemporaryDirectory() as tmp:
-            backup = Path(tmp) / "authors.yaml"
-            shutil.copy(original, backup)
-            cases = {
-                "missing file": None,
-                "malformed YAML": "authors:\n  - name: 'unclosed\n   bad: [1,2\n",
-                "empty file": "",
-                "entries without a name": "authors:\n  - orcid: '0000-0000-0000-0000'\n",
-            }
-            try:
-                for label, content in cases.items():
-                    with self.subTest(case=label):
-                        if content is None:
-                            original.unlink()
-                        else:
-                            original.write_text(content, encoding="utf-8")
-                        with self.assertRaises((FileNotFoundError, ValueError), msg=label):
-                            build_site.load_data()
-            finally:
-                shutil.copy(backup, original)
+        cases = {
+            "missing file": None,
+            "malformed YAML": "authors:\n  - name: 'unclosed\n   bad: [1,2\n",
+            "empty file": "",
+            "entries without a name": "authors:\n  - orcid: '0000-0000-0000-0000'\n",
+        }
+
+        # Redirect every path load_data() searches into a sandbox, rather than
+        # mutating the tracked data/authors.yaml: an interrupted run must not be
+        # able to leave the real file clobbered.
+        for label, content in cases.items():
+            with self.subTest(case=label), tempfile.TemporaryDirectory() as tmp:
+                sandbox = Path(tmp)
+                (sandbox / "data").mkdir()
+                authors_yaml = sandbox / "data" / "authors.yaml"
+                if content is not None:
+                    authors_yaml.write_text(content, encoding="utf-8")
+                with patch.object(build_site, "BASE_DIR", sandbox), \
+                     patch.object(build_site, "AUTHORS_FILE", authors_yaml), \
+                     patch.object(build_site, "AUTHORS_CSV_FILE", sandbox / "data" / "authors.csv"):
+                    with self.assertRaises((FileNotFoundError, ValueError), msg=label):
+                        build_site.load_data()
 
         # The real file still loads, so the guards are not over-eager
         _, authors = build_site.load_data()
