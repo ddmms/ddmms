@@ -5,19 +5,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 import yaml
 
-try:
-    from .header import get_header
-    from .footer import get_footer
-    from .layout import render_page_hero
-except (ImportError, ValueError):
-    try:
-        from components.header import get_header
-        from components.footer import get_footer
-        from components.layout import render_page_hero
-    except ImportError:
-        from src.components.header import get_header
-        from src.components.footer import get_footer
-        from src.components.layout import render_page_hero
+from .layout import render_page, render_page_hero
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 RESEARCH_FILE = BASE_DIR / "data" / "research.yaml"
@@ -117,8 +105,6 @@ def generate_research_html(
     approach: Optional[Union[str, Dict[str, Any]]] = None,
 ) -> str:
     """Generate the research page HTML."""
-    header_html = get_header("research")
-    footer_html = get_footer()
 
     if research_data is None:
         research_data = load_research()
@@ -266,24 +252,11 @@ def generate_research_html(
 
     cards_html = "\n\n".join(cards)
 
-    return f"""<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Research | Data Driven Materials and Molecular Science</title>
-  <meta name="description" content="Research areas of the Data Driven Materials and Molecular Science group: MLIPs, MOFs, molten salts, and automated workflows.">
-  <link rel="icon" type="image/svg+xml" href="assets/logos/ddmms.svg">
-  <link rel="stylesheet" href="assets/css/style.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
-</head>
-<body>
-{header_html}
-
-  <main id="main-content">
-{hero_html}
+    return render_page(
+        title="Research",
+        description="Research areas of the Data Driven Materials and Molecular Science group: MLIPs, MOFs, molten salts, and automated workflows.",
+        active_page="research",
+        main_html=f"""{hero_html}
 
     <section class="home-section">
       <div class="container">
@@ -291,10 +264,5 @@ def generate_research_html(
 {cards_html}
         </div>
       </div>
-    </section>
-  </main>
-
-{footer_html}
-  <script src="assets/js/main.js"></script>
-</body>
-</html>"""
+    </section>""",
+    )

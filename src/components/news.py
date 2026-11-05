@@ -1,22 +1,10 @@
 """News component and data loader for the DDMMS website."""
 
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+from typing import Dict, List, Optional, Union
 import yaml
 
-try:
-    from .header import get_header
-    from .footer import get_footer
-    from .layout import render_page_hero
-except (ImportError, ValueError):
-    try:
-        from components.header import get_header
-        from components.footer import get_footer
-        from components.layout import render_page_hero
-    except ImportError:
-        from src.components.header import get_header
-        from src.components.footer import get_footer
-        from src.components.layout import render_page_hero
+from .layout import render_page, render_page_hero
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 NEWS_FILE = BASE_DIR / "data" / "news.yaml"
@@ -77,8 +65,6 @@ def load_news(news_file: Optional[Union[str, Path]] = None) -> List[Dict[str, st
 
 def generate_news_html(news=None):
     """Generate the dedicated historical news & milestones archive page."""
-    header_html = get_header("about")
-    footer_html = get_footer()
 
     if news is None:
         news = load_news()
@@ -106,24 +92,11 @@ def generate_news_html(news=None):
         "Chronological archive of research milestones, software releases, funded grants, and community workshops.",
     )
 
-    return f"""<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>News &amp; Milestones | Data Driven Materials and Molecular Science</title>
-  <meta name="description" content="All historical news, publications, software releases, and milestones from the Data Driven Materials and Molecular Science group at STFC Daresbury Laboratory.">
-  <link rel="icon" type="image/svg+xml" href="assets/logos/ddmms.svg">
-  <link rel="stylesheet" href="assets/css/style.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
-</head>
-<body>
-{header_html}
-
-  <main id="main-content">
-{hero_html}
+    return render_page(
+        title="News &amp; Milestones",
+        description="All historical news, publications, software releases, and milestones from the Data Driven Materials and Molecular Science group at STFC Daresbury Laboratory.",
+        active_page="about",
+        main_html=f"""{hero_html}
 
     <section class="home-section">
       <div class="container">
@@ -131,10 +104,5 @@ def generate_news_html(news=None):
 {news_cards_html}
         </ul>
       </div>
-    </section>
-  </main>
-
-{footer_html}
-  <script src="assets/js/main.js"></script>
-</body>
-</html>"""
+    </section>""",
+    )

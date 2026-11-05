@@ -1,0 +1,47 @@
+[build-system]
+# >=77 for PEP 639 `license` as an SPDX string (below that it is rejected).
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ddmms-site"
+version = "0.1.0"
+description = "Static site generator for the Data Driven Materials and Molecular Science (DDMMS) group website"
+readme = "README.md"
+requires-python = ">=3.12"
+license = "BSD-3-Clause"
+
+dependencies = [
+    "requests>=2.31,<3",
+    "PyYAML>=6.0,<7",
+]
+
+# No console scripts: the generator reads data/ and writes HTML relative to the
+# repo root, so run it from a checkout via `python -m src.pubs` then
+# `python -m src.build_site`. Installing is just how the pins above resolve.
+
+[tool.setuptools]
+packages = ["src", "src.components", "src.pages"]
+
+[tool.setuptools.package-data]
+# Read at runtime by components.header/.footer, so they must ship in the wheel.
+src = ["templates/*.html"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+exclude = ["build"]
+
+[tool.ruff.lint]
+# F401 unused imports, F841 unused locals, E7xx common mistakes
+select = ["E4", "E7", "E9", "F"]
+
+[tool.ruff.lint.per-file-ignores]
+# These modules re-export names (see each __all__); the imports only look unused.
+"src/__init__.py" = ["F401"]
+"src/build_site.py" = ["F401"]
+"src/pubs.py" = ["F401"]
+"src/components/__init__.py" = ["F401"]
+"src/pages/__init__.py" = ["F401"]
+# Tests assert symbols are importable, and set up sys.path before importing.
+"tests/*" = ["F401", "E402"]

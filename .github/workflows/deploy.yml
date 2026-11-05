@@ -10,7 +10,7 @@ on:
     - cron: "0 5 * * 1"
 
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
 
@@ -36,15 +36,17 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install requests pyyaml
+          pip install .
 
+      # data/cache is committed, so the checkout always provides a fallback for
+      # src/pubs.py if the ORCID API is unreachable.
       - name: Fetch publications from ORCID
         run: |
-          python src/pubs.py
+          python -m src.pubs
 
       - name: Build website
         run: |
-          python src/build_site.py
+          python -m src.build_site
 
       - name: Run test suite
         run: |
@@ -62,17 +64,13 @@ jobs:
             research.html
             code.html
             news.html
-            header.html
-            footer.html
             publications.json
             PUBLICATIONS.md
 
-      - name: Commit updated publications data
-        uses: stefanzweifel/git-auto-commit-action@v7
-        with:
-          commit_message: "Auto-update publications from ORCID [skip ci]"
-          file_pattern: "data/authors.yaml"
-        continue-on-error: true
+      # The whole checkout is published, so strip what the site does not serve.
+      - name: Remove build artefacts before publishing
+        run: |
+          rm -rf build *.egg-info data/cache
 
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v6

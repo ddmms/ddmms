@@ -8,18 +8,30 @@ loading data feeds (publications, authors, news), and writing static HTML assets
 import csv
 import json
 import re
-import sys
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict
 import yaml
+
+# Entry point: run as `python -m src.build_site` from the repository root.
+from src.components.header import generate_header_html, get_header
+from src.components.footer import generate_footer_html, get_footer
+from src.components.news import load_news, generate_news_html
+from src.components.index import generate_index_html, generate_about_html, load_mission
+from src.components.code import generate_code_html, generate_software_html, load_software
+from src.components.publications import generate_publications_html
+from src.components.people import generate_people_html, load_people, generate_person_html, load_person
+from src.components.research import generate_research_html, load_research
+from src.components.collaborate import generate_collaborate_html, load_collaborate
+from src.components.teaching import generate_teaching_html, load_teaching, load_training
+from src.components.talks import generate_talks_html, load_talks
+from src.components.events import generate_events_html, load_events
+
 
 # Paths
 BASE_DIR = Path(__file__).resolve().parent.parent
 PUBLICATIONS_FILE = BASE_DIR / "publications.json"
 AUTHORS_FILE = BASE_DIR / "data" / "authors.yaml"
 AUTHORS_CSV_FILE = BASE_DIR / "data" / "authors.csv"
-HEADER_FILE = BASE_DIR / "header.html"
-FOOTER_FILE = BASE_DIR / "footer.html"
 NEWS_FILE = BASE_DIR / "data" / "news.yaml"
 RESEARCH_FILE = BASE_DIR / "data" / "research.yaml"
 PEOPLE_FILE = BASE_DIR / "data" / "people.yaml"
@@ -30,48 +42,6 @@ TRAINING_FILE = BASE_DIR / "data" / "training.yaml"
 TEACHING_FILE = TRAINING_FILE
 TALKS_FILE = BASE_DIR / "data" / "talks.yaml"
 EVENTS_FILE = BASE_DIR / "data" / "events.yaml"
-
-# Import modular components with flexible path resolution
-try:
-    from .components.header import generate_header_html, get_header
-    from .components.footer import generate_footer_html, get_footer
-    from .components.news import load_news, generate_news_html
-    from .components.index import generate_index_html, generate_about_html, load_mission
-    from .components.code import generate_code_html, generate_software_html, load_software
-    from .components.publications import generate_publications_html
-    from .components.people import generate_people_html, load_people, generate_person_html, load_person
-    from .components.research import generate_research_html, load_research
-    from .components.collaborate import generate_collaborate_html, load_collaborate
-    from .components.teaching import generate_teaching_html, load_teaching, load_training
-    from .components.talks import generate_talks_html, load_talks
-    from .components.events import generate_events_html, load_events
-except (ImportError, ValueError):
-    try:
-        from components.header import generate_header_html, get_header
-        from components.footer import generate_footer_html, get_footer
-        from components.news import load_news, generate_news_html
-        from components.index import generate_index_html, generate_about_html, load_mission
-        from components.code import generate_code_html, generate_software_html, load_software
-        from components.publications import generate_publications_html
-        from components.people import generate_people_html, load_people, generate_person_html, load_person
-        from components.research import generate_research_html, load_research
-        from components.collaborate import generate_collaborate_html, load_collaborate
-        from components.teaching import generate_teaching_html, load_teaching, load_training
-        from components.talks import generate_talks_html, load_talks
-        from components.events import generate_events_html, load_events
-    except ImportError:
-        from src.components.header import generate_header_html, get_header
-        from src.components.footer import generate_footer_html, get_footer
-        from src.components.news import load_news, generate_news_html
-        from src.components.index import generate_index_html, generate_about_html, load_mission
-        from src.components.code import generate_code_html, generate_software_html, load_software
-        from src.components.publications import generate_publications_html
-        from src.components.people import generate_people_html, load_people, generate_person_html, load_person
-        from src.components.research import generate_research_html, load_research
-        from src.components.collaborate import generate_collaborate_html, load_collaborate
-        from src.components.teaching import generate_teaching_html, load_teaching, load_training
-        from src.components.talks import generate_talks_html, load_talks
-        from src.components.events import generate_events_html, load_events
 
 __all__ = [
     "BASE_DIR",
@@ -143,51 +113,54 @@ def load_data():
 
     authors = {}
 
-    authors_path = AUTHORS_FILE
-    if not authors_path.exists():
-        for cand in (BASE_DIR / "data" / "authors.yml", AUTHORS_CSV_FILE):
-            if cand.exists():
-                authors_path = cand
-                break
+    candidates = (AUTHORS_FILE, BASE_DIR / "data" / "authors.yml", AUTHORS_CSV_FILE)
+    authors_path = next((cand for cand in candidates if cand.exists()), None)
 
-    if authors_path.exists():
-        content = authors_path.read_text(encoding="utf-8-sig")
-        is_yaml = authors_path.suffix.lower() in (".yaml", ".yml") or ("\n- " in content or content.startswith("- "))
-        loaded_yaml = None
-        if is_yaml:
-            try:
-                loaded_yaml = yaml.safe_load(content)
-            except Exception:
-                loaded_yaml = None
+    # Drives group-member highlighting on every publication: fail, don't default.
+    if authors_path is None:
+        raise FileNotFoundError(
+            "No authors file found. Expected one of: "
+            + ", ".join(str(c) for c in candidates)
+        )
 
-        if loaded_yaml:
-            if isinstance(loaded_yaml, list):
-                for item in loaded_yaml:
+    content = authors_path.read_text(encoding="utf-8-sig")
+    suffix_is_yaml = authors_path.suffix.lower() in (".yaml", ".yml")
+    is_yaml = suffix_is_yaml or ("\n- " in content or content.startswith("- "))
+    loaded_yaml = None
+    if is_yaml:
+        try:
+            loaded_yaml = yaml.safe_load(content)
+        except yaml.YAMLError as exc:
+            raise ValueError(f"Could not parse authors file {authors_path}: {exc}") from exc
+
+    if loaded_yaml:
+        if isinstance(loaded_yaml, list):
+            for item in loaded_yaml:
+                if isinstance(item, dict):
+                    add_author_entry(authors, item.get("orcid") or item.get("id"), item.get("name"))
+        elif isinstance(loaded_yaml, dict):
+            raw_authors = loaded_yaml.get("authors", loaded_yaml)
+            if isinstance(raw_authors, list):
+                for item in raw_authors:
                     if isinstance(item, dict):
                         add_author_entry(authors, item.get("orcid") or item.get("id"), item.get("name"))
-            elif isinstance(loaded_yaml, dict):
-                raw_authors = loaded_yaml.get("authors", loaded_yaml)
-                if isinstance(raw_authors, list):
-                    for item in raw_authors:
-                        if isinstance(item, dict):
-                            add_author_entry(authors, item.get("orcid") or item.get("id"), item.get("name"))
-                elif isinstance(raw_authors, dict):
-                    for k, v in raw_authors.items():
-                        add_author_entry(authors, k, v)
-        else:
-            reader = csv.reader(content.splitlines())
-            for row in reader:
-                if not row or row[0].startswith("#") or row[0].lower() in ("orcid", "id"):
-                    continue
-                if len(row) >= 2:
-                    add_author_entry(authors, row[0], row[1])
+            elif isinstance(raw_authors, dict):
+                for k, v in raw_authors.items():
+                    add_author_entry(authors, k, v)
+    elif suffix_is_yaml:
+        raise ValueError(f"Authors file {authors_path} is empty or holds no author entries.")
+    else:
+        reader = csv.reader(content.splitlines())
+        for row in reader:
+            if not row or row[0].startswith("#") or row[0].lower() in ("orcid", "id"):
+                continue
+            if len(row) >= 2:
+                add_author_entry(authors, row[0], row[1])
 
     if not authors:
-        authors = {
-            "0000-0002-7013-6670": "Alin Marin Elena",
-            "0009-0005-2015-9478": "Elliott Kasoar",
-            "0000-0001-7374-9352": "Junwen Yin",
-        }
+        raise ValueError(
+            f"No usable author entries in {authors_path}; each entry needs a name."
+        )
 
     # Ensure any group member from authors (with or without a valid ORCID) present in
     # pub["authors"] is tracked in pub["group_authors"]
@@ -237,12 +210,8 @@ def main():
         f"and group mission."
     )
 
-    header_content = generate_header_html()
-    footer_content = generate_footer_html()
-
+    # Header and footer are inlined by components.layout, not written separately.
     pages = {
-        "header.html": header_content,
-        "footer.html": footer_content,
         "index.html": generate_index_html(
             pubs,
             authors,

@@ -7,25 +7,8 @@ from typing import Any, Dict, List, Optional, Union
 from urllib.parse import quote
 import yaml
 
-try:
-    from .header import get_header
-    from .footer import get_footer
-    from .layout import render_page_hero
-    from .code import load_software
-except (ImportError, ValueError):
-    try:
-        from components.header import get_header
-        from components.footer import get_footer
-        from components.layout import render_page_hero
-        from components.code import load_software
-    except ImportError:
-        try:
-            from src.components.header import get_header
-            from src.components.footer import get_footer
-            from src.components.layout import render_page_hero
-            from src.components.code import load_software
-        except ImportError:
-            load_software = None
+from .layout import render_page, render_page_hero
+from .code import load_software
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 PEOPLE_FILE = BASE_DIR / "data" / "people.yaml"
@@ -164,8 +147,6 @@ def load_people(people_file: Optional[Union[str, Path]] = None) -> Dict[str, Any
 
 def generate_people_html(people_data: Optional[Dict[str, Any]] = None) -> str:
     """Generate the people page HTML dynamically from people data."""
-    header_html = get_header("people")
-    footer_html = get_footer()
 
     if people_data is None:
         people_data = load_people()
@@ -381,37 +362,18 @@ def generate_people_html(people_data: Optional[Dict[str, Any]] = None) -> str:
 
     all_sections_html = "\n\n".join(sections_rendered)
 
-    return f"""<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>People | Data Driven Materials and Molecular Science</title>
-  <meta name="description" content="Meet the researchers, developers, former members, collaborators, and visitors in the Data Driven Materials and Molecular Science group.">
-  <link rel="icon" type="image/svg+xml" href="assets/logos/ddmms.svg">
-  <link rel="stylesheet" href="assets/css/style.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
-</head>
-<body>
-{header_html}
-
-  <main id="main-content">
-{hero_html}
+    return render_page(
+        title="People",
+        description="Meet the researchers, developers, former members, collaborators, and visitors in the Data Driven Materials and Molecular Science group.",
+        active_page="people",
+        main_html=f"""{hero_html}
 
     <section class="home-section">
       <div class="container">
 {subnav_html}{all_sections_html}
       </div>
-    </section>
-  </main>
-
-{footer_html}
-  <script src="assets/js/main.js"></script>
-</body>
-</html>
-"""
+    </section>""",
+    )
 
 
 def compute_bibtex_key(pub: Dict[str, Any]) -> str:
@@ -803,8 +765,6 @@ def generate_person_html(
     software: Optional[Union[Dict[str, Any], List[Dict[str, Any]]]] = None,
 ) -> str:
     """Generate a dedicated individual profile page for a team member."""
-    header_html = get_header("people")
-    footer_html = get_footer()
 
     name = str(person_data.get("name") or "").strip()
     role = str(person_data.get("role") or "").strip()
@@ -832,7 +792,6 @@ def generate_person_html(
     meta_desc_escaped = html.escape(re.sub(r"\s+", " ", meta_desc).strip())
 
     # Base href tag for subdirectory placement if needed
-    base_tag = f'  <base href="{base_href}">\n' if base_href else ""
     rel_prefix = base_href if base_href else ""
 
     hero_bg = str(person_data.get("hero_bg") or "assets/images/heroes/people_banner.jpg").strip()
@@ -1081,24 +1040,12 @@ def generate_person_html(
         </div>
       </section>"""
 
-    return f"""<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{name} | Data Driven Materials and Molecular Science</title>
-  <meta name="description" content="{meta_desc_escaped}">
-{base_tag}  <link rel="icon" type="image/svg+xml" href="assets/logos/ddmms.svg">
-  <link rel="stylesheet" href="assets/css/style.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
-</head>
-<body>
-{header_html}
-
-  <main id="main-content">
-    <section class="page-hero">
+    return render_page(
+        title=name,
+        description=meta_desc_escaped,
+        active_page="people",
+        base_href=base_href,
+        main_html=f"""    <section class="page-hero">
       <div class="page-hero-bg" aria-hidden="true">
         <img src="{hero_bg_src}" alt="" class="page-hero-bg-img" loading="eager">
       </div>
@@ -1136,11 +1083,5 @@ def generate_person_html(
 
 {publications_section}
       </div>
-    </section>
-  </main>
-
-{footer_html}
-  <script src="assets/js/main.js"></script>
-</body>
-</html>
-"""
+    </section>""",
+    )

@@ -5,19 +5,7 @@ from pathlib import Path
 from typing import Any, Dict, Optional, Union
 import yaml
 
-try:
-    from .header import get_header
-    from .footer import get_footer
-    from .layout import render_page_hero
-except (ImportError, ValueError):
-    try:
-        from components.header import get_header
-        from components.footer import get_footer
-        from components.layout import render_page_hero
-    except ImportError:
-        from src.components.header import get_header
-        from src.components.footer import get_footer
-        from src.components.layout import render_page_hero
+from .layout import render_page, render_page_hero
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 COLLABORATE_FILE = BASE_DIR / "data" / "collaborate.yaml"
@@ -43,8 +31,6 @@ def load_collaborate(collaborate_file: Optional[Union[str, Path]] = None) -> Dic
 
 def generate_collaborate_html(collaborate: Optional[Dict[str, Any]] = None) -> str:
     """Generate the Collaborate page HTML."""
-    header_html = get_header("collaborate")
-    footer_html = get_footer()
 
     if collaborate is None:
         collaborate = load_collaborate()
@@ -118,30 +104,12 @@ def generate_collaborate_html(collaborate: Optional[Dict[str, Any]] = None) -> s
 
     all_sections_html = "\n\n".join(sections_html)
 
-    return f"""<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Collaborate | Data Driven Materials and Molecular Science</title>
-  <meta name="description" content="Research collaborations, partner networks and how to get in touch with the Data Driven Materials and Molecular Science group at STFC.">
-  <link rel="icon" type="image/svg+xml" href="assets/logos/ddmms.svg">
-  <link rel="stylesheet" href="assets/css/style.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
-</head>
-<body>
-{header_html}
-
-  <main id="main-content">
-{hero_html}
+    return render_page(
+        title="Collaborate",
+        description="Research collaborations, partner networks and how to get in touch with the Data Driven Materials and Molecular Science group at STFC.",
+        active_page="collaborate",
+        main_html=f"""{hero_html}
 
 {all_sections_html}
-{contact_html}
-  </main>
-
-{footer_html}
-  <script src="assets/js/main.js"></script>
-</body>
-</html>"""
+{contact_html}""",
+    )

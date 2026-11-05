@@ -1,6 +1,7 @@
 """Footer component for the DDMMS website."""
 
 from datetime import datetime
+from functools import lru_cache
 from pathlib import Path
 from typing import Optional, Union
 
@@ -58,12 +59,16 @@ def generate_footer_html(
     return rendered
 
 
-def get_footer(full_markup=False):
-    """Return the reusable site footer container or full markup.
+@lru_cache(maxsize=1)
+def _default_footer_html() -> str:
+    """Read and cache the default footer template, which is identical for every page."""
+    return generate_footer_html()
 
-    Individual HTML pages reuse the separate footer.html file directly,
-    eliminating duplicate footer markup across pages.
+
+def get_footer():
+    """Return the full site footer markup, for inlining into a generated page.
+
+    The footer is baked into each page at build time rather than fetched by the
+    browser, so it renders without JavaScript and needs no extra request.
     """
-    if full_markup:
-        return generate_footer_html()
-    return '  <div id="site-footer" data-include-footer></div>'
+    return _default_footer_html()

@@ -1,5 +1,4 @@
 import unittest
-import os
 import json
 import re
 import sys
@@ -14,14 +13,49 @@ if str(BASE_DIR) not in sys.path:
     sys.path.insert(0, str(BASE_DIR))
 
 
+FIXTURE_PUBS_FILE = Path(__file__).resolve().parent / "fixtures" / "publications.json"
+LIVE_PUBS_FILE = BASE_DIR / "publications.json"
+
+
+def fixture_pubs():
+    """A small committed sample of real ORCID records.
+
+    Rendering tests run against this so that they pass on a clean checkout,
+    without first running src/pubs.py to fetch from the ORCID API.
+    """
+    with open(FIXTURE_PUBS_FILE, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+# Tests that check the live ORCID feed rather than our rendering of it. These
+# always run in CI, where the deploy workflow fetches publications before
+# testing, and are skipped on a clean checkout.
+requires_live_pubs = unittest.skipUnless(
+    LIVE_PUBS_FILE.exists(),
+    "publications.json absent; run 'python src/pubs.py' to check the live ORCID feed",
+)
+
+
+def rendered_header() -> str:
+    """The header markup that gets inlined into every generated page.
+
+    The header is no longer written out as a standalone header.html partial, so
+    tests assert against the rendered template directly.
+    """
+    import build_site
+    return build_site.generate_header_html()
+
+
+def rendered_footer() -> str:
+    """The footer markup that gets inlined into every generated page."""
+    import build_site
+    return build_site.generate_footer_html()
+
+
 class TestDDMMSSite(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        if (
-            not (BASE_DIR / "index.html").exists()
-            or not (BASE_DIR / "header.html").exists()
-            or not (BASE_DIR / "footer.html").exists()
-        ):
+        if not (BASE_DIR / "index.html").exists():
             import build_site
             build_site.main()
 
@@ -47,7 +81,7 @@ class TestDDMMSSite(unittest.TestCase):
             self.assertGreater(p.stat().st_size, 1000, f"{fname} is suspiciously small")
 
     def test_required_nav_menu_items(self):
-        content = (BASE_DIR / "header.html").read_text(encoding="utf-8")
+        content = rendered_header()
         content_lower = content.lower()
         # Awards and News have been removed from the navigation menu
         self.assertNotIn("awards.html", content_lower, "awards.html should not be in header.html navigation menu")
@@ -96,13 +130,9 @@ class TestDDMMSSite(unittest.TestCase):
         self.assertIn("assets/logos/aiida-mlip.svg", code_html)
         self.assertIn("assets/logos/pack-mm.svg", code_html)
 
-    def test_publications_json_validity(self):
-        p = BASE_DIR / "publications.json"
-        self.assertTrue(p.exists(), "publications.json does not exist")
-        with open(p, "r", encoding="utf-8") as f:
-            data = json.load(f)
+    def assert_publications_well_formed(self, data, source):
         self.assertIsInstance(data, list)
-        self.assertGreater(len(data), 0, "No publications in publications.json")
+        self.assertGreater(len(data), 0, f"No publications in {source}")
         for pub in data:
             self.assertIn("authors", pub, f"Missing authors in pub: {pub.get('title')}")
             self.assertIsInstance(pub["authors"], list)
@@ -112,6 +142,54 @@ class TestDDMMSSite(unittest.TestCase):
                 self.assertIsNotNone(pub.get("preprint_doi"), f"Missing preprint_doi for preprint: {pub.get('title')}")
                 self.assertTrue(pub["preprint_doi"].startswith("10.48550/arXiv."), f"Invalid preprint_doi format: {pub.get('preprint_doi')}")
 
+    def test_publications_fixture_validity(self):
+        self.assert_publications_well_formed(fixture_pubs(), "the test fixture")
+
+    @requires_live_pubs
+    def test_publications_json_validity(self):
+        with open(LIVE_PUBS_FILE, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        self.assert_publications_well_formed(data, "publications.json")
+
+    def test_unusable_authors_file_fails_loudly(self):
+        """A bad authors.yaml must raise, not silently fall back to a few hardcoded names.
+
+        This list decides which names are highlighted as group members on every
+        publication, so quietly substituting defaults would drop people from the
+        site with no visible error.
+        """
+        import tempfile
+        from unittest.mock import patch
+        import build_site
+
+        cases = {
+            "missing file": None,
+            "malformed YAML": "authors:\n  - name: 'unclosed\n   bad: [1,2\n",
+            "empty file": "",
+            "entries without a name": "authors:\n  - orcid: '0000-0000-0000-0000'\n",
+        }
+
+        # Redirect every path load_data() searches into a sandbox, rather than
+        # mutating the tracked data/authors.yaml: an interrupted run must not be
+        # able to leave the real file clobbered.
+        for label, content in cases.items():
+            with self.subTest(case=label), tempfile.TemporaryDirectory() as tmp:
+                sandbox = Path(tmp)
+                (sandbox / "data").mkdir()
+                authors_yaml = sandbox / "data" / "authors.yaml"
+                if content is not None:
+                    authors_yaml.write_text(content, encoding="utf-8")
+                with patch.object(build_site, "BASE_DIR", sandbox), \
+                     patch.object(build_site, "AUTHORS_FILE", authors_yaml), \
+                     patch.object(build_site, "AUTHORS_CSV_FILE", sandbox / "data" / "authors.csv"):
+                    with self.assertRaises((FileNotFoundError, ValueError), msg=label):
+                        build_site.load_data()
+
+        # The real file still loads, so the guards are not over-eager
+        _, authors = build_site.load_data()
+        self.assertGreater(len(authors), 0)
+        self.assertIn("Alin Marin Elena", authors.values())
+
     def test_awards_completely_removed(self):
         self.assertFalse((BASE_DIR / "data" / "awards.yaml").exists(), "data/awards.yaml should not exist")
         self.assertFalse((BASE_DIR / "src" / "components" / "awards.py").exists(), "src/components/awards.py should not exist")
@@ -120,17 +198,26 @@ class TestDDMMSSite(unittest.TestCase):
         self.assertNotIn("awards", build_site_py.lower(), "src/build_site.py should have no references to awards")
 
     def test_publications_markdown_has_authors_and_preprint_dois(self):
-        pub_md = (BASE_DIR / "PUBLICATIONS.md").read_text(encoding="utf-8")
+        import tempfile
+        from pubs import generate_markdown
+
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / "PUBLICATIONS.md"
+            generate_markdown(fixture_pubs(), output_path=str(out))
+            pub_md = out.read_text(encoding="utf-8")
+
         self.assertIn(" by ", pub_md, "PUBLICATIONS.md should list authors with 'by'")
         self.assertIn("10.48550/arXiv.", pub_md, "PUBLICATIONS.md should include preprint DOIs")
 
     def test_embedded_publications_script_in_publications_page(self):
-        content = (BASE_DIR / "publications.html").read_text(encoding="utf-8")
+        from build_site import generate_publications_html
+
+        content = generate_publications_html(fixture_pubs(), {"0000-0002-7013-6670": "Alin Marin Elena"})
         match = re.search(r'<script\s+id="publications-data"\s+type="application/json">\s*([\s\S]*?)\s*</script>', content)
         self.assertIsNotNone(match, "Embedded publications-data script missing in publications.html")
         data = json.loads(match.group(1))
         self.assertIsInstance(data, list)
-        self.assertGreater(len(data), 0)
+        self.assertEqual(len(data), len(fixture_pubs()))
 
     def test_codes_showcase_in_code_page(self):
         code_content = (BASE_DIR / "code.html").read_text(encoding="utf-8").lower()
@@ -140,7 +227,7 @@ class TestDDMMSSite(unittest.TestCase):
 
     def test_goldilocks_ac_uk_and_psdi_presence(self):
         code_html = (BASE_DIR / "code.html").read_text(encoding="utf-8")
-        footer_html = (BASE_DIR / "footer.html").read_text(encoding="utf-8")
+        footer_html = rendered_footer()
         research_html = (BASE_DIR / "research.html").read_text(encoding="utf-8")
         self.assertIn("goldilocks.ac.uk", code_html, "goldilocks.ac.uk not found in code.html")
         # Goldilocks pipeline and agent; feature text is one inline span so bold words stay in the sentence
@@ -269,7 +356,7 @@ class TestDDMMSSite(unittest.TestCase):
         self.assertIn("assets/images/junwen_yin.jpeg", (BASE_DIR / "people.html").read_text(encoding="utf-8"))
 
     def test_separate_navigation_links(self):
-        header_content = (BASE_DIR / "header.html").read_text(encoding="utf-8")
+        header_content = rendered_header()
         self.assertIn('href="index.html"', header_content, "Separate link index.html missing in header.html")
         self.assertIn('href="people.html"', header_content, "Separate link people.html missing in header.html")
         self.assertIn('href="research.html"', header_content, "Separate link research.html missing in header.html")
@@ -279,8 +366,7 @@ class TestDDMMSSite(unittest.TestCase):
         self.assertIn('href="talks.html"', header_content, "Separate link talks.html missing in header.html")
         self.assertIn('href="events.html"', header_content, "Separate link events.html missing in header.html")
         # Neither header nor footer should contain excluded entries outside the menu and submenus
-        for fname in ["header.html", "footer.html"]:
-            content = (BASE_DIR / fname).read_text(encoding="utf-8")
+        for fname, content in [("header", rendered_header()), ("footer", rendered_footer())]:
             self.assertNotIn('href="awards.html"', content, f"awards.html should not be in navigation {fname}")
             self.assertNotIn('href="news.html"', content, f"news.html should not be in navigation {fname}")
             self.assertNotIn('href="opportunities.html"', content, f"opportunities.html should not be in navigation {fname}")
@@ -288,7 +374,7 @@ class TestDDMMSSite(unittest.TestCase):
             self.assertNotIn('href="index.html#news"', content, f"News section link should not be in navigation {fname}")
 
     def test_no_software_and_feeds_in_footer(self):
-        content = (BASE_DIR / "footer.html").read_text(encoding="utf-8")
+        content = rendered_footer()
         self.assertNotIn("Software &amp; Feeds", content, "Found Software & Feeds in footer.html")
         self.assertNotIn("Software & Feeds", content, "Found Software & Feeds in footer.html")
 
@@ -362,10 +448,8 @@ class TestDDMMSSite(unittest.TestCase):
         self.assertIn("Alin is the scientific secretary of", alin_html)
         self.assertIn("Alin leads the Data Driven Materials and Molecular Science research group.", alin_html)
 
-    def test_reusable_footer_file_exists_and_valid(self):
-        footer_path = BASE_DIR / "footer.html"
-        self.assertTrue(footer_path.exists(), "footer.html does not exist")
-        footer_content = footer_path.read_text(encoding="utf-8")
+    def test_footer_template_renders_valid_markup(self):
+        footer_content = rendered_footer()
         self.assertIn('<footer class="site-footer">', footer_content)
         self.assertIn("footer-grid", footer_content)
         self.assertIn("footer-links", footer_content)
@@ -385,13 +469,13 @@ class TestDDMMSSite(unittest.TestCase):
         # Footer menu is removed since the header menu is always sticky on
         self.assertNotIn("footer-nav-pills", footer_content)
 
-    def test_build_site_get_footer_container(self):
+    def test_build_site_get_footer_returns_full_markup(self):
         import build_site
         footer = build_site.get_footer()
-        self.assertIn('id="site-footer"', footer)
-        self.assertIn('data-include-footer', footer)
-        full_footer = build_site.get_footer(full_markup=True)
-        self.assertIn('<footer class="site-footer">', full_footer)
+        self.assertIn('<footer class="site-footer">', footer)
+        self.assertIn("footer-grid", footer)
+        # The footer is inlined at build time, not fetched by the browser
+        self.assertNotIn('data-include-footer', footer)
 
     def test_build_site_generate_footer_html(self):
         import build_site
@@ -420,22 +504,23 @@ class TestDDMMSSite(unittest.TestCase):
         with self.assertRaises(FileNotFoundError):
             build_site.generate_footer_html(template_file="/nonexistent/footer_template.html")
 
-    def test_all_pages_reuse_footer(self):
+    def test_all_pages_inline_footer_exactly_once(self):
+        """Each page carries the real footer markup, inlined at build time, exactly once."""
         for fname in self.html_files:
             content = (BASE_DIR / fname).read_text(encoding="utf-8")
-            self.assertIn('id="site-footer"', content, f"Footer container missing from {fname}")
-            self.assertIn('data-include-footer', content, f"Footer include attribute missing from {fname}")
+            self.assertEqual(
+                content.count('<footer class="site-footer">'), 1,
+                f"Expected exactly one inlined footer in {fname}",
+            )
+            self.assertEqual(
+                content.count('<div class="footer-grid">'), 1,
+                f"Expected exactly one footer grid in {fname}",
+            )
+            # The footer must not be left to a client-side fetch
+            self.assertNotIn('data-include-footer', content, f"Stale footer placeholder in {fname}")
 
-    def test_no_duplicate_footer_markup_in_pages(self):
-        for fname in self.html_files:
-            content = (BASE_DIR / fname).read_text(encoding="utf-8")
-            self.assertNotIn('<footer class="site-footer">', content, f"Duplicated footer markup found in {fname}")
-            self.assertNotIn('<div class="footer-grid">', content, f"Duplicated footer grid found in {fname}")
-
-    def test_reusable_header_file_exists_and_valid(self):
-        header_path = BASE_DIR / "header.html"
-        self.assertTrue(header_path.exists(), "header.html does not exist")
-        header_content = header_path.read_text(encoding="utf-8")
+    def test_header_template_renders_valid_markup(self):
+        header_content = rendered_header()
         self.assertIn('<header class="site-header"', header_content)
         self.assertIn("brand-link", header_content)
         self.assertNotIn("nav-desktop", header_content)
@@ -444,13 +529,13 @@ class TestDDMMSSite(unittest.TestCase):
         self.assertIn("corner-menu-btn", header_content)
         self.assertIn("corner-menu-panel", header_content)
 
-    def test_build_site_get_header_container(self):
+    def test_build_site_get_header_returns_full_markup(self):
         import build_site
         header = build_site.get_header()
-        self.assertIn('id="site-header"', header)
-        self.assertIn('data-include-header', header)
-        full_header = build_site.get_header(full_markup=True)
-        self.assertIn('<header class="site-header"', full_header)
+        self.assertIn('<header class="site-header"', header)
+        self.assertIn("corner-menu-panel", header)
+        # The header is inlined at build time, not fetched by the browser
+        self.assertNotIn('data-include-header', header)
 
     def test_build_site_generate_header_html(self):
         import build_site
@@ -481,18 +566,32 @@ class TestDDMMSSite(unittest.TestCase):
         with self.assertRaises(FileNotFoundError):
             build_site.generate_header_html(template_file="/nonexistent/header_template.html")
 
-    def test_all_pages_reuse_header(self):
+    def test_all_pages_inline_header_exactly_once(self):
+        """Each page carries the real header markup, inlined at build time, exactly once."""
         for fname in self.html_files:
             content = (BASE_DIR / fname).read_text(encoding="utf-8")
-            self.assertIn('id="site-header"', content, f"Header container missing from {fname}")
-            self.assertIn('data-include-header', content, f"Header include attribute missing from {fname}")
+            self.assertEqual(
+                content.count('<header class="site-header"'), 1,
+                f"Expected exactly one inlined header in {fname}",
+            )
+            self.assertEqual(
+                content.count('id="corner-menu-panel"'), 1,
+                f"Expected exactly one corner menu panel in {fname}",
+            )
+            self.assertNotIn('<nav class="nav-desktop"', content, f"Unexpected nav-desktop in {fname}")
+            # The header must not be left to a client-side fetch
+            self.assertNotIn('data-include-header', content, f"Stale header placeholder in {fname}")
 
-    def test_no_duplicate_header_markup_in_pages(self):
+    def test_navigation_works_without_javascript(self):
+        """Primary navigation links are present in the served HTML, not injected by JS."""
+        main_js = (BASE_DIR / "assets" / "js" / "main.js").read_text(encoding="utf-8")
+        self.assertNotIn("fetch('header.html')", main_js, "Header is still fetched client-side")
+        self.assertNotIn("fetch('footer.html')", main_js, "Footer is still fetched client-side")
+
         for fname in self.html_files:
             content = (BASE_DIR / fname).read_text(encoding="utf-8")
-            self.assertNotIn('<header class="site-header"', content, f"Duplicated header markup found in {fname}")
-            self.assertNotIn('<nav class="nav-desktop"', content, f"Duplicated nav desktop found in {fname}")
-            self.assertNotIn('<div class="mobile-drawer"', content, f"Duplicated mobile drawer found in {fname}")
+            for link in ("index.html", "people.html", "research.html", "publications.html", "code.html"):
+                self.assertIn(f'href="{link}"', content, f"Nav link to {link} missing from {fname}")
 
     def test_deploy_workflow_actions_upgraded_to_node24(self):
         wf = BASE_DIR / ".github" / "workflows" / "deploy.yml"
@@ -500,7 +599,6 @@ class TestDDMMSSite(unittest.TestCase):
         content = wf.read_text(encoding="utf-8")
         self.assertIn("actions/checkout@v7", content)
         self.assertIn("actions/setup-python@v7", content)
-        self.assertIn("stefanzweifel/git-auto-commit-action@v7", content)
         self.assertIn("actions/configure-pages@v6", content)
         self.assertIn("actions/upload-pages-artifact@v5", content)
         self.assertIn("actions/deploy-pages@v5", content)
@@ -508,8 +606,9 @@ class TestDDMMSSite(unittest.TestCase):
         # Ensure deprecated Node 20 versions are no longer referenced
         self.assertNotIn("actions/checkout@v4", content)
         self.assertNotIn("actions/setup-python@v5", content)
-        self.assertNotIn("stefanzweifel/git-auto-commit-action@v5", content)
         self.assertNotIn("actions/configure-pages@v5", content)
+        # pubs.py only writes gitignored artifacts, so no auto-commit step is needed
+        self.assertNotIn("git-auto-commit-action", content)
         self.assertNotIn("actions/upload-pages-artifact@v3", content)
         self.assertNotIn("actions/deploy-pages@v4", content)
         self.assertNotIn("actions/upload-artifact@v3", content)
@@ -550,7 +649,7 @@ class TestDDMMSSite(unittest.TestCase):
         self.assertIn('href="https://www.ukri.org/who-we-are/stfc/facilities/rutherford-appleton-laboratory/"', index_html)
 
         # Brand links point to index.html as landing page
-        content = (BASE_DIR / "header.html").read_text(encoding="utf-8")
+        content = rendered_header()
         self.assertIn('<a href="index.html" class="brand-link"', content)
 
     def test_load_news_yaml(self):
@@ -1428,11 +1527,14 @@ talks:
             junwen_html,
         )
 
-    def test_publication_authors_highlighting_only_authors_file(self):
+    def test_publications_js_matches_authors_from_file(self):
         pubs_js = (BASE_DIR / "assets" / "js" / "publications.js").read_text(encoding="utf-8")
         self.assertIn("matchAuthorFromFile", pubs_js)
+
+    @requires_live_pubs
+    def test_publication_authors_highlighting_only_authors_file(self):
         # Ensure publications.json has full author list for multi-author papers
-        with open(BASE_DIR / "publications.json", "r", encoding="utf-8") as f:
+        with open(LIVE_PUBS_FILE, "r", encoding="utf-8") as f:
             pubs = json.load(f)
         multi_author_pubs = [p for p in pubs if len(p.get("authors", [])) > 2]
         self.assertGreater(len(multi_author_pubs), 30, "Most publications should have their full list of authors (>2 authors)")
@@ -1474,8 +1576,7 @@ talks:
         self.assertIn("yearFilter.value = '2024-onwards'", pubs_js)
 
         from src.components.publications import generate_publications_html, build_html_page
-        with open(BASE_DIR / "publications.json", "r", encoding="utf-8") as f:
-            pubs = json.load(f)
+        pubs = fixture_pubs()
         authors_dict = {"0000-0002-7013-6670": "Alin Marin Elena"}
         gen_html = generate_publications_html(pubs, authors_dict)
         self.assertIn('<option value="2024-onwards" selected>2024 onwards</option>', gen_html)
@@ -1484,9 +1585,19 @@ talks:
         self.assertIn('<option value="2024-onwards" selected>2024 onwards</option>', page_html)
         self.assertIn("2024-onwards", page_html)
 
+    def render_person_page(self, slug):
+        """Render one person's profile page from the committed publications fixture."""
+        from build_site import generate_person_html, load_people, load_software
+
+        for sec in load_people().get("sections", []):
+            for member in sec.get("members", []):
+                if member.get("slug") == slug:
+                    return generate_person_html(member, fixture_pubs(), software=load_software())
+        self.fail(f"No member with slug {slug!r} in data/people.yaml")
+
     def test_highlighted_work_on_individual_pages(self):
         """Verify that individual person pages support Highlighted Work with software and bibtex keys."""
-        alin_html = (BASE_DIR / "alin-marin-elena.html").read_text(encoding="utf-8")
+        alin_html = self.render_person_page("alin-marin-elena")
         self.assertIn('id="highlighted-work"', alin_html)
         self.assertIn("Highlighted Work", alin_html)
         self.assertIn("highlighted-software-card", alin_html)
@@ -1499,12 +1610,12 @@ talks:
         highlighted_block = alin_html.split('id="highlighted-work"')[1].split('</section>')[0]
         self.assertNotIn("Gábor Csányi", highlighted_block)
 
-        elliott_html = (BASE_DIR / "elliott-kasoar.html").read_text(encoding="utf-8")
+        elliott_html = self.render_person_page("elliott-kasoar")
         self.assertIn('id="highlighted-work"', elliott_html)
         self.assertIn("janus-core", elliott_html)
         self.assertIn("@batatia20269411", elliott_html)
 
-        junwen_html = (BASE_DIR / "junwen-yin.html").read_text(encoding="utf-8")
+        junwen_html = self.render_person_page("junwen-yin")
         self.assertIn('id="highlighted-work"', junwen_html)
         self.assertIn("goldilocks", junwen_html)
         self.assertIn("@patyukova2026565e", junwen_html)
@@ -1710,7 +1821,7 @@ talks:
 
     def test_header_nav_pills_different_colours(self):
         """Verify navigation pills are present at the top of the header on two lines with different colors."""
-        header_html = (BASE_DIR / "header.html").read_text(encoding="utf-8")
+        header_html = rendered_header()
         self.assertIn('header-nav-pills', header_html)
         self.assertIn('header-nav-level1', header_html)
         self.assertIn('header-subline-wrap', header_html)
@@ -1723,7 +1834,7 @@ talks:
             self.assertIn(f"<span>{expected}</span>", header_html)
 
         # Footer menu is removed since the header menu is always sticky on
-        footer_html = (BASE_DIR / "footer.html").read_text(encoding="utf-8")
+        footer_html = rendered_footer()
         self.assertNotIn('footer-nav-pills', footer_html)
 
         # People and Software should not have submenus
