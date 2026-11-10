@@ -12,7 +12,7 @@ sections:
 
       - name: "Elliott Kasoar"
         yaml: "data/people/elliott-kasoar.yaml"
-        join_date: "2024-10-01"
+        join_date: "2022-10-10"
 
       - name: "Dr. Junwen Yin"
         yaml: "data/people/junwen-yin.yaml"
@@ -63,12 +63,16 @@ sections:
         left_date: "2026-09-30"
       - name: "Jessie Gould"
         role: "Graduate"
-        join_date: "2023-09-01"
-        left_date: "2024-08-31"
+        join_date: "2025-09-15"
+        left_date: "2026-03-23"
       - name: "Muhammad Mohsin"
         role: "Graduate"
-        join_date: "2023-09-01"
-        left_date: "2024-08-31"
+        join_date: "2025-05-06"
+        left_date: "2025-12-01"
+      - name: "Cameron Ball"
+        role: "Graduate"
+        join_date: "2024-09-19"
+        left_date: "2025-03-11"
       - name: "Dr Elena Patyukova"
     #     avatar: "assets/images/photo.jpg"   # or initials, e.g. "FN"
         role: "Computational Scientist"
@@ -83,7 +87,7 @@ sections:
     #         url: "https://orcid.org/..."
       - name: "Dr Federica Zanca"
         role: "Computational Scientist"
-        join_date: "2023-01-01"
+        join_date: "2023-06-02"
         left_date: "2024-08-31"
 
 

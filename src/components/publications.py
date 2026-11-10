@@ -4,25 +4,11 @@ import json
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
-try:
-    from .header import get_header
-    from .footer import get_footer
-    from .layout import render_page_hero
-except (ImportError, ValueError):
-    try:
-        from components.header import get_header
-        from components.footer import get_footer
-        from components.layout import render_page_hero
-    except ImportError:
-        from src.components.header import get_header
-        from src.components.footer import get_footer
-        from src.components.layout import render_page_hero
+from .layout import render_page, render_page_hero
 
 
 def generate_publications_html(pubs, authors):
     """Generate the publications catalogue page HTML."""
-    header_html = get_header("publications")
-    footer_html = get_footer()
     pubs_json_str = json.dumps(pubs)
     authors_json_str = json.dumps(authors)
     hero_html = render_page_hero(
@@ -30,24 +16,7 @@ def generate_publications_html(pubs, authors):
         "Comprehensive, real-time bibliography aggregated via the ORCID Public API for members of Data Driven Materials and Molecular Science.",
     )
 
-    content = f"""<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Publications | Data Driven Materials and Molecular Science</title>
-  <meta name="description" content="Full publication catalogue for the Data Driven Materials and Molecular Science group, auto-aggregated from ORCID.">
-  <link rel="icon" type="image/svg+xml" href="assets/logos/ddmms.svg">
-  <link rel="stylesheet" href="assets/css/style.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
-</head>
-<body>
-{header_html}
-
-  <main id="main-content">
-{hero_html}
+    main_html = f"""{hero_html}
 
     <section class="home-section">
     <div class="container" id="pubs-app-root">
@@ -135,28 +104,32 @@ def generate_publications_html(pubs, authors):
       <!-- Publication Cards List -->
       <div class="pubs-container"></div>
     </div>
-    </section>
-  </main>
+    </section>"""
 
-{footer_html}
-
+    data_scripts = f"""
   <script id="publications-data" type="application/json">
 {pubs_json_str}
   </script>
   <script id="authors-data" type="application/json">
 {authors_json_str}
   </script>
+"""
 
-  <script src="assets/js/main.js"></script>
-  <script src="assets/js/publications.js"></script>
+    app_scripts = """  <script src="assets/js/publications.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', () => {{
+    document.addEventListener('DOMContentLoaded', () => {
       window.initPublications('pubs-app-root');
-    }});
-  </script>
-</body>
-</html>"""
-    return content
+    });
+  </script>"""
+
+    return render_page(
+        title="Publications",
+        description="Full publication catalogue for the Data Driven Materials and Molecular Science group, auto-aggregated from ORCID.",
+        active_page="publications",
+        main_html=main_html,
+        body_end=data_scripts,
+        extra_scripts=app_scripts,
+    )
 
 
 

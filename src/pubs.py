@@ -6,24 +6,18 @@ Distributed under the terms of the BSD 3-Clause License.
 import argparse
 import csv
 from datetime import datetime, timezone
-import html
 import json
 import os
 from pathlib import Path
 import re
 import sys
+import time
 from typing import Any, Dict, List, Optional, Sequence, Union
 import requests
 import yaml
 
 # HTML generation is delegated to components.publications; re-export for backward compatibility
-try:
-    from .components.publications import build_html_page, generate_html
-except (ImportError, ValueError):
-    try:
-        from components.publications import build_html_page, generate_html
-    except ImportError:
-        from src.components.publications import build_html_page, generate_html
+from src.components.publications import build_html_page, generate_html
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 DEFAULT_AUTHORS_PATH = str(BASE_DIR / "data" / "authors.yaml")
@@ -333,26 +327,74 @@ def select_best_summary(summaries: List[Dict[str, Any]]) -> Dict[str, Any]:
     return summaries[0]
 
 
-def fetch_member_works(orcid_id: str, cache_dir: str = "data/cache") -> List[Dict[str, Any]]:
-    """Retrieve all work summaries for an individual ORCID record, with offline cache support."""
+def _cached_work_count(orcid_id: str, cache_dir: str) -> int:
+    """Number of work groups in this author's cached ORCID response, 0 if none."""
+    if not cache_dir:
+        return 0
+    cache_file = os.path.join(cache_dir, f"{orcid_id}.json")
+    if not os.path.isfile(cache_file):
+        return 0
+    try:
+        with open(cache_file, "r", encoding="utf-8") as f:
+            return len(json.load(f).get("group") or [])
+    except (OSError, ValueError):
+        return 0
+
+
+def fetch_member_works(
+    orcid_id: str,
+    cache_dir: str = "data/cache",
+    failures: Optional[List[str]] = None,
+    max_attempts: int = 3,
+    backoff: float = 2.0,
+) -> List[Dict[str, Any]]:
+    """Retrieve all work summaries for an individual ORCID record, with offline cache support.
+
+    Transient failures (network errors, 429, 5xx) are retried up to
+    ``max_attempts`` times with a linear ``backoff`` in seconds, since a single
+    blip from the ORCID API should not fail a whole run. A 4xx other than 429 is
+    not retried, as it will not fix itself.
+
+    An empty result is ambiguous on its own: it means either that the author
+    genuinely has no works, or that the fetch failed and no cache was available.
+    When a ``failures`` list is passed, this ORCID is appended to it in the
+    second case, so callers can tell the two apart.
+    """
     url = f"{ORCID_API_BASE}/{orcid_id}/works"
     data = None
-    try:
-        resp = requests.get(url, headers=HEADERS, timeout=15)
-        if resp.status_code == 200:
-            data = resp.json()
-            if cache_dir:
-                try:
-                    os.makedirs(cache_dir, exist_ok=True)
-                    cache_file = os.path.join(cache_dir, f"{orcid_id}.json")
-                    with open(cache_file, "w", encoding="utf-8") as f:
-                        json.dump(data, f, indent=2)
-                except OSError:
-                    pass
-        else:
+    for attempt in range(1, max_attempts + 1):
+        retryable = True
+        try:
+            resp = requests.get(url, headers=HEADERS, timeout=15)
+            if resp.status_code == 200:
+                data = resp.json()
+                # An empty 200 may be an ORCID glitch; don't let it overwrite a
+                # cache that has works and silently drop this author.
+                cached = _cached_work_count(orcid_id, cache_dir)
+                if not (data.get("group") or []) and cached > 0:
+                    print(f"Warning: ORCID returned no works for {orcid_id}; keeping {cached} cached.")
+                    data = None
+                    retryable = False
+                    break
+                if cache_dir:
+                    try:
+                        os.makedirs(cache_dir, exist_ok=True)
+                        cache_file = os.path.join(cache_dir, f"{orcid_id}.json")
+                        with open(cache_file, "w", encoding="utf-8") as f:
+                            json.dump(data, f, indent=2)
+                    except OSError:
+                        pass
+                break
+            retryable = resp.status_code == 429 or resp.status_code >= 500
             print(f"Warning: Failed to fetch {orcid_id} (HTTP {resp.status_code})")
-    except requests.RequestException as e:
-        print(f"Warning: Network error fetching {orcid_id}: {e}")
+        except requests.RequestException as e:
+            print(f"Warning: Network error fetching {orcid_id}: {e}")
+
+        if not retryable or attempt == max_attempts:
+            break
+        delay = backoff * attempt
+        print(f"  Retrying {orcid_id} in {delay:.0f}s (attempt {attempt + 1} of {max_attempts})...")
+        time.sleep(delay)
 
     # Fallback to local cache if network response not available
     if not data and cache_dir:
@@ -366,6 +408,9 @@ def fetch_member_works(orcid_id: str, cache_dir: str = "data/cache") -> List[Dic
                 print(f"Warning: Could not read cache for {orcid_id}: {e}")
 
     if not data:
+        print(f"Error: no publication data available for {orcid_id} (network failed and no cache)")
+        if failures is not None:
+            failures.append(orcid_id)
         return []
 
     group_items = data.get("group") or []
@@ -472,8 +517,14 @@ def normalize_title(title: str) -> str:
 def aggregate_publications(
     orcids: Sequence[str] | Dict[str, str] | None = None,
     cache_dir: str = "data/cache",
+    failures: Optional[List[str]] = None,
 ) -> List[Dict[str, Any]]:
-    """Fetch and deduplicate publications across all researchers with author tracking."""
+    """Fetch and deduplicate publications across all researchers with author tracking.
+
+    Any ORCID whose records could not be retrieved at all is appended to
+    ``failures`` when that list is provided, so the caller can refuse to write
+    out a partial bibliography.
+    """
     if orcids is None:
         mapping = ORCID_IDS
     elif isinstance(orcids, dict):
@@ -490,7 +541,7 @@ def aggregate_publications(
     title_map: Dict[str, Dict[str, Any]] = {}
 
     for orcid, author_name in mapping.items():
-        works = fetch_member_works(orcid, cache_dir=cache_dir)
+        works = fetch_member_works(orcid, cache_dir=cache_dir, failures=failures)
         for work in works:
             doi = work.get("doi")
             norm_title = normalize_title(work["title"])
@@ -765,12 +816,29 @@ def main():
         orcids_input = orcid_dict
 
     print(f"Fetching / reading publications for {len(orcid_dict)} author(s)...")
-    pubs = aggregate_publications(orcids_input, cache_dir=args.cache_dir)
+    failures: List[str] = []
+    pubs = aggregate_publications(orcids_input, cache_dir=args.cache_dir, failures=failures)
+
+    # Bail out before writing: a partial file would silently drop publications.
+    if failures:
+        print(
+            f"Error: could not retrieve publications for {len(failures)} of "
+            f"{len(orcid_dict)} author(s): {', '.join(failures)}.\n"
+            "Refusing to write a partial bibliography; existing output left untouched.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
 
     if not pubs:
-        print("Warning: No publications found or fetched.")
-    else:
-        print(f"Aggregated {len(pubs)} unique publication records.")
+        print(
+            "Error: no publications were found for any author. This usually means the "
+            "ORCID API is unreachable or the author list is wrong.\n"
+            "Refusing to write an empty bibliography; existing output left untouched.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    print(f"Aggregated {len(pubs)} unique publication records.")
 
     # Write Markdown
     if not args.no_markdown and args.output:
@@ -781,7 +849,7 @@ def main():
         export_json(pubs, output_path=args.json)
 
     print("Publications data synchronization complete!")
-    print("To generate or rebuild the website pages, run: python src/build_site.py")
+    print("To generate or rebuild the website pages, run: python -m src.build_site")
 
 
 if __name__ == "__main__":

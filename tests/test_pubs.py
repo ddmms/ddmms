@@ -355,7 +355,7 @@ https://orcid.org/0000-0001-6068-6786,Gilberto Teobaldi
         ]
         with patch("pubs.fetch_member_works", return_value=mock_works) as mock_fetch:
             res = aggregate_publications({"0000-0002-7013-6670": "Alin Marin Elena"}, cache_dir="data/cache")
-            mock_fetch.assert_called_once_with("0000-0002-7013-6670", cache_dir="data/cache")
+            mock_fetch.assert_called_once_with("0000-0002-7013-6670", cache_dir="data/cache", failures=None)
             self.assertEqual(len(res), 1)
             self.assertEqual(res[0]["title"], "Quantum Simulations")
             self.assertEqual(res[0]["authors"], ["Alin Marin Elena"])
@@ -460,6 +460,184 @@ https://orcid.org/0000-0001-6068-6786,Gilberto Teobaldi
         finally:
             if os.path.exists(tmp_path):
                 os.remove(tmp_path)
+
+
+class TestPubsFailFast(unittest.TestCase):
+    """A failed ORCID fetch must not quietly produce a partial or empty bibliography."""
+
+    ORCIDS = {"0000-0000-0000-0001": "Author One", "0000-0000-0000-0002": "Author Two"}
+
+    def test_fetch_member_works_records_failure(self):
+        import requests
+        from pubs import fetch_member_works
+
+        failures = []
+        with patch("pubs.requests.get", side_effect=requests.RequestException("down")):
+            works = fetch_member_works(
+                "0000-0000-0000-0001", cache_dir="", failures=failures, max_attempts=1
+            )
+        self.assertEqual(works, [])
+        self.assertEqual(failures, ["0000-0000-0000-0001"])
+
+    def test_fetch_member_works_retries_transient_failures(self):
+        """A single blip from the ORCID API should not fail the run."""
+        import requests
+        from pubs import fetch_member_works
+
+        ok = MagicMock(status_code=200)
+        ok.json.return_value = {"group": []}
+        attempts = [requests.RequestException("blip"), MagicMock(status_code=503), ok]
+
+        failures = []
+        with patch("pubs.time.sleep") as sleep, \
+             patch("pubs.requests.get", side_effect=attempts) as get:
+            fetch_member_works("0000-0000-0000-0001", cache_dir="", failures=failures, backoff=0)
+
+        self.assertEqual(get.call_count, 3, "should retry a network error and a 503")
+        self.assertEqual(failures, [], "a recovered fetch is not a failure")
+        self.assertEqual(sleep.call_count, 2, "should back off between attempts")
+
+    def test_fetch_member_works_does_not_retry_client_errors(self):
+        """A 404 will not fix itself, so retrying only wastes time."""
+        from pubs import fetch_member_works
+
+        failures = []
+        with patch("pubs.requests.get", return_value=MagicMock(status_code=404)) as get:
+            fetch_member_works("0000-0000-0000-0001", cache_dir="", failures=failures, backoff=0)
+
+        self.assertEqual(get.call_count, 1)
+        self.assertEqual(failures, ["0000-0000-0000-0001"])
+
+    def test_fetch_member_works_retries_rate_limiting(self):
+        from pubs import fetch_member_works
+
+        with patch("pubs.requests.get", return_value=MagicMock(status_code=429)) as get:
+            fetch_member_works("0000-0000-0000-0001", cache_dir="", backoff=0)
+
+        self.assertEqual(get.call_count, 3, "429 is transient and should be retried")
+
+    def test_fetch_member_works_no_failure_when_cache_rescues(self):
+        """Degrading to the cache is not a failure; the data is still complete."""
+        import requests
+        from pubs import fetch_member_works
+
+        with tempfile.TemporaryDirectory() as cache:
+            with open(os.path.join(cache, "0000-0000-0000-0001.json"), "w", encoding="utf-8") as f:
+                json.dump({"group": []}, f)
+            failures = []
+            with patch("pubs.requests.get", side_effect=requests.RequestException("down")):
+                fetch_member_works(
+                    "0000-0000-0000-0001", cache_dir=cache, failures=failures, backoff=0
+                )
+        self.assertEqual(failures, [], "cache fallback should not be reported as a failure")
+
+    @staticmethod
+    def _cache_with_works(cache_dir, orcid, n):
+        payload = {"group": [{"work-summary": [{
+            "title": {"title": {"value": f"Paper {i}"}},
+            "publication-date": {"year": {"value": "2025"}},
+            "type": "journal-article",
+            "external-ids": {"external-id": []},
+            "display-index": "0",
+        }]} for i in range(n)]}
+        with open(os.path.join(cache_dir, f"{orcid}.json"), "w", encoding="utf-8") as f:
+            json.dump(payload, f)
+
+    def test_empty_200_does_not_clobber_a_populated_cache(self):
+        """ORCID can return an empty 200 during an incident; that must not erase good data."""
+        from pubs import fetch_member_works
+
+        orcid = "0000-0000-0000-0001"
+        empty = MagicMock(status_code=200)
+        empty.json.return_value = {"group": []}
+
+        with tempfile.TemporaryDirectory() as cache:
+            self._cache_with_works(cache, orcid, 2)
+            failures = []
+            with patch("pubs.requests.get", return_value=empty):
+                works = fetch_member_works(orcid, cache_dir=cache, failures=failures, backoff=0)
+
+            with open(os.path.join(cache, f"{orcid}.json"), encoding="utf-8") as f:
+                still_cached = len(json.load(f)["group"])
+
+        self.assertEqual(still_cached, 2, "the populated cache must survive an empty response")
+        self.assertEqual(len(works), 2, "the cached works should be used instead")
+        self.assertEqual(failures, [], "recovering from cache is not a failure")
+
+    def test_empty_200_is_accepted_when_cache_is_also_empty(self):
+        """An author with genuinely no works must not be treated as an error."""
+        from pubs import fetch_member_works
+
+        empty = MagicMock(status_code=200)
+        empty.json.return_value = {"group": []}
+        with tempfile.TemporaryDirectory() as cache:
+            failures = []
+            with patch("pubs.requests.get", return_value=empty):
+                works = fetch_member_works(
+                    "0000-0000-0000-0001", cache_dir=cache, failures=failures, backoff=0
+                )
+        self.assertEqual(works, [])
+        self.assertEqual(failures, [], "no works and no cache is a legitimate empty result")
+
+    def _run_main_expecting_exit(self, fetch_side_effect):
+        """Run pubs.main() against a temp output dir and return (exit_code, files_written)."""
+        import pubs as pubs_mod
+
+        with tempfile.TemporaryDirectory() as tmp:
+            md = os.path.join(tmp, "PUBLICATIONS.md")
+            js = os.path.join(tmp, "publications.json")
+            argv = ["pubs", "--cache-dir", "", "--output", md, "--json", js]
+            with patch.object(sys, "argv", argv), \
+                 patch("pubs.load_orcids_from_yaml", return_value=self.ORCIDS), \
+                 patch("pubs.fetch_member_works", side_effect=fetch_side_effect):
+                with self.assertRaises(SystemExit) as ctx:
+                    pubs_mod.main()
+            return ctx.exception.code, sorted(os.listdir(tmp))
+
+    def test_main_exits_nonzero_when_every_author_fails(self):
+        def all_fail(orcid, cache_dir=None, failures=None):
+            failures.append(orcid)
+            return []
+
+        code, written = self._run_main_expecting_exit(all_fail)
+        self.assertEqual(code, 1)
+        self.assertEqual(written, [], "no output should be written when the fetch failed")
+
+    def test_main_exits_nonzero_on_partial_failure(self):
+        """One author failing would otherwise silently drop their publications."""
+        work = [{"title": "A paper", "year": "2025", "journal": "J", "doi": "10.1/x",
+                 "url": "https://doi.org/10.1/x", "type": "journal-article"}]
+
+        def one_fails(orcid, cache_dir=None, failures=None):
+            if orcid.endswith("2"):
+                failures.append(orcid)
+                return []
+            return work
+
+        code, written = self._run_main_expecting_exit(one_fails)
+        self.assertEqual(code, 1)
+        self.assertEqual(written, [], "a partial bibliography must not overwrite existing output")
+
+    def test_main_exits_nonzero_when_no_publications_found(self):
+        """Every fetch succeeds but returns nothing: still wrong, still loud."""
+        code, written = self._run_main_expecting_exit(lambda orcid, cache_dir=None, failures=None: [])
+        self.assertEqual(code, 1)
+        self.assertEqual(written, [])
+
+    def test_main_writes_output_on_success(self):
+        import pubs as pubs_mod
+
+        work = [{"title": "A paper", "year": "2025", "journal": "J", "doi": "10.1/x",
+                 "url": "https://doi.org/10.1/x", "type": "journal-article"}]
+        with tempfile.TemporaryDirectory() as tmp:
+            md = os.path.join(tmp, "PUBLICATIONS.md")
+            js = os.path.join(tmp, "publications.json")
+            argv = ["pubs", "--cache-dir", "", "--output", md, "--json", js]
+            with patch.object(sys, "argv", argv), \
+                 patch("pubs.load_orcids_from_yaml", return_value=self.ORCIDS), \
+                 patch("pubs.fetch_member_works", side_effect=lambda o, cache_dir=None, failures=None: work):
+                pubs_mod.main()
+            self.assertEqual(sorted(os.listdir(tmp)), ["PUBLICATIONS.md", "publications.json"])
 
 
 if __name__ == "__main__":

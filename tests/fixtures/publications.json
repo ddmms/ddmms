@@ -1,0 +1,267 @@
+[
+  {
+    "title": "A foundation model for atomistic materials chemistry",
+    "year": "2025",
+    "journal": "The Journal of Chemical Physics",
+    "doi": "10.1063/5.0297006",
+    "url": "https://doi.org/10.1063/5.0297006",
+    "type": "journal-article",
+    "arxiv_id": null,
+    "preprint_doi": null,
+    "group_authors": [
+      "Alin Marin Elena"
+    ],
+    "authors": [
+      "Ilyes Batatia",
+      "Philipp Benner",
+      "Yuan Chiang",
+      "Alin M. Elena",
+      "Dávid P. Kovács",
+      "Janosh Riebesell",
+      "Xavier R. Advincula",
+      "Mark Asta",
+      "Matthew Avaylon",
+      "William J. Baldwin",
+      "Fabian Berger",
+      "Noam Bernstein",
+      "Arghya Bhowmik",
+      "Filippo Bigi",
+      "Samuel M. Blau",
+      "Vlad Cărare",
+      "Michele Ceriotti",
+      "Sanggyu Chong",
+      "James P. Darby",
+      "Sandip De",
+      "Flaviano Della Pia",
+      "Volker L. Deringer",
+      "Rokas Elijošius",
+      "Zakariya El-Machachi",
+      "Edvin Fako",
+      "Fabio Falcioni",
+      "Andrea C. Ferrari",
+      "John L. A. Gardner",
+      "Mikołaj J. Gawkowski",
+      "Annalena Genreith-Schriever",
+      "Janine George",
+      "Rhys E. A. Goodall",
+      "Jonas Grandel",
+      "Clare P. Grey",
+      "Petr Grigorev",
+      "Shuang Han",
+      "Will Handley",
+      "Hendrik H. Heenen",
+      "Kersti Hermansson",
+      "Cheuk Hin Ho",
+      "Stephan Hofmann",
+      "Christian Holm",
+      "Jad Jaafar",
+      "Konstantin S. Jakob",
+      "Hyunwook Jung",
+      "Venkat Kapil",
+      "Aaron D. Kaplan",
+      "Nima Karimitari",
+      "James R. Kermode",
+      "Panagiotis Kourtis",
+      "Namu Kroupa",
+      "Jolla Kullgren",
+      "Matthew C. Kuner",
+      "Domantas Kuryla",
+      "Guoda Liepuoniute",
+      "Chen Lin",
+      "Johannes T. Margraf",
+      "Ioan-Bogdan Magdău",
+      "Angelos Michaelides",
+      "J. Harry Moore",
+      "Aakash A. Naik",
+      "Samuel P. Niblett",
+      "Sam Walton Norwood",
+      "Niamh O’Neill",
+      "Christoph Ortner",
+      "Kristin A. Persson",
+      "Karsten Reuter",
+      "Andrew S. Rosen",
+      "Louise A. M. Rosset",
+      "Lars L. Schaaf",
+      "Christoph Schran",
+      "Benjamin X. Shi",
+      "Eric Sivonxay",
+      "Tamás K. Stenczel",
+      "Christopher Sutton",
+      "Viktor Svahn",
+      "Thomas D. Swinburne",
+      "Jules Tilly",
+      "Cas van der Oord",
+      "Santiago Vargas",
+      "Eszter Varga-Umbrich",
+      "Tejs Vegge",
+      "Martin Vondrák",
+      "Yangshuai Wang",
+      "William C. Witt",
+      "Thomas Wolf",
+      "Fabian Zills",
+      "Gábor Csányi"
+    ],
+    "orcids": [
+      "0000-0002-7013-6670"
+    ]
+  },
+  {
+    "title": "A budget-dependent crossover between coverage-and response-based training-set selection for machine-learned interatomic potentials",
+    "year": "2026",
+    "journal": "arXiv preprint arXiv:2609.05877",
+    "doi": "10.48550/arXiv.2609.05877",
+    "url": "https://doi.org/10.48550/arXiv.2609.05877",
+    "type": "journal-article",
+    "arxiv_id": "2609.05877",
+    "preprint_doi": "10.48550/arXiv.2609.05877",
+    "group_authors": [
+      "Alin Marin Elena"
+    ],
+    "authors": [
+      "Jia Bi",
+      "Alin-Marin Elena"
+    ],
+    "orcids": [
+      "0000-0002-7013-6670"
+    ]
+  },
+  {
+    "title": "Controlling nanocluster growth through nanoconfinement: the effect of the number and nature of metal-organic framework functionalities",
+    "year": "2024",
+    "journal": "Physical Chemistry Chemical Physics",
+    "doi": "10.1039/d4cp02422b",
+    "url": "https://doi.org/10.1039/d4cp02422b",
+    "type": "journal-article",
+    "arxiv_id": null,
+    "preprint_doi": null,
+    "group_authors": [
+      "Alin Marin Elena",
+      "Federica Zanca"
+    ],
+    "authors": [
+      "James King",
+      "Zhipeng Lin",
+      "Federica Zanca",
+      "Hui Luo",
+      "Linda Zhang",
+      "Patrick Cullen",
+      "Mohsen Danaie",
+      "Michael Hirscher",
+      "Simone Meloni",
+      "Alin M. Elena",
+      "Petra Á. Szilágyi"
+    ],
+    "orcids": [
+      "0000-0002-7013-6670"
+    ]
+  },
+  {
+    "title": "Experimental and Modeling Studies of Local and Nanoscale para-Cresol Behavior: A Comparison of Classical Force Fields",
+    "year": "2023",
+    "journal": "Journal of Physical Chemistry A",
+    "doi": "10.1021/acs.jpca.2c08022",
+    "url": "https://doi.org/10.1021/acs.jpca.2c08022",
+    "type": "journal-article",
+    "arxiv_id": null,
+    "preprint_doi": null,
+    "group_authors": [
+      "Alin Marin Elena"
+    ],
+    "authors": [
+      "Katie S. C. Morton",
+      "Alin M. Elena",
+      "Jeff Armstrong",
+      "Alexander J. O’Malley"
+    ],
+    "orcids": [
+      "0000-0002-7013-6670"
+    ]
+  },
+  {
+    "title": "Automatic generation of input files with optimised k-point meshes for Quantum ESPRESSO self-consistent field single-point total energy calculations",
+    "year": "2026",
+    "journal": "Digital Discovery",
+    "doi": "10.1039/d5dd00565e",
+    "url": "https://doi.org/10.1039/d5dd00565e",
+    "type": "journal-article",
+    "arxiv_id": null,
+    "preprint_doi": null,
+    "group_authors": [
+      "Alin Marin Elena",
+      "Junwen Yin",
+      "Elena Patyukova"
+    ],
+    "authors": [
+      "Elena Patyukova",
+      "Junwen Yin",
+      "Susmita Basak",
+      "Samuel Pinilla",
+      "Alin M. Elena",
+      "Gilberto Teobaldi"
+    ],
+    "orcids": [
+      "0000-0002-7013-6670",
+      "0000-0001-7374-9352"
+    ]
+  },
+  {
+    "title": "Data-driven Design of Metal-Organic Frameworks with Tunable Negative Thermal Expansion",
+    "year": "2026",
+    "journal": "arXiv preprint arXiv:2607.18594",
+    "doi": "10.48550/arXiv.2607.18594",
+    "url": "https://doi.org/10.48550/arXiv.2607.18594",
+    "type": "journal-article",
+    "arxiv_id": "2607.18594",
+    "preprint_doi": "10.48550/arXiv.2607.18594",
+    "group_authors": [
+      "Alin Marin Elena"
+    ],
+    "authors": [
+      "Prathami Divakar Kamath",
+      "Francesco Tavani",
+      "Alin Marin Elena",
+      "Théo Jaffrelot Inizan",
+      "Yen-hsu Lin",
+      "Jian Yin",
+      "Wenqian Xu",
+      "Omar M. Yaghi",
+      "Kristin A. Persson"
+    ],
+    "orcids": [
+      "0000-0002-7013-6670"
+    ]
+  },
+  {
+    "title": "MACE-POLAR-1: A Polarisable Electrostatic Foundation Model for Molecular Chemistry",
+    "year": "2026",
+    "journal": null,
+    "doi": "10.48550/arXiv.2602.19411",
+    "url": "https://doi.org/10.48550/arXiv.2602.19411",
+    "type": "journal-article",
+    "arxiv_id": "2602.19411",
+    "preprint_doi": "10.48550/arXiv.2602.19411",
+    "group_authors": [
+      "Alin Marin Elena",
+      "Elliott Kasoar"
+    ],
+    "authors": [
+      "Ilyes Batatia",
+      "William J. Baldwin",
+      "Domantas Kuryla",
+      "Joseph Hart",
+      "Elliott Kasoar",
+      "Alin M. Elena",
+      "Harry Moore",
+      "Mikołaj J. Gawkowski",
+      "Benjamin X. Shi",
+      "Venkat Kapil",
+      "Panagiotis Kourtis",
+      "Ioan-Bogdan Magdău",
+      "Gábor Csányi"
+    ],
+    "orcids": [
+      "0000-0002-7013-6670",
+      "0009-0005-2015-9478"
+    ]
+  }
+]

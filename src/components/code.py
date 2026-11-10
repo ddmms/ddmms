@@ -4,19 +4,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 import yaml
 
-try:
-    from .header import get_header
-    from .footer import get_footer
-    from .layout import render_page_hero
-except (ImportError, ValueError):
-    try:
-        from components.header import get_header
-        from components.footer import get_footer
-        from components.layout import render_page_hero
-    except ImportError:
-        from src.components.header import get_header
-        from src.components.footer import get_footer
-        from src.components.layout import render_page_hero
+from .layout import render_page, render_page_hero
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 SOFTWARE_FILE = BASE_DIR / "data" / "software.yaml"
@@ -73,8 +61,6 @@ def generate_code_html(
     software_data: Optional[Union[Dict[str, Any], List[Dict[str, Any]]]] = None,
 ) -> str:
     """Generate the code & software page HTML dynamically from software data."""
-    header_html = get_header("code")
-    footer_html = get_footer()
 
     if software_data is None:
         software_data = load_software()
@@ -193,24 +179,11 @@ def generate_code_html(
         subtitle,
     )
 
-    return f"""<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Software &amp; Skills | Data Driven Materials and Molecular Science</title>
-  <meta name="description" content="Open-source scientific software packages and skills developed by DDMMS: janus-core, aiida-mlip, aiidalab-mlip, pack-mm, ml-peg, and goldilocks.">
-  <link rel="icon" type="image/svg+xml" href="assets/logos/ddmms.svg">
-  <link rel="stylesheet" href="assets/css/style.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
-</head>
-<body>
-{header_html}
-
-  <main id="main-content">
-{hero_html}
+    return render_page(
+        title="Software &amp; Skills",
+        description="Open-source scientific software packages and skills developed by DDMMS: janus-core, aiida-mlip, aiidalab-mlip, pack-mm, ml-peg, and goldilocks.",
+        active_page="code",
+        main_html=f"""{hero_html}
 
     <section class="home-section">
       <div class="container">
@@ -218,13 +191,8 @@ def generate_code_html(
 {cards_html}
         </div>
       </div>
-    </section>
-  </main>
-
-{footer_html}
-  <script src="assets/js/main.js"></script>
-</body>
-</html>"""
+    </section>""",
+    )
 
 
 generate_software_html = generate_code_html

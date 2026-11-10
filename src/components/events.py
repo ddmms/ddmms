@@ -4,22 +4,8 @@ from pathlib import Path
 from typing import Any, Dict, Optional, Union
 import yaml
 
-try:
-    from .header import get_header
-    from .footer import get_footer
-    from .layout import render_page_hero
-    from .sections import render_category_sections
-except (ImportError, ValueError):
-    try:
-        from components.header import get_header
-        from components.footer import get_footer
-        from components.layout import render_page_hero
-        from components.sections import render_category_sections
-    except ImportError:
-        from src.components.header import get_header
-        from src.components.footer import get_footer
-        from src.components.layout import render_page_hero
-        from src.components.sections import render_category_sections
+from .layout import render_page, render_page_hero
+from .sections import render_category_sections
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 EVENTS_FILE = BASE_DIR / "data" / "events.yaml"
@@ -45,8 +31,6 @@ def load_events(events_file: Optional[Union[str, Path]] = None) -> Dict[str, Any
 
 def generate_events_html(events: Optional[Dict[str, Any]] = None) -> str:
     """Generate the Events page HTML."""
-    header_html = get_header("events")
-    footer_html = get_footer()
 
     if events is None:
         events = load_events()
@@ -60,34 +44,16 @@ def generate_events_html(events: Optional[Dict[str, Any]] = None) -> str:
         events.get("categories") or [], "Events page quick navigation"
     )
 
-    return f"""<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Events | Data Driven Materials and Molecular Science</title>
-  <meta name="description" content="Conferences, workshops, summer schools and seminars organised or hosted by the Data Driven Materials and Molecular Science group.">
-  <link rel="icon" type="image/svg+xml" href="assets/logos/ddmms.svg">
-  <link rel="stylesheet" href="assets/css/style.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
-</head>
-<body>
-{header_html}
-
-  <main id="main-content">
-{hero_html}
+    return render_page(
+        title="Events",
+        description="Conferences, workshops, summer schools and seminars organised or hosted by the Data Driven Materials and Molecular Science group.",
+        active_page="events",
+        main_html=f"""{hero_html}
 
     <section class="home-section">
       <div class="container">
 {subnav_html}{categories_html}
       </div>
-    </section>
-  </main>
-
-{footer_html}
-  <script src="assets/js/main.js"></script>
-</body>
-</html>"""
+    </section>""",
+    )
 

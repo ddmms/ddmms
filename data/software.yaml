@@ -6,17 +6,18 @@ packages:
     name: "janus-core"
     logo: "assets/logos/janus-core.svg"
     badge:
-      text: "Python / ASE / CLI"
+      text: "Python / CLI"
       style: "background:#dbeafe; color:#1e40af;"
-    description: "Tools for materials modeling with machine-learned interatomic potentials (MACE, SevenNet, CHGNet, M3GNet). Provides a simple, robust CLI and Python API with full ASE calculator support."
+    description: "Tools for materials modeling with machine-learned interatomic potentials (MACE, SevenNet, CHGNet, UMA). Provides a simple, robust CLI and Python API with full ASE calculator support."
     install: "pip install janus-core"
     features:
       - "Single-point energies, forces, stress tensors, and Hessians"
-      - "Geometry optimization with FrechetCellFilter and BFGS/FIRE"
-      - "Molecular dynamics in NVE, NVT, and NPT ensembles with thermostat/barostat logging"
-      - "Automated equation of state (EOS) and full 6x6 elasticity stiffness tensors ($C_{ij}$)"
+      - "Geometry optimisation"
+      - "Molecular dynamics"
+      - "Equation of state (EOS)"
+      - "Elasticity calculations"
       - "Phonon band structures &amp; DOS via Phonopy integration"
-      - "Minimum Energy Pathways with Climbing-Image NEB"
+      - "Nudged elastic band (NEB)"
     links:
       - text: "GitHub Repository &rarr;"
         url: "https://github.com/stfc/janus-core"
@@ -31,11 +32,12 @@ packages:
     badge:
       text: "AiiDA / Workflows"
       style: "background:#fef3c7; color:#92400e;"
-    description: "An open-source AiiDA plugin integrating the janus-core library to manage automated workflows for machine learning interatomic potentials (MLIPs) with complete data provenance."
+    description: "An open-source AiiDA plugin integrating the janus-core library to manage automated workflows for machine learnt interatomic potentials (MLIPs) with complete data provenance."
     install: "pip install aiida-mlip"
     features:
       - "Full provenance graphs recording every calculation input, output, and potential parameter"
-      - "Automated single-point, geometry optimization, and molecular dynamics workchains"
+      - "Automated single-point, geometry optimization, and molecular dynamics workflows"
+      - "Support for high-throughput calculations"
       - "Scalable execution across local workstations and remote HPC clusters"
       - "Integrates directly with the wider AiiDA simulation and materials informatics ecosystem"
     links:
@@ -91,7 +93,7 @@ packages:
       text: "Benchmark / Guide"
       style: "background:#e0e7ff; color:#3730a3;"
     description: "Machine Learning Performance and Extrapolation Guide. A comprehensive benchmarking framework and interactive performance guide to evaluate MLIPs across diverse chemical systems, extrapolations, and physical observables."
-    install: "git clone https://github.com/ddmms/ml-peg.git"
+    install: "pip install ml-peg"
     features:
       - "Evaluates model performance beyond basic force/energy errors to actual physical stability"
       - "Tests out-of-distribution generalization, extrapolation limits, and uncertainty quantification"
@@ -102,6 +104,10 @@ packages:
         url: "https://github.com/ddmms/ml-peg"
       - text: "Live Platform &rarr;"
         url: "https://ml-peg.stfc.ac.uk"
+      - text: "Documentation"
+        url: "https://ddmms.github.io/ml-peg"
+      - text: "PyPI"
+        url: "https://pypi.org/project/ml-peg"
 
   - id: goldilocks
     name: "goldilocks"

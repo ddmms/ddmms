@@ -5,22 +5,9 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 import yaml
 
-try:
-    from .header import get_header
-    from .footer import get_footer
-    from .news import load_news
-    from .collaborate import load_collaborate
-except (ImportError, ValueError):
-    try:
-        from components.header import get_header
-        from components.footer import get_footer
-        from components.news import load_news
-        from components.collaborate import load_collaborate
-    except ImportError:
-        from src.components.header import get_header
-        from src.components.footer import get_footer
-        from src.components.news import load_news
-        from src.components.collaborate import load_collaborate
+from .layout import render_page
+from .news import load_news
+from .collaborate import load_collaborate
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 MISSION_FILE = BASE_DIR / "data" / "mission.yaml"
@@ -259,8 +246,6 @@ def generate_index_html(
     **_kwargs,
 ):
     """Generate the index / about homepage HTML dynamically."""
-    header_html = get_header("index")
-    footer_html = get_footer()
 
     if news is None:
         news = load_news()
@@ -389,24 +374,11 @@ def generate_index_html(
 
     affiliations_html = render_affiliations_carousel_html(affiliations_data)
 
-    return f"""<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>About | Data Driven Materials and Molecular Science</title>
-  <meta name="description" content="Mission, background, and methodology of the Data Driven Materials and Molecular Science group at STFC Daresbury Laboratory, UKRI.">
-  <link rel="icon" type="image/svg+xml" href="assets/logos/ddmms.svg">
-  <link rel="stylesheet" href="assets/css/style.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
-</head>
-<body>
-{header_html}
-
-  <main id="main-content">
-{affiliations_html}
+    return render_page(
+        title="About",
+        description="Mission, background, and methodology of the Data Driven Materials and Molecular Science group at STFC Daresbury Laboratory, UKRI.",
+        active_page="index",
+        main_html=f"""{affiliations_html}
 
     <section class="home-section" id="mission">
       <div class="container home-narrow">
@@ -452,13 +424,8 @@ def generate_index_html(
           </a>
         </div>
       </div>
-    </section>
-  </main>
-
-{footer_html}
-  <script src="assets/js/main.js"></script>
-</body>
-</html>"""
+    </section>""",
+    )
 
 
 def generate_about_html(*args, **kwargs):
