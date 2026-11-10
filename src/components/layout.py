@@ -44,7 +44,6 @@ def render_page(
     title: str,
     description: str,
     main_html: str,
-    base_href: Optional[str] = None,
     active_page: str = "home",
     head_extra: str = "",
     body_end: str = "",
@@ -60,15 +59,12 @@ def render_page(
         title: Page-specific part of the ``<title>``; the site name is appended.
         description: Content of the ``<meta name="description">`` tag.
         main_html: Inner HTML of ``<main id="main-content">``.
-        base_href: Value for a ``<base>`` tag, used by pages generated into a
-            subdirectory (e.g. ``"../"`` for ``people/``) so that the root-relative
-            asset and navigation paths in the header and footer still resolve.
-        active_page: Section name passed through to the header.
+        active_page: Section name passed through to the header and emitted as
+            ``<body data-active-page>`` for the nav highlighting in main.js.
         head_extra: Extra markup appended inside ``<head>``.
         body_end: Markup inserted after the footer, before the common scripts.
         extra_scripts: Script tags appended after ``assets/js/main.js``.
     """
-    base_tag = f'  <base href="{base_href}">\n' if base_href else ""
     head_extra = f"{head_extra}\n" if head_extra and not head_extra.endswith("\n") else head_extra
     body_end = f"{body_end}\n" if body_end and not body_end.endswith("\n") else body_end
     extra_scripts = (
@@ -85,13 +81,13 @@ def render_page(
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{title} | {SITE_NAME}</title>
   <meta name="description" content="{description}">
-{base_tag}  <link rel="icon" type="image/svg+xml" href="assets/logos/ddmms.svg">
+  <link rel="icon" type="image/svg+xml" href="assets/logos/ddmms.svg">
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
 {head_extra}</head>
-<body>
+<body data-active-page="{active_page}">
 {header_html}
 
   <main id="main-content">
@@ -119,7 +115,6 @@ def render_page_hero(
     intro: str = "",
     extra_html: str = "",
     bg_image: Optional[str] = None,
-    rel_prefix: str = "",
 ) -> str:
     """Render the dark full-width title band shown at the top of every inner page,
     with a generic scientific picture nicely blended from left to right.
@@ -129,9 +124,8 @@ def render_page_hero(
 
     chosen_bg = bg_image if bg_image is not None else get_hero_bg_for_title(title)
     if chosen_bg:
-        img_src = f"{rel_prefix}{chosen_bg}" if (rel_prefix and chosen_bg.startswith("assets/")) else chosen_bg
         bg_html = f"""      <div class="page-hero-bg" aria-hidden="true">
-        <img src="{img_src}" alt="" class="page-hero-bg-img" loading="eager">
+        <img src="{chosen_bg}" alt="" class="page-hero-bg-img" loading="eager">
       </div>\n"""
     else:
         bg_html = ""

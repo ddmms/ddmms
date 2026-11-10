@@ -104,23 +104,18 @@
     const currentFilename = currentPath.split('/').pop() || 'index.html';
     const currentHash = window.location.hash;
 
-    // Detect active section
+    // Detect active section. Profile pages have arbitrary filenames, so the
+    // People section comes from the data-active-page attribute set at build time.
     let activeSection = '';
     if (['research.html', 'talks.html', 'teaching.html', 'events.html'].includes(currentFilename)) {
       activeSection = 'research';
-    } else if (
-      currentFilename === 'people.html' ||
-      currentFilename.endsWith('-elena.html') ||
-      currentFilename.endsWith('-kasoar.html') ||
-      currentFilename.endsWith('-yin.html') ||
-      currentPath.includes('/people/')
-    ) {
+    } else if (document.body.dataset.activePage === 'people') {
       activeSection = 'people';
     } else if (currentFilename === 'code.html') {
       activeSection = 'software';
     } else if (currentFilename === 'publications.html') {
       activeSection = 'publications';
-    } else if (currentFilename === 'index.html' || currentFilename === '') {
+    } else if (currentFilename === 'index.html') {
       activeSection = 'home';
     }
 
@@ -172,7 +167,9 @@
     // Apply active classes on all nav links, pills, and chips
     headerScope.querySelectorAll('.nav-desktop .nav-item a, .nav-pill, .subnav-pill, .corner-nav-link, .corner-subnav-chip, .mobile-nav-item a').forEach(link => {
       const href = link.getAttribute('href') || '';
-      const hrefClean = href.split('#')[0];
+      // Home links point at "./" so the URL stays at the site root.
+      const hrefPath = href.split('#')[0];
+      const hrefClean = hrefPath === './' ? 'index.html' : hrefPath;
 
       // Level 1 top line pill
       if (link.closest('.header-nav-level1')) {
@@ -182,7 +179,7 @@
         }
       } else if (link.closest('.header-subline-group')) {
         // Level 2 second line sub-pill
-        if (href === currentFilename || (currentFilename === '' && href === 'index.html')) {
+        if (href === currentFilename) {
           link.classList.add('active');
         } else if (hrefClean === currentFilename && currentHash && href.includes(currentHash)) {
           link.classList.add('active');
@@ -195,7 +192,7 @@
         }
       } else {
         // Drawer / fallback links
-        if (hrefClean === currentFilename || (currentFilename === '' && hrefClean === 'index.html')) {
+        if (hrefClean === currentFilename) {
           link.classList.add('active');
           const parentGroup = link.closest('.corner-nav-group');
           if (parentGroup) {

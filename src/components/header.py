@@ -60,6 +60,7 @@ def get_header(active_page="home"):
     browser, so navigation works without JavaScript and needs no extra request.
     ``active_page`` is accepted for call-site readability; the active section is
     highlighted at runtime by ``initHeader`` in assets/js/main.js, which derives
-    it from the current URL.
+    it from the current URL and the ``data-active-page`` attribute that
+    ``render_page`` sets on ``<body>``.
     """
     return _default_header_html()
