@@ -357,7 +357,8 @@ class TestDDMMSSite(unittest.TestCase):
 
     def test_separate_navigation_links(self):
         header_content = rendered_header()
-        self.assertIn('href="index.html"', header_content, "Separate link index.html missing in header.html")
+        self.assertIn('href="./"', header_content, "Home link to the site root missing in header.html")
+        self.assertNotIn('href="index.html"', header_content, "Home links should point to ./ so the URL has no index.html")
         self.assertIn('href="people.html"', header_content, "Separate link people.html missing in header.html")
         self.assertIn('href="research.html"', header_content, "Separate link research.html missing in header.html")
         self.assertIn('href="publications.html"', header_content, "Separate link publications.html missing in header.html")
@@ -590,7 +591,7 @@ class TestDDMMSSite(unittest.TestCase):
 
         for fname in self.html_files:
             content = (BASE_DIR / fname).read_text(encoding="utf-8")
-            for link in ("index.html", "people.html", "research.html", "publications.html", "code.html"):
+            for link in ("./", "people.html", "research.html", "publications.html", "code.html"):
                 self.assertIn(f'href="{link}"', content, f"Nav link to {link} missing from {fname}")
 
     def test_deploy_workflow_actions_upgraded_to_node24(self):
@@ -648,9 +649,9 @@ class TestDDMMSSite(unittest.TestCase):
         self.assertIn('href="https://www.ukri.org/who-we-are/stfc/facilities/daresbury-laboratory/"', index_html)
         self.assertIn('href="https://www.ukri.org/who-we-are/stfc/facilities/rutherford-appleton-laboratory/"', index_html)
 
-        # Brand links point to index.html as landing page
+        # Brand link points to the site root as landing page
         content = rendered_header()
-        self.assertIn('<a href="index.html" class="brand-link"', content)
+        self.assertIn('<a href="./" class="brand-link"', content)
 
     def test_load_news_yaml(self):
         import tempfile
@@ -1516,9 +1517,9 @@ talks:
             self.assertIn("Publications", content)
             self.assertIn("publications.html?author=", content)
 
-            # Also verify file in people/ subdirectory exists
-            sub_path = BASE_DIR / "people" / page_name
-            self.assertTrue(sub_path.exists(), f"Subdirectory profile page people/{page_name} was not generated")
+            # Profile pages have arbitrary filenames, so main.js highlights the
+            # People nav pill from this attribute
+            self.assertIn('<body data-active-page="people">', content)
 
         # Career entries with a url link the institution name
         junwen_html = (BASE_DIR / "junwen-yin.html").read_text(encoding="utf-8")
@@ -1667,10 +1668,9 @@ talks:
         card_with_pic = render_highlighted_paper_card(
             multi_author_pub,
             image="assets/images/highlights/sample_paper.png",
-            rel_prefix="../",
         )
         self.assertIn('class="highlighted-card-media"', card_with_pic)
-        self.assertIn('src="../assets/images/highlights/sample_paper.png"', card_with_pic)
+        self.assertIn('src="assets/images/highlights/sample_paper.png"', card_with_pic)
         self.assertIn('class="highlighted-card-image"', card_with_pic)
 
         # Test picture rendering on software card
@@ -1681,11 +1681,10 @@ talks:
         }
         sw_card_with_pic = render_highlighted_software_card(
             sample_sw,
-            rel_prefix="../",
             image="assets/images/highlights/my_tool.png",
         )
         self.assertIn('class="highlighted-card-media"', sw_card_with_pic)
-        self.assertIn('src="../assets/images/highlights/my_tool.png"', sw_card_with_pic)
+        self.assertIn('src="assets/images/highlights/my_tool.png"', sw_card_with_pic)
         self.assertIn('class="highlighted-card-image"', sw_card_with_pic)
 
         # Test resolve_highlighted_items with image/picture dictionaries
@@ -1808,10 +1807,6 @@ talks:
             self.assertIn('class="page-hero-bg"', html_content, f"{fname} missing page-hero-bg")
             self.assertIn('class="page-hero-bg-img"', html_content, f"{fname} missing page-hero-bg-img")
             self.assertIn(expected_img, html_content, f"{fname} does not contain {expected_img}")
-
-        # Check people/ subpage handles relative prefix
-        sub_html = (BASE_DIR / "people" / "alin-marin-elena.html").read_text(encoding="utf-8")
-        self.assertIn('src="../assets/images/heroes/people_banner.jpg"', sub_html)
 
         # Check CSS contains horizontal gradient blend
         style_css = (BASE_DIR / "assets" / "css" / "style.css").read_text(encoding="utf-8")

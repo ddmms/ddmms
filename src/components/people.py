@@ -587,7 +587,6 @@ def resolve_highlighted_items(
 
 def render_highlighted_software_card(
     pkg: Dict[str, Any],
-    rel_prefix: str = "",
     image: str = "",
 ) -> str:
     """Render a card for a highlighted software tool."""
@@ -604,14 +603,12 @@ def render_highlighted_software_card(
     image_html = ""
     if img:
         img_str = str(img).strip()
-        img_src = f"{rel_prefix}{img_str}" if (rel_prefix and img_str.startswith("assets/")) else img_str
         image_html = f"""\n          <div class="highlighted-card-media">
-            <img src="{img_src}" alt="{html.escape(name, quote=True)}" class="highlighted-card-image" loading="lazy">
+            <img src="{img_str}" alt="{html.escape(name, quote=True)}" class="highlighted-card-image" loading="lazy">
           </div>"""
 
     if logo:
-        logo_src = f"{rel_prefix}{logo}" if (rel_prefix and str(logo).startswith("assets/")) else logo
-        logo_html = f'<img src="{logo_src}" alt="{name}" class="highlighted-work-logo">'
+        logo_html = f'<img src="{logo}" alt="{name}" class="highlighted-work-logo">'
     elif icon:
         logo_html = f'<span class="highlighted-work-icon">{icon}</span>'
     else:
@@ -658,7 +655,6 @@ def render_highlighted_paper_card(
     pub: Dict[str, Any],
     bibtex_key: str = "",
     comment: str = "",
-    rel_prefix: str = "",
     image: str = "",
 ) -> str:
     """Render a card for a highlighted publication."""
@@ -700,9 +696,8 @@ def render_highlighted_paper_card(
     image_html = ""
     if img:
         img_str = str(img).strip()
-        img_src = f"{rel_prefix}{img_str}" if (rel_prefix and img_str.startswith("assets/")) else img_str
         image_html = f"""\n          <div class="highlighted-card-media">
-            <img src="{img_src}" alt="{html.escape(title, quote=True)}" class="highlighted-card-image" loading="lazy">
+            <img src="{img_str}" alt="{html.escape(title, quote=True)}" class="highlighted-card-image" loading="lazy">
           </div>"""
 
     return f"""        <div class="highlighted-card highlighted-paper-card">
@@ -761,7 +756,6 @@ def filter_publications_by_dates(
 def generate_person_html(
     person_data: Dict[str, Any],
     publications: Optional[List[Dict[str, Any]]] = None,
-    base_href: Optional[str] = None,
     software: Optional[Union[Dict[str, Any], List[Dict[str, Any]]]] = None,
 ) -> str:
     """Generate a dedicated individual profile page for a team member."""
@@ -791,17 +785,12 @@ def generate_person_html(
     meta_desc = short_bio or bio[:160]
     meta_desc_escaped = html.escape(re.sub(r"\s+", " ", meta_desc).strip())
 
-    # Base href tag for subdirectory placement if needed
-    rel_prefix = base_href if base_href else ""
-
     hero_bg = str(person_data.get("hero_bg") or "assets/images/heroes/people_banner.jpg").strip()
-    hero_bg_src = f"{rel_prefix}{hero_bg}" if (rel_prefix and hero_bg.startswith("assets/")) else hero_bg
 
     # Avatar element
     if (avatar.startswith("assets/") or avatar.startswith("http") or avatar.startswith("/") or
         any(avatar.lower().endswith(ext) for ext in (".jpg", ".jpeg", ".png", ".svg", ".webp"))):
-        avatar_src = f"{rel_prefix}{avatar}" if (rel_prefix and avatar.startswith("assets/")) else avatar
-        avatar_html = f'<img src="{avatar_src}" alt="{name}" class="profile-header-avatar">'
+        avatar_html = f'<img src="{avatar}" alt="{name}" class="profile-header-avatar">'
     elif avatar:
         avatar_html = f'<div class="profile-header-avatar profile-header-avatar-text">{avatar}</div>'
     else:
@@ -946,7 +935,7 @@ def generate_person_html(
             if h_type == "software":
                 cards_rendered.append(
                     render_highlighted_software_card(
-                        h_data, rel_prefix=rel_prefix, image=h_img
+                        h_data, image=h_img
                     )
                 )
             else:
@@ -955,7 +944,6 @@ def generate_person_html(
                         h_data,
                         bibtex_key=h.get("key", ""),
                         comment=h.get("comment", ""),
-                        rel_prefix=rel_prefix,
                         image=h_img,
                     )
                 )
@@ -1044,10 +1032,9 @@ def generate_person_html(
         title=name,
         description=meta_desc_escaped,
         active_page="people",
-        base_href=base_href,
         main_html=f"""    <section class="page-hero">
       <div class="page-hero-bg" aria-hidden="true">
-        <img src="{hero_bg_src}" alt="" class="page-hero-bg-img" loading="eager">
+        <img src="{hero_bg}" alt="" class="page-hero-bg-img" loading="eager">
       </div>
       <div class="container page-hero-container">
         <div class="profile-header-card">
